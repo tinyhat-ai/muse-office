@@ -84,3 +84,21 @@ test("a link or an image inside a visual is removed even with an ordinary target
   assert.match(html, /<a href="https:\/\/example.com" rel="noopener noreferrer">a link<\/a>/);
   assert.match(html, /<img src="https:\/\/example.com\/a.png" alt="alt"/);
 });
+
+test("a nested SVG cannot end the protected span early", () => {
+  const cases = [
+    '<svg viewBox="0 0 10 10"><svg></svg><a href="https://example.com/out"><text>CLICK</text></a></svg>',
+    '<svg viewBox="0 0 10 10"><g><svg></svg><img src="https://example.com/track"/></g></svg>',
+    '<svg viewBox="0 0 10 10"><svg><a href="https://example.com/out"><text>DEEP</text></a></svg></svg>',
+  ];
+  for (const c of cases) {
+    const html = renderMarkdown(c);
+    assert.doesNotMatch(html, /<a\b/, c);
+    assert.doesNotMatch(html, /<img\b/, c);
+    assert.doesNotMatch(html, /example\.com/, c);
+  }
+  assert.match(renderMarkdown(cases[0]), /<text>CLICK<\/text>/);
+  // A link right after a visual is still a link.
+  const after = renderMarkdown('<svg viewBox="0 0 10 10"><svg></svg></svg>\n\n[after](https://example.com/after)');
+  assert.match(after, /<a href="https:\/\/example.com\/after" rel="noopener noreferrer">after<\/a>/);
+});

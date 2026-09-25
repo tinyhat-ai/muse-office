@@ -73,9 +73,27 @@ SANITIZE.transformTags = {
 // becomes its text, an image disappears. The allowlist above cannot see an
 // element's parent, so this runs on the sanitized output, svg by svg.
 function stripLinksAndImagesInsideSvg(html: string): string {
-  return html.replace(/<svg\b[\s\S]*?<\/svg>/gi, (svg) =>
-    svg.replace(/<a\b[^>]*>/gi, "").replace(/<\/a>/gi, "").replace(/<img\b[^>]*>/gi, ""),
-  );
+  // Walk the tags and track how deep inside <svg> we are, so a nested <svg>
+  // (or a stray closing tag) cannot end the protected span early.
+  const tag = /<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g;
+  let depth = 0;
+  let out = "";
+  let last = 0;
+  for (let m = tag.exec(html); m; m = tag.exec(html)) {
+    const name = m[1].toLowerCase();
+    const closing = m[0].startsWith("</");
+    const selfClosing = m[0].endsWith("/>");
+    let keep = true;
+    if (name === "svg") {
+      if (closing) depth = Math.max(0, depth - 1);
+      else if (!selfClosing) depth += 1;
+    } else if (depth > 0 && (name === "a" || name === "img")) {
+      keep = false;
+    }
+    out += html.slice(last, m.index) + (keep ? m[0] : "");
+    last = m.index + m[0].length;
+  }
+  return out + html.slice(last);
 }
 
 /** Markdown → safe HTML for a page. Never render Markdown any other way. */
