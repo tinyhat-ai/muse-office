@@ -1,0 +1,77 @@
+/* Team page. Layout from the approved mockup: the chief's wide card and the
+   specialist cards two across on the left, a sticky detail panel on the right.
+   Shared classes (.card, .pill.*, .chip, .dashed, .tell, .av.*) come from globals.css. */
+
+.tm-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 24px; margin-top: 24px; align-items: start; }
+.tm-grid > * { min-width: 0; }
+
+/* ---- the chief's card ---- */
+.tm-chief { display: flex; gap: 20px; align-items: center; }
+.tm-chief .tm-nm { font-size: var(--t-h2); font-weight: 750; letter-spacing: -0.02em; }
+.tm-chief .tm-rl { font-size: var(--t-cap); color: var(--soft); font-weight: 600; }
+.tm-chief p { font-size: var(--t-sec); color: #3d3c38; margin-top: 8px; line-height: 1.45; }
+.tm-wear { margin-top: 8px; font-size: var(--t-cap); color: var(--soft); }
+.tm-wear b { color: var(--ink); }
+
+/* ---- specialist cards ---- */
+/* Dense packing lets the inline detail take a full row on narrow screens without leaving a hole beside the tapped card. */
+.tm-mates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 16px; margin-top: 16px; }
+.tm-mate {
+  display: flex; flex-direction: column; gap: 8px; min-width: 0;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 16px;
+  box-shadow: var(--shadow-card); transition: transform 0.12s, border-color 0.12s;
+}
+.tm-mate:hover { border-color: #cfcdc6; transform: translateY(-1px); }
+.tm-mate.tm-on { outline: 2px solid var(--ink); outline-offset: 1px; }
+.tm-top { display: flex; gap: 10px; align-items: center; }
+.tm-mate .tm-nm { font-weight: 750; font-size: var(--t-body); }
+.tm-mate .tm-rl { font-size: var(--t-cap); color: var(--soft); font-weight: 600; }
+.tm-job { font-size: var(--t-cap); color: #3d3c38; line-height: 1.4; }
+
+/* The status keeps the shared pill colours; the label sits on the first line and
+   the task on the second, so it never wraps three deep. */
+.tm-mate .tm-status {
+  display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 8px; row-gap: 1px; align-items: start;
+  align-self: stretch; min-width: 0; white-space: normal; padding: 8px 10px; border-radius: var(--r-chip);
+  font-size: var(--t-cap); font-weight: 650;
+}
+.tm-mate .tm-status::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; margin-top: 5px; }
+.tm-mate .tm-status b { font-weight: 700; }
+.tm-mate .tm-task { grid-column: 2; font-weight: 500; color: #4a4945; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+
+.tm-latest { border-top: 1px solid #efeee9; padding-top: 8px; margin-top: 2px; display: flex; flex-direction: column; gap: 6px; }
+.tm-latest > div { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 6px; font-size: var(--t-cap); color: #4a4945; line-height: 1.5; }
+.tm-ok { color: #2d6a43; font-weight: 700; }
+.tm-when { grid-column: 2; font-size: var(--t-badge); color: var(--soft); white-space: nowrap; line-height: 1.3; }
+
+/* The empty seat is a slot, not leftover copy. */
+.tm-mates .tm-note { font-size: var(--t-sec); line-height: 1.5; color: #55544f; }
+.tm-mates .tm-note b { color: #3d3c38; }
+
+/* ---- detail panel ---- */
+.tm-detail { position: sticky; top: 72px; }
+.tm-detail-inline { display: none; }
+.tm-hd { display: flex; gap: 14px; align-items: center; }
+.tm-dnm { font-size: var(--t-h2); font-weight: 750; letter-spacing: -0.01em; }
+.tm-drl { font-size: var(--t-cap); color: var(--soft); font-weight: 600; }
+.tm-detail h3 { font-size: var(--t-badge); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); margin-top: 16px; }
+.tm-detail ul { margin-top: 6px; padding-left: 17px; font-size: var(--t-sec); line-height: 1.6; color: #33322e; }
+.tm-skills { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 6px; }
+.tm-learned { margin-top: 6px; font-size: var(--t-cap); background: #fbf7ec; border-left: 3px solid #d9b45c; padding: 8px 10px; border-radius: 0 var(--r-chip) var(--r-chip) 0; color: #4a4436; }
+.tm-none { margin-top: 6px; font-size: var(--t-sec); color: var(--soft); }
+.tm-detail .tm-home { margin-top: 16px; color: #55544f; background: #f6f5f1; border-radius: var(--r-chip); padding: 8px 12px; }
+
+/* ---- narrow screens ---- */
+@media (max-width: 980px) {
+  .tm-grid { grid-template-columns: 1fr; }
+  .tm-detail-side { display: none; }
+  /* The panel hangs off the tapped card's row, so the tap visibly does something. */
+  .tm-detail-inline {
+    display: block; position: static; grid-column: 1 / -1;
+    border-color: var(--ink); border-radius: 0 0 var(--r-card) var(--r-card); margin-top: -4px;
+  }
+}
+@media (max-width: 560px) {
+  .tm-chief { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .tm-mates { grid-template-columns: 1fr; }
+}

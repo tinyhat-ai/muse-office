@@ -1,0 +1,171 @@
+/* Projects board (pj-) and a project's page (pp-). Tokens come from globals.css.
+   The sticky-note geometry is spec/DESIGN.md §Board; lanes, tiles and the project
+   page are ported from the approved mockup. */
+
+/* ---------------- board: header ---------------- */
+.pj-lede { display: flex; align-items: center; gap: 8px; }
+
+/* ---------------- board: project tiles ---------------- */
+.pj-tiles { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+.pj-tile {
+  position: relative; width: 118px; height: 118px; display: flex; flex-direction: column; justify-content: space-between;
+  padding: 14px 14px 12px; border-radius: var(--r-card); background: var(--c); color: var(--ink);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.05); transition: transform 0.12s;
+}
+.pj-tile:hover { transform: translateY(-1px); }
+.pj-tile.all { background: var(--card); border: 1px solid var(--line); }
+/* the chosen project wears an ink ring; its fill stays its own colour */
+.pj-tile.on, .pj-tile:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.pj-tile-nm { font-size: var(--t-sec); font-weight: 750; line-height: 1.25; }
+.pj-tile-n { font-size: var(--t-cap); font-weight: 600; color: var(--soft); }
+.pj-info { min-height: 28px; margin-top: 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: var(--t-sec); color: var(--soft); }
+.pj-info a { color: var(--ink); font-weight: 650; padding: 4px 10px; border: 1px solid #c9c7bf; border-radius: var(--r-pill); }
+.pj-info a:hover { border-color: var(--ink); }
+
+/* ---------------- board: lanes ---------------- */
+/* four lanes on a 16px gutter; each lane knows the paper behind it (--lane-bg) so a note's folded corner shows the right background */
+.pj-board { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-top: 8px; align-items: start; }
+.pj-lane { --lane-bg: var(--bg); border-top: 3px solid var(--lc); padding-top: 12px; min-width: 0; }
+.pj-lane-h { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; padding: 0 2px 12px; }
+.pj-lane-t { font-size: 15px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; }
+.pj-lane-sb { font-size: var(--t-badge); color: var(--soft); margin-top: 1px; }
+.pj-lane-ct {
+  width: 24px; height: 24px; border-radius: 50%; background: #e7e6e0; color: #3d3c38; font-size: var(--t-badge); font-weight: 700;
+  display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
+}
+/* the one lane that needs the user is the loudest thing on the page: orange title and badge on a faint peach wash painted behind it */
+.pj-lane.wait { --lane-bg: #f8f0ea; position: relative; z-index: 0; border-top-color: var(--needs); padding-bottom: 12px; }
+.pj-lane.wait::before { content: ""; position: absolute; inset: 0 -8px; background: rgba(251, 238, 230, 0.6); border-radius: 0 0 var(--r-card) var(--r-card); z-index: -1; }
+.pj-lane.wait .pj-lane-t { color: var(--needs); }
+.pj-lane.wait .pj-lane-ct { background: var(--needs); color: #fff; }
+.pj-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.pj-lane.done .pj-note { opacity: 0.78; } /* finished work is quieter than live work */
+.pj-none { text-align: center; padding: 24px 10px; }
+.pj-lane.wait .pj-none { border-color: #e9c9b6; }
+.pj-tell { margin-top: 24px; }
+
+/* ---------------- sticky notes (spec/DESIGN.md §Board) ---------------- */
+/* the project's own paper with faint ruled lines, a hairline border, a big bottom-right corner with a fold in it */
+.pj-note {
+  position: relative; display: flex; flex-direction: column; min-height: 180px; min-width: 0; padding: 12px 13px 10px; color: var(--ink);
+  background-color: var(--c);
+  background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.022) 0 1px, transparent 1px 7px);
+  border: 1px solid rgba(0, 0, 0, 0.07); border-radius: 3px 3px 16px 3px; box-shadow: var(--shadow-note);
+  transition: transform 0.12s, box-shadow 0.12s;
+}
+.pj-note:hover { transform: translateY(-1px); box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 8px 18px rgba(0, 0, 0, 0.07); }
+.pj-note:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+/* the fold: the paper's lighter back, a hairline of shade, then the lane behind it. It sits over the border, so the corner reads as cut */
+.pj-note::after {
+  content: ""; position: absolute; right: -1px; bottom: -1px; width: 18px; height: 18px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--c) 45%, #fff) 0 calc(50% - 1px), rgba(0, 0, 0, 0.1) calc(50% - 1px) 50%, var(--lane-bg, var(--bg)) 50%);
+}
+.pj-note-p { display: flex; align-items: center; gap: 6px; font-size: var(--t-badge); font-weight: 650; color: var(--soft); }
+.pj-note-p i { width: 3.5px; height: 13px; border-radius: var(--r-pill); background: var(--d); flex: 0 0 auto; }
+.pj-note-t {
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere;
+  margin-top: 7px; font-size: 15px; font-weight: 750; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink);
+}
+/* the question: a white pill with an orange dot, two lines at most */
+.pj-note-q {
+  margin-top: 9px; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 3px 9px;
+  border-radius: var(--r-pill); background: rgba(255, 255, 255, 0.78); color: var(--needs); font-size: var(--t-badge); font-weight: 700; line-height: 1.3;
+}
+.pj-note-q::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--needs); flex: 0 0 auto; }
+.pj-note-q > span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; min-width: 0; }
+.pj-note-n { margin-top: 6px; font-size: var(--t-badge); color: var(--soft); overflow-wrap: anywhere; text-wrap: pretty; }
+/* the footer sits at the bottom: who on the left, when on the right; it wraps when a note is narrow */
+.pj-note-f { margin-top: auto; padding-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: var(--t-badge); color: var(--soft); }
+.pj-note-who { font-weight: 600; }
+.pj-note-ago { margin-left: auto; padding-right: 8px; white-space: nowrap; } /* clears the fold */
+.pj-note-dn { color: var(--done); font-weight: 750; display: inline-flex; align-items: center; gap: 5px; }
+.pj-note-dn::before {
+  content: "✓"; width: 16px; height: 16px; border-radius: 50%; background: var(--done); color: #fff; font-size: 10px; line-height: 1;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+
+/* ---------------- a project's page ---------------- */
+.wrap.pp-wrap { max-width: 1060px; }
+.pp-head { display: flex; gap: 14px; align-items: stretch; margin-top: 16px; }
+.pp-head > div { min-width: 0; }
+.pp-bar { width: 6px; border-radius: var(--r-pill); background: var(--d); flex: 0 0 auto; }
+.pp-head h1.title { margin-top: 0; }
+.pp-desc { color: #4a4945; font-size: var(--t-body); margin-top: 8px; }
+.pp-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.pp-pill {
+  display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-cap); font-weight: 600;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-pill); padding: 3px 11px 3px 4px;
+}
+.pp-pill.plain { padding-left: 11px; }
+.pp-pill.w { color: var(--needs); border-color: #f0d6c6; background: var(--needs-bg); }
+.pp-body { display: grid; grid-template-columns: minmax(0, 1fr) 300px; grid-template-areas: "flow flow" "md side"; gap: 16px; align-items: start; margin-top: 24px; }
+.pp-body > * { min-width: 0; }
+
+/* how it runs: a row of round nodes joined by a line; badges need 10px of room above the scroll box */
+.card.pp-flow { grid-area: flow; padding: 20px 12px; }
+.pp-flow h2 { font-size: var(--t-h2); font-weight: 650; letter-spacing: -0.01em; margin: 0 8px 16px; }
+.pp-steps { list-style: none; padding: 10px 0 0; margin: -10px 0 0; display: flex; align-items: flex-start; overflow-x: auto; }
+.pp-step { flex: 1; min-width: 104px; text-align: center; position: relative; }
+.pp-step:not(:last-child)::after { content: ""; position: absolute; top: 24px; left: calc(50% + 30px); right: calc(-50% + 30px); height: 2px; background: #dcdad2; }
+.pp-dot { width: 48px; height: 48px; border-radius: 50%; background: var(--c); margin: 0 auto; display: flex; align-items: center; justify-content: center; position: relative; }
+.pp-step.you .pp-dot { box-shadow: 0 0 0 2.5px var(--ink); } /* your step: an ink ring */
+.pp-step.wait .pp-dot { box-shadow: 0 0 0 2.5px var(--needs); } /* a task at this step is waiting on you right now */
+.pp-badge {
+  position: absolute; top: -8px; left: calc(50% + 8px); height: 20px; padding: 0 7px; border-radius: var(--r-pill); background: var(--ink); color: #fff;
+  font-size: var(--t-badge); font-weight: 700; display: flex; align-items: center; white-space: nowrap; box-shadow: 0 0 0 2px var(--card);
+}
+.pp-step-txt { display: block; min-width: 0; }
+.pp-step-nm { display: block; font-weight: 700; font-size: var(--t-sec); margin-top: 8px; }
+.pp-step-who { display: block; font-size: var(--t-cap); color: var(--soft); }
+.pp-ok { display: inline-block; margin-top: 4px; padding: 1px 8px; border-radius: var(--r-pill); background: var(--needs-bg); color: var(--needs); font-size: var(--t-badge); font-weight: 700; }
+.pp-step-desc { display: block; font-size: var(--t-cap); color: var(--soft); line-height: 1.4; margin-top: 4px; padding: 0 6px; }
+.pp-empty { color: var(--soft); font-size: var(--t-sec); }
+
+/* the process text, then the rules, then who keeps it */
+.card.pp-md { grid-area: md; padding: 20px 24px; }
+.pp-src { margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--line); font-size: var(--t-cap); color: var(--soft); font-style: italic; }
+
+/* right now: the open tasks with their column pill */
+.card.pp-side { grid-area: side; }
+.pp-side-h { font-size: var(--t-badge); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); margin-bottom: 4px; }
+.pp-row { display: flex; align-items: center; gap: 8px; padding: 10px 0; border-top: 1px solid #f0efea; font-size: var(--t-sec); line-height: 1.3; }
+.pp-side-h + .pp-row { border-top: none; }
+.pp-row-t { flex: 1; min-width: 0; }
+.pp-row .pill { margin-left: auto; }
+.pp-side .pp-empty { padding: 10px 0; }
+.pp-tell { display: block; margin-top: 12px; padding-top: 12px; border-top: 1px solid #f0efea; }
+
+/* ---------------- narrower screens ---------------- */
+@media (max-width: 1100px) {
+  .pj-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 980px) {
+  .pp-body { grid-template-columns: minmax(0, 1fr); grid-template-areas: "side" "flow" "md"; }
+}
+@media (max-width: 720px) {
+  /* tiles scroll sideways; the row fades out so a clipped tile reads as "more"; 4px of room keeps the ink ring inside the scroll box */
+  .pj-tiles {
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 4px 24px 6px 4px; margin: 24px -4px 0;
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+  }
+  .pj-tiles::-webkit-scrollbar { display: none; }
+  .pj-tile { width: 88px; height: 88px; flex: 0 0 auto; padding: 10px 10px 8px; }
+  .pj-tile-nm { font-size: var(--t-cap); }
+  /* lanes stack, Waiting on you first; one column of notes per lane */
+  .pj-board { display: flex; flex-direction: column; align-items: stretch; gap: 16px; }
+  .pj-lane.wait { order: -1; }
+  .pj-notes { grid-template-columns: minmax(0, 1fr); }
+  .pj-note { min-height: 132px; } /* a full-width note cannot be square-ish anyway; 180px would leave every note half empty */
+
+  /* the steps become a vertical list: dot on the left, words on the right, the line running down between dots */
+  .card.pp-flow { padding: 16px; }
+  .pp-flow h2 { margin: 0 0 12px; }
+  .pp-steps { flex-direction: column; align-items: stretch; gap: 14px; overflow: visible; }
+  .pp-step { display: grid; grid-template-columns: 48px minmax(0, 1fr); column-gap: 12px; align-items: start; text-align: left; min-width: 0; }
+  .pp-dot { margin: 0; }
+  .pp-step-nm { margin-top: 0; }
+  .pp-step-desc { padding: 0; margin-top: 3px; }
+  .pp-badge { top: auto; bottom: -8px; left: 50%; transform: translateX(-50%); }
+  .pp-step:not(:last-child)::after { top: 48px; bottom: -14px; height: auto; left: 23px; right: auto; width: 2px; }
+  .card.pp-md { padding: 20px 16px; }
+}

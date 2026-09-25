@@ -1,0 +1,129 @@
+/* A task's page (/tasks/[id]). Ported from the mockup's task page; tokens
+   come from globals.css. Every class here starts with tk-. */
+
+.wrap.tk { max-width: 860px; padding-top: 24px; }
+
+/* ---- header: crumb, project, title, status line ---- */
+.tk-crumb { padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.tk-proj { display: inline-flex; align-items: center; gap: 7px; font-size: var(--t-cap); font-weight: 650; color: #55544f; margin-top: 24px; }
+.tk-proj .stripe { margin-right: 0; height: 15px; }
+.wrap.tk h1.title { margin-top: 8px; line-height: 1.08; }
+.tk-meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 12px; font-size: var(--t-cap); color: var(--soft); padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.tk-st { display: inline-flex; align-items: center; gap: 6px; font-weight: 750; }
+.tk-st::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
+.tk-st.todo { color: var(--soft); }
+.tk-st.in_progress { color: #3d5a6c; }
+.tk-st.waiting_on_you { color: var(--needs); }
+.tk-st.done { color: var(--done); }
+.tk-who { display: inline-flex; align-items: center; gap: 6px; color: #3d3c38; }
+
+/* ---- sections ---- */
+.tk-h2 { font-size: var(--t-h2); font-weight: 650; letter-spacing: -0.01em; margin-top: 32px; }
+.tk-h2 .sub { font-size: var(--t-cap); font-weight: 500; color: var(--soft); margin-left: 8px; letter-spacing: 0; }
+.tk-h3 { font-size: var(--t-body); font-weight: 650; margin-top: 24px; }
+.tk-sec { border-top: 1px solid var(--line); margin-top: 24px; }
+.tk-def { margin-top: 8px; }
+.tk-empty { margin-top: 8px; font-size: var(--t-body); line-height: 1.6; color: var(--soft); }
+.tk-req { margin-top: 12px; font-size: var(--t-cap); color: var(--soft); }
+.tk-req summary { cursor: pointer; font-weight: 650; }
+.tk-req div { margin-top: 8px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-chip); padding: 10px 12px; color: #3d3c38; font-size: var(--t-sec); white-space: pre-wrap; }
+
+/* Done when: a hollow circle, or a green check once met */
+.tk-chk { list-style: none; padding-left: 0; margin-top: 8px; }
+.tk-chk li { display: flex; gap: 10px; padding: 5px 0 5px 4px; font-size: var(--t-body); }
+.tk-chk li::before { content: "○"; color: #b3b1a9; width: 14px; flex: 0 0 auto; }
+.tk-chk li.ok::before { content: "✓"; color: var(--done); font-weight: 800; }
+
+/* Plan: the current step is bold with "· now"; done steps are grey with a check */
+.tk-plan { margin-top: 8px; padding-left: 26px; font-size: var(--t-body); }
+.tk-plan li { padding: 4px 0; }
+.tk-plan li.done { color: var(--soft); }
+.tk-plan li.done .tk-tick { color: var(--done); font-weight: 800; margin-right: 6px; }
+.tk-plan li.now { font-weight: 700; }
+.tk-plan li.now .tk-now { color: #3d5a6c; font-weight: 650; font-size: var(--t-cap); }
+
+/* ---- the pinned question (only while the task waits on the user) ---- */
+.tk-pin { margin-top: 24px; }
+.tk-pin .tk-cm-box { box-shadow: var(--shadow-card); }
+.tk-pin .tk-cm-f { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.tk-pin .tk-rbox { flex: 1 0 100%; }
+.tk-pin .qhint { font-size: var(--t-cap); color: var(--soft); } /* the button is the only orange thing in the card */
+.tk-money { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tk-answered { padding: 0 16px 12px; font-size: var(--t-sec); display: flex; align-items: flex-start; gap: 8px; }
+.tk-answered .body { white-space: pre-wrap; overflow-wrap: anywhere; }
+.tk-answered .tm { color: var(--soft); font-size: var(--t-cap); }
+.tk-answered .next { display: block; color: var(--soft); font-size: var(--t-cap); margin-top: 2px; }
+
+/* ---- the conversation: a vertical timeline ---- */
+.tk-conv { margin-top: 16px; position: relative; }
+.tk-conv::before { content: ""; position: absolute; left: 15px; top: 6px; bottom: 6px; width: 2px; background: #e3e2dc; }
+.tk-ev { display: flex; align-items: flex-start; padding: 6px 0; position: relative; font-size: var(--t-cap); color: var(--soft); }
+.tk-ev .d { width: 10px; height: 10px; border-radius: 50%; background: #cfcdc6; margin: 4px 17px 0 11px; flex: 0 0 auto; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--bg); }
+.tk-ev .t { font-size: var(--t-cap); color: #9a9992; display: block; margin-top: 1px; }
+.tk-cm { display: flex; gap: 12px; margin: 12px 0; position: relative; }
+.tk-cm > .av { position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--bg); }
+.tk-cm-box { flex: 1; min-width: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; }
+.tk-cm-h { display: flex; align-items: center; gap: 8px; padding: 8px 16px; background: #f7f7f4; border-bottom: 1px solid var(--line); font-size: var(--t-cap); flex-wrap: wrap; }
+.tk-cm-h b { font-size: var(--t-sec); }
+.tk-cm-h .k { color: var(--soft); }
+.tk-cm-h .tm { margin-left: auto; color: var(--soft); }
+.tk-cm-b { padding: 12px 16px; font-size: var(--t-body); line-height: 1.55; color: #2e2d2a; }
+.tk-cm-b .body { white-space: pre-wrap; overflow-wrap: anywhere; }
+.tk-fl { display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-cap); font-weight: 500; color: #3d3c38; background: #f3f2ee; border: 1px solid var(--line); border-radius: var(--r-pill); padding: 4px 10px; margin: 6px 6px 0 0; max-width: 100%; }
+a.tk-fl:hover { border-color: #c9c8c1; }
+.tk-cm-f { padding: 0 16px 12px; }
+.tk-cm-note { padding: 0 16px 12px; font-size: var(--t-cap); color: var(--soft); }
+.tk-reply { color: var(--ink); font-weight: 650; font-size: var(--t-cap); padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+.tk-rbox { margin-top: 10px; }
+
+/* a question card is peach; the pinned question's own place in the timeline is muted and points up */
+.tk-cm.q .tk-cm-box { border-color: #f0cdb9; }
+.tk-cm.q .tk-cm-h { background: var(--needs-bg); color: var(--needs); }
+.tk-cm.q .tk-cm-h b { color: var(--needs); }
+/* only the pinned card's reply is a button, and only it is orange: it is the user's OK */
+.tk-pin .tk-reply { background: var(--needs); color: #fff; border-radius: var(--r-chip); padding: 8px 14px; font-size: var(--t-sec); text-decoration: none; }
+.tk-pin .tk-reply.open { background: #efeee9; color: var(--ink); } /* "Cancel" is not about the user's OK, so it is not orange */
+.tk-cm.q.pinned-above .tk-cm-box { border-color: var(--line); }
+.tk-cm.q.pinned-above .tk-cm-h { background: #f7f7f4; color: inherit; }
+.tk-cm.q.pinned-above .tk-cm-h b { color: inherit; }
+
+/* the user's own comments get a blue-grey header */
+.tk-cm.mine .tk-cm-box { border-color: #cfd9e0; }
+.tk-cm.mine .tk-cm-h { background: #eef3f6; }
+
+/* replies sit indented under the card they answer */
+.tk-replies { margin: 0 16px 12px; border-left: 2px solid #e3e2dc; padding-left: 12px; }
+.tk-r { display: flex; gap: 8px; font-size: var(--t-sec); padding: 5px 0; line-height: 1.45; }
+.tk-r b { font-size: var(--t-cap); }
+.tk-r .tm { color: var(--soft); font-size: var(--t-cap); margin-left: 4px; }
+.tk-r .body { white-space: pre-wrap; overflow-wrap: anywhere; }
+
+/* ---- the one place the user writes ---- */
+.tk-form textarea { width: 100%; border: 1px solid var(--line); border-radius: var(--r-chip); padding: 10px 12px; font: inherit; font-size: var(--t-body); resize: vertical; outline: none; background: #fff; min-height: 64px; }
+.tk-form textarea:focus { border-color: var(--ink); }
+.tk-form textarea:disabled { background: #fafaf7; color: var(--soft); }
+.tk-form .row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; font-size: var(--t-cap); color: var(--soft); flex-wrap: wrap; }
+.tk-form .btn { font-size: var(--t-sec); }
+.tk-form .btn:disabled, .tk-money .btn:disabled { opacity: 0.55; cursor: default; }
+.tk-form-err { color: var(--needs); font-size: var(--t-cap); margin-top: 6px; }
+.tk-composer { display: flex; gap: 12px; margin-top: 16px; }
+.tk-composer .cbox { flex: 1; min-width: 0; }
+.tk-onlyhere { display: inline-flex; gap: 6px; align-items: center; font-size: var(--t-cap); color: var(--soft); font-weight: 500; }
+
+/* ---- files and footer ---- */
+.tk-out { margin-top: 24px; }
+.tk-files { display: flex; flex-wrap: wrap; margin-top: 4px; }
+.tk-files .tk-fl { margin: 8px 8px 0 0; }
+.tk-foot { margin-top: 32px; padding-top: 12px; border-top: 1px solid var(--line); font-size: var(--t-cap); color: var(--soft); display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+/* ---- phone ---- */
+@media (max-width: 560px) {
+  .wrap.tk { padding-top: 16px; }
+  .wrap.tk h1.title { font-size: var(--t-big); }
+  .tk-cm { gap: 8px; }
+  .tk-cm-h, .tk-cm-b, .tk-cm-f, .tk-cm-note, .tk-answered { padding-left: 12px; padding-right: 12px; }
+  .tk-replies { margin: 0 12px 12px; }
+  .tk-composer { gap: 8px; }
+  .tk-form .row { justify-content: flex-end; }
+  .tk-form .row .tk-onlyhere, .tk-form .row .hint { flex: 1 0 100%; }
+}

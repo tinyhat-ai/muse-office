@@ -1,0 +1,144 @@
+/* Notes: the find page (/notes) and a note's page (/notes/[slug]). Shared shell classes
+   (.wrap, .head, .kick, .title, .lede, .crumb, .tell, .md, .av) come from globals.css;
+   everything here is prefixed nt-. */
+
+/* ---- the find page ---- */
+.nt-lede { display: flex; align-items: center; gap: 8px; }
+
+/* The search is a control, so it is quieter than the note cards: one hairline, no shadow. */
+.nt-search {
+  margin-top: 24px; display: flex; align-items: center; gap: 10px; height: 48px; padding: 0 14px;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-chip); transition: border-color 0.15s;
+}
+.nt-search:focus-within { border-color: var(--ink); }
+.nt-search svg { width: 18px; height: 18px; flex: 0 0 auto; color: #8a8984; }
+.nt-search input[type="search"] { flex: 1; border: 0; padding: 0; background: transparent; font-size: var(--t-body); color: var(--ink); box-shadow: none; }
+.nt-search input[type="search"]:focus { border: 0; outline: none; }
+.nt-clear, .nt-go {
+  border: 0; background: #efeee9; color: #55544f; border-radius: var(--r-pill); font-size: var(--t-cap); font-weight: 650; padding: 4px 10px; white-space: nowrap;
+}
+.nt-go { color: var(--soft); }
+
+.nt-filters { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+.nt-fl { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.nt-lbl { font-size: var(--t-badge); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); width: 74px; flex: 0 0 auto; }
+.nt-chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px;
+  border: 1px solid var(--line); background: #fff; border-radius: var(--r-pill);
+  font-size: var(--t-cap); font-weight: 600; color: #3d3c38; user-select: none;
+}
+.nt-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--d); }
+.nt-chip .av { margin-left: -6px; }
+.nt-chip:hover { border-color: #c9c7bf; }
+.nt-chip.on { background: #edeae3; border-color: var(--ink); box-shadow: inset 0 0 0 0.5px var(--ink); color: var(--ink); } /* chosen, but not the darkest thing on the page */
+
+.nt-count {
+  margin-top: 24px; padding-bottom: 10px; border-bottom: 1px solid var(--line);
+  display: flex; justify-content: space-between; align-items: center; font-size: var(--t-cap); color: var(--soft);
+}
+.nt-count > span + span { color: #3d3c38; font-weight: 600; }
+
+.nt-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+.nt-card {
+  position: relative; display: flex; flex-direction: column; min-height: 178px; padding: 20px; overflow: hidden;
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-card); box-shadow: var(--shadow-card);
+  transition: transform 0.12s, border-color 0.12s;
+}
+.nt-card:hover { transform: translateY(-2px); border-color: #d6d5ce; }
+.nt-card.nt-pin { grid-column: span 2; background: linear-gradient(135deg, #fffdf4, #fff); border-color: #e6dcc3; padding: 20px 24px; justify-content: center; } /* the pinned note leads the page */
+.nt-card.nt-pin .nt-card-top { margin-bottom: auto; }
+.nt-card.nt-pin h3 { font-size: var(--t-big); margin-top: 12px; }
+.nt-card.nt-pin p { font-size: var(--t-body); margin-top: 8px; }
+.nt-card.nt-pin .nt-card-foot { margin-top: auto; padding-top: 14px; }
+.nt-card-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: var(--t-badge); color: #6d6c66; font-weight: 650; }
+.nt-card-proj { display: inline-flex; align-items: center; gap: 6px; }
+.nt-card-proj i { width: 4px; height: 12px; border-radius: var(--r-pill); background: var(--d); }
+.nt-card-pin { font-size: var(--t-badge); font-weight: 750; letter-spacing: 0.06em; text-transform: uppercase; color: #8a6412; background: #f7ecd0; border-radius: var(--r-pill); padding: 2px 8px; }
+.nt-card h3 { font-size: var(--t-h2); font-weight: 650; letter-spacing: -0.015em; line-height: 1.25; margin-top: 10px; color: var(--ink); }
+.nt-card p { font-size: var(--t-sec); color: #5d5c57; line-height: 1.5; margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.nt-card-foot { margin-top: auto; padding-top: 12px; display: flex; align-items: center; gap: 8px; font-size: var(--t-cap); color: #6d6c66; }
+.nt mark, .nt-page mark { background: #fbe7a6; color: inherit; padding: 0 1px; }
+.nt-empty { grid-column: 1 / -1; text-align: center; padding: 40px 10px; color: var(--soft); font-size: var(--t-sec); border: 1.5px dashed #d6d5ce; border-radius: var(--r-card); }
+.nt-foot { margin-top: 24px; }
+
+/* ---- a note is the whole page ---- */
+.nt-page { background: #fff; min-height: calc(100vh - 57px); }
+.nt-bar { max-width: 1120px; margin: 0 auto; padding: 16px 32px 0; gap: 8px; }
+.nt-bar a { color: #3d3c38; font-weight: 600; border-radius: var(--r-chip); padding: 2px 6px; margin: 0 -6px; }
+.nt-bar a:hover { background: #f3f2ee; }
+.nt-sep { color: #c3c1b9; }
+.nt-here { color: var(--ink); font-weight: 650; }
+.nt-note { max-width: 1120px; margin: 0 auto; padding: 24px 32px 64px; display: grid; grid-template-columns: minmax(0, 700px) 240px; gap: 64px; justify-content: center; }
+.nt-note article { min-width: 0; }
+.nt-proj { display: inline-flex; align-items: center; gap: 8px; font-size: var(--t-cap); font-weight: 700; color: #55544f; }
+.nt-proj i { width: 4px; height: 15px; border-radius: var(--r-pill); background: var(--d); }
+.nt-title { font-size: var(--t-display); letter-spacing: -0.035em; line-height: 1.05; margin-top: 12px; }
+.nt-note-lede { font-size: var(--t-body); line-height: 1.5; color: #55544f; margin-top: 12px; max-width: 60ch; text-wrap: balance; }
+.nt-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: var(--t-cap); color: var(--soft); margin-top: 16px; padding-bottom: 24px; border-bottom: 1px solid var(--line); }
+.nt-meta b { color: #3d3c38; font-weight: 650; }
+
+/* the body: on top of the shared .md rules, a little more air */
+.nt-body { line-height: 1.7; }
+.nt-body h2 { font-weight: 650; letter-spacing: -0.02em; margin: 32px 0 8px; scroll-margin-top: 72px; }
+.nt-body h2:first-child { margin-top: 24px; }
+.nt-body h3 { scroll-margin-top: 72px; }
+.nt-body p { margin: 10px 0; }
+.nt-body ul, .nt-body ol { padding-left: 24px; margin: 8px 0; }
+.nt-body li { margin: 6px 0; }
+.nt-body table { margin: 12px 0; border-radius: var(--r-card); }
+.nt-body th { letter-spacing: 0.07em; padding: 10px 14px; }
+.nt-body td { padding: 11px 14px; }
+.nt-body td:first-child { font-weight: 600; }
+.nt-body > :first-child { margin-top: 24px; }
+
+.nt-from { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); }
+.nt-h4 { font-size: var(--t-badge); font-weight: 750; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); }
+.nt-tasks { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+/* a linked task is a small sticky note in its project's colour */
+.nt-task {
+  display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; font-size: var(--t-sec); font-weight: 650;
+  background-color: var(--c); background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.022) 0 1px, transparent 1px 7px);
+  border: 1px solid rgba(0, 0, 0, 0.07); border-radius: 3px 3px 10px 3px;
+}
+.nt-task:hover { box-shadow: var(--shadow-card); }
+.nt-note-foot { margin-top: 32px; }
+
+.nt-toc { position: sticky; top: 72px; align-self: start; }
+.nt-toc a { display: block; font-size: var(--t-sec); color: #55544f; padding: 5px 0 5px 12px; border-left: 2px solid #ecebe6; }
+.nt-toc a.nt-toc-sub { padding-left: 24px; }
+.nt-toc a:hover { color: var(--ink); border-left-color: var(--ink); }
+.nt-toc nav .nt-h4 { margin-bottom: 4px; }
+.nt-rel { margin-top: 24px; }
+.nt-rel a { border-left: none; padding-left: 0; font-weight: 600; color: #3d3c38; }
+.nt-rel a span { display: block; font-weight: 400; font-size: var(--t-cap); color: var(--soft); }
+.nt-rel .nt-h4 { margin-bottom: 4px; }
+
+/* ---- narrower screens ---- */
+@media (max-width: 980px) {
+  .nt-grid { grid-template-columns: 1fr 1fr; }
+  .nt-card.nt-pin { grid-column: span 2; }
+  .nt-note { grid-template-columns: 1fr; gap: 10px; }
+  .nt-toc { position: static; }
+  .nt-toc nav { display: none; } /* the headings are a scroll away; keep only the related notes */
+}
+@media (max-width: 720px) {
+  .nt-bar { padding: 16px 16px 0; }
+  .nt-note { padding: 16px 16px 40px; }
+}
+@media (max-width: 560px) {
+  .nt-grid { grid-template-columns: 1fr; }
+  .nt-card.nt-pin { grid-column: auto; }
+  .nt-card { min-height: auto; } /* the kept-by line sits 12px under the excerpt; desktop keeps its 178px alignment */
+  .nt-lbl { width: 100%; }
+  .nt-title { font-size: var(--t-big); }
+  /* note tables stack: each row becomes a labelled card (labels come from the header cells via data-label) */
+  .nt-body table, .nt-body tbody, .nt-body tr { display: block; }
+  .nt-body thead { display: none; }
+  .nt-body tr { padding: 12px 14px; border-bottom: 1px solid #f0efea; }
+  .nt-body tr:last-child { border-bottom: none; }
+  .nt-body td { display: grid; grid-template-columns: 62px 1fr; gap: 8px; padding: 0; border: 0; font-size: var(--t-sec); line-height: 1.45; font-weight: 400; }
+  .nt-body td + td { margin-top: 4px; }
+  .nt-body td::before { content: attr(data-label); font-size: var(--t-badge); letter-spacing: 0.07em; text-transform: uppercase; color: var(--soft); font-weight: 700; padding-top: 2px; }
+  .nt-body td:first-child { display: block; font-size: var(--t-body); font-weight: 600; margin-bottom: 6px; }
+  .nt-body td:first-child::before { display: none; }
+}

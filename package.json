@@ -1,0 +1,34 @@
+{
+  "name": "muse-office",
+  "version": "0.0.1",
+  "private": true,
+  "description": "The Office: the private board where a Muse chief of staff shows its user what its team is doing. Reference app plus the hat that teaches a Muse to build it.",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev -p 3007",
+    "build": "next build",
+    "start": "next start -p 3007",
+    "reset": "rm -f data/office.db data/office.db-wal data/office.db-shm && echo 'Office data removed; the next start seeds the demo again.'"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "marked": "^15.0.6",
+    "next": "^15.5.26",
+    "react": "19.1.0",
+    "react-dom": "19.1.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.12",
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tinyhat-ai/muse-office.git"
+  }
+}

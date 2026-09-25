@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" rx="14" fill="#f3f3ef"/>
+  <!-- a small top hat: the chief of staff's -->
+  <rect x="20" y="14" width="24" height="26" rx="3" fill="#1c1c19"/>
+  <rect x="20" y="30" width="24" height="5" fill="#b3541e"/>
+  <rect x="12" y="40" width="40" height="6" rx="3" fill="#1c1c19"/>
+</svg>
