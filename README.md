@@ -89,7 +89,7 @@ The board: lanes with a coloured rule, sticky notes in the project's colour, and
 
 ![The Projects board](docs/screenshots/projects.png)
 
-A task's page, the one place the person can write: the pinned question with a one-tap answer, what the task is, done-when, the plan, and the conversation.
+A task's page shows the pinned question with a one-tap answer, what the task is, done-when, the plan, and the conversation. People can comment on tasks and notes.
 
 ![A task waiting on a money question](docs/screenshots/task-waiting-money.png)
 

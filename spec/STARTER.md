@@ -17,7 +17,7 @@ Put **Choose one priority for this week** in Waiting on you, with one direct que
 
 Create three tagged notes in plain words:
 
-1. **How your Office works** (pin it; tags `office`, `start here`): the chief takes requests in chat, routes substantial work to specialists, and records task progress and decisions here. The person comments on task pages and asks the chief to change other pages. Include a small Markdown table of the team roles and a fenced `mermaid` flowchart showing request → routing → specialist → Office result. Use a top-to-bottom flow so its labels remain readable in the note's width. Confirm both render on the note page.
+1. **How your Office works** (pin it; tags `office`, `start here`): the chief takes requests in chat, routes substantial work to specialists, and records task progress and decisions here. The person comments on task and note pages and asks the chief to change other pages. Include a small Markdown table of the team roles and a fenced `mermaid` flowchart showing request → routing → specialist → Office result. Use a top-to-bottom flow so its labels remain readable in the note's width. Confirm both render on the note page.
 2. **Your first week** (tags `office`, `first week`): list the first tasks above and the one priority question. Mark each dependency as unanswered until the person answers.
 3. **Where your information comes from** (tags `sources`, `reports`, `customers`): explain that Customers grows from real people the person names or communication channels they choose to share; business Reports grow from verified work sources. Access requires the person's choice, and outgoing communication waits for their approval.
 
