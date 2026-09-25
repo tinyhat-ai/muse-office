@@ -77,6 +77,8 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
   const minutes = Math.max(1, Math.round(words / 200));
   const tags = json<string[]>(note.tags_json, []);
   const comments = all<NoteCommentRow>("SELECT * FROM note_comments WHERE note = ? ORDER BY id", slug);
+  const commentIds = new Set(comments.map((comment) => comment.id));
+  const topComments = comments.filter((comment) => comment.reply_to == null || !commentIds.has(comment.reply_to));
   const label = note.project === "general" ? "Start here" : project?.name ?? "Note";
   const dark = project?.color_dark ?? "#9a978c";
 
@@ -138,10 +140,17 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
           <section className="nt-comments" aria-labelledby="note-comments-title">
             <h2 id="note-comments-title">Comments</h2>
             <p>Questions and corrections here reach {keeper?.name ?? chiefName}. For an immediate answer, use chat.</p>
-            {comments.map((comment) => <div className="nt-comment" key={comment.id}>
-              <b>{comment.author === "you" ? "You" : members.get(comment.author)?.name ?? comment.author}</b>
-              <time dateTime={comment.created_at}>{ago(comment.created_at, now)}</time>
-              <p>{comment.body}</p>
+            {topComments.map((comment) => <div className="nt-comment-thread" key={comment.id}>
+              <div className="nt-comment">
+                <b>{comment.author === "you" ? "You" : members.get(comment.author)?.name ?? comment.author}</b>
+                <time dateTime={comment.created_at}>{ago(comment.created_at, now)}</time>
+                <p>{comment.body}</p>
+              </div>
+              {comments.filter((reply) => reply.reply_to === comment.id).map((reply) => <div className="nt-comment nt-comment-reply" key={reply.id}>
+                <b>{reply.author === "you" ? "You" : members.get(reply.author)?.name ?? reply.author}</b>
+                <time dateTime={reply.created_at}>{ago(reply.created_at, now)}</time>
+                <p>{reply.body}</p>
+              </div>)}
             </div>)}
             <NoteCommentForm note={slug} />
           </section>

@@ -106,6 +106,9 @@
 .nt-comments h2 { font-size: var(--t-h2); }
 .nt-comments > p { color: var(--soft); margin: 8px 0 20px; font-size: var(--t-sec); }
 .nt-comment { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.nt-comment-thread { border-bottom: 1px solid var(--line); }
+.nt-comment-thread .nt-comment { border-bottom: 0; }
+.nt-comment-reply { margin: 0 0 12px 20px; padding: 10px 14px; border-left: 2px solid #d7d4c8; border-radius: 0 8px 8px 0; background: #f5f4ef; }
 .nt-comment b { font-size: var(--t-sec); }
 .nt-comment time { color: var(--soft); font-size: var(--t-cap); margin-left: 10px; }
 .nt-comment p { white-space: pre-wrap; line-height: 1.5; margin-top: 6px; }
