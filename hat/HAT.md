@@ -227,9 +227,9 @@ Do these before the hand-over, and again after any change to the app:
 - The app's icon is the top hat from `src/app/icon.svg`, not a briefcase or a
   generic office symbol.
 - No page is empty on the first visit: the board has cards in To do, Waiting
-  on you, and Done; Customers has at least the person and Tinyhat (stage
-  `past`, outside the funnel); Reports has its eight cards; Notes has three
-  tagged notes.
+  on you, and Done; Customers has at least the person and Tinyhat (`in_funnel:
+  false`, shown as "Contact", counted nowhere); Reports has its eight
+  cards; Notes has three tagged notes.
 
 ## Updates
 
