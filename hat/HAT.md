@@ -229,6 +229,9 @@ Do these before the hand-over, and again after any change to the app:
 - Nothing on any page is a form, except the comment box on a task's page.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their avatar.
+- Team has exactly one chief (you) and five distinct specialists. Compare the
+  member list and starter tasks with what was already there before adding rows;
+  no setup task, first-priority question, or orientation contact appears twice.
 - No page is empty on the first visit: the board has cards in To do, Waiting
   on you, and Done; Customers has at least the person and Tinyhat (`in_funnel:
   false`, shown as "Contact", counted nowhere); Reports visibly shows four
