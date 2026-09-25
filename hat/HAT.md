@@ -200,6 +200,8 @@ Do these before the hand-over, and again after any change to the app:
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,
   settings.
 - Nothing on any page is a form, except the comment box on a task's page.
+- The app's icon is the top hat from `src/app/icon.svg`, not a briefcase or a
+  generic office symbol.
 
 ## Updates
 

@@ -30,6 +30,7 @@
   },
   "builder_notes": [
     "Prefer running the repository's own code. Only when that is impossible, re-create it exactly from the four spec files; do not invent pages, controls, or fields.",
+    "The app's icon is the top hat in src/app/icon.svg (see the icon field), never a briefcase or a generic office symbol.",
     "Pages are view-only. Wherever a control would normally sit, show the line: To change this, tell <chief name> in chat. The chief's name comes from the members table (is_chief = 1).",
     "The one write from the UI is POST /api/comments {task, body, reply_to?} → a task_updates row with author 'you', kind 'comment' or 'reply', unread_by_agent 1. The money buttons post body 'yes' or 'not yet' with reply_to = the question's update id.",
     "Actions are POST /api/actions/<name> with a JSON body, returning {ok:true, data} or {ok:false, error}. Every error names what was wrong and the valid values. Publish the same 33 names as the app's actions so the chief can call them.",
@@ -43,5 +44,10 @@
     "A boards or tasks app already exists: ask the person, then turn it into Office and carry its cards over as tasks (one project per lane) before anything else.",
     "The repository cannot be fetched: ask the person to paste db/schema.sql, spec/PAGES.md, spec/DESIGN.md, and spec/ACTIONS.md, then build from those.",
     "The platform has no full-stack app kind: stop and tell the person; a static page is not an Office."
-  ]
+  ],
+  "icon": {
+    "use": "src/app/icon.svg from the repository: the chief of staff's top hat (ink #1c1c19 with an orange band #b3541e) on the warm off-white #f3f3ef, rounded corners",
+    "never": "a briefcase, a suitcase, a building, a generic 'office' or 'work' symbol, or any stock icon; the hat is the mark of this office",
+    "fallback": "if the platform cannot take an SVG, draw the same top hat as a small PNG, or use the 🎩 emoji"
+  }
 }

@@ -75,3 +75,12 @@ Always round, always the head crop: 20px on cards and in lists, 32px in card hea
 ## Charts
 
 Inline SVG, drawn at 640×230 for wide cards and 320×180 for narrow ones (redrawn at 320 wide on a phone). Axis and legend text 12px `--soft`. Bars have 2–3px radius. The spending chart is stacked with a dashed average line and the label "8-week average $680". Money in and out are grouped bars in `#5b8a5a` (in) and `#3d5a6c` (out). Website visitors are one series of blue-grey bars with the last one darker.
+
+## Icon
+
+The Office's icon is the chief of staff's top hat: ink (`#1c1c19`) with a
+thin orange band (`#b3541e`) on the warm off-white (`#f3f3ef`), rounded
+corners, as in `src/app/icon.svg`. Use that file for the app's icon wherever
+the platform shows one (an app list, a tab, an artifact card). Never a
+briefcase, a suitcase, a building, or a generic "office" symbol: the hat is
+what says "this is the office my chief of staff runs".
