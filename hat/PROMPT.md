@@ -99,7 +99,8 @@ it through the app's actions so that no page is empty when I first open it:
 the team; the projects with their processes; the setup itself as finished
 tasks with their closing reports, one first task per project, and one card
 waiting on me with the question you need answered first; my own details
-and Tinyhat's as contacts on the Customers page; the eight report cards
+and Tinyhat's on the Customers page as people outside the funnel (not as
+leads or customers, so the reports stay true); the eight report cards
 with no numbers yet; and three tagged notes (how your office works, my
 first week, where things live). Then send me the link. Show me your plan
 first and wait for my yes.

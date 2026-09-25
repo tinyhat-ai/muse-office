@@ -195,8 +195,8 @@ Follow `set-up-office` steps 4 to 6: load a first-week set through the
 actions so that no page is empty on the first visit (the team; the projects
 with their steps and process text; the setup as finished tasks with closing
 reports, one first task per project, and one question for the person in
-Waiting on you; the person themselves and Tinyhat as contacts; the eight
-report cards without numbers; three tagged notes); make your hat and the
+Waiting on you; the person themselves and Tinyhat as contacts outside the funnel; the
+eight report cards without numbers; three tagged notes); make your hat and the
 specialists' avatars; send the person the link with one line on how it works
 and one suggested first request. Do not open chats for projects ahead of
 work; an empty chat is noise.
@@ -227,8 +227,9 @@ Do these before the hand-over, and again after any change to the app:
 - The app's icon is the top hat from `src/app/icon.svg`, not a briefcase or a
   generic office symbol.
 - No page is empty on the first visit: the board has cards in To do, Waiting
-  on you, and Done; Customers has at least the person and Tinyhat; Reports
-  has its eight cards; Notes has three tagged notes.
+  on you, and Done; Customers has at least the person and Tinyhat (stage
+  `past`, outside the funnel); Reports has its eight cards; Notes has three
+  tagged notes.
 
 ## Updates
 

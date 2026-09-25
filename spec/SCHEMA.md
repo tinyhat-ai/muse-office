@@ -61,3 +61,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 ## Notes carry tags
 
 `notes.tags_json` is a JSON array of short lowercase strings: the topics a note belongs to and the words someone would search for (`["brand", "colors", "decision"]`, at most 12). The Notes page shows them as chips and filters by one tag; `list_notes` searches them. A note's body may hold a small inline SVG (a timeline, a flow, a comparison) next to tables and lists; the page keeps it and strips anything that runs or links out.
+
+## People outside the funnel
+
+A contact with stage `past` is shown in the people table but counted nowhere: not in the funnel blocks, not in the new-customers report, which counts only `lead` and `customer` changes in `stage_changes`. Use `past` for the person themselves and for the maker of the hat, so that the page is never empty without the numbers lying. There is no email column; an email goes in `notes`.

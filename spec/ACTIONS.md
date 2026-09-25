@@ -54,7 +54,7 @@ When a user answers a `money` question with the "Yes, pay …" button, the app s
 | `upsert_contact` | `slug`, `name`, `company?`, `title?`, `stage?`, `source?`, `notes?: string[]`, `value?` | Adds or updates a person. A stage change is recorded for the funnel. |
 | `log_touch` | `contact`, `channel`, `summary`, `by?`, `task?`, `happened_at?` | Adds a line to the person's timeline and to "Lately". `channel` is one of `email`, `call`, `meeting`, `message`, `website`, `invoice`, `note`. |
 | `set_next_step` | `contact`, `text`, `due?`, `waiting_on_you?` | Sets what happens next and when. |
-| `set_stage` | `contact`, `stage` | Moves a person along the funnel. |
+| `set_stage` | `contact`, `stage` | Moves a person along the funnel. `past` is also the stage for people who are not in the funnel at all (the person themselves, the maker of the hat): the funnel blocks and the reports count only `lead`, `talking`, `proposal`, and `customer`. |
 | `find_contacts` | `q?`, `stage?` | Search by name or company. |
 | `list_followups` | `days?` (default 7) | Everyone with a next step due in the window, waiting-on-you first. |
 

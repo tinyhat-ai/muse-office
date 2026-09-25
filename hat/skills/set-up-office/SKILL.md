@@ -87,11 +87,14 @@ the user's browser cannot reach your computer. The Office app is the view.
     to keep; draft a simple posting plan; find last month's receipts), and
     one card in Waiting on you with the question the team needs answered
     first ("What do you charge, and for what?", question_kind answer);
-  - contacts: the user themselves (name, business, email, stage customer,
-    a note "You. Your own details, so the team has them.") and Tinyhat
-    (name "Tinyhat", company "Tinyhat", stage talking, source "made this
-    hat", next step "check for hat updates" in a week, notes with
-    https://tinyhat.ai and support@tinyhat.ai), plus anyone the user named;
+  - contacts: anyone the user named as a real lead or customer, at their
+    real stage. So that the page is not empty, also add two people who are
+    not in the funnel: the user themselves and Tinyhat, both with stage
+    `past` (the funnel and the reports ignore `past`), with `source` saying
+    why ("you", "made this hat") and the details in `notes` (the user's
+    business and email; https://tinyhat.ai and support@tinyhat.ai). Never
+    give them a funnel stage: `lead`, `talking`, `proposal`, and `customer`
+    all count as sales activity on the Reports page;
   - the eight report cards (upsert_report: website, new-customers, owed,
     in-out, spending, bills, subscriptions, savings, as spec/SCHEMA.md
     lists them) with no numbers yet; each shows who fills it and when;
