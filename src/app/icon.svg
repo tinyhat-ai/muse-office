@@ -1,7 +1,9 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
   <rect width="64" height="64" rx="14" fill="#f3f3ef"/>
-  <!-- a small top hat: the chief of staff's -->
-  <rect x="20" y="14" width="24" height="26" rx="3" fill="#1c1c19"/>
-  <rect x="20" y="30" width="24" height="5" fill="#b3541e"/>
-  <rect x="12" y="40" width="40" height="6" rx="3" fill="#1c1c19"/>
+  <path d="M17 51V21h30v30" fill="none" stroke="#1c1c19" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M13 20h38" fill="none" stroke="#1c1c19" stroke-width="4" stroke-linecap="round"/>
+  <rect x="22" y="26" width="7" height="7" rx="1" fill="#dbe9e8" stroke="#1c1c19" stroke-width="2"/>
+  <rect x="35" y="26" width="7" height="7" rx="1" fill="#dbe9e8" stroke="#1c1c19" stroke-width="2"/>
+  <path d="M28 51V40a4 4 0 0 1 4-4 4 4 0 0 1 4 4v11" fill="#b3541e" stroke="#1c1c19" stroke-width="2"/>
+  <path d="M12 52h40" fill="none" stroke="#1c1c19" stroke-width="3" stroke-linecap="round"/>
 </svg>

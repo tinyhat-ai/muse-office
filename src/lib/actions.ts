@@ -28,7 +28,7 @@ const NOTE_KINDS = ["update", "question", "event"] as const;
 const PLAN_STATES = ["done", "now", "later"] as const;
 const RULE_ORIGINS = ["you", "ok"] as const;
 const CHANNELS = ["email", "call", "meeting", "message", "website", "invoice", "note"] as const;
-const CHARTS = ["bars", "grouped-bars", "stacked-bars", "bars-horizontal", "list", "savings", "number"] as const;
+const CHARTS = ["bars", "timeline", "donut", "grouped-bars", "stacked-bars", "bars-horizontal", "list", "savings", "number"] as const;
 const SETTING_KEYS = ["office_name", "user_name", "hat_version", "last_agent_visit"] as const;
 // Project pastels from spec/DESIGN.md, the five in use then the spares; a new project takes the first free pair.
 const PASTELS: ReadonlyArray<readonly [string, string]> = [
@@ -892,7 +892,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       section: "string · Your business or Your money · required for a new report",
       title: "string · required for a new report",
       description: "string · one line, what it measures · optional",
-      chart: "string · bars, grouped-bars, stacked-bars, bars-horizontal, list, savings, or number · required for a new report",
+      chart: "string · bars, timeline, donut, grouped-bars, stacked-bars, bars-horizontal, list, savings, or number · required for a new report",
       owner: "string · member slug who keeps it fresh · optional",
       source: "string · where the numbers come from · optional",
       source_url: "string · https URL for a published source · optional",

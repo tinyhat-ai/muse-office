@@ -246,13 +246,15 @@ export function seed(db: Database.Database) {
     // Published examples are clearly separate from this person's business results.
     const publicReports: Array<[string, string, string, string, string, string]> = [
       ["world-population", "World population (millions)", "Rounded historical estimates for 1950, 2000, and 2024.", "bars", "UN World Population Prospects 2024", "https://population.un.org/wpp/"],
-      ["olympic-women", "Women at the Paris Olympics", "Women athletes in 1900, 1924, and 2024; counts, not percentages.", "bars", "Paris 2024 official report", "https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=3702240&parentDocumentId=3598869&skipCopyright=true&skipWatermark=true"],
+      ["olympic-women", "From 22 to 5,300 women at the Games", "Actual women athletes at the Paris Games in 1900, 1924, and 2024; selected years, not quota places.", "timeline", "Paris 2024 official report", "https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=3702240&parentDocumentId=3598869&skipCopyright=true&skipWatermark=true"],
       ["recorded-music", "Recorded music revenue (US$ billions)", "Global recorded-music trade revenue in 2023 and 2024.", "bars", "IFPI Global Music Report 2025", "https://www.ifpi.org/ifpi-amidst-highly-competitive-market-global-recorded-music-revenues-grew-4-8-in-2024/"],
+      ["earth-surface", "The blue planet", "About 71% of Earth's surface is ocean and 29% is land.", "donut", "NASA Earth facts", "https://science.nasa.gov/earth/facts/"],
     ];
     publicReports.forEach(([slug, title, description, chart, source, sourceUrl], i) => report.run(slug, "Around the world", title, description, chart, null, source, sourceUrl, i, monday));
-    for (const [label, value] of [["1950", 2500], ["2000", 6100], ["2024", 8200]] as const) metric.run("world-population", null, label, value, "{}", monday);
+    for (const [label, value] of [["1950", 2500], ["2000", 6200], ["2024", 8200]] as const) metric.run("world-population", null, label, value, "{}", monday);
     for (const [label, value] of [["1900", 22], ["1924", 135], ["2024", 5300]] as const) metric.run("olympic-women", null, label, value, "{}", monday);
     for (const [label, value] of [["2023", 28.6], ["2024", 29.6]] as const) metric.run("recorded-music", null, label, value, "{}", monday);
+    for (const [label, value] of [["Land", 29], ["Ocean", 71]] as const) metric.run("earth-surface", null, label, value, "{}", monday);
     const reports: Array<[string, string, string, string, string, string, string]> = [
       ["website", "Your business", "Website visitors and inquiries", "People who visited your current site each week, and how many wrote to you. The new site takes over at launch.", "bars", "patch", "from your current site's visitor stats and contact form"],
       ["new-customers", "Your business", "New customers", "New leads and new paying customers, each month.", "grouped-bars", "scout", "from the funnel on Customers"],

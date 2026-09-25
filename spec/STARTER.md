@@ -1,6 +1,6 @@
 # The first visit to Office
 
-Build this with Office actions after the person approves the promotion. Use the person's real name, their Muse's name, and the specialist names the Muse chose. All pages must show a useful example of their purpose on the first visit. Treat every unfinished task as a proposed next step; never claim a source was connected, a message was sent, or work was completed when it was not.
+Build this with Office actions after the person approves the promotion. When running the repository app for that person, set `OFFICE_SEED=none` before first start and confirm its database is empty. The default reference-app starter and these action calls are alternative setup paths, never consecutive steps. If an Office already exists, inspect and update its records in place. Use the person's real name, their Muse's name, and the specialist names the Muse chose. All pages must show a useful example of their purpose on the first visit. Treat every unfinished task as a proposed next step; never claim a source was connected, a message was sent, or work was completed when it was not.
 
 ## Projects and Notes
 
@@ -27,16 +27,17 @@ Add the person and Tinyhat support as **contacts outside the funnel** using `ups
 
 ## Reports
 
-Create these **published examples first**, in section `Around the world`, using `upsert_report` with `chart: bars`, `source`, and `source_url`. Load the exact `record_metric` pairs shown. Write the unit and source year into each description. This section is labeled as examples; it is never presented as the person's business data. Published values can be revised later only after checking the source again.
+Create these **published examples first**, in section `Around the world`, using `upsert_report` with the chart type shown, `source`, and `source_url`. Load the exact `record_metric` pairs shown. Write the unit and source year into each description. This section is labeled as examples; it is never presented as the person's business data. Published values can be revised later only after checking the source again.
 Plot years from oldest to newest left to right, regardless of the order in which action calls finish. Check the year labels in the rendered chart, not only the metric rows.
 
-| Slug and title | Metrics (`label`: `value`) | Unit and source |
-| --- | --- | --- |
-| `world-population` · World population (millions) | `1950`: `2500`; `2000`: `6100`; `2024`: `8200` | Rounded historical estimates in millions. [UN World Population Prospects 2024](https://population.un.org/wpp/). |
-| `olympic-women` · Women at the Paris Olympics | `1900`: `22`; `1924`: `135`; `2024`: `5300` | Women athletes, counts. [Paris 2024 official report](https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=3702240&parentDocumentId=3598869&skipCopyright=true&skipWatermark=true). |
-| `recorded-music` · Recorded music revenue (US$ billions) | `2023`: `28.6`; `2024`: `29.6` | Global recorded-music trade revenue, US$ billions. [IFPI 2024 report](https://www.ifpi.org/wp-content/uploads/2024/04/GMR_2024_State_of_the_Industry.pdf), [IFPI 2025 report](https://www.ifpi.org/ifpi-amidst-highly-competitive-market-global-recorded-music-revenues-grew-4-8-in-2024/). Use the 2025 report as `source_url`. |
+| Slug and title | Chart | Metrics (`label`: `value`) | Unit and source |
+| --- | --- | --- | --- |
+| `world-population` · World population (millions) | `bars` | `1950`: `2500`; `2000`: `6200`; `2024`: `8200` | Rounded historical estimates in millions. [UN World Population Prospects 2024](https://population.un.org/wpp/). |
+| `olympic-women` · From 22 to 5,300 women at the Games | `timeline` | `1900`: `22`; `1924`: `135`; `2024`: `5300` | Actual women athletes, not advance quota places. [Paris 2024 official report](https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=3702240&parentDocumentId=3598869&skipCopyright=true&skipWatermark=true). |
+| `recorded-music` · Recorded music revenue (US$ billions) | `bars` | `2023`: `28.6`; `2024`: `29.6` | Global recorded-music trade revenue, US$ billions. [IFPI 2024 report](https://www.ifpi.org/wp-content/uploads/2024/04/GMR_2024_State_of_the_Industry.pdf), [IFPI 2025 report](https://www.ifpi.org/ifpi-amidst-highly-competitive-market-global-recorded-music-revenues-grew-4-8-in-2024/). Use the 2025 report as `source_url`. |
+| `earth-surface` · The blue planet | `donut` | `Land`: `29`; `Ocean`: `71` | Approximate share of Earth's surface, percent. [NASA Earth facts](https://science.nasa.gov/earth/facts/). |
 
-Create the eight **Your business** and **Your money** report definitions from `spec/SCHEMA.md`, but **do not display their cards while they have no verified figures**. The first view of Reports must show the three real visual charts above, not a grid of empty text cards. As the team verifies the person's own data, add metrics and reveal each chart. Never substitute example or fabricated numbers. The person can ask the chief in chat for a new report about what matters to them.
+Create the eight **Your business** and **Your money** report definitions from `spec/SCHEMA.md`, but **do not display their cards while they have no verified figures**. The first view of Reports must show the four real visual charts above, including the timeline and donut, not a grid of empty text cards. As the team verifies the person's own data, add metrics and reveal each chart. Never substitute example or fabricated numbers. The person can ask the chief in chat for a new report about what matters to them.
 
 ## Team faces
 

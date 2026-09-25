@@ -178,7 +178,10 @@ browser cannot reach.
 
 - **If you can build from the repository** (fetch or clone
   `https://github.com/tinyhat-ai/muse-office` and run its `src/` app on your
-  app platform), do that. It is the finished thing.
+  app platform), do that. It is the finished thing. Set `OFFICE_SEED=none`
+  before its first database open. The app's generic starter is for browsing
+  the reference app; you will load this person's records through actions in
+  step 4. Do not run both seed paths.
 - **If you cannot**, build an app that matches the repository **exactly**:
   the same pages (`spec/PAGES.md`), the same look (`spec/DESIGN.md`), the same
   database schema (`db/schema.sql`, every table and column, in whatever
@@ -194,7 +197,7 @@ delete an app without asking.
 
 Follow `set-up-office` steps 4 to 6 and `spec/STARTER.md`. Load useful
 first-visit data through the actions: real setup tasks, first tasks in each
-project, one question, orientation contacts outside the sales funnel, three
+project, one question, orientation contacts outside the sales funnel, four
 sourced public report charts, the business report cards awaiting real
 figures, and tagged notes. Keep your own face under the chief's hat; each
 specialist gets a different, specialty-relevant mascot face in the same
@@ -224,11 +227,11 @@ Do these before the hand-over, and again after any change to the app:
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,
   settings.
 - Nothing on any page is a form, except the comment box on a task's page.
-- The app's icon is the top hat from `src/app/icon.svg`, not a briefcase or a
-  generic office symbol.
+- The app's icon is the Office building from `src/app/icon.svg`; the top hat
+  identifies the chief on their avatar.
 - No page is empty on the first visit: the board has cards in To do, Waiting
   on you, and Done; Customers has at least the person and Tinyhat (`in_funnel:
-  false`, shown as "Contact", counted nowhere); Reports visibly shows three
+  false`, shown as "Contact", counted nowhere); Reports visibly shows four
   populated, sourced public example charts. Store the eight business report
   definitions, but keep their cards hidden until verified figures can be
   plotted. Notes has three tagged notes.

@@ -8,7 +8,7 @@ import { money } from "@/lib/time";
 // src/app/reports/reports.css shows one or the other (.rp-ch-desk / .rp-ch-phone)
 // and styles the small HTML parts (.rp-lg legend, .rp-hb rows).
 
-export type Unit = "count" | "money";
+export type Unit = "count" | "money" | "money-billions";
 export interface Series {
   name: string;
   color: string;
@@ -24,6 +24,7 @@ const HALO: CSSProperties = { paintOrder: "stroke", stroke: "#fff", strokeWidth:
 
 /** Numbers as the charts print them: counts plain, money through `money()`, "$2.5k" on a money axis. */
 export function fmt(n: number, unit: Unit = "count", axis = false): string {
+  if (unit === "money-billions") return `$${Number.isInteger(n) ? n : n.toFixed(1)}B`;
   if (unit === "money") {
     if (axis && Math.abs(n) >= 1000) {
       const k = n / 1000;
@@ -172,6 +173,54 @@ export function Bars({ title, labels, values, color, captions, captionLabel, uni
       );
     }} />
   );
+}
+
+/** A time series with actual year spacing; points mark the observations that were recorded. */
+export function Timeline({ title, labels, values, color, unit = "count", wide = true }: {
+  title: string; labels: string[]; values: number[]; color: string; unit?: Unit; wide?: boolean;
+}) {
+  const years = labels.map(Number);
+  const numericYears = years.every(Number.isFinite) && new Set(years).size === years.length;
+  const { top, step } = niceScale(Math.max(0, ...values), unit);
+  return <Chart wide={wide} title={title} draw={(W, H, compact) => {
+    const f = frame(W, H, compact ? 42 : 48, 28, 28);
+    const first = Math.min(...years), span = Math.max(...years) - first;
+    const x = (i: number) => f.L + 20 + (numericYears && span > 0 ? ((years[i] - first) / span) : values.length === 1 ? 0.5 : i / (values.length - 1)) * (f.plotW - 40);
+    const y = (v: number) => f.bottom - (v / top) * f.plotH;
+    const points = values.map((v, i) => `${x(i)},${y(v)}`).join(" ");
+    return <>
+      <Gridlines f={f} top={top} step={step} unit={unit} labels />
+      <polyline points={points} fill="none" stroke={color} strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+      {values.map((v, i) => <g key={`${labels[i]}-${i}`}>
+        <circle cx={x(i)} cy={y(v)} r="5" fill={color} stroke="#fff" strokeWidth="2" />
+        <ValueText x={x(i)} y={Math.max(14, y(v) - 10)}>{fmt(v, unit)}</ValueText>
+        <AxisText x={x(i)} y={f.bottom + 19} strong={i === values.length - 1}>{labels[i]}</AxisText>
+      </g>)}
+    </>;
+  }} />;
+}
+
+/** A whole divided into parts, with the largest part named inside the ring. */
+export function Donut({ title, segments }: { title: string; segments: Array<{ label: string; value: number; color: string }> }) {
+  const positive = segments.filter((s) => s.value > 0);
+  const total = positive.reduce((sum, s) => sum + s.value, 0);
+  if (total <= 0) return null;
+  const largest = [...positive].sort((a, b) => b.value - a.value)[0];
+  let offset = 0;
+  return <>
+    <svg className="rp-ch rp-donut" viewBox="0 0 320 180" role="img" aria-label={`${title}: ${positive.map((s) => `${s.label} ${Math.round(s.value / total * 100)}%`).join(", ")}`}>
+      <title>{title}</title>
+      {positive.map((s) => {
+        const fraction = s.value / total;
+        const start = offset;
+        offset += fraction;
+        return <circle key={s.label} cx="160" cy="90" r="62" fill="none" stroke={s.color} strokeWidth="25" pathLength="100" strokeDasharray={`${fraction * 100} ${100 - fraction * 100}`} strokeDashoffset={-start * 100} transform="rotate(-90 160 90)" />;
+      })}
+      <text x="160" y="87" textAnchor="middle" fontSize="32" fontWeight="750" fill={INK}>{Math.round((largest?.value ?? 0) / total * 100)}%</text>
+      <text x="160" y="108" textAnchor="middle" fontSize="12" fill={SOFT}>{largest?.label ?? ""}</text>
+    </svg>
+    <Legend items={positive.map((s) => ({ color: s.color, text: `${s.label} · ${Math.round(s.value / total * 100)}%` }))} />
+  </>;
 }
 
 /** Two (or more) series side by side per label, with a legend. `showValues` prints non-zero values on the bars. */

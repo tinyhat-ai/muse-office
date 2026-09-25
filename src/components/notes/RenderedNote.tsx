@@ -3,6 +3,15 @@
 import { useEffect, useRef } from "react";
 
 let mermaidReady = false;
+let diagramSequence = 0;
+
+function diagramDescription(code: string): string {
+  const accessibleTitle = /^\s*accTitle:\s*(.+)$/m.exec(code)?.[1];
+  const accessibleDescription = /^\s*accDescr:\s*(.+)$/m.exec(code)?.[1];
+  if (accessibleTitle || accessibleDescription) return [accessibleTitle, accessibleDescription].filter(Boolean).join(". ").slice(0, 300);
+  const labels = [...code.matchAll(/\[([^\]\n]+)\]/g)].map((match) => match[1].trim()).filter(Boolean);
+  return labels.length ? `Diagram: ${labels.slice(0, 10).join(" → ")}`.slice(0, 300) : `Diagram: ${code.split("\n", 1)[0]}`;
+}
 
 /**
  * The server supplies sanitized GFM HTML. Mermaid code fences stay as escaped
@@ -20,7 +29,7 @@ export function RenderedNote({ html }: { html: string }) {
     async function draw() {
       const { default: mermaid } = await import("mermaid");
       if (!mermaidReady) {
-        mermaid.initialize({ startOnLoad: false, securityLevel: "strict", htmlLabels: false, theme: "neutral", maxTextSize: 10000 });
+        mermaid.initialize({ startOnLoad: false, securityLevel: "strict", htmlLabels: false, theme: "neutral", maxTextSize: 10000, suppressErrorRendering: true });
         mermaidReady = true;
       }
       for (const block of blocks) {
@@ -28,12 +37,20 @@ export function RenderedNote({ html }: { html: string }) {
         const code = (block.textContent ?? "").trim();
         if (!code || code.length > 10000) continue;
         try {
-          const id = `office-mermaid-${crypto.randomUUID().replaceAll("-", "")}`;
+          const id = `office-mermaid-${++diagramSequence}`;
           const { svg } = await mermaid.render(id, code);
           if (cancelled || !block.isConnected) return;
           const image = document.createElement("img");
           image.className = "md-mermaid-image";
-          image.alt = `Diagram: ${code.split("\n", 1)[0]}`;
+          image.alt = diagramDescription(code);
+          // Mermaid gives its SVG a viewBox in CSS pixels. Keep enough of that
+          // width for legible labels; the figure scrolls if a diagram is wide.
+          const viewBox = new DOMParser().parseFromString(svg, "image/svg+xml").documentElement.getAttribute("viewBox");
+          const viewWidth = Number(viewBox?.trim().split(/\s+/)[2]);
+          const vertical = /^\s*(?:flowchart|graph)\s+(?:TB|TD|BT)\b/im.test(code);
+          const minimumWidth = vertical ? 320 : 900;
+          image.style.width = `${Math.min(2400, Math.max(minimumWidth, Number.isFinite(viewWidth) ? viewWidth : 0))}px`;
+          if (vertical) image.style.maxWidth = "100%";
           image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
           const figure = document.createElement("figure");
           figure.className = "md-mermaid";

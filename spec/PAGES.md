@@ -61,7 +61,7 @@ Eight to ten people is the right size for the table. Stage pills: Lead (sand), T
 
 1. Header: kicker "How things are going", title "Reports", and one line saying the team will add charts from verified work sources.
 2. If anything waits on the user, one orange line that links to the task and says to open it to answer.
-3. On the first visit, **Around the world** leads with three actual bar charts and linked sources: world population, women at the Olympics, and recorded music revenue. Do not lead with empty business cards or textual chart substitutes.
+3. On the first visit, **Around the world** leads with four sourced visual charts: bars for population and recorded music, a timeline for women at the Paris Games, and a donut for Earth's ocean/land share. Do not lead with empty business cards or textual chart substitutes.
 4. Section **Your business** appears once real figures exist: "Website visitors and inquiries" (bars per week with the inquiry count under each), "New customers" (grouped bars per month: new leads, new customers), "Money owed to you" (a list of unpaid invoices with due dates), "Money in and out" (grouped bars per month).
 5. Section **Your money** appears once real figures exist: "Spending by category, each week" (stacked bars with an average line and a legend), "Bills coming up" (a dated list; "Waiting on your OK" in orange), "Subscriptions" (horizontal bars; unused ones striped and flagged), "Savings the team found" (a big number, then "Saved" rows and "Waiting on you" rows in peach).
 6. Every visible card: title, one-line description, a big number with a comparison line, the visual report, and a source line with the owner's avatar or a public source link.

@@ -65,6 +65,12 @@ Build one web_fullstack app from apps/office.json, the way HAT.md step 3
 says: from the repository https://github.com/tinyhat-ai/muse-office when you
 can, otherwise an exact match of its schema (db/schema.sql), pages
 (spec/PAGES.md), look (spec/DESIGN.md), and actions (spec/ACTIONS.md).
+When running the repository code for this person, set `OFFICE_SEED=none`
+**before the first database open**. The app's default starter is for browsing
+the reference app; loading it and then calling setup actions creates duplicate
+chiefs and first-week records. Check that the new Office is empty before
+calling the actions below. For an existing Office, inspect and update its
+records in place; do not append another starter set.
 Do not run a web app on your own computer for the user to look at:
 the user's browser cannot reach your computer. The Office app is the view.
 - Present the build to the user as the plan you already agreed.
@@ -76,7 +82,7 @@ the user's browser cannot reach your computer. The Office app is the view.
   a comment on a task's page waits until the user next talks to you.
 - After the build, load the office through its actions exactly as
   `spec/STARTER.md` describes. That file names the first tasks, three notes,
-  two real orientation contacts outside the sales funnel, and three sourced
+  two real orientation contacts outside the sales funnel, and four sourced
   public reports with exact values. Create the eight business report definitions,
   but hide their cards until your team has verified figures to plot. On the first
   visit the Reports page must lead with actual charts, not empty text cards.

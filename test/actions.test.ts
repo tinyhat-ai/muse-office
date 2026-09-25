@@ -88,6 +88,17 @@ test("notes carry tags for finding them later; list_notes filters by one tag and
   assert.throws(() => runAction("upsert_note", { slug: "bills", tags: Array.from({ length: 13 }, (_, i) => `t${i}`) }), /at most 12/);
 });
 
+test("a Muse can create timeline and donut reports through Office actions", () => {
+  for (const chart of ["timeline", "donut"]) {
+    const slug = `public-${chart}`;
+    const report = runAction("upsert_report", { slug, section: "Around the world", title: `Example ${chart}`, chart, source: "Published source", source_url: "https://example.org/data" }) as { chart: string };
+    assert.equal(report.chart, chart);
+    runAction("record_metric", { report: slug, label: chart === "timeline" ? "2024" : "Ocean", value: 71 });
+  }
+  const rows = getDb().prepare("SELECT chart FROM reports WHERE section = 'Around the world' ORDER BY slug").all() as Array<{ chart: string }>;
+  assert.deepEqual(rows.map((r) => r.chart), ["donut", "timeline"]);
+});
+
 test("a contact kept outside the funnel has no stage change and is not counted until it enters", () => {
   const you = runAction("upsert_contact", { slug: "you", name: "You", in_funnel: false, source: "you", notes: ["hello@example.com"] }) as { in_funnel: boolean; stage: string };
   assert.equal(you.in_funnel, false);

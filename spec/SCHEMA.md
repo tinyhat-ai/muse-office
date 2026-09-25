@@ -58,7 +58,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 
 `new-customers` has no metrics: the page counts `stage_changes` per month (new leads, new customers) and sums `contacts.value_cents` for customers won this month.
 
-For the first visit, put three published examples in an **Around the world** section before the person's business cards. They use ordinary `reports` and `metrics` rows, with an HTTPS `reports.source_url` and a dated description. The examples are world population (millions; UN 2024 revision), women athletes at the Paris Olympic Games (counts; Paris 2024 report), and global recorded-music revenue (US$ billions; IFPI). These figures are public context, never the person's business results. See `spec/STARTER.md` for the exact values and links. Do not invent the person's visitors, income, leads, or customers to fill a chart.
+For the first visit, put four published examples in an **Around the world** section before the person's business cards. They use ordinary `reports` and `metrics` rows, with an HTTPS `reports.source_url` and a dated description. The examples use bars, a timeline, and a donut for world population (UN 2024 revision), women athletes at the Paris Olympic Games (Paris 2024 report), global recorded-music revenue (IFPI), and Earth's ocean/land share (NASA). These figures are public context, never the person's business results. See `spec/STARTER.md` for the exact values and links. Do not invent the person's visitors, income, leads, or customers to fill a chart.
 
 ## Notes carry tags
 

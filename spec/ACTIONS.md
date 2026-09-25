@@ -62,7 +62,7 @@ When a user answers a `money` question with the "Yes, pay …" button, the app s
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `upsert_report` | `slug`, `section`, `title`, `description?`, `chart`, `owner?`, `source?`, `source_url?` | Adds or updates a report card. `source_url` is an HTTPS link to published data. Charts: `bars`, `stacked-bars`, `grouped-bars`, `list`, `bars-horizontal`, `savings`, `number`. |
+| `upsert_report` | `slug`, `section`, `title`, `description?`, `chart`, `owner?`, `source?`, `source_url?` | Adds or updates a report card. `source_url` is an HTTPS link to published data. Charts: `bars`, `timeline` (year labels use calendar spacing), `donut` (parts of a whole), `stacked-bars`, `grouped-bars`, `list`, `bars-horizontal`, `savings`, `number`. |
 | `record_metric` | `report`, `label`, `value`, `series?`, `note?: object`, `recorded_at?` | Adds or replaces one number (same report + series + label replaces; an omitted `note` keeps the old one). See `spec/SCHEMA.md` for what each report expects. |
 | `clear_metrics` | `report`, `series?` | Removes numbers before a full refresh. |
 | `list_reports` | — | Every report with its latest numbers. |

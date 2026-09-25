@@ -80,12 +80,11 @@ Inline SVG, drawn at 640×230 for wide cards and 320×180 for narrow ones (redra
 
 ## Icon
 
-The Office's icon is the chief of staff's top hat: ink (`#1c1c19`) with a
-thin orange band (`#b3541e`) on the warm off-white (`#f3f3ef`), rounded
-corners, as in `src/app/icon.svg`. Use that file for the app's icon wherever
-the platform shows one (an app list, a tab, an artifact card). Never a
-briefcase, a suitcase, a building, or a generic "office" symbol: the hat is
-what says "this is the office my chief of staff runs".
+The Office's icon is the small building in `src/app/icon.svg`: two windows,
+an orange doorway (`#b3541e`), ink outlines (`#1c1c19`), and a warm off-white
+background (`#f3f3ef`). Use it wherever the platform shows the app's icon
+(an app list, a tab, an artifact card). The top hat belongs on the chief's
+avatar, so people can distinguish the workspace from the role.
 
 ## Visuals in notes
 

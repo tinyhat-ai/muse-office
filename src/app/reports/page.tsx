@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { all, get, json, type MemberRow, type MetricRow, type ProjectRow, type ReportRow, type TaskRow } from "@/lib/db";
 import { ago, dueWord, money, shortDate } from "@/lib/time";
 import { Avatar, Initials } from "@/components/Avatar";
-import { Bars, GroupedBars, HBars, StackedBars, blend, fmt } from "@/components/charts/Charts";
+import { Bars, Donut, GroupedBars, HBars, StackedBars, Timeline, blend, fmt } from "@/components/charts/Charts";
 import "./reports.css";
 
 // The Reports page: every card is a `reports` row and every number a `metrics`
@@ -59,7 +59,7 @@ function lastMonths(n: number, now: Date): string[] {
 }
 /** The series colour for a report: the project with the same slug, else the project its owner leads, else the palette. */
 function colorFor(report: ReportRow, ctx: Ctx): string {
-  const examples: Record<string, string> = { "world-population": "#5f8497", "olympic-women": "#5b8a5a", "recorded-music": "#7e6aa6" };
+  const examples: Record<string, string> = { "world-population": "#5f8497", "olympic-women": "#5b8a5a", "recorded-music": "#7e6aa6", "earth-surface": "#5f8497" };
   if (report.section === "Around the world" && examples[report.slug]) return examples[report.slug];
   const p = ctx.projects.find((x) => x.slug === report.slug) ?? ctx.projects.find((x) => x.lead && x.lead === report.owner);
   return p?.color_dark ?? ctx.palette[0] ?? "#9a978c";
@@ -421,7 +421,7 @@ function GenericCard({ report, rows, ctx, wide }: CardProps) {
   if (!rows.length) return <Empty report={report} ctx={ctx} />;
   const labels = uniqSorted(rows.map((r) => r.label));
   const isMoney = /\$|money|spend|cost|revenue|income|bill|owed|paid/i.test(`${report.title} ${report.description ?? ""}`);
-  const unit = isMoney ? "money" : "count";
+  const unit = /US\$ billions/i.test(`${report.title} ${report.description ?? ""}`) ? "money-billions" : isMoney ? "money" : "count";
   const show = (label: string) => (/^\d{4}-\d{2}-\d{2}$/.test(label) ? shortDate(atNoon(label)) : /^\d{4}-\d{2}$/.test(label) ? monthShort(label) : label);
   const seriesNames = Array.from(new Set(rows.map((r) => r.series ?? report.title)));
   const series = seriesNames.map((s, i) => ({ name: s, color: ctx.palette[i % ctx.palette.length], values: labels.map((l) => rows.find((r) => (r.series ?? report.title) === s && r.label === l)?.value ?? 0) }));
@@ -439,6 +439,16 @@ function GenericCard({ report, rows, ctx, wide }: CardProps) {
         <Bars title={report.title} labels={labels.map(show)} values={v} color={colorFor(report, ctx)} unit={unit} wide={wide} />
       </>
     );
+  }
+  if (report.chart === "timeline") {
+    const v = series[0].values, last = v[v.length - 1];
+    return <>
+      <Kpi big={fmt(last, unit)} words={`in ${show(lastLabel)}`} cmp="Selected years; spacing follows the calendar" />
+      <Timeline title={report.title} labels={labels.map(show)} values={v} color={colorFor(report, ctx)} unit={unit} wide={wide} />
+    </>;
+  }
+  if (report.chart === "donut") {
+    return <Donut title={report.title} segments={rows.map((r, i) => ({ label: r.label, value: r.value, color: i === 0 ? "#c8b990" : colorFor(report, ctx) }))} />;
   }
   if (report.chart === "grouped-bars" || report.chart === "stacked-bars") {
     const lastTotal = series.reduce((a, s) => a + (s.values[s.values.length - 1] ?? 0), 0);
@@ -597,13 +607,13 @@ export default function ReportsPage() {
             {s.name === "Around the world" ? <p className="rp-examples">Published examples show what visual reports can do. As you share your priorities and communication channels, {ctx.chiefName} adds reports about what matters to you.</p> : null}
             <div className={`rp-grid${s.name === "Around the world" ? " rp-grid-examples" : ""}`}>
               {s.cards.map((r, i) => (
-                <ReportCard key={r.slug} report={r} rows={byReport.get(r.slug) ?? []} ctx={ctx} wide={s.name === "Around the world" ? i === 0 : i % 4 === 0 || i % 4 === 3} />
+                <ReportCard key={r.slug} report={r} rows={byReport.get(r.slug) ?? []} ctx={ctx} wide={s.name === "Around the world" ? false : i % 4 === 0 || i % 4 === 3} />
               ))}
             </div>
           </section>
         ))
       ) : (
-        <div className="dashed rp-empty-page">No reports yet. {ctx.chiefName} sets them up on Monday, or ask for one in chat.</div>
+        <div className="dashed rp-empty-page">No sourced figures yet. Ask {ctx.chiefName} in chat for a report about a result that matters to you.</div>
       )}
 
       <p className="tell rp-foot">

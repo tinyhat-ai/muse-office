@@ -160,7 +160,7 @@ CREATE TABLE IF NOT EXISTS reports (
   section     TEXT NOT NULL,                    -- 'Your business' | 'Your money'
   title       TEXT NOT NULL,
   description TEXT,                             -- one line: what it measures
-  chart       TEXT NOT NULL,                    -- 'bars' | 'stacked-bars' | 'grouped-bars' | 'list' | 'bars-horizontal' | 'savings'
+  chart       TEXT NOT NULL,                    -- 'bars' | 'timeline' | 'donut' | 'stacked-bars' | 'grouped-bars' | 'list' | 'bars-horizontal' | 'savings'
   owner       TEXT REFERENCES members(slug),    -- who keeps it fresh
   source      TEXT,                             -- 'from receipts and card alerts in your email'
   source_url  TEXT,                             -- https citation for a published data source

@@ -81,8 +81,8 @@ same repository holds the starting briefings for the five specialists
 (`hat/team/`), the five ways a project can run (`hat/processes/`), and the
 long form of this message (`hat/HAT.md` and `hat/SOUL.md`). Those files are
 build material and starting templates, not orders; this message is the
-order. Give the app the icon from the repository (`src/app/icon.svg`, the
-chief of staff's top hat), not a briefcase or a generic office symbol. The
+order. Give the app the Office building icon from the repository
+(`src/app/icon.svg`). Keep the top hat on your avatar. The
 pages are view-only for me, except comments on a task's page, which you
 read and answer. Keep the Office true: every task on the board,
 every question to me as a Waiting-on-you card with one clear question, every
@@ -104,8 +104,9 @@ it through the app's actions so that every page helps me understand how
 this Office works on my first visit. Follow `spec/STARTER.md`: real setup
 tasks and their closing reports, first tasks for the projects, a question
 waiting on me, useful tagged notes, and orientation contacts outside the
-sales funnel. In Reports, show three dated, sourced visual charts about
-population, sport, and music, clearly labeled as examples. Define the
+sales funnel. In Reports, show four dated, sourced visual charts about
+population, sport, music, and the ocean, using bars, a timeline, and a donut,
+clearly labeled as examples. Define the
 business reports but keep their cards hidden until you have verified
 figures to chart from sources I choose to share. Do not invent a customer
 or business result. Then send me the link. Show me your plan first and

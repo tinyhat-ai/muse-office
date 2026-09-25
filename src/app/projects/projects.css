@@ -47,7 +47,7 @@
 /* ---------------- sticky notes (spec/DESIGN.md §Board) ---------------- */
 /* the project's own paper with faint ruled lines, a hairline border, a big bottom-right corner with a fold in it */
 .pj-note {
-  position: relative; display: flex; flex-direction: column; height: 206px; max-width: 270px; min-width: 0; overflow: hidden; padding: 12px 13px 10px; color: var(--ink);
+  position: relative; display: flex; flex-direction: column; height: 206px; width: 100%; min-width: 0; overflow: hidden; padding: 12px 13px 10px; color: var(--ink);
   background-color: var(--c);
   background-image: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.022) 0 1px, transparent 1px 7px);
   border: 1px solid rgba(0, 0, 0, 0.07); border-radius: 3px 3px 16px 3px; box-shadow: var(--shadow-note);

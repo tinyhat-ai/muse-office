@@ -7,7 +7,7 @@
   "source": {
     "repo": "https://github.com/tinyhat-ai/muse-office",
     "branch": "main",
-    "app": "the repository root is a Next.js app (src/); npm install && npm run dev serves it on port 3007 with a SQLite file in data/",
+    "app": "the repository root is a Next.js app (src/); for a person's Office, set OFFICE_SEED=none before its first run, then npm install && npm run dev serves it on port 3007 with a SQLite file in data/. The default starter seed is only for browsing the reference app.",
     "schema": "db/schema.sql",
     "pages": "spec/PAGES.md",
     "design": "spec/DESIGN.md",
@@ -21,13 +21,14 @@
     "connectors": []
   },
   "seed_data": {
-    "note": "The reference app now starts with a truthful Office starter (the fictional showcase is OFFICE_SEED=demo). After promotion, load the exact first-visit set from spec/STARTER.md through actions, using the person's real name and chosen specialist names: meaningful setup and next tasks, the person and Tinyhat support outside the funnel, three sourced public charts, eight business report definitions hidden until verified figures exist, and three tagged notes. Never invent business results or customers to fill space.",
+    "note": "Choose exactly one seed path. For a person's Office, set OFFICE_SEED=none before the first database open, then load spec/STARTER.md through actions with the person's real name and chosen specialists. Do not run the reference app's generic starter and then load these actions: that creates duplicate chiefs, tasks, contacts, notes, and reports. The default generic starter is only for browsing the reference app; OFFICE_SEED=demo is a fictional showcase. Never invent business results or customers to fill space.",
     "members_from": "hat/team/*.md plus the chief itself (is_chief = 1), loaded with upsert_member",
     "projects_from": "the projects the person said yes to, loaded with upsert_project + set_process from hat/processes/*.md"
   },
   "builder_notes": [
     "Prefer running the repository's own code. Only when that is impossible, re-create it exactly from the four spec files; do not invent pages, controls, or fields.",
-    "The app's icon is the top hat in src/app/icon.svg (see the icon field), never a briefcase or a generic office symbol.",
+    "Before the person's Office starts for the first time, set OFFICE_SEED=none. Verify members, tasks, notes, contacts, and reports are empty, then load spec/STARTER.md once through actions. If refining an existing Office, inspect its rows first and update them in place; never append a second starter set.",
+    "The app's icon is the small Office building in src/app/icon.svg (see the icon field). Keep the top hat on the chief's avatar only.",
     "Pages are view-only. Wherever a control would normally sit, show the line: To change this, tell <chief name> in chat. The chief's name comes from the members table (is_chief = 1).",
     "The one write from the UI is POST /api/comments {task, body, reply_to?} → a task_updates row with author 'you', kind 'comment' or 'reply', unread_by_agent 1. The money buttons post body 'yes' or 'not yet' with reply_to = the question's update id.",
     "Actions are POST /api/actions/<name> with a JSON body, returning {ok:true, data} or {ok:false, error}. Every error names what was wrong and the valid values. Publish the same 33 names as the app's actions so the chief can call them.",
@@ -35,7 +36,7 @@
     "The board uses the sticky-note look in spec/DESIGN.md: lanes with a coloured top rule, one readable note per lane in the project's pastel with a folded corner, project tiles as plain coloured rounded squares.",
     "Parse GitHub-flavored Markdown in Notes before display. Tables are real tables, bold text is styled, and fenced mermaid code draws a responsive diagram with strict security. Keep invalid diagram source visible for correction.",
     "The chief keeps its own face under a small top hat. Each specialist gets a distinct face and specialty-relevant mascot in one visual style; changing only the hat or color is insufficient.",
-    "Reports lead with three sourced public visual charts. Keep business templates hidden until verified numbers exist; then show results, never task counts: website visitors and inquiries, new customers, money owed, money in and out, spending by category, bills coming up, subscriptions, savings the team found. Charts are inline SVG.",
+    "Reports lead with four sourced public visual charts using bars, a timeline, and a donut. Keep business templates hidden until verified numbers exist; then show results, never task counts: website visitors and inquiries, new customers, money owed, money in and out, spending by category, bills coming up, subscriptions, savings the team found. Charts are inline SVG.",
     "Private to one person. No public link, no sign-in for others, no analytics, no external calls from the app itself."
   ],
   "fallbacks": [
@@ -45,8 +46,8 @@
     "The platform has no full-stack app kind: stop and tell the person; a static page is not an Office."
   ],
   "icon": {
-    "use": "src/app/icon.svg from the repository: the chief of staff's top hat (ink #1c1c19 with an orange band #b3541e) on the warm off-white #f3f3ef, rounded corners",
-    "never": "a briefcase, a suitcase, a building, a generic 'office' or 'work' symbol, or any stock icon; the hat is the mark of this office",
-    "fallback": "if the platform cannot take an SVG, draw the same top hat as a small PNG, or use the 🎩 emoji"
+    "use": "src/app/icon.svg from the repository: a small Office building with two windows and an orange doorway on warm off-white #f3f3ef",
+    "never": "the chief's top hat as the app icon, a briefcase, a suitcase, or an unrelated stock icon",
+    "fallback": "if the platform cannot take an SVG, render the same Office building as a small PNG"
   }
 }

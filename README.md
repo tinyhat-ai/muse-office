@@ -44,7 +44,7 @@ npm run dev
 
 Open <http://localhost:3007>. The first start creates `data/office.db` and
 fills it with a starter Office: real setup tasks, an initial team, a guide in
-Notes, two contacts outside the customer funnel, and three cited public charts.
+Notes, two contacts outside the customer funnel, and four cited public charts.
 It does not invent business results or customers. `npm run reset` deletes the
 data; the next start seeds the starter again. Use `OFFICE_SEED=demo npm run dev`
 for the fictional consultant showcase shown in some screenshots, or
@@ -58,7 +58,7 @@ on a task's page. Everything else changes through the actions.
 The starter board shows setup work and one real question for the person. Team
 members have distinct illustrated faces. Customers contains orientation contacts
 outside the sales funnel; the funnel stays at zero until real people are added.
-Reports opens with three charts from linked public sources, and Notes renders a
+Reports opens with four charts from linked public sources, and Notes renders a
 Markdown table and a Mermaid flowchart.
 
 ![Starter Projects board](docs/screenshots/starter-projects.jpg)

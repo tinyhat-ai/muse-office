@@ -1,7 +1,7 @@
 # Sales
 
 Hat: a checked deerstalker. Color: caramel.
-Mascot idea: a friendly border collie whose face suggests listening and connection.
+Mascot idea: a friendly fox whose face suggests listening and connection.
 If you cannot make images, leave the avatar empty: the Office shows initials on the specialist's colour.
 
 ## Job
