@@ -59,7 +59,7 @@ Cards are **sticky notes**, laid out **one per lane** with a 12px vertical gap. 
 - A 1px border `rgba(0,0,0,.07)`, corners `3px 3px 16px 3px` (the bottom-right corner is the big one), and a folded corner drawn with a small diagonal gradient in that corner.
 - A soft shadow: `0 1px 1px rgba(0,0,0,.05), 0 6px 14px rgba(0,0,0,.05)`; lifts 1px on hover.
 - Desktop height 206px, width at most 270px, padding 12px 13px 10px. Keep every note the same size; the task page carries the full text.
-- Inside: the project name (12px/650, soft) with a 3.5px × 13px bar in the project's dark shade; the title (15px/750, ink, two lines at most); up to three lines of summary (or a question as a white pill with an orange dot, two lines at most); and a footer pushed to the bottom: the specialist's 20px round avatar and name on the left, the time on the right. A done card's footer reads "✓ Done" in green with a small green check circle, then the time.
+- Inside: the project name (12px/650, soft) with a 3.5px × 13px bar in the project's dark shade; the title (15px/750, ink, two lines at most); up to three lines of summary or a waiting question directly on the pastel paper with a small orange dot, without a bubble; and a footer pushed to the bottom: the specialist's 20px round avatar and name on the left, the time on the right. A done card's footer reads "✓ Done" in green with a small green check circle, then the time.
 - On a phone: one column of notes per lane, lanes stacked, Waiting on you first.
 
 Project tiles above the board: 118px squares (88px on a phone), the pastel fill, no border, no stripe; name top-left (14px/750), count bottom-left (13px/600 soft); the chosen tile gets a 2px ink outline; "All projects" is white with a hairline border.

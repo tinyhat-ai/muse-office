@@ -66,13 +66,13 @@
   display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere;
   margin-top: 7px; font-size: 15px; font-weight: 750; line-height: 1.3; letter-spacing: -0.01em; color: var(--ink);
 }
-/* the question: a white pill with an orange dot, two lines at most */
+/* A waiting question sits directly on the project paper, marked by a small orange dot. */
 .pj-note-q {
-  margin-top: 9px; align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; max-width: 100%; padding: 3px 9px;
-  border-radius: var(--r-pill); background: rgba(255, 255, 255, 0.78); color: var(--needs); font-size: var(--t-badge); font-weight: 700; line-height: 1.3;
+  margin-top: 8px; display: flex; align-items: flex-start; gap: 6px; max-width: 100%;
+  color: var(--ink); font-size: var(--t-badge); line-height: 1.35;
 }
-.pj-note-q::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--needs); flex: 0 0 auto; }
-.pj-note-q > span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; min-width: 0; }
+.pj-note-q::before { content: ""; width: 6px; height: 6px; margin-top: 5px; border-radius: 50%; background: var(--needs); flex: 0 0 auto; }
+.pj-note-q > span { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; min-width: 0; }
 .pj-note-n { margin-top: 6px; font-size: var(--t-badge); color: var(--soft); overflow-wrap: anywhere; text-wrap: pretty; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 /* the footer sits at the bottom: who on the left, when on the right; it wraps when a note is narrow */
 .pj-note-f { margin-top: auto; padding-top: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; font-size: var(--t-badge); color: var(--soft); }
