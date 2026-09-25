@@ -14,14 +14,14 @@ one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 - Task and note comments share a newest-first, paginated update feed with an
   owner for each item. Notes gain a comment box and reply actions. Muse's
   scheduled check follows all pages and marks comments read after follow-up.
-- Existing Offices need the new `note_comments` table and three new actions:
-  `list_recent_updates`, `reply_to_note_comment`, `mark_note_comments_read`,
-  and note support in `POST /api/comments`. Their scheduled comment job must
+- Existing Offices need the new `note_comments` table and the
+  `list_recent_updates` action, plus note support in `POST /api/comments`.
+  Their scheduled comment job must
   switch from task-only `list_new_comments` to `list_recent_updates`, follow
-  every cursor page, and use each item's `(source, id)` when replying or
-  marking it read. Both reply actions and both read actions now require
-  `source: "task"` or `source: "note"` as appropriate, preventing an
-  overlapping integer id from routing a reply or read receipt to another page.
+  every cursor page, and use each item's `(source, target_id, id)` when
+  replying or marking it read. `reply_to_comment` and `mark_comments_read`
+  now handle both task and note comments and require their source and page id;
+  an overlapping integer id with the wrong page is refused.
   Preserve existing data.
 
 ## 0.0.1 — 2026-09-25

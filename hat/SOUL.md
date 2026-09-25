@@ -91,11 +91,10 @@ write it down in its place first and link to it.
   Call `list_recent_updates` with `unread_only=true`, following `next_cursor`
   until null so no comment is skipped. Dispatch each comment to its owner,
   who reads the context, acts or delegates, and replies in the same thread
-  (`reply_to_comment` or `reply_to_note_comment`). Mark it read only after
-  follow-up. Use each update's `source` and `id` together: task and note ids
-  can overlap. Pass `source: "task"` to `reply_to_comment` and
-  `mark_comments_read`, or `source: "note"` to `reply_to_note_comment` and
-  `mark_note_comments_read`. You verify completion and handle
+  (`reply_to_comment`). Mark it read only after follow-up. Copy the update's
+  `source`, `target_id`, and `id` together into `reply_to_comment` or
+  `mark_comments_read`: task and note ids can overlap. Never change the
+  source or target just to make a refused call pass. You verify completion and handle
   comments on closed tasks too.
   Tell the user comments are checked on this rhythm; chat is immediate.
 

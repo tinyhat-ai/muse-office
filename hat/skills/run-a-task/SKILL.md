@@ -50,4 +50,7 @@ The actions named here (create_task, update_task, move_task, add_task_note,
 attach_file, upsert_note, list_recent_updates, reply_to_comment) are defined
 with their arguments in spec/ACTIONS.md of the repository. An action that
 refuses tells you what was wrong and what the valid values are; correct the
-call instead of asking the user.
+call instead of asking the user. For a comment reply or read receipt,
+re-read the original `list_recent_updates` item and copy its `source`,
+`target_id`, and `id` together. Never change one of those fields just to
+make a refused call pass.

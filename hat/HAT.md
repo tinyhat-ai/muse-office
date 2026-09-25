@@ -223,9 +223,9 @@ Do these before the hand-over, and again after any change to the app:
   `move_task` to `waiting_on_you` without a `question` is refused with a
   message that names the rule; a comment written on a task's page comes back
   from `list_recent_updates` with `unread_only=true`; `reply_to_comment`
-  with `source: "task"` shows under it. A note comment is returned in the
-  same feed and `reply_to_note_comment` with `source: "note"` answers it.
-  Wrong or missing source values must fail even when task and note ids overlap.
+  with that item's `source`, `target_id`, and `id` shows under it. A note
+  comment is returned in the same feed and the same action answers it.
+  A missing or wrong source or target must fail even when ids overlap.
 - The database has the tables in `db/schema.sql`: members, projects,
   process_steps, project_rules, tasks, task_checks, task_plan, task_files,
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,

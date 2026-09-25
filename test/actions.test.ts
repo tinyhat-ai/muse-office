@@ -121,17 +121,17 @@ test("the team can change, and task and note comments reach an ordered paginated
   while (noteCollision.id < taskCollision.id) noteCollision = postComment({ note: note.slug, body: "Another note question." });
   assert.equal(noteCollision.id, taskCollision.id);
   assert.equal(callAction("reply_to_comment", { comment_id: noteCollision.id, author: "researcher", body: "Wrong page." }).status, 400);
-  assert.equal(callAction("reply_to_comment", { source: "note", comment_id: noteCollision.id, author: "researcher", body: "Wrong page." }).status, 400);
-  assert.equal(callAction("reply_to_note_comment", { source: "task", comment_id: taskCollision.id, author: "researcher", body: "Wrong page." }).status, 400);
+  assert.equal(callAction("reply_to_comment", { source: "task", target_id: note.slug, comment_id: noteCollision.id, author: "researcher", body: "Wrong page." }).status, 404);
+  assert.equal(callAction("reply_to_comment", { source: "note", target_id: task.id, comment_id: taskCollision.id, author: "researcher", body: "Wrong page." }).status, 404);
   assert.equal((getDb().prepare("SELECT COUNT(*) AS count FROM task_updates WHERE reply_to = ?").get(taskCollision.id) as { count: number }).count, 0);
   assert.equal(callAction("mark_comments_read", { ids: [noteCollision.id] }).status, 400);
-  assert.equal(callAction("mark_comments_read", { source: "note", ids: [noteCollision.id] }).status, 400);
-  assert.equal((runAction("mark_note_comments_read", { source: "note", ids: [noteCollision.id] }) as { marked: number }).marked, 1);
+  assert.equal(callAction("mark_comments_read", { source: "task", target_id: note.slug, ids: [noteCollision.id] }).status, 404);
+  assert.equal((runAction("mark_comments_read", { source: "note", target_id: note.slug, ids: [noteCollision.id] }) as { marked: number }).marked, 1);
   const stillUnread = runAction("list_recent_updates", { unread_only: true }) as { updates: Item[] };
   assert.ok(stillUnread.updates.some((item) => item.source === "task" && item.id === taskCollision.id));
 
-  runAction("reply_to_note_comment", { source: "note", comment_id: noteComment.id, author: "researcher", body: "Added the date." });
-  runAction("reply_to_comment", { source: "task", comment_id: taskComment.id, author: "researcher", body: "I will compare them." });
+  runAction("reply_to_comment", { source: "note", target_id: note.slug, comment_id: noteComment.id, author: "researcher", body: "Added the date." });
+  runAction("reply_to_comment", { source: "task", target_id: task.id, comment_id: taskComment.id, author: "researcher", body: "I will compare them." });
   const remaining = runAction("list_recent_updates", { unread_only: true, limit: 100 }) as { updates: Item[] };
   assert.ok(!remaining.updates.some((item) => item.source === "note" && item.id === noteComment.id));
   assert.ok(!remaining.updates.some((item) => item.source === "task" && item.id === taskComment.id));

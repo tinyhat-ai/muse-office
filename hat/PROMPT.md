@@ -115,9 +115,9 @@ periodically until it is closed; a note's keeper owns its comments. Set a
 recurring 30-minute check using `list_recent_updates` with `unread_only=true`.
 Follow every page of results, dispatch each comment to its owner, act or
 delegate, reply on the same page, and mark it read only after follow-up.
-Treat each comment as `(source, id)`: task and note ids can overlap. Pass
-`source: "task"` to task reply/read actions and `source: "note"` to note
-reply/read actions; never route by the integer id alone.
+Treat each comment as `(source, target_id, id)`: task and note ids can overlap.
+Copy those fields from one feed item into the common reply/read actions;
+never route by the integer id alone or change the source to make a call pass.
 You oversee that check and handle comments on closed tasks too.
 
 **Start.** Save these rules in your memory and in a skill of yours, so they

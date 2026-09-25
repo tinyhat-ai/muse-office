@@ -772,17 +772,26 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   reply_to_comment: {
     section: "Comments",
-    description: "Answers a task comment in the same thread and marks it read. Pass source from list_recent_updates so a note id cannot route the reply to an unrelated task.",
-    params: { source: "string · task · required", comment_id: "integer · task comment id · required", author: "string · member slug · required", body: "string · the answer, in plain words · required" },
+    description: "Answers a task or note comment on its original page and marks it read. Copy source, target_id, and comment_id from one list_recent_updates item.",
+    params: { source: "string · task or note, copied from the update · required", target_id: "string · page id, copied from the update · required", comment_id: "integer · update id · required", author: "string · member slug · required", body: "string · the answer, in plain words · required" },
     run(input) {
-      oneOf(input, "source", ["task"], { required: true });
+      const source = oneOf(input, "source", ["task", "note"], { required: true });
+      const targetId = requiredString(input, "target_id", "the page id from list_recent_updates");
       const id = int(input, "comment_id", { required: true, min: 1 }) as number;
-      const parent = get<UpdateRow>("SELECT * FROM task_updates WHERE id = ?", id);
-      if (!parent) throw new ActionError(`No comment with id ${id}. list_new_comments returns the ids of the user's unread comments.`, 404);
-      if (parent.author !== "you") throw new ActionError(`comment_id ${id} is not something the user wrote (it is ${parent.author}'s ${parent.kind}); reply to a comment or reply by the user.`);
       const author = memberField(input, "author");
       if (!author) throw new ActionError(`author is required: a member slug, one of: ${listOf(memberSlugs())}.`);
       const body = requiredString(input, "body", "the answer, in plain words");
+      if (source === "note") {
+        const parent = get<NoteCommentRow>("SELECT * FROM note_comments WHERE id = ? AND note = ?", id, targetId);
+        if (!parent || parent.author !== "you") throw new ActionError(`No user note comment ${id} on note ${targetId}. Copy source, target_id, and id from the same list_recent_updates item.`, 404);
+        return tx(() => {
+          const r = run("INSERT INTO note_comments (note, author, body, reply_to) VALUES (?, ?, ?, ?)", parent.note, author, body, id);
+          run("UPDATE note_comments SET unread_by_agent = 0 WHERE id = ?", id);
+          return get<NoteCommentRow>("SELECT * FROM note_comments WHERE id = ?", Number(r.lastInsertRowid));
+        });
+      }
+      const parent = get<UpdateRow>("SELECT * FROM task_updates WHERE id = ? AND task = ?", id, targetId);
+      if (!parent || parent.author !== "you") throw new ActionError(`No user task comment ${id} on task ${targetId}. Copy source, target_id, and id from the same list_recent_updates item.`, 404);
       return tx(() => {
         const now = nowIso();
         const u = addUpdate(parent.task, author, "reply", body, [], parent.id, 0, now);
@@ -794,44 +803,21 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   mark_comments_read: {
     section: "Comments",
-    description: "Clears unread_by_agent on task comments only. Pass source from list_recent_updates so a note id cannot silently mark a different task comment read.",
-    params: { source: "string · task · required", ids: "integer[] · task comment ids · required" },
+    description: "Marks handled user comments on one task or note read. Copy source, target_id, and ids from list_recent_updates; never mix pages in one call.",
+    params: { source: "string · task or note · required", target_id: "string · page id · required", ids: "integer[] · comment ids on that page · required" },
     run(input) {
-      oneOf(input, "source", ["task"], { required: true });
-      const ids = intArray(input, "ids", { required: true }) ?? [];
-      if (!ids.length) throw new ActionError("ids is required: a list of task comment ids from list_recent_updates or list_new_comments.");
-      const r = run(`UPDATE task_updates SET unread_by_agent = 0 WHERE author = 'you' AND id IN (${ids.map(() => "?").join(", ")})`, ...ids);
-      return { marked: r.changes };
-    },
-  },
-  reply_to_note_comment: {
-    section: "Comments",
-    description: "Answers a user comment on a note and marks it read. The note's keeper owns the follow-up. Pass source from list_recent_updates so a task id cannot route the reply to an unrelated note.",
-    params: { source: "string · note · required", comment_id: "integer · note comment id · required", author: "string · member slug · required", body: "string · answer · required" },
-    run(input) {
-      oneOf(input, "source", ["note"], { required: true });
-      const id = int(input, "comment_id", { required: true, min: 1 }) as number;
-      const parent = get<NoteCommentRow>("SELECT * FROM note_comments WHERE id = ?", id);
-      if (!parent || parent.author !== "you") throw new ActionError(`No user note comment with id ${id}.`, 404);
-      const author = memberField(input, "author");
-      if (!author) throw new ActionError("author is required: a member slug.");
-      const body = requiredString(input, "body", "the answer");
-      return tx(() => {
-        const r = run("INSERT INTO note_comments (note, author, body, reply_to) VALUES (?, ?, ?, ?)", parent.note, author, body, id);
-        run("UPDATE note_comments SET unread_by_agent = 0 WHERE id = ?", id);
-        return get<NoteCommentRow>("SELECT * FROM note_comments WHERE id = ?", Number(r.lastInsertRowid));
-      });
-    },
-  },
-  mark_note_comments_read: {
-    section: "Comments",
-    description: "Marks user comments on notes read after their owner has handled them. Pass source from list_recent_updates to guard against id collisions with task comments.",
-    params: { source: "string · note · required", ids: "integer[] · note comment ids · required" },
-    run(input) {
-      oneOf(input, "source", ["note"], { required: true });
-      const ids = intArray(input, "ids", { required: true }) ?? [];
-      if (!ids.length) throw new ActionError("ids is required.");
-      return { marked: run(`UPDATE note_comments SET unread_by_agent = 0 WHERE author = 'you' AND id IN (${ids.map(() => "?").join(", ")})`, ...ids).changes };
+      const source = oneOf(input, "source", ["task", "note"], { required: true });
+      const targetId = requiredString(input, "target_id", "the page id from list_recent_updates");
+      const ids = [...new Set(intArray(input, "ids", { required: true }) ?? [])];
+      if (!ids.length) throw new ActionError("ids is required: comment ids from one list_recent_updates page.");
+      const table = source === "task" ? "task_updates" : "note_comments";
+      const pageColumn = source === "task" ? "task" : "note";
+      for (const id of ids) {
+        if (!get(`SELECT id FROM ${table} WHERE id = ? AND ${pageColumn} = ? AND author = 'you'`, id, targetId)) {
+          throw new ActionError(`No user ${source} comment ${id} on ${targetId}. Copy source, target_id, and ids from the same list_recent_updates page.`, 404);
+        }
+      }
+      return { marked: run(`UPDATE ${table} SET unread_by_agent = 0 WHERE ${pageColumn} = ? AND id IN (${ids.map(() => "?").join(", ")})`, targetId, ...ids).changes };
     },
   },
 
