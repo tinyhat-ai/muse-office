@@ -25,6 +25,14 @@ talking to it the way you always have.
 The long form of the promotion, which your Muse reads as build material, is
 [`hat/HAT.md`](hat/HAT.md), also served at <https://tinyhat.ai/hats/chief-of-staff.md>.
 
+## What a Muse builds from this hat
+
+Built by a Muse from the message in `hat/PROMPT.md`, on a freshly reset agent, with the specialists named by the Muse itself: the Team page and the Notes page of its Office.
+
+![Team page of an Office built by a Muse](docs/live/team.png)
+
+![Notes page of an Office built by a Muse](docs/live/notes.png)
+
 ## Run the Office locally
 
 ```bash
