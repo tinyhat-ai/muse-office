@@ -69,14 +69,23 @@ SANITIZE.transformTags = {
   ])),
 };
 
+// Inside a visual nothing may link or load, whatever the target: a link
+// becomes its text, an image disappears. The allowlist above cannot see an
+// element's parent, so this runs on the sanitized output, svg by svg.
+function stripLinksAndImagesInsideSvg(html: string): string {
+  return html.replace(/<svg\b[\s\S]*?<\/svg>/gi, (svg) =>
+    svg.replace(/<a\b[^>]*>/gi, "").replace(/<\/a>/gi, "").replace(/<img\b[^>]*>/gi, ""),
+  );
+}
+
 /** Markdown → safe HTML for a page. Never render Markdown any other way. */
 export function renderMarkdown(markdown: string | null | undefined): string {
   if (!markdown) return "";
   const html = marked.parse(markdown, { async: false }) as string;
-  return sanitizeHtml(html, SANITIZE);
+  return stripLinksAndImagesInsideSvg(sanitizeHtml(html, SANITIZE));
 }
 
 /** Sanitize HTML that a page built itself from rendered Markdown (e.g. after adding heading ids). */
 export function sanitizeRendered(html: string): string {
-  return sanitizeHtml(html, SANITIZE);
+  return stripLinksAndImagesInsideSvg(sanitizeHtml(html, SANITIZE));
 }

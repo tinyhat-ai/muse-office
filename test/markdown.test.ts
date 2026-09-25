@@ -69,3 +69,18 @@ test("a small inline SVG survives as a visual, but nothing that runs or reaches 
   assert.doesNotMatch(html, /<script/i);
   assert.match(html, /<text x="4" y="24" font-size="12">Plan<\/text>/);
 });
+
+test("a link or an image inside a visual is removed even with an ordinary target", () => {
+  const html = renderMarkdown([
+    '<svg viewBox="0 0 100 20"><a href="https://example.com/out"><text x="1" y="12">WEB</text></a><img src="https://example.com/track"/></svg>',
+    "",
+    'Outside a visual, [a link](https://example.com) and an image ![alt](https://example.com/a.png) stay.',
+  ].join("\n"));
+  const svg = html.match(/<svg[\s\S]*?<\/svg>/i)![0];
+  assert.doesNotMatch(svg, /<a\b/);
+  assert.doesNotMatch(svg, /<img\b/);
+  assert.doesNotMatch(svg, /example\.com/);
+  assert.match(svg, /<text x="1" y="12">WEB<\/text>/);
+  assert.match(html, /<a href="https:\/\/example.com" rel="noopener noreferrer">a link<\/a>/);
+  assert.match(html, /<img src="https:\/\/example.com\/a.png" alt="alt"/);
+});

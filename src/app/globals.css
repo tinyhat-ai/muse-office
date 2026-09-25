@@ -122,3 +122,8 @@ textarea:focus, input:focus { border-color: #3d5a6c; }
   .wrap { padding: 18px 16px 40px; }
   h1.title { font-size: 32px; }
 }
+
+
+/* A visual inside a note or a task description scales to the column it is in. */
+.md svg { display: block; max-width: 100%; height: auto; margin: 8px 0 14px; }
+.md img { max-width: 100%; height: auto; }
