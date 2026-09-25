@@ -39,13 +39,17 @@ tables, and Mermaid diagrams.
 - [Starter Note with Markdown and Mermaid](screenshots/starter-note-mermaid.jpg)
 - [More Office screenshots](screenshots/)
 
+Earlier examples from an Office built by Muse are available in the
+[Team](live/team.png) and [Notes](live/notes.png) captures. They predate the
+current starter layout.
+
 ## Office actions
 
 ```bash
 curl -s localhost:3007/api/actions | jq .
 curl -s -X POST localhost:3007/api/actions/create_task \
   -H 'content-type: application/json' \
-  -d '{"project":"website","title":"Pick brand colors","specialist":"pastel"}'
+  -d '{"project":"website","title":"Pick brand colors","specialist":"designer"}'
 ```
 
 Every action is `POST /api/actions/<name>` with a JSON body. It responds with
@@ -56,6 +60,7 @@ is in [the actions specification](../spec/ACTIONS.md).
 
 | Path | Purpose |
 | --- | --- |
+| [`hat/PROMPT.md`](../hat/PROMPT.md) | The message a person sends Muse; the stable copy is on `channels/lts`. |
 | [`hat/HAT.md`](../hat/HAT.md) | The entry instruction, published with each release and channel. |
 | [`hat/SOUL.md`](../hat/SOUL.md) | How the chief of staff behaves each day. |
 | [`hat/skills/`](../hat/skills/) | Setup, running a task, improving a process, and the avatar. |
@@ -63,6 +68,7 @@ is in [the actions specification](../spec/ACTIONS.md).
 | [`hat/processes/`](../hat/processes/) | Five ways a project can run. |
 | [`hat/apps/office.json`](../hat/apps/office.json) | The build request for Office. |
 | [`spec/PAGES.md`](../spec/PAGES.md) | What each page shows. |
+| [`spec/STARTER.md`](../spec/STARTER.md) | What the first visit shows. |
 | [`spec/DESIGN.md`](../spec/DESIGN.md) | Design tokens, colours, and the board. |
 | [`spec/SCHEMA.md`](../spec/SCHEMA.md), [`db/schema.sql`](../db/schema.sql) | The database. |
 | [`spec/ACTIONS.md`](../spec/ACTIONS.md) | The actions. |
