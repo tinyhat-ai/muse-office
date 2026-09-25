@@ -1,0 +1,123 @@
+/* Reports page. Shared shell classes (.wrap, .head, .kick, .title, .lede, .dashed, .tell, .av)
+   come from globals.css; everything here is prefixed rp- and also styles the chart
+   components in src/components/charts/Charts.tsx (.rp-ch, .rp-lg, .rp-hb). */
+
+/* ---- the orange line: what waits on the user ---- */
+.rp-needs {
+  display: flex; align-items: flex-start; gap: 10px; width: 100%; margin-top: 24px;
+  background: var(--needs-bg); border-left: 4px solid var(--needs); border-radius: var(--r-chip);
+  color: var(--needs); font-weight: 650; font-size: var(--t-body); line-height: 1.4; padding: 12px 16px;
+}
+.rp-needs .rp-d { width: 8px; height: 8px; border-radius: 50%; background: var(--needs); flex: 0 0 8px; margin-top: 7px; } /* marks the first line even when the text wraps */
+.rp-needs-link::after { content: "→"; margin-left: auto; padding-left: 12px; flex: 0 0 auto; }
+.rp-needs a { text-decoration: underline; text-decoration-color: rgba(179, 84, 30, 0.4); text-underline-offset: 3px; }
+.rp-needs a:hover { text-decoration-color: var(--needs); }
+
+/* ---- sections and the grid ---- */
+.rp-sec {
+  font-size: var(--t-badge); font-weight: 750; letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft);
+  margin: 32px 0 0; display: flex; align-items: center; gap: 10px;
+}
+.rp-sec::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.rp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; align-items: start; } /* a card ends after its own footer */
+.rp-wide { grid-column: span 2; }
+
+/* ---- a card ---- */
+.rp-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 20px;
+  display: flex; flex-direction: column; box-shadow: var(--shadow-card); min-width: 0;
+}
+.rp-card h3 { font-size: var(--t-h2); font-weight: 650; letter-spacing: -0.01em; }
+.rp-why { font-size: var(--t-sec); color: var(--soft); margin-top: 4px; line-height: 1.4; }
+.rp-main { flex: 1; min-width: 0; }
+.rp-src {
+  margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line);
+  font-size: var(--t-cap); color: var(--soft); display: flex; align-items: center; gap: 8px;
+}
+.rp-empty { margin-top: 16px; }
+.rp-empty-page { margin-top: 24px; }
+
+/* ---- the big number ---- */
+.rp-kpi { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+.rp-kpi > b { font-size: var(--t-big); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.rp-kpi > span { font-size: var(--t-sec); color: var(--soft); }
+.rp-kpi .rp-up { color: #2d6a43; font-weight: 700; }
+.rp-kpi .rp-dn { color: var(--soft); font-weight: 700; }
+.rp-kpi .rp-warn { color: var(--needs); font-weight: 700; } /* money that waits on the user's call */
+.rp-kpi2 { flex-basis: 100%; }
+.rp-kpi2 b { color: var(--ink); font-weight: 700; }
+.rp-green { color: #2d6a43; }
+
+/* ---- charts (drawn by Charts.tsx) ---- */
+.rp-ch { display: block; width: 100%; height: auto; margin-top: 12px; }
+.rp-ch-phone { display: none; }
+.rp-lg { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; }
+.rp-lg span { display: inline-flex; align-items: center; gap: 6px; font-size: var(--t-badge); color: var(--soft); }
+.rp-lg i { width: 10px; height: 10px; border-radius: var(--r-pill); flex: 0 0 auto; }
+.rp-note { margin-top: 12px; font-size: var(--t-cap); color: var(--soft); line-height: 1.45; }
+.rp-note b { color: var(--ink); font-weight: 650; }
+.rp-tip { margin-top: 12px; background: var(--needs-bg); border-radius: var(--r-chip); padding: 10px 12px; font-size: var(--t-cap); color: #4a4945; line-height: 1.45; }
+
+/* ---- lists inside cards ---- */
+.rp-list { margin-top: 6px; }
+.rp-amt4 span.rp-late, .rp-how .rp-late { color: var(--needs); font-weight: 700; }
+
+/* money owed to you */
+.rp-owe { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid #f1f0eb; font-size: var(--t-sec); }
+.rp-owe:first-child { border-top: none; }
+.rp-owe .ini { font-size: var(--t-badge); }
+.rp-w2 { flex: 1; min-width: 0; text-wrap: pretty; }
+.rp-w2 b { display: block; }
+.rp-w2 a:hover { text-decoration: underline; }
+.rp-w2 span { font-size: var(--t-cap); color: var(--soft); }
+.rp-amt4 { font-weight: 750; font-size: var(--t-sec); text-align: right; white-space: nowrap; }
+.rp-amt4 span { display: block; font-size: var(--t-cap); font-weight: 600; color: var(--soft); } /* a date is information, not an alert */
+
+/* bills coming up */
+.rp-bill { display: grid; grid-template-columns: 48px 1fr auto; gap: 10px; align-items: center; padding: 10px 0; border-top: 1px solid #f1f0eb; }
+.rp-bill:first-child { border-top: none; }
+.rp-dt { text-align: center; border-radius: var(--r-chip); background: #f5f4f0; padding: 4px 0; line-height: 1.1; }
+.rp-dt b { display: block; font-size: var(--t-body); }
+.rp-dt span { font-size: var(--t-badge); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--soft); }
+.rp-nm2 { font-size: var(--t-sec); font-weight: 650; }
+.rp-how { font-size: var(--t-cap); color: var(--soft); }
+.rp-how .rp-w { color: var(--needs); font-weight: 700; }
+.rp-how a.rp-w:hover { text-decoration: underline; }
+.rp-amt2 { font-size: var(--t-sec); font-weight: 750; white-space: nowrap; }
+
+/* subscriptions: horizontal bars */
+.rp-hb-list { margin-top: 6px; }
+.rp-hb { display: grid; grid-template-columns: 118px 1fr 64px; gap: 8px; align-items: center; margin-top: 8px; font-size: var(--t-cap); }
+.rp-hb-name { min-width: 0; }
+.rp-hb-flag { grid-column: 1 / -1; margin-top: -4px; font-size: var(--t-badge); font-weight: 750; color: var(--needs); }
+.rp-hb-track { display: block; width: 100%; height: 10px; }
+.rp-hb-amt { text-align: right; font-weight: 650; }
+
+/* savings the team found */
+.rp-save-lbl { font-size: var(--t-badge); font-weight: 750; letter-spacing: 0.1em; text-transform: uppercase; color: var(--soft); margin-top: 14px; }
+.rp-save-lbl.rp-w { color: var(--needs); }
+.rp-save { display: flex; gap: 10px; align-items: flex-start; padding: 10px 0; border-top: 1px solid #f1f0eb; font-size: var(--t-sec); line-height: 1.4; }
+.rp-save:first-child { border-top: none; }
+.rp-check { color: #2d6a43; font-weight: 800; flex: 0 0 auto; }
+.rp-v { font-weight: 800; color: #2d6a43; min-width: 62px; flex: 0 0 auto; }
+.rp-by2 { display: block; font-size: var(--t-cap); color: var(--soft); margin-top: 2px; }
+.rp-by2 a { color: #3d3c38; font-weight: 600; }
+.rp-by2 a:hover { text-decoration: underline; }
+.rp-save.rp-wait { background: var(--needs-bg); border-top: none; border-radius: var(--r-chip); padding: 10px; margin-top: 4px; }
+.rp-save.rp-wait .rp-v { color: var(--needs); }
+
+/* ---- footer ---- */
+.rp-foot { margin-top: 24px; }
+
+/* ---- narrower screens: two columns, then one; wide charts swap to their 320-wide copy ---- */
+@media (max-width: 980px) {
+  .rp-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .rp-grid { grid-template-columns: 1fr; }
+  .rp-wide { grid-column: auto; }
+  .rp-ch-desk { display: none; }
+  .rp-ch-phone { display: block; }
+  .rp-needs { font-size: var(--t-sec); }
+  .rp-hb { grid-template-columns: 96px 1fr 56px; }
+}

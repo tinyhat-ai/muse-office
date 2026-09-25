@@ -1,0 +1,49 @@
+{
+  "kind": "web_fullstack",
+  "kind_reason": "The Office keeps the person's tasks, customers, numbers, and notes, so it needs its own database and its own actions. It is private to one person and must never have a public link. A static page cannot do any of that.",
+  "name": "Office",
+  "slug": "office",
+  "verbatim_request": "Build me a private Office app that shows me what my team is doing. Five pages in one top bar: Projects, Team, Customers, Reports, Notes, plus a page for every project, every task, and every note. I only look; the only thing I can write is a comment or a reply on a task's page (and one-tap Yes / Not yet on a money question). Everything else changes through the app's actions, which my chief of staff calls. Build it from https://github.com/tinyhat-ai/muse-office: the same pages (spec/PAGES.md), the same look (spec/DESIGN.md), the same database schema (db/schema.sql), and the same actions with the same names and arguments (spec/ACTIONS.md).",
+  "source": {
+    "repo": "https://github.com/tinyhat-ai/muse-office",
+    "branch": "main",
+    "app": "the repository root is a Next.js app (src/); npm install && npm run dev serves it on port 3007 with a SQLite file in data/",
+    "schema": "db/schema.sql",
+    "pages": "spec/PAGES.md",
+    "design": "spec/DESIGN.md",
+    "actions": "spec/ACTIONS.md",
+    "actions_catalog": "GET /api/actions on the running app lists every action with its arguments",
+    "note": "You (the Muse) read these files; the app itself needs no web access and makes no external calls. When your builder fetches the repository, the platform asks the person to confirm access to github.com for this artifact; that confirmation is expected and the person should allow it. A declined confirmation stops the build; ask them to try again."
+  },
+  "capabilities": {
+    "public_web_read": false,
+    "connectors": []
+  },
+  "seed_data": {
+    "note": "Not the reference app's demo seed (set OFFICE_SEED=none; the demo is for people trying it locally). The chief of staff loads a real first-week set through the actions right after the build, so no page is empty on the first visit: the team; the projects with their processes; the setup as finished tasks plus one first task per project and one question for the person in Waiting on you; the person themselves and Tinyhat as contacts with in_funnel false (shown as Contact, counted nowhere, so the reports stay true); the eight report cards without numbers; three tagged notes (How your office works, Your first week, Where things live).",
+    "members_from": "hat/team/*.md plus the chief itself (is_chief = 1), loaded with upsert_member",
+    "projects_from": "the projects the person said yes to, loaded with upsert_project + set_process from hat/processes/*.md"
+  },
+  "builder_notes": [
+    "Prefer running the repository's own code. Only when that is impossible, re-create it exactly from the four spec files; do not invent pages, controls, or fields.",
+    "The app's icon is the top hat in src/app/icon.svg (see the icon field), never a briefcase or a generic office symbol.",
+    "Pages are view-only. Wherever a control would normally sit, show the line: To change this, tell <chief name> in chat. The chief's name comes from the members table (is_chief = 1).",
+    "The one write from the UI is POST /api/comments {task, body, reply_to?} → a task_updates row with author 'you', kind 'comment' or 'reply', unread_by_agent 1. The money buttons post body 'yes' or 'not yet' with reply_to = the question's update id.",
+    "Actions are POST /api/actions/<name> with a JSON body, returning {ok:true, data} or {ok:false, error}. Every error names what was wrong and the valid values. Publish the same 33 names as the app's actions so the chief can call them.",
+    "Columns are exactly todo, in_progress, waiting_on_you, done. Stages are exactly lead, talking, proposal, customer, past. waiting_on_you requires a question. Times are ISO 8601 UTC.",
+    "The board uses the sticky-note look in spec/DESIGN.md: lanes with a coloured top rule, notes two across in the project's pastel with a folded corner, project tiles as plain coloured rounded squares.",
+    "Reports show results, never task counts: website visitors and inquiries, new customers, money owed, money in and out, spending by category, bills coming up, subscriptions, savings the team found. Charts are inline SVG.",
+    "Private to one person. No public link, no sign-in for others, no analytics, no external calls from the app itself."
+  ],
+  "fallbacks": [
+    "An app with slug 'office' already exists: refine it by edits until it matches the checks in HAT.md; never rebuild from scratch and never delete it.",
+    "A boards or tasks app already exists: ask the person, then turn it into Office and carry its cards over as tasks (one project per lane) before anything else.",
+    "The repository cannot be fetched: ask the person to paste db/schema.sql, spec/PAGES.md, spec/DESIGN.md, and spec/ACTIONS.md, then build from those.",
+    "The platform has no full-stack app kind: stop and tell the person; a static page is not an Office."
+  ],
+  "icon": {
+    "use": "src/app/icon.svg from the repository: the chief of staff's top hat (ink #1c1c19 with an orange band #b3541e) on the warm off-white #f3f3ef, rounded corners",
+    "never": "a briefcase, a suitcase, a building, a generic 'office' or 'work' symbol, or any stock icon; the hat is the mark of this office",
+    "fallback": "if the platform cannot take an SVG, draw the same top hat as a small PNG, or use the 🎩 emoji"
+  }
+}
