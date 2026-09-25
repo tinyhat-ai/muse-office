@@ -55,7 +55,7 @@ Customers (a small funnel, this week's follow-ups, the people table) and Reports
 
 ![Reports](docs/screenshots/reports.png)
 
-More in [`docs/screenshots/`](docs/screenshots/): a project's page, Team, Notes, a note, and the board on a phone.
+More in [`docs/screenshots/`](docs/screenshots/): a project's page, Team, Notes, a note, the board on a phone, and a task whose money question was asked again with a new amount (the earlier yes stays with the earlier question).
 
 ## The actions
 
