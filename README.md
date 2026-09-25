@@ -8,11 +8,12 @@ brings decisions back to you. Their work stays visible in a private **Office**
 that your Muse builds for you. The sample team is a starting point: you can
 ask Muse to add, change, or remove agents as your work changes.
 
-### [Copy the message →](https://tinyhat.ai/muse)
+### [Open and copy the stable message →](https://github.com/tinyhat-ai/muse-office/blob/channels/lts/hat/PROMPT.md)
 
 Paste it into your chat with Muse. Muse shows you its plan and waits for your
 approval before setting up the team and Office. You can edit the message
-before you send it. [Read the stable message first](https://github.com/tinyhat-ai/muse-office/blob/channels/lts/hat/PROMPT.md).
+before you send it. The one-click landing page will be at `tinyhat.ai/muse`
+after deployment.
 
 **What changes:**
 
@@ -32,8 +33,7 @@ before you send it. [Read the stable message first](https://github.com/tinyhat-a
 
 The hat is a set of instructions, not an app you need to install by hand. This
 repository also contains the Office reference app and the files Muse uses to
-build your copy. [See the landing page](https://tinyhat.ai/muse) for the team
-and the before/after view.
+build your copy.
 
 ## See an Office made by Muse
 
