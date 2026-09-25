@@ -3,7 +3,7 @@
 All notable changes to this repository are listed here. The version is the
 one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
-## 0.0.1 — unreleased
+## 0.0.1 — 2026-09-25
 
 First public version.
 

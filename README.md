@@ -16,8 +16,8 @@ before you send it. [Read the stable message first](https://github.com/tinyhat-a
 **What changes:**
 
 - **A team with distinct roles.** A Designer, Developer, Marketer, Sales
-  specialist, and Bookkeeper each has its own face, instructions, skills, and
-  memory. Muse coordinates them and remains the person you talk to.
+  specialist, and Bookkeeper each have their own face, instructions, skills, and
+  memory. Muse coordinates them and remains the one you talk to.
 - **A place to see the work.** Projects shows the tasks and what is waiting on
   you. Team shows who does what. Customers keeps track of people. Reports
   shows visual charts. Notes keeps decisions and useful knowledge.
@@ -32,8 +32,6 @@ build your copy. [See the landing page](https://tinyhat.ai/muse) for the team
 and the before/after view.
 
 ## See an Office made by Muse
-
-## What a Muse builds from this hat
 
 These are pages from an Office a Muse built from the promotion message. The
 current reference app adds tagged notes and a more useful first visit.
@@ -139,9 +137,11 @@ in [`spec/ACTIONS.md`](spec/ACTIONS.md).
 [`RELEASING.md`](RELEASING.md) and [`CHANGELOG.md`](CHANGELOG.md).
 
 [`channels/lts`](https://github.com/tinyhat-ai/muse-office/tree/channels/lts)
-is the stable hat used by the promotion message. [`channels/latest`](https://github.com/tinyhat-ai/muse-office/tree/channels/latest)
+carries the stable promotion message. [`channels/latest`](https://github.com/tinyhat-ai/muse-office/tree/channels/latest)
 tracks the newest published release. `main` is for upcoming changes and may
-move ahead of both channels. See the [first release](https://github.com/tinyhat-ai/muse-office/releases/tag/v0.0.1).
+move ahead of both channels. The message currently links Muse to build
+materials on `main`, so those files can change independently of the LTS
+message. See the [first release](https://github.com/tinyhat-ai/muse-office/releases/tag/v0.0.1).
 
 ## License
 
