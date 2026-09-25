@@ -135,13 +135,13 @@ function NewCustomersCard({ report, ctx, wide }: CardProps) {
   // A person is a new lead in the month of their first `lead` change, a new customer in any month they reached `customer`.
   const leadRows = all<{ month: string; n: number }>(
     `SELECT substr(first_lead, 1, 7) AS month, COUNT(*) AS n
-       FROM (SELECT contact, MIN(changed_at) AS first_lead FROM stage_changes WHERE stage = 'lead' GROUP BY contact)
+       FROM (SELECT s.contact, MIN(s.changed_at) AS first_lead FROM stage_changes s JOIN contacts c ON c.slug = s.contact WHERE s.stage = 'lead' AND c.in_funnel = 1 GROUP BY s.contact)
       GROUP BY month`,
   );
   const custRows = all<{ month: string; n: number; value: number }>(
     `SELECT month, COUNT(*) AS n, COALESCE(SUM(value_cents), 0) AS value
        FROM (SELECT DISTINCT s.contact, substr(s.changed_at, 1, 7) AS month, c.value_cents
-               FROM stage_changes s JOIN contacts c ON c.slug = s.contact WHERE s.stage = 'customer')
+               FROM stage_changes s JOIN contacts c ON c.slug = s.contact WHERE s.stage = 'customer' AND c.in_funnel = 1)
       GROUP BY month`,
   );
   const leads = new Map(leadRows.map((r) => [r.month, r.n]));

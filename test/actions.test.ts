@@ -101,3 +101,18 @@ test("a contact kept outside the funnel has no stage change and is not counted u
   const lead = runAction("upsert_contact", { slug: "new-lead", name: "New Lead" }) as { in_funnel: boolean; stage: string };
   assert.deepEqual([lead.in_funnel, lead.stage], [true, "lead"]);
 });
+
+test("moving a contact with sales history outside the funnel drops that history; entering without a stage means lead", () => {
+  runAction("upsert_contact", { slug: "legacy-lead", name: "Legacy Lead", stage: "lead" });
+  runAction("set_stage", { contact: "legacy-lead", stage: "customer" });
+  const rows = () => (getDb().prepare("SELECT COUNT(*) n FROM stage_changes WHERE contact = 'legacy-lead'").get() as { n: number }).n;
+  assert.equal(rows(), 2);
+  const out = runAction("upsert_contact", { slug: "legacy-lead", in_funnel: false }) as { in_funnel: boolean };
+  assert.equal(out.in_funnel, false);
+  assert.equal(rows(), 0, "no sales history remains for someone kept outside the funnel");
+  // Back in, with no stage named: a lead, and that is the first recorded change.
+  const back = runAction("upsert_contact", { slug: "legacy-lead", in_funnel: true }) as { in_funnel: boolean; stage: string };
+  assert.deepEqual([back.in_funnel, back.stage], [true, "lead"]);
+  assert.equal(rows(), 1);
+  assert.equal((getDb().prepare("SELECT stage FROM stage_changes WHERE contact = 'legacy-lead'").get() as { stage: string }).stage, "lead");
+});

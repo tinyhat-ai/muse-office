@@ -763,13 +763,22 @@ export const ACTIONS: Record<string, ActionDef> = {
           // Someone kept outside the funnel enters it when given a stage (or in_funnel true);
           // that entry is the first recorded stage change.
           const enters = existing.in_funnel === 0 && (inFunnel === true || (stage !== undefined && inFunnel !== false));
-          if (inFunnel === false) patch.in_funnel = 0;
-          if (enters) patch.in_funnel = 1;
-          if (stage && (stage !== existing.stage || enters)) {
+          if (inFunnel === false && existing.in_funnel === 1) {
+            // Kept here without selling to them: whatever stages were recorded were not
+            // sales history, so they go, and the funnel and the reports stop counting them.
+            patch.in_funnel = 0;
+            run("DELETE FROM stage_changes WHERE contact = ?", slug);
+          }
+          if (enters) {
+            // Entering the funnel is their first recorded stage change; without a stage, they enter as a lead.
+            patch.in_funnel = 1;
+            patch.stage = stage ?? "lead";
+            run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, patch.stage, now);
+          } else if (stage && stage !== existing.stage && inFunnel !== false && existing.in_funnel === 1) {
             patch.stage = stage;
-            if (inFunnel !== false) run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, stage, now);
-          } else if (enters) {
-            run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, existing.stage, now);
+            run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, stage, now);
+          } else if (stage && inFunnel === false) {
+            patch.stage = stage; // remembered, shown nowhere
           }
           patchRow("contacts", "slug", slug, patch);
         } else {

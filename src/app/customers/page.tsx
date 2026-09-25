@@ -137,7 +137,8 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
 
   const contacts = all<ContactRow>("SELECT * FROM contacts ORDER BY name");
   const touches = all<TouchRow>("SELECT * FROM touches ORDER BY happened_at DESC, id DESC");
-  const changes = all<StageChangeRow>("SELECT * FROM stage_changes ORDER BY changed_at DESC, id DESC");
+  // Only people in the funnel have sales history; someone kept outside it has none to show or count.
+  const changes = all<StageChangeRow>("SELECT s.* FROM stage_changes s JOIN contacts c ON c.slug = s.contact WHERE c.in_funnel = 1 ORDER BY s.changed_at DESC, s.id DESC");
   const members = all<MemberRow>("SELECT * FROM members ORDER BY is_chief DESC, sort_order, name");
   const project = get<ProjectRow>("SELECT * FROM projects WHERE slug = 'customers'");
 
