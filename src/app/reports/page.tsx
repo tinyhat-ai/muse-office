@@ -59,6 +59,8 @@ function lastMonths(n: number, now: Date): string[] {
 }
 /** The series colour for a report: the project with the same slug, else the project its owner leads, else the palette. */
 function colorFor(report: ReportRow, ctx: Ctx): string {
+  const examples: Record<string, string> = { "world-population": "#5f8497", "olympic-women": "#5b8a5a", "recorded-music": "#7e6aa6" };
+  if (report.section === "Around the world" && examples[report.slug]) return examples[report.slug];
   const p = ctx.projects.find((x) => x.slug === report.slug) ?? ctx.projects.find((x) => x.lead && x.lead === report.owner);
   return p?.color_dark ?? ctx.palette[0] ?? "#9a978c";
 }
@@ -77,7 +79,7 @@ function Kpi({ big, words, cmp, tone, children }: { big: ReactNode; words: React
 
 function Empty({ report, ctx }: { report: ReportRow; ctx: Ctx }) {
   const owner = report.owner ? ctx.members.get(report.owner) : undefined;
-  return <div className="dashed rp-empty">No numbers yet. {owner?.name ?? ctx.chiefName} fills this in on Monday.</div>;
+  return <div className="dashed rp-empty">No figures collected from your work yet. {owner?.name ?? ctx.chiefName} adds them as the relevant sources become available.</div>;
 }
 
 function Card({ report, ctx, wide, children }: { report: ReportRow; ctx: Ctx; wide: boolean; children: ReactNode }) {
@@ -91,7 +93,7 @@ function Card({ report, ctx, wide, children }: { report: ReportRow; ctx: Ctx; wi
         {owner ? <Avatar member={owner} size="xs" /> : null}
         <span>
           {owner ? `${owner.name} · ` : ""}
-          {report.source ? `${report.source} · ` : ""}updated {ago(report.updated_at, ctx.now)}
+          {report.source ? (report.source_url ? <><a href={report.source_url} target="_blank" rel="noopener noreferrer">{report.source} ↗</a> · </> : `${report.source} · `) : ""}updated {ago(report.updated_at, ctx.now)}
         </span>
       </div>
     </article>
@@ -427,9 +429,13 @@ function GenericCard({ report, rows, ctx, wide }: CardProps) {
   const lastLabel = labels[labels.length - 1];
   if (report.chart === "bars") {
     const v = series[0].values, last = v[v.length - 1], prev = v[v.length - 2];
+    const publicExample = report.section === "Around the world";
+    const comparison = prev === undefined ? undefined : publicExample
+      ? `vs ${fmt(prev, unit)} in ${show(labels[labels.length - 2])}`
+      : `vs ${fmt(prev, unit)} before${pct(last, prev)}`;
     return (
       <>
-        <Kpi big={fmt(last, unit)} words={`latest, ${show(lastLabel)}`} cmp={prev === undefined ? undefined : `vs ${fmt(prev, unit)} before${pct(last, prev)}`} tone={prev !== undefined && last >= prev ? "up" : "dn"} />
+        <Kpi big={fmt(last, unit)} words={`latest, ${show(lastLabel)}`} cmp={comparison} tone={publicExample ? undefined : prev !== undefined && last >= prev ? "up" : "dn"} />
         <Bars title={report.title} labels={labels.map(show)} values={v} color={colorFor(report, ctx)} unit={unit} wide={wide} />
       </>
     );
@@ -506,7 +512,7 @@ function NeedsLine({ tasks, ctx }: { tasks: TaskRow[]; ctx: Ctx }) {
     return `${t.title}${amount ? ` · ${amount}` : ""}${t.due ? ` · ${dueText(t.due, ctx.now)}` : ""}`;
   };
   const lead = `${tasks.length} ${tasks.length === 1 ? "thing needs" : "things need"} you: `;
-  const tail = ` · say OK to ${ctx.chiefName} in chat`;
+  const tail = " · open the task to answer";
   if (tasks.length === 1) {
     return (
       <Link className="rp-needs rp-needs-link" href={`/tasks/${tasks[0].id}`}>
@@ -539,7 +545,9 @@ export default function ReportsPage() {
   const projects = all<ProjectRow>("SELECT * FROM projects ORDER BY sort_order, slug");
   const tasks = new Map(all<TaskRow>("SELECT * FROM tasks").map((t) => [t.id, t]));
   const contacts = new Map(all<{ slug: string; name: string }>("SELECT slug, name FROM contacts").map((c) => [c.slug, c.name]));
-  const reports = all<ReportRow>("SELECT * FROM reports ORDER BY sort_order, slug");
+  const reports = all<ReportRow>(`SELECT * FROM reports ORDER BY
+    CASE section WHEN 'Around the world' THEN 0 WHEN 'Your business' THEN 1 WHEN 'Your money' THEN 2 ELSE 3 END,
+    section, sort_order, slug`);
   const metrics = all<MetricRow>("SELECT * FROM metrics ORDER BY report, id");
   // Money questions first: they carry the amount the line quotes.
   const waiting = all<TaskRow>(
@@ -556,9 +564,15 @@ export default function ReportsPage() {
   };
   const byReport = new Map<string, MetricRow[]>();
   for (const m of metrics) byReport.set(m.report, [...(byReport.get(m.report) ?? []), m]);
-  // Sections in the order they first appear by sort_order; cards keep their sort_order inside each.
+  // Keep unsourced business templates in the database for the team to fill,
+  // but show a report card only once it can display real figures.
+  const customerHistory = get<{ n: number }>(`SELECT COUNT(*) AS n FROM stage_changes s
+    JOIN contacts c ON c.slug = s.contact WHERE c.in_funnel = 1`)?.n ?? 0;
+  const visibleReports = reports.filter((r) =>
+    (byReport.get(r.slug)?.length ?? 0) > 0 || (r.slug === "new-customers" && customerHistory > 0));
+  // Published examples lead the first visit; cards keep their sort_order within each section.
   const sections: Array<{ name: string; cards: ReportRow[] }> = [];
-  for (const r of reports) {
+  for (const r of visibleReports) {
     const s = sections.find((x) => x.name === r.section);
     if (s) s.cards.push(r);
     else sections.push({ name: r.section, cards: [r] });
@@ -570,7 +584,7 @@ export default function ReportsPage() {
         <div className="kick">How things are going</div>
         <h1 className="title">Reports</h1>
         <p className="lede">
-          The results that matter: who found you, who became a customer, where the money went, and what the team saved you. Every Monday, last week&apos;s numbers.
+          Visual reports about the results that matter to you. Explore the sourced examples below; your team adds charts from your work as its sources become available.
         </p>
       </div>
 
@@ -580,9 +594,10 @@ export default function ReportsPage() {
         sections.map((s) => (
           <section className="rp-section" key={s.name}>
             <h2 className="rp-sec">{s.name}</h2>
-            <div className="rp-grid">
+            {s.name === "Around the world" ? <p className="rp-examples">Published examples show what visual reports can do. As you share your priorities and communication channels, {ctx.chiefName} adds reports about what matters to you.</p> : null}
+            <div className={`rp-grid${s.name === "Around the world" ? " rp-grid-examples" : ""}`}>
               {s.cards.map((r, i) => (
-                <ReportCard key={r.slug} report={r} rows={byReport.get(r.slug) ?? []} ctx={ctx} wide={i % 4 === 0 || i % 4 === 3} />
+                <ReportCard key={r.slug} report={r} rows={byReport.get(r.slug) ?? []} ctx={ctx} wide={s.name === "Around the world" ? i === 0 : i % 4 === 0 || i % 4 === 3} />
               ))}
             </div>
           </section>
@@ -592,7 +607,7 @@ export default function ReportsPage() {
       )}
 
       <p className="tell rp-foot">
-        Want another report? Ask {ctx.chiefName} in chat, for example &ldquo;How much did workshops bring in this year?&rdquo; It becomes a card here and stays fresh.
+        Want a report about your work? Ask {ctx.chiefName} in chat. Once the team can verify its source, it will appear here as a chart.
       </p>
     </main>
   );

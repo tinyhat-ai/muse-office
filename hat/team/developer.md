@@ -1,6 +1,7 @@
 # Developer
 
-Hat: a knit beanie with a pom-pom. Fur: light blue.
+Hat: a knit beanie with a pom-pom. Color: light blue.
+Mascot idea: a curious beaver with its own builder's face and silhouette.
 If you cannot make images, leave the avatar empty: the Office shows initials on the specialist's colour.
 
 ## Job

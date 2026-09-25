@@ -43,13 +43,33 @@ npm run dev
 `npm test` runs the small test suite (the Markdown sanitizer and the question/answer loop) with Node's built-in runner.
 
 Open <http://localhost:3007>. The first start creates `data/office.db` and
-fills it with a demo office (a consultant who runs workshops, five
-specialists, five projects, a few tasks, customers, reports, and notes).
-`npm run reset` deletes the data; the next start seeds it again. Start with
-an empty office with `OFFICE_SEED=none npm run dev`.
+fills it with a starter Office: real setup tasks, an initial team, a guide in
+Notes, two contacts outside the customer funnel, and three cited public charts.
+It does not invent business results or customers. `npm run reset` deletes the
+data; the next start seeds the starter again. Use `OFFICE_SEED=demo npm run dev`
+for the fictional consultant showcase shown in some screenshots, or
+`OFFICE_SEED=none npm run dev` for an empty database.
 
 The pages are view-only. The one thing you can write is a comment or a reply
 on a task's page. Everything else changes through the actions.
+
+## First visit
+
+The starter board shows setup work and one real question for the person. Team
+members have distinct illustrated faces. Customers contains orientation contacts
+outside the sales funnel; the funnel stays at zero until real people are added.
+Reports opens with three charts from linked public sources, and Notes renders a
+Markdown table and a Mermaid flowchart.
+
+![Starter Projects board](docs/screenshots/starter-projects.png)
+
+![Starter Team and specialist mascots](docs/screenshots/starter-team.png)
+
+![Starter Customers page](docs/screenshots/starter-customers.png)
+
+![Starter Reports with public charts](docs/screenshots/starter-reports.png)
+
+![Starter Note with rendered Markdown and Mermaid](docs/screenshots/starter-note-mermaid.png)
 
 ## What it looks like
 

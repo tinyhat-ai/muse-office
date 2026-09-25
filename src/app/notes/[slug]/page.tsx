@@ -5,6 +5,7 @@ import { renderMarkdown, sanitizeRendered } from "@/lib/markdown";
 import { all, get, json, type MemberRow, type NoteRow, type ProjectRow, type TaskRow } from "@/lib/db";
 import { ago } from "@/lib/time";
 import { Avatar } from "@/components/Avatar";
+import { RenderedNote } from "@/components/notes/RenderedNote";
 import "../notes.css";
 
 // One note, rendered from its markdown. The headings get ids so "On this page"
@@ -117,7 +118,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
             </div>
           ) : null}
 
-          <div className="md nt-body" dangerouslySetInnerHTML={{ __html: html }} />
+          <RenderedNote html={html} />
 
           {linked.length ? (
             <section className="nt-from">

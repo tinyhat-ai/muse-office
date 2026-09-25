@@ -116,3 +116,9 @@ test("moving a contact with sales history outside the funnel drops that history;
   assert.equal(rows(), 1);
   assert.equal((getDb().prepare("SELECT stage FROM stage_changes WHERE contact = 'legacy-lead'").get() as { stage: string }).stage, "lead");
 });
+
+test("published report sources are HTTPS URLs", () => {
+  assert.throws(() => runAction("upsert_report", { slug: "population", section: "Around the world", title: "Population", chart: "bars", source_url: "javascript:alert(1)" }), /https URL/);
+  const report = runAction("upsert_report", { slug: "population", section: "Around the world", title: "Population", chart: "bars", source: "UN", source_url: "https://population.un.org/wpp/" }) as { source_url: string };
+  assert.equal(report.source_url, "https://population.un.org/wpp/");
+});

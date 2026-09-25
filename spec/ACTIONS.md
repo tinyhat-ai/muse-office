@@ -62,7 +62,7 @@ When a user answers a `money` question with the "Yes, pay …" button, the app s
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `upsert_report` | `slug`, `section`, `title`, `description?`, `chart`, `owner?`, `source?` | Adds or updates a report card. Charts: `bars`, `stacked-bars`, `grouped-bars`, `list`, `bars-horizontal`, `savings`, `number`. |
+| `upsert_report` | `slug`, `section`, `title`, `description?`, `chart`, `owner?`, `source?`, `source_url?` | Adds or updates a report card. `source_url` is an HTTPS link to published data. Charts: `bars`, `stacked-bars`, `grouped-bars`, `list`, `bars-horizontal`, `savings`, `number`. |
 | `record_metric` | `report`, `label`, `value`, `series?`, `note?: object`, `recorded_at?` | Adds or replaces one number (same report + series + label replaces; an omitted `note` keeps the old one). See `spec/SCHEMA.md` for what each report expects. |
 | `clear_metrics` | `report`, `series?` | Removes numbers before a full refresh. |
 | `list_reports` | — | Every report with its latest numbers. |
@@ -74,7 +74,7 @@ Notes are where anything worth finding later goes: a decision, a how-to, a price
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `upsert_note` | `slug`, `title`, `markdown`, `project?`, `lede?`, `kept_by?`, `linked_tasks?: string[]`, `tags?: string[]`, `pinned?` | Adds or updates a note. One note per topic; update rather than add. `tags` are the topics and the words someone would search for (lowercase, up to 12); every note should have some. The body is markdown; tables and a small inline SVG are fine for a visual. |
+| `upsert_note` | `slug`, `title`, `markdown`, `project?`, `lede?`, `kept_by?`, `linked_tasks?: string[]`, `tags?: string[]`, `pinned?` | Adds or updates a note. One note per topic; update rather than add. `tags` are topics and search words (lowercase, up to 12). The body is GitHub-flavored Markdown: tables and fenced `mermaid` diagrams render as visuals. |
 | `get_note` | `slug` | The note. |
 | `list_notes` | `q?`, `project?`, `kept_by?`, `tag?` | Search (title, lede, body, tags) and filter, `tag` exact. |
 | `remove_note` | `slug` | Removes a note. Never called without the user's yes. |

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Songbird marketer in a cap">
+  <circle cx="60" cy="60" r="60" fill="#fbefbd"/>
+  <path d="M21 96c7-16 21-27 39-27s32 11 39 27v24H21Z" fill="#e2a94c"/>
+  <circle cx="60" cy="60" r="36" fill="#f0c96c"/>
+  <path d="M40 49c7-4 14-5 19-3m12 0c5-2 11-1 17 3" fill="none" stroke="#bc8d3e" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="47" cy="56" r="4" fill="#303c42"/><circle cx="74" cy="56" r="4" fill="#303c42"/>
+  <path d="m56 66 11 5-11 5Z" fill="#d68145"/>
+  <path d="M30 35c11-18 29-24 49-15 8 4 13 9 15 15Z" fill="#b95336"/>
+  <path d="M27 37h76" stroke="#9a452d" stroke-width="8" stroke-linecap="round"/>
+  <path d="M88 77c7-8 14-10 21-8l-8 10 8 10c-7 2-14 0-21-8" fill="#fff8e8" stroke="#d9894a" stroke-width="2"/>
+</svg>

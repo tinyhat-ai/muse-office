@@ -8,12 +8,13 @@
     "dev": "next dev -p 3007",
     "build": "next build",
     "start": "next start -p 3007",
-    "reset": "rm -f data/office.db data/office.db-wal data/office.db-shm && echo 'Office data removed; the next start seeds the demo again.'",
+    "reset": "rm -f data/office.db data/office.db-wal data/office.db-shm && echo 'Office data removed; the next start seeds the starter Office again.'",
     "test": "rm -rf .test-out && tsc -p tsconfig.test.json && node --test .test-out/test/*.test.js"
   },
   "dependencies": {
     "better-sqlite3": "^11.7.0",
     "marked": "^15.0.6",
+    "mermaid": "^11.17.2",
     "next": "^15.5.26",
     "react": "19.1.0",
     "react-dom": "19.1.0",

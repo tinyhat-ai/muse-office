@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Owl chief of staff in a top hat">
+  <circle cx="60" cy="60" r="60" fill="#eee2cb"/>
+  <path d="M23 87c7-19 21-29 37-29s30 10 37 29v33H23Z" fill="#b98d63"/>
+  <path d="M27 49 24 31l18 7c10-6 26-6 36 0l18-7-3 18c8 12 7 29-2 40-8 10-19 15-31 15S37 99 29 89c-9-11-10-28-2-40Z" fill="#b98d63"/>
+  <ellipse cx="44" cy="64" rx="16" ry="20" fill="#fff7e9"/><ellipse cx="76" cy="64" rx="16" ry="20" fill="#fff7e9"/>
+  <circle cx="47" cy="63" r="4" fill="#263844"/><circle cx="73" cy="63" r="4" fill="#263844"/>
+  <path d="m54 78 6 7 6-7Z" fill="#d78c45"/>
+  <path d="M36 33V12h48v21" fill="#263844"/><path d="M29 33h62" stroke="#263844" stroke-width="9" stroke-linecap="round"/>
+  <path d="M36 25h48" stroke="#d8aa59" stroke-width="5"/>
+</svg>

@@ -1,6 +1,7 @@
 # Bookkeeper
 
-Hat: a small navy bowler with a gold band. Fur: sage green.
+Hat: a small navy bowler with a gold band. Color: sage green.
+Mascot idea: a careful owl with its own calm, detail-minded face.
 If you cannot make images, leave the avatar empty: the Office shows initials on the specialist's colour.
 
 ## Job

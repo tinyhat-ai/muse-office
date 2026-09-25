@@ -74,40 +74,25 @@ the user's browser cannot reach your computer. The Office app is the view.
 - Create a scheduled task of yours (every 30 minutes) that calls
   list_new_comments and handles what it finds, as SOUL.md says; without it
   a comment on a task's page waits until the user next talks to you.
-- After the build, load the office through the app's actions so that no
-  page is empty on the first visit. Not the repository's demo data (that is
-  for people trying the app locally), but a real first-week set:
-  - the team (upsert_member, you included with is_chief);
-  - each project with its process (upsert_project, then set_process with
-    the steps and the process.md text);
-  - tasks: the setup itself as finished cards ("Set up the office", "Build
-    the Office app": create_task, then move_task to done, each with a
-    closing report), one first task per project in To do for the specialist
-    who will take it (for example: look at the current website and note what
-    to keep; draft a simple posting plan; find last month's receipts), and
-    one card in Waiting on you with the question the team needs answered
-    first ("What do you charge, and for what?", question_kind answer);
-  - contacts: anyone the user named as a real lead or customer, at their
-    real stage. So that the page is not empty, also add two people who are
-    not in the funnel: the user themselves and Tinyhat, with
-    `in_funnel: false` (they show as "Contact", get no stage, and count
-    nowhere), `source` saying why ("you", "made this hat") and the details
-    in `notes` (the user's business and email; https://tinyhat.ai and
-    support@tinyhat.ai). Never give them a funnel stage: `lead`,
-    `talking`, `proposal`, and `customer` all count as sales activity;
-  - the eight report cards (upsert_report: website, new-customers, owed,
-    in-out, spending, bills, subscriptions, savings, as spec/SCHEMA.md
-    lists them) with no numbers yet; each shows who fills it and when;
-  - three notes, each with tags: "How your office works" (pinned; where
-    things live, who does what), "Your first week" (what the team will do
-    first and what it needs from the user), and "Where things live" (chat
-    for updates, the board for work, notes for what to find later).
+- After the build, load the office through its actions exactly as
+  `spec/STARTER.md` describes. That file names the first tasks, three notes,
+  two real orientation contacts outside the sales funnel, and three sourced
+  public reports with exact values. Create the eight business report definitions,
+  but hide their cards until your team has verified figures to plot. On the first
+  visit the Reports page must lead with actual charts, not empty text cards.
+  Never invent a lead, customer, website visitor, invoice, or completion to make
+  a page look busy. The repository's `OFFICE_SEED=demo` data is a fictional
+  showcase, not for this person's Office.
 
 ## 5. Avatars
 
-Follow skills/hat-avatar/SKILL.md for your own avatar.
-Then make one sibling avatar per specialist (the "Hat:" and "Fur:" lines in
-each team/ template) and set it on the Team page.
+Follow skills/hat-avatar/SKILL.md for your own avatar. Then create a distinct
+face and specialty-relevant mascot for each specialist in a consistent visual
+style. Use the "Hat:" and "Color:" lines in each team/ template as optional
+visual cues, not instructions to recolor the same face. Store each image on
+that specialist's Team card with `upsert_member.avatar_url`. Show the person
+the team together before you finish; if images are unavailable, keep initials
+temporarily and record avatar creation as a setup task.
 
 ## 6. Hand over
 

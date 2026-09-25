@@ -240,9 +240,19 @@ export function seed(db: Database.Database) {
     }
 
     // ------------------------------------------------------------- reports
-    const report = db.prepare(`INSERT INTO reports (slug, section, title, description, chart, owner, source, sort_order, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    const report = db.prepare(`INSERT INTO reports (slug, section, title, description, chart, owner, source, source_url, sort_order, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     const metric = db.prepare(`INSERT INTO metrics (report, series, label, value, note_json, recorded_at) VALUES (?, ?, ?, ?, ?, ?)`);
     const monday = t(((new Date(now).getDay() + 6) % 7) * D + 9 * H);
+    // Published examples are clearly separate from this person's business results.
+    const publicReports: Array<[string, string, string, string, string, string]> = [
+      ["world-population", "World population (millions)", "Rounded historical estimates for 1950, 2000, and 2024.", "bars", "UN World Population Prospects 2024", "https://population.un.org/wpp/"],
+      ["olympic-women", "Women at the Paris Olympics", "Women athletes in 1900, 1924, and 2024; counts, not percentages.", "bars", "Paris 2024 official report", "https://library.olympics.com/digitalCollection/DigitalCollectionAttachmentDownloadHandler.ashx?documentId=3702240&parentDocumentId=3598869&skipCopyright=true&skipWatermark=true"],
+      ["recorded-music", "Recorded music revenue (US$ billions)", "Global recorded-music trade revenue in 2023 and 2024.", "bars", "IFPI Global Music Report 2025", "https://www.ifpi.org/ifpi-amidst-highly-competitive-market-global-recorded-music-revenues-grew-4-8-in-2024/"],
+    ];
+    publicReports.forEach(([slug, title, description, chart, source, sourceUrl], i) => report.run(slug, "Around the world", title, description, chart, null, source, sourceUrl, i, monday));
+    for (const [label, value] of [["1950", 2500], ["2000", 6100], ["2024", 8200]] as const) metric.run("world-population", null, label, value, "{}", monday);
+    for (const [label, value] of [["1900", 22], ["1924", 135], ["2024", 5300]] as const) metric.run("olympic-women", null, label, value, "{}", monday);
+    for (const [label, value] of [["2023", 28.6], ["2024", 29.6]] as const) metric.run("recorded-music", null, label, value, "{}", monday);
     const reports: Array<[string, string, string, string, string, string, string]> = [
       ["website", "Your business", "Website visitors and inquiries", "People who visited your current site each week, and how many wrote to you. The new site takes over at launch.", "bars", "patch", "from your current site's visitor stats and contact form"],
       ["new-customers", "Your business", "New customers", "New leads and new paying customers, each month.", "grouped-bars", "scout", "from the funnel on Customers"],
@@ -253,7 +263,7 @@ export function seed(db: Database.Database) {
       ["subscriptions", "Your money", "Subscriptions", "What you pay every month.", "bars-horizontal", "penny", "amounts from card emails, usage from each tool's own emails"],
       ["savings", "Your money", "Savings the team found", "This month, in dollars.", "savings", "chief", "counted only once the money is actually kept"],
     ];
-    reports.forEach((r, i) => report.run(...r, i, monday));
+    reports.forEach((r, i) => report.run(...r, null, i + publicReports.length, monday));
     const visitors = [310, 290, 340, 360, 420, 480, 610, 720], inquiries = [1, 2, 1, 2, 1, 2, 2, 3];
     visitors.forEach((v, i) => { const wk = mondayWeeksAgo(8 - i); metric.run("website", "visitors", wk, v, "{}", monday); metric.run("website", "inquiries", wk, inquiries[i], "{}", monday); });
     const inn = [6200, 5800, 7400, 6900, 8100, 7300], out = [4900, 5200, 5600, 6100, 5300, 4700];
@@ -280,7 +290,22 @@ export function seed(db: Database.Database) {
 - You can comment on any task's page. Everything else, you ask in chat.
 
 ## Who does what
-- **Pastel** designs. **Patch** builds the website. **Sunny** brings people in. **Scout** follows up with customers. **Penny** keeps the books.
+| Specialist | Work |
+| --- | --- |
+| Pastel | Designs the brand and visuals. |
+| Patch | Builds the website and tools. |
+| Sunny | Brings people in. |
+| Scout | Follows up with customers. |
+| Penny | Keeps the books. |
+
+## How a request moves
+~~~mermaid
+flowchart LR
+  A[You ask Muse] --> B{Quick question?}
+  B -->|Yes| C[Muse answers]
+  B -->|No| D[Specialist works]
+  D --> E[Office records result]
+~~~
 
 ## What never happens without you
 - Sending, buying, booking, publishing, or deleting anything.`, "chief", [], 1, 12 * H, ["office", "how it works", "start here"]],

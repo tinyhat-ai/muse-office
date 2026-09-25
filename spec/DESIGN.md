@@ -53,13 +53,13 @@ Spare pastels for new projects: `#efd3d3` / `#b86e6e`, `#d3e0e6` / `#5f8497`, `#
 
 Lanes: a 3px top rule in the lane colour (To do `#c9c8c1`, In progress `#3d5a6c`, Waiting on you `#b3541e`, Done `#2d5a45`), then the title (15px/700), a one-line subtitle (12px, soft), and a round count badge (24px, `#e7e6e0`; orange with white text on the Waiting lane). The Waiting lane sits on a faint peach wash (`#fbeee6` at 60%, rounded, 8px inside).
 
-Cards are **sticky notes**, laid out **two across** in each lane with a 12px gap:
+Cards are **sticky notes**, laid out **one per lane** with a 12px vertical gap. Four desktop lanes leave too little width for two readable notes in each lane.
 
 - Filled with the project's pastel, with faint ruled lines: `repeating-linear-gradient(0deg, rgba(0,0,0,.022) 0 1px, transparent 1px 7px)`.
 - A 1px border `rgba(0,0,0,.07)`, corners `3px 3px 16px 3px` (the bottom-right corner is the big one), and a folded corner drawn with a small diagonal gradient in that corner.
 - A soft shadow: `0 1px 1px rgba(0,0,0,.05), 0 6px 14px rgba(0,0,0,.05)`; lifts 1px on hover.
-- Minimum height 180px so a short note is still a square-ish note, padding 12px 13px 10px.
-- Inside: the project name (12px/650, soft) with a 3.5px × 13px bar in the project's dark shade; the title (15px/750, ink, two lines at most); one line (the question as a white pill with an orange dot, or the note in 12px soft); and a footer pushed to the bottom: the specialist's 20px round avatar and name on the left, the time on the right. A done card's footer reads "✓ Done" in green with a small green check circle, then the time.
+- Desktop height 206px, width at most 270px, padding 12px 13px 10px. Keep every note the same size; the task page carries the full text.
+- Inside: the project name (12px/650, soft) with a 3.5px × 13px bar in the project's dark shade; the title (15px/750, ink, two lines at most); up to three lines of summary (or a question as a white pill with an orange dot, two lines at most); and a footer pushed to the bottom: the specialist's 20px round avatar and name on the left, the time on the right. A done card's footer reads "✓ Done" in green with a small green check circle, then the time.
 - On a phone: one column of notes per lane, lanes stacked, Waiting on you first.
 
 Project tiles above the board: 118px squares (88px on a phone), the pastel fill, no border, no stripe; name top-left (14px/750), count bottom-left (13px/600 soft); the chosen tile gets a 2px ink outline; "All projects" is white with a hairline border.
@@ -71,6 +71,8 @@ Cards: white, `--r-card`, `--shadow-card`, 20px padding. Small chips: `--r-chip`
 ## Avatars
 
 Always round, always the head crop: 20px on cards and in lists, 32px in card headers, 40px in page headers, 64px for the chief of staff's card. People (contacts) get initials on a coloured circle instead.
+
+The chief keeps its recognizable face and gains a small top hat. The five specialists each get a different face and mascot suited to their specialty, with a shared illustration style. A hat or color change on the chief's face is not a specialist identity. Compare the five faces side by side at card size; they should be recognizable without reading the name. `hat/skills/hat-avatar/SKILL.md` owns the creation steps.
 
 ## Charts
 
@@ -87,4 +89,4 @@ what says "this is the office my chief of staff runs".
 
 ## Visuals in notes
 
-A note explains; a visual is for when a picture says it faster. Use, in this order: a table (choices, prices, dates); a small inline SVG for a timeline, a flow, or a comparison; an image by URL only when it already exists somewhere the person can open. Rules for an inline SVG: `viewBox` set and `width` at most 640, so it scales on a phone; the page's colours only (project pastels and darks, `--ink`, `--soft`, `--line`, `--needs`, `--done`); text 12–13px in the page font; a `role="img"` and an `aria-label` that says what it shows; no scripts, links, images, or references to anything outside the SVG (the page strips them). Say in one line above the visual what it shows.
+A note explains; a visual is for when a picture says it faster. Use, in this order: a Markdown table (choices, prices, dates); a fenced `mermaid` diagram for a flow, timeline, or relationship; a small inline SVG for a custom comparison; an image by URL only when it already exists somewhere the person can open. Render GitHub-flavored Markdown before styling it: a pipe table is a table and `**bold**` is bold. A `mermaid` fence becomes a responsive diagram, with the source kept visible if rendering fails. Use strict Mermaid security with HTML labels and clickable links disabled, and display the generated SVG as an image. Rules for an inline SVG: `viewBox` set and `width` at most 640, so it scales on a phone; the page's colours only (project pastels and darks, `--ink`, `--soft`, `--line`, `--needs`, `--done`); text 12–13px in the page font; a `role="img"` and an `aria-label` that says what it shows; no scripts, links, images, or references to anything outside the SVG (the page strips them). Say in one line above the visual what it shows.

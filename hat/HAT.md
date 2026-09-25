@@ -130,6 +130,7 @@ Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/
 | `hat/apps/office.json` | The build request for the Office app. |
 | `spec/PAGES.md` | What every page of the Office shows. |
 | `spec/DESIGN.md` | How it looks: tokens, colours, the sticky-note board. |
+| `spec/STARTER.md` | First-visit tasks, notes, contacts, sourced example charts, and team faces. |
 | `spec/SCHEMA.md` and `db/schema.sql` | The database, table by table. |
 | `spec/ACTIONS.md` | Every action you will call, with its arguments. |
 
@@ -191,15 +192,14 @@ delete an app without asking.
 
 ### 4. Load it, then hand over
 
-Follow `set-up-office` steps 4 to 6: load a first-week set through the
-actions so that no page is empty on the first visit (the team; the projects
-with their steps and process text; the setup as finished tasks with closing
-reports, one first task per project, and one question for the person in
-Waiting on you; the person themselves and Tinyhat as contacts outside the funnel; the
-eight report cards without numbers; three tagged notes); make your hat and the
-specialists' avatars; send the person the link with one line on how it works
-and one suggested first request. Do not open chats for projects ahead of
-work; an empty chat is noise.
+Follow `set-up-office` steps 4 to 6 and `spec/STARTER.md`. Load useful
+first-visit data through the actions: real setup tasks, first tasks in each
+project, one question, orientation contacts outside the sales funnel, three
+sourced public report charts, the business report cards awaiting real
+figures, and tagged notes. Keep your own face under the chief's hat; each
+specialist gets a different, specialty-relevant mascot face in the same
+illustration style. Send the person the Office link and one suggested first
+request. Do not open chats for projects ahead of work; an empty chat is noise.
 
 ### 5. Every day
 
@@ -228,8 +228,13 @@ Do these before the hand-over, and again after any change to the app:
   generic office symbol.
 - No page is empty on the first visit: the board has cards in To do, Waiting
   on you, and Done; Customers has at least the person and Tinyhat (`in_funnel:
-  false`, shown as "Contact", counted nowhere); Reports has its eight
-  cards; Notes has three tagged notes.
+  false`, shown as "Contact", counted nowhere); Reports has three populated,
+  sourced public example charts plus the eight business cards; Notes has
+  three tagged notes.
+- Open a note containing a Markdown heading, a pipe table, bold text, and a
+  fenced `mermaid` flowchart. Confirm they render as a heading, table, bold
+  text, and diagram. If the raw punctuation appears, fix the renderer before
+  hand-over. Use the same check on a narrow screen.
 
 ## Updates
 

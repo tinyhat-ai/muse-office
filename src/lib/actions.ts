@@ -895,6 +895,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       chart: "string · bars, grouped-bars, stacked-bars, bars-horizontal, list, savings, or number · required for a new report",
       owner: "string · member slug who keeps it fresh · optional",
       source: "string · where the numbers come from · optional",
+      source_url: "string · https URL for a published source · optional",
     },
     run(input) {
       const slug = slugFrom(input, "title", "in-out");
@@ -906,6 +907,11 @@ export const ACTIONS: Record<string, ActionDef> = {
       if (present(input, "chart")) patch.chart = oneOf(input, "chart", CHARTS, { required: true });
       if (present(input, "owner")) patch.owner = memberField(input, "owner");
       if (present(input, "source")) patch.source = optionalString(input, "source");
+      if (present(input, "source_url")) {
+        const url = optionalString(input, "source_url");
+        if (url && !/^https:\/\/[^\s]+$/i.test(url)) throw new ActionError("source_url must be an https URL.");
+        patch.source_url = url;
+      }
       if (existing) {
         patchRow("reports", "slug", slug, patch);
       } else {
