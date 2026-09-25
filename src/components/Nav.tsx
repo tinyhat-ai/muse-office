@@ -1,8 +1,8 @@
 import Link from "next/link";
+import Image from "next/image";
 import { headers } from "next/headers";
-import { get, type MemberRow } from "@/lib/db";
+import { get } from "@/lib/db";
 import { ago } from "@/lib/time";
-import { Avatar } from "./Avatar";
 
 const TABS = [
   ["/projects", "Projects"],
@@ -15,14 +15,13 @@ const TABS = [
 export async function Nav() {
   const h = await headers();
   const current = h.get("x-pathname") || "";
-  const chief = get<MemberRow>("SELECT * FROM members WHERE is_chief = 1 ORDER BY sort_order LIMIT 1");
   const last = get<{ t: string }>(
     "SELECT MAX(t) AS t FROM (SELECT MAX(updated_at) t FROM tasks UNION SELECT MAX(updated_at) FROM contacts UNION SELECT MAX(updated_at) FROM notes UNION SELECT MAX(updated_at) FROM reports)",
   );
   return (
     <header className="nav">
       <Link href="/projects" className="brand">
-        {chief ? <Avatar member={chief} size="sm" /> : null}
+        <Image src="/icon.svg" width={28} height={28} alt="" />
         Office
       </Link>
       <nav className="tabs">
