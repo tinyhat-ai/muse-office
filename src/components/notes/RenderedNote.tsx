@@ -43,14 +43,11 @@ export function RenderedNote({ html }: { html: string }) {
           const image = document.createElement("img");
           image.className = "md-mermaid-image";
           image.alt = diagramDescription(code);
-          // Mermaid gives its SVG a viewBox in CSS pixels. Keep enough of that
-          // width for legible labels; the figure scrolls if a diagram is wide.
+          // Preserve Mermaid's intrinsic label size. The figure scrolls when
+          // a diagram is wider than the note, instead of shrinking its text.
           const viewBox = new DOMParser().parseFromString(svg, "image/svg+xml").documentElement.getAttribute("viewBox");
           const viewWidth = Number(viewBox?.trim().split(/\s+/)[2]);
-          const vertical = /^\s*(?:flowchart|graph)\s+(?:TB|TD|BT)\b/im.test(code);
-          const minimumWidth = vertical ? 320 : 900;
-          image.style.width = `${Math.min(2400, Math.max(minimumWidth, Number.isFinite(viewWidth) ? viewWidth : 0))}px`;
-          if (vertical) image.style.maxWidth = "100%";
+          if (Number.isFinite(viewWidth) && viewWidth > 0) image.style.width = `${Math.min(viewWidth, 2400)}px`;
           image.src = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
           const figure = document.createElement("figure");
           figure.className = "md-mermaid";
