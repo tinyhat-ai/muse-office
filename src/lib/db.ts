@@ -134,3 +134,7 @@ export interface NoteRow {
   slug: string; project: string | null; title: string; lede: string | null; markdown: string; kept_by: string | null;
   linked_tasks_json: string; tags_json: string; pinned: number; created_at: string; updated_at: string;
 }
+export interface NoteCommentRow {
+  id: number; note: string; author: string; body: string; reply_to: number | null;
+  unread_by_agent: number; created_at: string;
+}

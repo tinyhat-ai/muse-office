@@ -76,6 +76,46 @@ test("moving to waiting_on_you without a question is refused with the valid kind
   assert.match(String((r.body as { error: string }).error), /money, approve, answer/);
 });
 
+test("the team can change, and task and note comments reach an ordered paginated owner feed", () => {
+  runAction("upsert_member", { slug: "researcher", name: "Rae", role: "Researcher", job: "Checks sources." });
+  runAction("upsert_member", { slug: "researcher", job: "Checks sources and writes briefs." });
+  const task = runAction("create_task", { project: "money", title: "Investigate a market", specialist: "researcher" }) as { id: string };
+  const note = runAction("upsert_note", { slug: "market-brief", title: "Market brief", markdown: "# Brief", kept_by: "researcher" }) as { slug: string };
+  const taskComment = postComment({ task: task.id, body: "Please compare two sources." });
+  const noteComment = postComment({ note: note.slug, body: "Add the source date." });
+  const beforeFollowUp = runAction("summary", {}) as { unread_task_comments: number; unread_note_comments: number; unread_comments: number };
+  assert.ok(beforeFollowUp.unread_task_comments >= 1);
+  assert.ok(beforeFollowUp.unread_note_comments >= 1);
+  assert.equal(beforeFollowUp.unread_comments, beforeFollowUp.unread_task_comments + beforeFollowUp.unread_note_comments);
+
+  type Item = { id: number; source: string; owner: string; body: string; url: string; unread_by_agent: boolean };
+  const found: Item[] = [];
+  let cursor: string | null = null;
+  do {
+    const page = runAction("list_recent_updates", { unread_only: true, limit: 1, ...(cursor ? { cursor } : {}) }) as { updates: Item[]; next_cursor: string | null };
+    found.push(...page.updates);
+    cursor = page.next_cursor;
+  } while (cursor);
+  assert.equal(found.filter((item) => item.source === "task" && item.id === taskComment.id).length, 1);
+  assert.equal(found.filter((item) => item.source === "note" && item.id === noteComment.id).length, 1);
+  assert.equal(found.find((item) => item.body === "Add the source date.")?.owner, "researcher");
+  assert.equal(found.find((item) => item.body === "Add the source date.")?.url, "/notes/market-brief");
+  assert.ok(found.every((item) => item.unread_by_agent));
+  assert.equal(callAction("list_recent_updates", { cursor: "bad" }).status, 400);
+
+  runAction("reply_to_note_comment", { comment_id: noteComment.id, author: "researcher", body: "Added the date." });
+  runAction("reply_to_comment", { comment_id: taskComment.id, author: "researcher", body: "I will compare them." });
+  const remaining = runAction("list_recent_updates", { unread_only: true, limit: 100 }) as { updates: Item[] };
+  assert.ok(!remaining.updates.some((item) => item.source === "note" && item.id === noteComment.id));
+  assert.ok(!remaining.updates.some((item) => item.source === "task" && item.id === taskComment.id));
+
+  assert.equal(callAction("remove_member", { slug: "researcher" }).status, 400);
+  runAction("update_task", { id: task.id, specialist: "penny" });
+  runAction("upsert_note", { slug: note.slug, kept_by: "chief" });
+  const removed = runAction("remove_member", { slug: "researcher" }) as { removed: string };
+  assert.equal(removed.removed, "researcher");
+});
+
 test("notes carry tags for finding them later; list_notes filters by one tag and searches tags", () => {
   runAction("upsert_note", { slug: "brand-guide", title: "Brand guide", markdown: "Warm and earthy.", tags: ["Brand", " colors ", "brand", "decision"] });
   runAction("upsert_note", { slug: "bills", title: "Bills and due dates", markdown: "Taxes on the 30th.", tags: ["money", "taxes"] });

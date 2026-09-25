@@ -102,6 +102,21 @@
 }
 .nt-task:hover { box-shadow: var(--shadow-card); }
 .nt-note-foot { margin-top: 32px; }
+.nt-comments { margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--line); }
+.nt-comments h2 { font-size: var(--t-h2); }
+.nt-comments > p { color: var(--soft); margin: 8px 0 20px; font-size: var(--t-sec); }
+.nt-comment { padding: 14px 0; border-bottom: 1px solid var(--line); }
+.nt-comment b { font-size: var(--t-sec); }
+.nt-comment time { color: var(--soft); font-size: var(--t-cap); margin-left: 10px; }
+.nt-comment p { white-space: pre-wrap; line-height: 1.5; margin-top: 6px; }
+.nt-comment-form { margin-top: 22px; display: grid; gap: 10px; }
+.nt-comment-form label { font-weight: 650; font-size: var(--t-sec); }
+.nt-comment-form textarea { resize: vertical; width: 100%; min-height: 90px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
+.nt-comment-form textarea:focus { outline: 2px solid #526c68; outline-offset: 2px; }
+.nt-comment-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.nt-comment-actions span { color: var(--soft); font-size: var(--t-cap); }
+.nt-comment-actions button { border: 0; border-radius: 8px; background: var(--ink); color: white; padding: 9px 16px; font: inherit; font-weight: 650; cursor: pointer; }
+.nt-comment-actions button:disabled { opacity: .5; cursor: default; }
 
 .nt-toc { position: sticky; top: 72px; align-self: start; }
 .nt-toc a { display: block; font-size: var(--t-sec); color: #55544f; padding: 5px 0 5px 12px; border-left: 2px solid #ecebe6; }

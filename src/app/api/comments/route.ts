@@ -3,10 +3,9 @@ import { postComment, describeError } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
 
-// The UI's one write. POST {task, body, reply_to?} stores a task_updates row
-// (author 'you', kind comment or reply, unread_by_agent 1) and returns {ok:true, data:{id}}.
-// The task page's money buttons post body "yes" / "not yet" with reply_to set to
-// the question's update id; nothing else happens here. The agent reads it through list_new_comments.
+// The UI's only write: {task, body, reply_to?} or {note, body, reply_to?}.
+// User comments are unread until the chief handles them through list_recent_updates.
+// A task's money buttons bind "yes" / "not yet" to the question update id.
 export async function POST(req: Request) {
   let input: unknown;
   try {
