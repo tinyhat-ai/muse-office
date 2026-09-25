@@ -100,7 +100,12 @@ style. Use the "Hat:" and "Color:" lines in each team/ template as optional
 visual cues, not instructions to recolor the same face. Store each image on
 that specialist's Team card with `upsert_member.avatar_url`. Show the person
 the team together before you finish; if images are unavailable, keep initials
-temporarily and record avatar creation as a setup task.
+temporarily and record avatar creation as a setup task. When creating or
+changing an agent later, use `hat` only for a wearable accessory, never as a
+stand-in for the mascot. Open Team and verify the card, live specialist count,
+and loaded image. Check the specialist's folder and the actual briefing,
+skills, and memory files before reporting the agent as ready. If any part is
+missing, report that exact gap and keep its setup task open.
 
 ## 6. Hand over
 

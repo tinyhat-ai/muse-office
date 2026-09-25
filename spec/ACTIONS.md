@@ -14,6 +14,8 @@ Names are `snake_case`. Slugs are short, lowercase, `kebab-case`. Dates are ISO 
 | `set_member_rule` | `slug`, `rule` | Sets the "last rule learned" shown in the specialist's detail. |
 | `remove_member` | `slug` | Removes a specialist. Refused while they have open tasks, and refused for the chief. Their finished work stays; it is unlinked from them. Never called without the user's yes. |
 
+For a new specialist, `avatar_url` holds a real, specialty-relevant face or mascot image. `hat` is only a wearable accessory; writing an animal name there does not create its image. Verify the image loads on Team and the team count updates before reporting setup complete. If the image cannot yet be made, leave an avatar task open and say the card uses initials for now.
+
 The Team page works out each specialist's status ("working on", "next", "waiting on you") and their latest finished work from `tasks`; there is no action for those.
 
 ## Projects
