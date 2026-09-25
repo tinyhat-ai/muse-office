@@ -33,7 +33,7 @@ Like an issue page, top to bottom:
 3. **What this is**: the job definition. A collapsed "Original request" with the user's own words.
 4. **Done when**: a checklist; met items show a green check.
 5. **Plan**: a numbered list; the current step is bold with "· now"; done steps are grey.
-6. **Conversation**: a vertical timeline. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Update cards with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files as chips. A question card is peach. The user's comments have a blue-grey header and show replies indented under them. Each card has a "Reply" link that opens a small box.
+6. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Update cards with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files as chips. A question card is peach. The user's comments have a blue-grey header and show replies indented under them. Each card has a "Reply" link that opens a small box.
 7. **The comment box**: "[you] Add a comment for <Muse> and Penny…" with a "Comment" button and a small tag "The one place you can write in Office". Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`).
 8. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
@@ -70,9 +70,9 @@ Charts are inline SVG. Axis text 12px grey. Series colours are the projects' dar
 
 ## Notes (`/notes` and `/notes/<slug>`)
 
-The find page: header (kicker "What the team has learned, written down for you"), a large search box, filter rows "Project" and "Kept by" (chips with avatars), a count line, and a grid of note cards (project, title, excerpt, kept by · updated). The pinned "Start here" note spans two columns. Searching filters as you type and highlights matches.
+The find page: header (kicker "What the team has learned, written down for you"), a large search box, filter rows "Project", "Kept by" (chips with avatars), and "Tags" (the most used tags as `#tag` chips), a count line, and a grid of note cards (project, title, excerpt, up to four tags, kept by · updated). The pinned "Start here" note spans two columns. Searching filters as you type, matches tags too, and highlights matches.
 
-A note's page: breadcrumb "Notes / Website / Brand guide"; the project label; a large title; the lede; "Kept by Pastel · Updated 2 days ago · 1 min read"; the markdown body (headings, lists, tables, colour swatches); "Came from these tasks" as sticky-note chips that open the tasks; and "To change this note, tell <Muse> in chat." On the right, "On this page" (the headings) and "More in Website".
+A note's page: breadcrumb "Notes / Website / Brand guide"; the project label; a large title; the lede; "Kept by Pastel · Updated 2 days ago · 1 min read"; the tags as `#tag` chips that filter the find page; the markdown body (headings, lists, tables, colour swatches, and small inline SVG visuals such as a timeline or a flow); "Came from these tasks" as sticky-note chips that open the tasks; and "To change this note, tell <Muse> in chat." On the right, "On this page" (the headings) and "More in Website".
 
 ## Times
 

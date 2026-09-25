@@ -186,6 +186,7 @@ CREATE TABLE IF NOT EXISTS notes (
   markdown          TEXT NOT NULL,
   kept_by           TEXT REFERENCES members(slug),
   linked_tasks_json TEXT NOT NULL DEFAULT '[]', -- ["acme-proposal", ...]
+  tags_json         TEXT NOT NULL DEFAULT '[]', -- ["brand", "colors", "decision"]: topics and keywords, lowercase, for finding it later
   pinned            INTEGER NOT NULL DEFAULT 0, -- 1 for "Start here"
   created_at        TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   updated_at        TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))

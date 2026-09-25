@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { CSSProperties, ReactNode } from "react";
-import { all, get, type MemberRow, type NoteRow, type ProjectRow } from "@/lib/db";
+import { all, get, json, type MemberRow, type NoteRow, type ProjectRow } from "@/lib/db";
 import { ago } from "@/lib/time";
 import { Avatar } from "@/components/Avatar";
 import "./notes.css";
@@ -40,7 +40,7 @@ function highlight(text: string, q: string): ReactNode {
 
 export default async function NotesPage({ searchParams }: { searchParams: Promise<Params> }) {
   const sp = await searchParams;
-  const q = one(sp.q), project = one(sp.project), by = one(sp.by);
+  const q = one(sp.q), project = one(sp.project), by = one(sp.by), tag = one(sp.tag).toLowerCase();
   const now = new Date();
 
   const chief = get<MemberRow>("SELECT * FROM members WHERE is_chief = 1 ORDER BY sort_order LIMIT 1");
@@ -54,15 +54,20 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
   // Only chips that lead somewhere: projects and people with at least one note.
   const projectChips = projects.filter((p) => notes.some((n) => n.project === p.slug));
   const keeperChips = members.filter((m) => notes.some((n) => n.kept_by === m.slug));
+  // Tags: the topics and keywords the team put on notes, most used first.
+  const tagsOf = (n: NoteRow) => json<string[]>(n.tags_json, []);
+  const tagCount = new Map<string, number>();
+  for (const n of notes) for (const t of tagsOf(n)) tagCount.set(t, (tagCount.get(t) ?? 0) + 1);
+  const tagChips = [...tagCount.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0])).slice(0, 14).map(([t]) => t);
 
   const ql = q.toLowerCase();
-  const matches = (n: NoteRow) => !ql || n.title.toLowerCase().includes(ql) || (n.lede ?? "").toLowerCase().includes(ql) || n.markdown.toLowerCase().includes(ql);
-  const list = notes.filter((n) => (!project || n.project === project) && (!by || n.kept_by === by) && matches(n));
+  const matches = (n: NoteRow) => !ql || n.title.toLowerCase().includes(ql) || (n.lede ?? "").toLowerCase().includes(ql) || n.markdown.toLowerCase().includes(ql) || tagsOf(n).some((t) => t.includes(ql));
+  const list = notes.filter((n) => (!project || n.project === project) && (!by || n.kept_by === by) && (!tag || tagsOf(n).includes(tag)) && matches(n));
 
   // Links keep the other params: a project chip does not drop the search, and so on.
-  const href = (patch: Partial<{ q: string; project: string; by: string }>) => {
+  const href = (patch: Partial<{ q: string; project: string; by: string; tag: string }>) => {
     const p = new URLSearchParams();
-    for (const [k, v] of Object.entries({ q, project, by, ...patch })) if (v) p.set(k, v);
+    for (const [k, v] of Object.entries({ q, project, by, tag, ...patch })) if (v) p.set(k, v);
     const s = p.toString();
     return s ? `/notes?${s}` : "/notes";
   };
@@ -79,7 +84,7 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
     return highlight(n.lede ?? body.slice(0, 150), q);
   };
 
-  const count = `${list.length} ${list.length === 1 ? "note" : "notes"}${q ? ` ${list.length === 1 ? "matches" : "match"} “${q}”` : ""}`;
+  const count = `${list.length} ${list.length === 1 ? "note" : "notes"}${q ? ` ${list.length === 1 ? "matches" : "match"} “${q}”` : ""}${tag ? ` tagged #${tag}` : ""}`;
 
   return (
     <main className="wrap nt">
@@ -100,6 +105,7 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
         <input type="search" name="q" defaultValue={q} placeholder="Search notes — a client, a price, a tool…" aria-label="Search notes" autoComplete="off" />
         {project ? <input type="hidden" name="project" value={project} /> : null}
         {by ? <input type="hidden" name="by" value={by} /> : null}
+        {tag ? <input type="hidden" name="tag" value={tag} /> : null}
         {q ? <Link className="nt-clear" href={href({ q: "" })}>Clear</Link> : <button type="submit" className="nt-go">Search</button>}
       </form>
 
@@ -124,6 +130,15 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
             </Link>
           ))}
         </div>
+        {tagChips.length ? (
+          <div className="nt-fl">
+            <span className="nt-lbl">Tags</span>
+            <Link className={`nt-chip${!tag ? " on" : ""}`} href={href({ tag: "" })}>Any</Link>
+            {tagChips.map((t) => (
+              <Link key={t} className={`nt-chip nt-tag${tag === t ? " on" : ""}`} href={href({ tag: t })}>#{t}</Link>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div className="nt-count">
@@ -148,6 +163,7 @@ export default async function NotesPage({ searchParams }: { searchParams: Promis
                 </div>
                 <h3>{highlight(n.title, q)}</h3>
                 <p>{excerpt(n)}</p>
+                {tagsOf(n).length ? <div className="nt-card-tags">{tagsOf(n).slice(0, 4).map((t) => <span key={t}>#{t}</span>)}</div> : null}
                 <div className="nt-card-foot">
                   {keeper ? <Avatar member={keeper} size="xs" /> : null}
                   Kept by {keeper?.name ?? chiefName} · updated {ago(n.updated_at, now)}

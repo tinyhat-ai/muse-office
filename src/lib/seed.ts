@@ -268,8 +268,8 @@ export function seed(db: Database.Database) {
     metric.run("savings", "penny", "Two subscriptions look unused: the scheduling app and stock photos. Counted once you tell your Muse to cancel.", 58, JSON.stringify({ state: "waiting", monthly: true }), monday);
 
     // --------------------------------------------------------------- notes
-    const note = db.prepare(`INSERT INTO notes (slug, project, title, lede, markdown, kept_by, linked_tasks_json, pinned, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
-    const notes: Array<[string, string, string, string, string, string, string[], number, number]> = [
+    const note = db.prepare(`INSERT INTO notes (slug, project, title, lede, markdown, kept_by, linked_tasks_json, tags_json, pinned, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
+    const notes: Array<[string, string, string, string, string, string, string[], number, number, string[]]> = [
       ["how-your-office-works", "general", "How your office works", "A one-page guide to your office, written by your chief of staff.", `## The short version
 - You talk to your chief of staff in chat. It decides where each request goes.
 - The team works on tasks. You see them on **Projects**.
@@ -280,7 +280,7 @@ export function seed(db: Database.Database) {
 - **Pastel** designs. **Patch** builds the website. **Sunny** brings people in. **Scout** follows up with customers. **Penny** keeps the books.
 
 ## What never happens without you
-- Sending, buying, booking, publishing, or deleting anything.`, "chief", [], 1, 12 * H],
+- Sending, buying, booking, publishing, or deleting anything.`, "chief", [], 1, 12 * H, ["office", "how it works", "start here"]],
       ["brand-guide", "website", "Brand guide", "How your website and anything with your name on it should look and sound.", `## Colors
 Not picked yet. The direction is warm and earthy; Pastel is making three palettes, and you pick one.
 
@@ -293,7 +293,7 @@ Headlines in a warm serif, body text in a clean sans. Big, calm headlines and sh
 
 ## Decided so far
 - Logo option B. <span class="by">— Sep 19, you picked it</span>
-- Warmer colors, less corporate. <span class="by">— Sep 17, from you</span>`, "pastel", ["pick-logo", "brand-colors"], 0, 2 * D],
+- Warmer colors, less corporate. <span class="by">— Sep 17, from you</span>`, "pastel", ["pick-logo", "brand-colors"], 0, 2 * D, ["brand", "colors", "type", "voice", "decision"]],
       ["how-the-website-runs", "website", "How the website is built and run", "Where your site lives, and how a change goes from idea to live.", `## Where it lives
 - The domain is registered in your name; renewal is automatic.
 - Every change goes to a preview link first.
@@ -304,8 +304,18 @@ Headlines in a warm serif, body text in a clean sans. Big, calm headlines and sh
 3. You look at the preview.
 4. Patch puts it live and notes what changed here.
 
+<svg viewBox="0 0 640 72" role="img" aria-label="Ask, build on a preview, your OK, live" width="640" height="72">
+  <rect x="2" y="16" width="140" height="40" rx="10" fill="#e9e7df" stroke="#c9c8c1"/><text x="72" y="41" text-anchor="middle" font-size="13" fill="#1c1c19">1 · You ask</text>
+  <line x1="142" y1="36" x2="166" y2="36" stroke="#9a978c" stroke-width="2"/>
+  <rect x="166" y="16" width="140" height="40" rx="10" fill="#f2e4a9" stroke="#b89a3a"/><text x="236" y="41" text-anchor="middle" font-size="13" fill="#1c1c19">2 · Preview link</text>
+  <line x1="306" y1="36" x2="330" y2="36" stroke="#9a978c" stroke-width="2"/>
+  <rect x="330" y="16" width="140" height="40" rx="10" fill="#fbeee6" stroke="#b3541e"/><text x="400" y="41" text-anchor="middle" font-size="13" fill="#b3541e">3 · Your OK</text>
+  <line x1="470" y1="36" x2="494" y2="36" stroke="#9a978c" stroke-width="2"/>
+  <rect x="494" y="16" width="140" height="40" rx="10" fill="#d8e7d3" stroke="#2d5a45"/><text x="564" y="41" text-anchor="middle" font-size="13" fill="#2d5a45">4 · Live</text>
+</svg>
+
 ## In the works
-- Homepage, layout B. Preview link tomorrow. <span class="by">— Patch, today</span>`, "patch", ["buy-domain", "homepage"], 0, 2 * H],
+- Homepage, layout B. Preview link tomorrow. <span class="by">— Patch, today</span>`, "patch", ["buy-domain", "homepage"], 0, 2 * H, ["website", "domain", "preview", "how-to", "launch"]],
       ["what-we-post", "marketing", "What we post and when", "The simple plan Sunny follows.", `| Where | How often | What |
 | --- | --- | --- |
 | LinkedIn | Once a week, Tuesday | One lesson from a workshop |
@@ -314,7 +324,7 @@ Headlines in a warm serif, body text in a clean sans. Big, calm headlines and sh
 
 ## Rules
 - You write the first newsletter issue yourself.
-- Nothing is posted without your OK.`, "sunny", ["linkedin-post", "october-issue"], 0, 1 * D],
+- Nothing is posted without your OK.`, "sunny", ["linkedin-post", "october-issue"], 0, 1 * D, ["marketing", "linkedin", "newsletter", "schedule", "plan"]],
       ["packages-and-rates", "customers", "Workshop packages and rates", "What you offer and what it costs. Scout uses this for every proposal.", `| Package | Length | For | Price |
 | --- | --- | --- | --- |
 | Half-day workshop | 3 hours | Up to 12 people | $2,400 |
@@ -323,13 +333,13 @@ Headlines in a warm serif, body text in a clean sans. Big, calm headlines and sh
 
 ## Good to know
 - Invoices go out on the 20th.
-- Travel is billed separately.`, "scout", ["acme-proposal", "northwind-invoice"], 0, 1 * D],
+- Travel is billed separately.`, "scout", ["acme-proposal", "northwind-invoice"], 0, 1 * D, ["workshops", "pricing", "rates", "proposals", "invoices"]],
       ["clients", "customers", "Clients we have worked with", "Who we have worked with, and what we think of them.", `| Company | Person | What | Notes |
 | --- | --- | --- | --- |
 | Northwind | Omar Haddad | Monthly advisory | Pays on time; likes a short summary |
 | Lumen Labs | Priya Raman | Half-day workshop, August | Wants the notes; invoice open |
 | Bello Realty | Aisha Bello | Half-day workshop, October | Came through Omar |
-| Sunrise Yoga | Grace Okafor | Half-day workshop, June | Happy; ask about a repeat session |`, "scout", ["lumen-invoice"], 0, 3 * D],
+| Sunrise Yoga | Grace Okafor | Half-day workshop, June | Happy; ask about a repeat session |`, "scout", ["lumen-invoice"], 0, 3 * D, ["clients", "customers", "history"]],
       ["bills-and-due-dates", "money", "Bills and due dates", "What is due, when, and how it gets paid.", `## This month
 | Bill | Due | Amount | How |
 | --- | --- | --- | --- |
@@ -338,7 +348,7 @@ Headlines in a warm serif, body text in a clean sans. Big, calm headlines and sh
 | Internet | Oct 5 | $85 | Autopay |
 
 ## Penny's rule
-- Anything not on autopay shows up in Waiting on you five days before it is due.`, "penny", ["quarterly-tax", "august-receipts"], 0, 1 * D],
+- Anything not on autopay shows up in Waiting on you five days before it is due.`, "penny", ["quarterly-tax", "august-receipts"], 0, 1 * D, ["bills", "due dates", "taxes", "autopay", "money"]],
       ["tools-we-pay-for", "money", "Tools we pay for", "Every subscription, what it is for, and whether it earns its keep.", `| Tool | A month | For | Verdict |
 | --- | --- | --- | --- |
 | Design tools | $54.99 | Pastel's work | Keep |
@@ -346,9 +356,9 @@ Headlines in a warm serif, body text in a clean sans. Big, calm headlines and sh
 | Video calls | $33.98 | Client calls | Keep |
 | Stock photos | $12.99 | Posts | Looks unused since Aug 2 |
 | Email tool | $12 | The newsletter | A cheaper plan covers 212 subscribers |
-| Cloud storage | $2.99 | Files | Keep |`, "penny", ["sort-expenses"], 0, 1 * D],
+| Cloud storage | $2.99 | Files | Keep |`, "penny", ["sort-expenses"], 0, 1 * D, ["subscriptions", "tools", "spending", "savings"]],
     ];
-    for (const [slug, project, title, lede, md, keptBy, linked, pinned, msAgo] of notes) note.run(slug, project, title, lede, md, keptBy, JSON.stringify(linked), pinned, t(msAgo + 6 * D), t(msAgo));
+    for (const [slug, project, title, lede, md, keptBy, linked, pinned, msAgo, tags] of notes) note.run(slug, project, title, lede, md, keptBy, JSON.stringify(linked), JSON.stringify(tags), pinned, t(msAgo + 6 * D), t(msAgo));
 
     // ------------------------------------------------------------ settings
     const setting = db.prepare(`INSERT INTO settings (key, value) VALUES (?, ?)`);

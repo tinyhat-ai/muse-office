@@ -75,3 +75,15 @@ test("moving to waiting_on_you without a question is refused with the valid kind
   assert.equal(r.status, 400);
   assert.match(String((r.body as { error: string }).error), /money, approve, answer/);
 });
+
+test("notes carry tags for finding them later; list_notes filters by one tag and searches tags", () => {
+  runAction("upsert_note", { slug: "brand-guide", title: "Brand guide", markdown: "Warm and earthy.", tags: ["Brand", " colors ", "brand", "decision"] });
+  runAction("upsert_note", { slug: "bills", title: "Bills and due dates", markdown: "Taxes on the 30th.", tags: ["money", "taxes"] });
+  const brand = runAction("get_note", { slug: "brand-guide" }) as { tags: string[] };
+  assert.deepEqual(brand.tags, ["brand", "colors", "decision"]);
+  const byTag = runAction("list_notes", { tag: "taxes" }) as Array<{ slug: string }>;
+  assert.deepEqual(byTag.map((n) => n.slug), ["bills"]);
+  const byWord = runAction("list_notes", { q: "decision" }) as Array<{ slug: string }>;
+  assert.deepEqual(byWord.map((n) => n.slug), ["brand-guide"]);
+  assert.throws(() => runAction("upsert_note", { slug: "bills", tags: Array.from({ length: 13 }, (_, i) => `t${i}`) }), /at most 12/);
+});

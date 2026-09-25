@@ -73,6 +73,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
   const html = sanitizeRendered(withIds);
   const words = note.markdown.split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.round(words / 200));
+  const tags = json<string[]>(note.tags_json, []);
   const label = note.project === "general" ? "Start here" : project?.name ?? "Note";
   const dark = project?.color_dark ?? "#9a978c";
 
@@ -108,6 +109,13 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
             <span>·</span>
             <span>{minutes} min read</span>
           </div>
+          {tags.length ? (
+            <div className="nt-tags" aria-label="Tags">
+              {tags.map((t) => (
+                <Link key={t} href={`/notes?tag=${encodeURIComponent(t)}`}>#{t}</Link>
+              ))}
+            </div>
+          ) : null}
 
           <div className="md nt-body" dangerouslySetInnerHTML={{ __html: html }} />
 

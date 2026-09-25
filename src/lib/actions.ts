@@ -156,9 +156,19 @@ function metricOut(m: MetricRow) {
   const { note_json, ...rest } = m;
   return { ...rest, note: json<Input>(note_json, {}) };
 }
+/** Tags are short, lowercase words or phrases; duplicates and empties dropped; at most 12. */
+function normalizeTags(tags: string[]): string[] {
+  const out: string[] = [];
+  for (const raw of tags) {
+    const t = raw.trim().toLowerCase().replace(/\s+/g, " ").slice(0, 30);
+    if (t && !out.includes(t)) out.push(t);
+  }
+  if (out.length > 12) throw new ActionError(`tags: at most 12 per note (got ${out.length}); keep the topics and the words someone would search for.`);
+  return out;
+}
 function noteOut(n: NoteRow) {
-  const { linked_tasks_json, ...rest } = n;
-  return { ...rest, linked_tasks: json<string[]>(linked_tasks_json, []), pinned: !!n.pinned };
+  const { linked_tasks_json, tags_json, ...rest } = n;
+  return { ...rest, linked_tasks: json<string[]>(linked_tasks_json, []), tags: json<string[]>(tags_json, []), pinned: !!n.pinned };
 }
 
 // ------------------------------------------------------------ task helpers
@@ -957,6 +967,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       lede: "string · one line under the title · optional",
       kept_by: "string · member slug who keeps it · optional",
       linked_tasks: "string[] · task ids it came from · optional",
+      tags: "string[] · topics and keywords for finding it later, e.g. [\"brand\", \"colors\", \"decision\"] · lowercase, up to 12 · optional",
       pinned: "boolean · true for the Start here note · optional",
     },
     run(input) {
@@ -974,13 +985,14 @@ export const ACTIONS: Record<string, ActionDef> = {
         if (unknown.length) throw new ActionError(`linked_tasks must be task ids; unknown: ${listOf(unknown)}. Known tasks: ${listOf(taskIds())}.`);
         patch.linked_tasks_json = JSON.stringify(ids);
       }
+      if (present(input, "tags")) patch.tags_json = JSON.stringify(normalizeTags(stringArray(input, "tags") ?? []));
       if (present(input, "pinned")) patch.pinned = bool(input, "pinned") ? 1 : 0;
       if (existing) {
         patchRow("notes", "slug", slug, patch);
       } else {
         requireForNew(patch, ["title", "markdown"], `note '${slug}'`);
         const now = nowIso();
-        insertRow("notes", { slug, linked_tasks_json: "[]", pinned: 0, ...patch, created_at: now, updated_at: now });
+        insertRow("notes", { slug, linked_tasks_json: "[]", tags_json: "[]", pinned: 0, ...patch, created_at: now, updated_at: now });
       }
       return noteOut(mustNote(slug));
     },
@@ -1002,20 +1014,21 @@ export const ACTIONS: Record<string, ActionDef> = {
   list_notes: {
     section: "Notes",
     description: "Search and filter the notes; each comes with an excerpt instead of the full body (get_note has that).",
-    params: { q: "string · part of the title, lede, or body · optional", project: "string · project slug · optional", kept_by: "string · member slug · optional" },
+    params: { q: "string · part of the title, lede, body, or a tag · optional", project: "string · project slug · optional", kept_by: "string · member slug · optional", tag: "string · one tag, exact · optional" },
     read: true,
     run(input) {
       const q = optionalString(input, "q") ?? null;
       const like = q ? `%${escapeLike(q)}%` : null;
       const project = projectField(input, "project") ?? null;
       const keptBy = memberField(input, "kept_by") ?? null;
+      const tag = optionalString(input, "tag")?.trim().toLowerCase() ?? null;
       return all<NoteRow>(
         `SELECT * FROM notes
-         WHERE (? IS NULL OR title LIKE ? ESCAPE '\\' OR lede LIKE ? ESCAPE '\\' OR markdown LIKE ? ESCAPE '\\')
+         WHERE (? IS NULL OR title LIKE ? ESCAPE '\\' OR lede LIKE ? ESCAPE '\\' OR markdown LIKE ? ESCAPE '\\' OR tags_json LIKE ? ESCAPE '\\')
            AND (? IS NULL OR project = ?) AND (? IS NULL OR kept_by = ?)
          ORDER BY pinned DESC, updated_at DESC`,
-        like, like, like, like, project, project, keptBy, keptBy,
-      ).map((n) => {
+        like, like, like, like, like, project, project, keptBy, keptBy,
+      ).filter((n) => !tag || json<string[]>(n.tags_json, []).includes(tag)).map((n) => {
         const { markdown, ...rest } = noteOut(n);
         return { ...rest, excerpt: markdown.replace(/<[^>]+>/g, " ").replace(/[#*_>|`-]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 160) };
       });

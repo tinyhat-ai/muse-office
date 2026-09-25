@@ -46,3 +46,26 @@ test("empty input renders nothing", () => {
   assert.equal(renderMarkdown(null), "");
   assert.equal(renderMarkdown(""), "");
 });
+
+test("a small inline SVG survives as a visual, but nothing that runs or reaches out", () => {
+  const html = renderMarkdown([
+    "## Timeline",
+    "",
+    '<svg viewBox="0 0 200 40" role="img" aria-label="three steps" onload="alert(1)">',
+    '  <rect x="0" y="10" width="60" height="20" fill="#d8e7d3" />',
+    '  <rect x="70" y="10" width="60" height="20" fill="url(#evil)" />',
+    '  <text x="4" y="24" font-size="12">Plan</text>',
+    '  <a href="javascript:alert(1)"><text x="74" y="24">Build</text></a>',
+    "  <script>alert(1)</script>",
+    "</svg>",
+  ].join("\n"));
+  assert.match(html, /<svg viewbox="0 0 200 40" role="img" aria-label="three steps">/i);
+  assert.doesNotMatch(html, /<a\b/);
+  assert.match(html, /Build/); // the link's text stays
+  assert.match(html, /<rect x="0" y="10" width="60" height="20" fill="#d8e7d3"/);
+  assert.doesNotMatch(html, /onload/i);
+  assert.doesNotMatch(html, /url\(#evil\)/);
+  assert.doesNotMatch(html, /javascript:/i);
+  assert.doesNotMatch(html, /<script/i);
+  assert.match(html, /<text x="4" y="24" font-size="12">Plan<\/text>/);
+});

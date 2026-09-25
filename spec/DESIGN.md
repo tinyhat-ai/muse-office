@@ -84,3 +84,7 @@ corners, as in `src/app/icon.svg`. Use that file for the app's icon wherever
 the platform shows one (an app list, a tab, an artifact card). Never a
 briefcase, a suitcase, a building, or a generic "office" symbol: the hat is
 what says "this is the office my chief of staff runs".
+
+## Visuals in notes
+
+A note explains; a visual is for when a picture says it faster. Use, in this order: a table (choices, prices, dates); a small inline SVG for a timeline, a flow, or a comparison; an image by URL only when it already exists somewhere the person can open. Rules for an inline SVG: `viewBox` set and `width` at most 640, so it scales on a phone; the page's colours only (project pastels and darks, `--ink`, `--soft`, `--line`, `--needs`, `--done`); text 12–13px in the page font; a `role="img"` and an `aria-label` that says what it shows; no scripts, links, images, or references to anything outside the SVG (the page strips them). Say in one line above the visual what it shows.

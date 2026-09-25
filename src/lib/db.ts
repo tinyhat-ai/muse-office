@@ -23,6 +23,10 @@ function open(): Db {
   db.pragma("foreign_keys = ON");
   const schema = fs.readFileSync(path.join(process.cwd(), "db", "schema.sql"), "utf8");
   db.exec(schema);
+  // Columns added after a database was first created (CREATE TABLE IF NOT EXISTS
+  // does not add them). Keep this list short and append-only.
+  const noteCols = (db.prepare("PRAGMA table_info(notes)").all() as Array<{ name: string }>).map((c) => c.name);
+  if (!noteCols.includes("tags_json")) db.exec("ALTER TABLE notes ADD COLUMN tags_json TEXT NOT NULL DEFAULT '[]'");
   const count = db.prepare("SELECT COUNT(*) AS n FROM members").get() as { n: number };
   if (count.n === 0 && process.env.OFFICE_SEED !== "none") {
     // Lazy import keeps the seed out of the hot path once the office exists.
@@ -119,5 +123,5 @@ export interface ReportRow {
 export interface MetricRow { id: number; report: string; series: string | null; label: string; value: number; note_json: string; recorded_at: string }
 export interface NoteRow {
   slug: string; project: string | null; title: string; lede: string | null; markdown: string; kept_by: string | null;
-  linked_tasks_json: string; pinned: number; created_at: string; updated_at: string;
+  linked_tasks_json: string; tags_json: string; pinned: number; created_at: string; updated_at: string;
 }

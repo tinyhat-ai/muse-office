@@ -142,3 +142,11 @@
   .nt-body td:first-child { display: block; font-size: var(--t-body); font-weight: 600; margin-bottom: 6px; }
   .nt-body td:first-child::before { display: none; }
 }
+
+/* Tags: the topics and keywords a note carries, for finding it later. */
+.nt-chip.nt-tag { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; }
+.nt-card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.nt-card-tags span { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 11px; color: var(--soft); background: var(--bg); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; }
+.nt-tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 0; }
+.nt-tags a { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 12px; color: var(--soft); background: #fff; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; text-decoration: none; }
+.nt-tags a:hover { color: var(--ink); border-color: var(--ink); }

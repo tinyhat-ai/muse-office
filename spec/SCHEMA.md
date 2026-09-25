@@ -57,3 +57,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 | `savings` | who found it (member slug) | what was saved, in words | dollars | `{"state": "saved" or "waiting", "task": "task-id", "monthly": true}` |
 
 `new-customers` has no metrics: the page counts `stage_changes` per month (new leads, new customers) and sums `contacts.value_cents` for customers won this month.
+
+## Notes carry tags
+
+`notes.tags_json` is a JSON array of short lowercase strings: the topics a note belongs to and the words someone would search for (`["brand", "colors", "decision"]`, at most 12). The Notes page shows them as chips and filters by one tag; `list_notes` searches them. A note's body may hold a small inline SVG (a timeline, a flow, a comparison) next to tables and lists; the page keeps it and strips anything that runs or links out.

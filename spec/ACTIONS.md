@@ -32,7 +32,7 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 | `create_task` | `project`, `title`, `specialist?`, `id?`, `column?`, `step?`, `job_definition?`, `original_request?`, `done_when?: string[]`, `plan?: string[]`, `due?`, `note?` | Creates the task and its page (`column` may be `todo`, `in_progress`, or `done`; to wait on the user, create it and then `move_task` with a question). Adds the event "Made this task". Returns the task id. |
 | `update_task` | `id`, then any of `title`, `specialist`, `step`, `note`, `job_definition`, `original_request`, `due`, `done_when: [{text, met}]`, `plan: [{text, state}]` | Changes the description parts of the task's page. `plan` states are `done`, `now`, `later`. |
 | `move_task` | `id`, `column`, `question?`, `question_kind?` | Moves the card and adds a small event. `waiting_on_you` requires `question` (one clear question) and takes `question_kind`: `money` (the page shows "Yes, pay …" / "Not yet"), `approve`, or `answer` (the default). The move also posts the question on the task's page (a `question` update by the specialist) and returns its id as `question_update_id`; the page pins that row, and the user's answer is a reply to it. Moving out of `waiting_on_you` clears the question. Moving to `done` sets `done_at`; moving out of `done` clears it. |
-| `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to the conversation on the task's page. `author` is a member slug. Files also appear under "Files from this task". Posting the task's current question again as a `question` note returns the row `move_task` already posted instead of adding a second one. |
+| `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to the conversation on the task's page. `author` is a member slug. Files also appear under "Files from this task". Posting the task's current question again as a `question` note returns the row `move_task` already posted instead of adding a second one. The last `update` before a task moves to `done` is its closing report: what was done, the result, the files, what was learned. |
 | `attach_file` | `id`, `name`, `url` | Adds a file to "Files from this task". The URL must open for the user (a file artifact link, or a file stored in the app), never a path on the Muse's computer. |
 | `get_task` | `id` | Everything on the task's page. |
 | `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, due, updated_at. |
@@ -69,11 +69,14 @@ When a user answers a `money` question with the "Yes, pay …" button, the app s
 
 ## Notes
 
+Notes are where anything worth finding later goes: a decision, a how-to, a price list, a comparison, a lesson. Plain words, tags, a visual when it helps, and links to the tasks it came from, so that finding something never means searching chat.
+
+
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `upsert_note` | `slug`, `title`, `markdown`, `project?`, `lede?`, `kept_by?`, `linked_tasks?: string[]`, `pinned?` | Adds or updates a note. One note per topic; update rather than add. |
+| `upsert_note` | `slug`, `title`, `markdown`, `project?`, `lede?`, `kept_by?`, `linked_tasks?: string[]`, `tags?: string[]`, `pinned?` | Adds or updates a note. One note per topic; update rather than add. `tags` are the topics and the words someone would search for (lowercase, up to 12); every note should have some. The body is markdown; tables and a small inline SVG are fine for a visual. |
 | `get_note` | `slug` | The note. |
-| `list_notes` | `q?`, `project?`, `kept_by?` | Search and filter. |
+| `list_notes` | `q?`, `project?`, `kept_by?`, `tag?` | Search (title, lede, body, tags) and filter, `tag` exact. |
 | `remove_note` | `slug` | Removes a note. Never called without the user's yes. |
 
 ## The whole office
