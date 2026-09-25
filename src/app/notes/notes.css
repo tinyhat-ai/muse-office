@@ -111,7 +111,7 @@
 .nt-comment-reply { margin: 0 0 12px 20px; padding: 10px 14px; border-left: 2px solid #d7d4c8; border-radius: 0 8px 8px 0; background: #f5f4ef; }
 .nt-comment b { font-size: var(--t-sec); }
 .nt-comment time { color: var(--soft); font-size: var(--t-cap); margin-left: 10px; }
-.nt-comment p { white-space: pre-wrap; line-height: 1.5; margin-top: 6px; }
+.nt-comment p { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.5; margin-top: 6px; }
 .nt-comment-form { margin-top: 22px; display: grid; gap: 10px; }
 .nt-comment-form label { font-weight: 650; font-size: var(--t-sec); }
 .nt-comment-form textarea { resize: vertical; width: 100%; min-height: 90px; padding: 12px; border: 1px solid var(--line); border-radius: 8px; font: inherit; }
