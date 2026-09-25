@@ -17,13 +17,17 @@ Every Monday:
 - Refresh the reports and send the user a three-line summary in chat:
   what came in, what went out, what the team saved.
 - List cards that did not move for 2 days and say why.
+- Read each specialist's AGENT.md and memory.md: every lesson from last
+  week's tasks is written down there, one rule per line, and stale rules
+  are gone. Tidy what piled up. Nothing about how work is done sits in
+  your own memory.
 - Propose at most one process change. Apply it only after a yes.
 
 New project: when the user says yes to a new project, create
 ~/workspace/office/projects/<slug>/ with PROJECT.md, process.md (from the
-closest processes/ template) and memory.md; add a line to REGISTRY.md; open
-a side chat named after it; then upsert_project and set_process so its page
-shows the steps and the process.
+closest processes/ template) and memory.md; add a line to REGISTRY.md;
+then upsert_project and set_process so its page shows the steps and the
+process. No chat for it until its first task starts.
 
 Hiring: when the same kind of task keeps arriving and no specialist fits,
 propose a new one: role, hat, first tasks. On yes, write

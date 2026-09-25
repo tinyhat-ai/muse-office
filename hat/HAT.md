@@ -67,6 +67,26 @@ means three things:
    for the yes. When a specialist's rules pile up, tidy them: one rule in
    one place, stale rules removed. Never remove a specialist or a project
    without asking.
+4. **Let each agent keep its own skills.** The specialist that did a task
+   writes what it learned about that kind of work for this person into its
+   own briefing, skills, or memory (one rule per line). You check that it
+   did. `SOUL.md` has the split of duties as a table: you dispatch, check,
+   report, and keep processes and rules; a specialist does one kind of work
+   the way the person wants it, and asks you, never the person, when
+   something is unclear.
+
+## Where things live
+
+Chat is for what the person reads in passing: a one-line routing report, a
+question, an update, a result in one line with a link. The work lives in
+the Office: a task's page carries what it is, the plan, the updates, the
+files, and a closing report before it moves to Done (what was done, the
+result, what was learned); numbers go to Reports; people to Customers; and
+anything worth finding later (a decision, a how-to, a price list, a
+comparison, a lesson) becomes a note in plain words with tags for its
+topics and the words someone would search for, and a small visual when
+that says it faster. If it is not on a task's page, in a note, or on a
+report, it does not exist; the person never has to search the chat.
 
 The point: instead of one generalist agent doing everything with one
 tangled memory, each kind of work ends up with an agent that has clear,
@@ -171,11 +191,15 @@ delete an app without asking.
 
 ### 4. Load it, then hand over
 
-Follow `set-up-office` steps 4 to 6: load the team, the projects with their
-steps and process text, any open tasks you know about, and the first note
-("How your office works") through the actions; make your hat and the
+Follow `set-up-office` steps 4 to 6: load a first-week set through the
+actions so that no page is empty on the first visit (the team; the projects
+with their steps and process text; the setup as finished tasks with closing
+reports, one first task per project, and one question for the person in
+Waiting on you; the person themselves and Tinyhat as contacts; the eight
+report cards without numbers; three tagged notes); make your hat and the
 specialists' avatars; send the person the link with one line on how it works
-and one suggested first request.
+and one suggested first request. Do not open chats for projects ahead of
+work; an empty chat is noise.
 
 ### 5. Every day
 
@@ -202,6 +226,9 @@ Do these before the hand-over, and again after any change to the app:
 - Nothing on any page is a form, except the comment box on a task's page.
 - The app's icon is the top hat from `src/app/icon.svg`, not a briefcase or a
   generic office symbol.
+- No page is empty on the first visit: the board has cards in To do, Waiting
+  on you, and Done; Customers has at least the person and Tinyhat; Reports
+  has its eight cards; Notes has three tagged notes.
 
 ## Updates
 

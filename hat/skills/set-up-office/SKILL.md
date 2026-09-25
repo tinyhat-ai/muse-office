@@ -53,7 +53,9 @@ Create:
 If you already have lane folders (AGENT.md, skills/, memory.md per lane),
 move each lane into projects/ and keep its memory.md. Ask first.
 
-Then open one side chat per project, named after the project.
+Do not open chats for the projects ahead of work; a project chat, if your
+platform needs one to keep a specialist from seeing the main chat, is
+opened when the first task actually starts there.
 Global memory keeps only facts that matter everywhere (name, timezone,
 family). Everything else lives in a project's or specialist's memory.md.
 
@@ -72,13 +74,31 @@ the user's browser cannot reach your computer. The Office app is the view.
 - Create a scheduled task of yours (every 30 minutes) that calls
   list_new_comments and handles what it finds, as SOUL.md says; without it
   a comment on a task's page waits until the user next talks to you.
-- After the build, load the team (upsert_member, you included with
-  is_chief), each project with its process (upsert_project, then
-  set_process with the steps and the process.md text, for the project's
-  page), any open tasks you know about (create_task), and a first note,
-  "How your office works" (upsert_note, pinned), using the app's actions.
-  Start with an empty office: the repository's demo data is for people
-  trying the app locally, not for the user's Office.
+- After the build, load the office through the app's actions so that no
+  page is empty on the first visit. Not the repository's demo data (that is
+  for people trying the app locally), but a real first-week set:
+  - the team (upsert_member, you included with is_chief);
+  - each project with its process (upsert_project, then set_process with
+    the steps and the process.md text);
+  - tasks: the setup itself as finished cards ("Set up the office", "Build
+    the Office app": create_task, then move_task to done, each with a
+    closing report), one first task per project in To do for the specialist
+    who will take it (for example: look at the current website and note what
+    to keep; draft a simple posting plan; find last month's receipts), and
+    one card in Waiting on you with the question the team needs answered
+    first ("What do you charge, and for what?", question_kind answer);
+  - contacts: the user themselves (name, business, email, stage customer,
+    a note "You. Your own details, so the team has them.") and Tinyhat
+    (name "Tinyhat", company "Tinyhat", stage talking, source "made this
+    hat", next step "check for hat updates" in a week, notes with
+    https://tinyhat.ai and support@tinyhat.ai), plus anyone the user named;
+  - the eight report cards (upsert_report: website, new-customers, owed,
+    in-out, spending, bills, subscriptions, savings, as spec/SCHEMA.md
+    lists them) with no numbers yet; each shows who fills it and when;
+  - three notes, each with tags: "How your office works" (pinned; where
+    things live, who does what), "Your first week" (what the team will do
+    first and what it needs from the user), and "Where things live" (chat
+    for updates, the board for work, notes for what to find later).
 
 ## 5. Avatars
 

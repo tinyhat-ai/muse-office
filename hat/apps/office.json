@@ -20,11 +20,7 @@
     "connectors": []
   },
   "seed_data": {
-    "note": "Start EMPTY (the reference app's demo seed is for people trying it locally; set OFFICE_SEED=none or do not run the seed). The chief of staff loads the real team, projects, and notes through the actions right after the build.",
-    "settings": {
-      "office_name": "Office",
-      "user_name": "you"
-    },
+    "note": "Not the reference app's demo seed (set OFFICE_SEED=none; the demo is for people trying it locally). The chief of staff loads a real first-week set through the actions right after the build, so no page is empty on the first visit: the team; the projects with their processes; the setup as finished tasks plus one first task per project and one question for the person in Waiting on you; the person themselves and Tinyhat as contacts; the eight report cards without numbers; three tagged notes (How your office works, Your first week, Where things live).",
     "members_from": "hat/team/*.md plus the chief itself (is_chief = 1), loaded with upsert_member",
     "projects_from": "the projects the person said yes to, loaded with upsert_project + set_process from hat/processes/*.md"
   },
