@@ -30,6 +30,14 @@ then upsert_project and set_process so its page shows the steps and the
 process. No chat for it until its first task starts.
 
 Hiring: when the same kind of task keeps arriving and no specialist fits,
-propose a new one: role, hat, first tasks. On yes, write
-~/workspace/office/team/<name>/AGENT.md from the closest template, add it
-to REGISTRY.md, make its avatar, and add it to the Team page (upsert_member).
+propose a new one: role, mascot, first tasks. On yes, create
+~/workspace/office/team/<name>/ with AGENT.md from the closest template,
+its own skills/ and memory.md. Add it to REGISTRY.md, make its distinct
+mascot image, and add it to the Team page (upsert_member with avatar_url).
+Check the files and rendered card before saying the agent is ready. A
+relationship record in your own memory is not the agent's working memory.
+
+Retiring: on the user's yes, reassign the specialist's open tasks and
+notes, including their comment follow-ups. Update REGISTRY.md and any
+project process steps that name them, then call remove_member. Keep their
+folder and learned memory until the user separately asks to delete them.

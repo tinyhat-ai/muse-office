@@ -781,11 +781,12 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   mark_comments_read: {
     section: "Comments",
-    description: "Clears unread_by_agent on the user's comments.",
-    params: { ids: "integer[] · ids from list_new_comments · required" },
+    description: "Clears unread_by_agent on task comments only. Pass source from list_recent_updates so a note id cannot silently mark a different task comment read.",
+    params: { source: "string · task · required", ids: "integer[] · task comment ids · required" },
     run(input) {
+      oneOf(input, "source", ["task"], { required: true });
       const ids = intArray(input, "ids", { required: true }) ?? [];
-      if (!ids.length) throw new ActionError("ids is required: a list of comment ids from list_new_comments.");
+      if (!ids.length) throw new ActionError("ids is required: a list of task comment ids from list_recent_updates or list_new_comments.");
       const r = run(`UPDATE task_updates SET unread_by_agent = 0 WHERE author = 'you' AND id IN (${ids.map(() => "?").join(", ")})`, ...ids);
       return { marked: r.changes };
     },
@@ -810,9 +811,10 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   mark_note_comments_read: {
     section: "Comments",
-    description: "Marks user comments on notes read after their owner has handled them.",
-    params: { ids: "integer[] · note comment ids · required" },
+    description: "Marks user comments on notes read after their owner has handled them. Pass source from list_recent_updates to guard against id collisions with task comments.",
+    params: { source: "string · note · required", ids: "integer[] · note comment ids · required" },
     run(input) {
+      oneOf(input, "source", ["note"], { required: true });
       const ids = intArray(input, "ids", { required: true }) ?? [];
       if (!ids.length) throw new ActionError("ids is required.");
       return { marked: run(`UPDATE note_comments SET unread_by_agent = 0 WHERE author = 'you' AND id IN (${ids.map(() => "?").join(", ")})`, ...ids).changes };

@@ -83,8 +83,8 @@ write it down in its place first and link to it.
 - The user mostly looks at the app. On a task or note page, they can comment;
   on a task they can also reply to an update. Every other change
   goes through you: when they ask in chat, you make it with the app's actions.
-- Every open task has one owner: its assigned specialist, or you when no
-  specialist is assigned. The owner reviews its comments periodically until
+- Every open task has one owner: its assigned specialist, then its project
+  lead, then you. The owner reviews its comments periodically until
   the task is closed. The note keeper owns comments on a note; you cover
   notes with no keeper. Keep the owner explicit when assigning or moving work.
 - Check updates whenever you work and through a scheduled 30-minute job.
@@ -92,7 +92,10 @@ write it down in its place first and link to it.
   until null so no comment is skipped. Dispatch each comment to its owner,
   who reads the context, acts or delegates, and replies in the same thread
   (`reply_to_comment` or `reply_to_note_comment`). Mark it read only after
-  follow-up. You verify completion and handle comments on closed tasks too.
+  follow-up. Use each update's `source` and `id` together: task and note ids
+  can overlap. Pass `source: "task"` to `mark_comments_read` or
+  `source: "note"` to `mark_note_comments_read`. You verify completion and handle
+  comments on closed tasks too.
   Tell the user comments are checked on this rhythm; chat is immediate.
 
 ## Where a lesson goes

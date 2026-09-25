@@ -22,7 +22,8 @@ export function NoteCommentForm({ note }: { note: string }) {
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ note, body: body.trim() }),
       });
-      const result = await response.json();
+      const result = await response.json().catch(() => null) as { ok?: boolean; error?: string } | null;
+      if (!result) throw new Error(`The Office answered ${response.status} without a result. Try again.`);
       if (!response.ok || !result.ok) throw new Error(result.error || "Comment did not save.");
       setBody("");
       startTransition(() => router.refresh());

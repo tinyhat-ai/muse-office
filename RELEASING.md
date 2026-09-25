@@ -4,8 +4,8 @@ A release is a tag `vX.Y.Z` on `main` and a GitHub release with the same
 name. `channels/latest` follows the newest published release, while
 `channels/lts` is the stable promotion channel. The Muse landing page copies
 `hat/PROMPT.md` from LTS, so work merged to `main` does not change the
-message people send their Muse until the stable channel is promoted. In
-v0.0.1, that message still links to build files on `main`; promoting the
+message people send their Muse until the stable channel is promoted. The
+current message still links to build files on `main`; promoting the
 channel pins the message text, not all files Muse will read.
 
 Both channel branches are protected and restricted to the maintainer. Agents

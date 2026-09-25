@@ -88,7 +88,7 @@ test("the team can change, and task and note comments reach an ordered paginated
   assert.ok(beforeFollowUp.unread_note_comments >= 1);
   assert.equal(beforeFollowUp.unread_comments, beforeFollowUp.unread_task_comments + beforeFollowUp.unread_note_comments);
 
-  type Item = { id: number; source: string; owner: string; body: string; url: string; unread_by_agent: boolean };
+  type Item = { id: number; source: string; owner: string; body: string; url: string; unread_by_agent: boolean; created_at: string };
   const found: Item[] = [];
   let cursor: string | null = null;
   do {
@@ -101,7 +101,27 @@ test("the team can change, and task and note comments reach an ordered paginated
   assert.equal(found.find((item) => item.body === "Add the source date.")?.owner, "researcher");
   assert.equal(found.find((item) => item.body === "Add the source date.")?.url, "/notes/market-brief");
   assert.ok(found.every((item) => item.unread_by_agent));
+  for (let i = 1; i < found.length; i++) {
+    const previous = found[i - 1];
+    const current = found[i];
+    assert.ok(previous.created_at > current.created_at ||
+      (previous.created_at === current.created_at && (previous.source > current.source ||
+        (previous.source === current.source && previous.id > current.id))));
+  }
   assert.equal(callAction("list_recent_updates", { cursor: "bad" }).status, 400);
+
+  // Task and note ids come from different tables. A note id must never
+  // silently mark an unrelated task comment with the same integer id read.
+  let taskCollision = taskComment;
+  let noteCollision = noteComment;
+  while (taskCollision.id < noteCollision.id) taskCollision = postComment({ task: task.id, body: "Another task question." });
+  while (noteCollision.id < taskCollision.id) noteCollision = postComment({ note: note.slug, body: "Another note question." });
+  assert.equal(noteCollision.id, taskCollision.id);
+  assert.equal(callAction("mark_comments_read", { ids: [noteCollision.id] }).status, 400);
+  assert.equal(callAction("mark_comments_read", { source: "note", ids: [noteCollision.id] }).status, 400);
+  assert.equal((runAction("mark_note_comments_read", { source: "note", ids: [noteCollision.id] }) as { marked: number }).marked, 1);
+  const stillUnread = runAction("list_recent_updates", { unread_only: true }) as { updates: Item[] };
+  assert.ok(stillUnread.updates.some((item) => item.source === "task" && item.id === taskCollision.id));
 
   runAction("reply_to_note_comment", { comment_id: noteComment.id, author: "researcher", body: "Added the date." });
   runAction("reply_to_comment", { comment_id: taskComment.id, author: "researcher", body: "I will compare them." });

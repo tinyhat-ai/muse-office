@@ -46,13 +46,15 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 | `list_recent_updates` | `limit?`, `cursor?`, `unread_only?` | Newest task updates and note comments, with target, owner, reply context, and unread status. Returns `updates` and `next_cursor`; follow pages until null. `unread_only: true` finds comments needing action. |
 | `list_new_comments` | — | Every comment or reply the user wrote that the Muse has not read yet, with its task and, if it is a reply, the update it answers. |
 | `reply_to_comment` | `comment_id`, `author`, `body` | Answers in the same thread. |
-| `mark_comments_read` | `ids: number[]` | Clears `unread_by_agent`. |
+| `mark_comments_read` | `source: "task"`, `ids: number[]` | Clears handled task comments. The source is required because task and note ids can overlap. |
 | `reply_to_note_comment` | `comment_id`, `author`, `body` | Answers a user's note comment and marks it read. |
-| `mark_note_comments_read` | `ids: number[]` | Marks handled user note comments read. |
+| `mark_note_comments_read` | `source: "note"`, `ids: number[]` | Marks handled note comments read. The source is required because task and note ids can overlap. |
 
 Each open task has an owner (`specialist`, then project lead, then chief). Its owner checks comments until it is closed. A note's `kept_by` member owns its comments, or the chief when unset. The chief's scheduled 30-minute job pages through unread updates, delegates to the owner, and verifies follow-up. Comments on completed tasks still appear and need triage.
 
-When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted); `list_new_comments` shows that question as `replying_to`. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
+Treat an update's identity as the pair `(source, id)`, never the integer id alone. Use `reply_to_comment` or `mark_comments_read` only for `source: "task"`; use `reply_to_note_comment` or `mark_note_comments_read` only for `source: "note"`. The read actions require the source value and reject a missing or mismatched one. Replace any old scheduled job that calls `list_new_comments` with `list_recent_updates`; the old list contains task comments only.
+
+When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted). `list_recent_updates` returns that id and `replying_to_body`; the old `list_new_comments` action returns a `replying_to` object. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
 
 ## Customers
 
