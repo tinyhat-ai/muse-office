@@ -30,23 +30,26 @@ can prepare reviewable promotion PRs but cannot move those branches themselves.
    Mark `-rc.N` versions as pre-releases; only finals are "Latest". The first
    published final release is `v0.0.1`. That first release used a lightweight
    tag and hand-written release notes; the commands above are for later releases.
-5. Advance `channels/latest` to the tested release. Advance `channels/lts`
-   when that release should become the stable promotion message. After merge,
-   compare the promoted channel's files with the release and check its raw
-   message:
+5. Open review PRs from the tested release tag to `channels/latest` and, when
+   it should become the stable promotion message, `channels/lts`. After review
+   and maintainer approval, the maintainer fast-forwards each protected ref
+   directly to the tag commit. Do not use GitHub's Merge button: merge, squash,
+   and rebase create a different commit on the channel and can break the next
+   fast-forward. Replace `TAG_SHA` with `git rev-parse vX.Y.Z^{commit}`:
 
    ```bash
-   git fetch origin --tags
-   git diff --quiet vX.Y.Z origin/channels/latest
+   gh api --method PATCH repos/tinyhat-ai/muse-office/git/refs/heads/channels/latest \
+     -f sha=TAG_SHA -F force=false
+   git ls-remote https://github.com/tinyhat-ai/muse-office \
+     refs/heads/channels/latest refs/tags/vX.Y.Z
    curl -fsS https://raw.githubusercontent.com/tinyhat-ai/muse-office/channels/latest/hat/PROMPT.md
    ```
 
-   When promoting LTS too, run the same checks for `origin/channels/lts` and
+   Both `ls-remote` lines must show the tag commit SHA. When promoting LTS,
+   apply the same ref update and checks to `channels/lts` and
    `https://raw.githubusercontent.com/tinyhat-ai/muse-office/channels/lts/hat/PROMPT.md`.
-
-   A GitHub merge or squash can put a new commit on the channel with the same
-   files as the tag; compare content, not only commit IDs. Keep an existing
-   LTS in place when a new release needs more time in Latest.
+   `force=false` rejects a non-fast-forward. Keep an existing LTS in place
+   when a new release needs more time in Latest.
 
 ## Compatibility
 
