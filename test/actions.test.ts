@@ -76,6 +76,78 @@ test("moving to waiting_on_you without a question is refused with the valid kind
   assert.match(String((r.body as { error: string }).error), /money, approve, answer/);
 });
 
+test("the team can change, and task and note comments reach an ordered paginated owner feed", () => {
+  runAction("upsert_member", { slug: "researcher", name: "Rae", role: "Researcher", job: "Checks sources." });
+  runAction("upsert_member", { slug: "researcher", job: "Checks sources and writes briefs." });
+  const portrait = runAction("set_member_avatar", { slug: "researcher", avatar_url: "/avatars/researcher.svg" }) as { avatar_url: string };
+  assert.equal(portrait.avatar_url, "/avatars/researcher.svg");
+  assert.equal(callAction("set_member_avatar", { slug: "unknown", avatar_url: "/avatars/unknown.svg" }).status, 404);
+  for (const avatar_url of ["/Users/example/avatar.png", "file:///tmp/avatar.png", "~/avatar.png"]) {
+    assert.equal(callAction("set_member_avatar", { slug: "researcher", avatar_url }).status, 400);
+    assert.equal(callAction("upsert_member", { slug: "researcher", avatar_url }).status, 400);
+  }
+  assert.equal((getDb().prepare("SELECT avatar_url FROM members WHERE slug = ?").get("researcher") as { avatar_url: string }).avatar_url, "/avatars/researcher.svg");
+  const task = runAction("create_task", { project: "money", title: "Investigate a market", specialist: "researcher" }) as { id: string };
+  const note = runAction("upsert_note", { slug: "market-brief", title: "Market brief", markdown: "# Brief", kept_by: "researcher" }) as { slug: string };
+  const taskComment = postComment({ task: task.id, body: "Please compare two sources." });
+  const noteComment = postComment({ note: note.slug, body: "Add the source date." });
+  const beforeFollowUp = runAction("summary", {}) as { unread_task_comments: number; unread_note_comments: number; unread_comments: number };
+  assert.ok(beforeFollowUp.unread_task_comments >= 1);
+  assert.ok(beforeFollowUp.unread_note_comments >= 1);
+  assert.equal(beforeFollowUp.unread_comments, beforeFollowUp.unread_task_comments + beforeFollowUp.unread_note_comments);
+
+  type Item = { id: number; source: string; owner: string; body: string; url: string; unread_by_agent: boolean; created_at: string };
+  const found: Item[] = [];
+  let cursor: string | null = null;
+  do {
+    const page = runAction("list_recent_updates", { unread_only: true, limit: 1, ...(cursor ? { cursor } : {}) }) as { updates: Item[]; next_cursor: string | null };
+    found.push(...page.updates);
+    cursor = page.next_cursor;
+  } while (cursor);
+  assert.equal(found.filter((item) => item.source === "task" && item.id === taskComment.id).length, 1);
+  assert.equal(found.filter((item) => item.source === "note" && item.id === noteComment.id).length, 1);
+  assert.equal(found.find((item) => item.body === "Add the source date.")?.owner, "researcher");
+  assert.equal(found.find((item) => item.body === "Add the source date.")?.url, "/notes/market-brief");
+  assert.ok(found.every((item) => item.unread_by_agent));
+  for (let i = 1; i < found.length; i++) {
+    const previous = found[i - 1];
+    const current = found[i];
+    assert.ok(previous.created_at > current.created_at ||
+      (previous.created_at === current.created_at && (previous.source > current.source ||
+        (previous.source === current.source && previous.id > current.id))));
+  }
+  assert.equal(callAction("list_recent_updates", { cursor: "bad" }).status, 400);
+
+  // Task and note ids come from different tables. A note id must never
+  // silently mark an unrelated task comment with the same integer id read.
+  let taskCollision = taskComment;
+  let noteCollision = noteComment;
+  while (taskCollision.id < noteCollision.id) taskCollision = postComment({ task: task.id, body: "Another task question." });
+  while (noteCollision.id < taskCollision.id) noteCollision = postComment({ note: note.slug, body: "Another note question." });
+  assert.equal(noteCollision.id, taskCollision.id);
+  assert.equal(callAction("reply_to_comment", { comment_id: noteCollision.id, author: "researcher", body: "Wrong page." }).status, 400);
+  assert.equal(callAction("reply_to_comment", { source: "task", target_id: note.slug, comment_id: noteCollision.id, author: "researcher", body: "Wrong page." }).status, 404);
+  assert.equal(callAction("reply_to_comment", { source: "note", target_id: task.id, comment_id: taskCollision.id, author: "researcher", body: "Wrong page." }).status, 404);
+  assert.equal((getDb().prepare("SELECT COUNT(*) AS count FROM task_updates WHERE reply_to = ?").get(taskCollision.id) as { count: number }).count, 0);
+  assert.equal(callAction("mark_comments_read", { ids: [noteCollision.id] }).status, 400);
+  assert.equal(callAction("mark_comments_read", { source: "task", target_id: note.slug, ids: [noteCollision.id] }).status, 404);
+  assert.equal((runAction("mark_comments_read", { source: "note", target_id: note.slug, ids: [noteCollision.id] }) as { marked: number }).marked, 1);
+  const stillUnread = runAction("list_recent_updates", { unread_only: true }) as { updates: Item[] };
+  assert.ok(stillUnread.updates.some((item) => item.source === "task" && item.id === taskCollision.id));
+
+  runAction("reply_to_comment", { source: "note", target_id: note.slug, comment_id: noteComment.id, author: "researcher", body: "Added the date." });
+  runAction("reply_to_comment", { source: "task", target_id: task.id, comment_id: taskComment.id, author: "researcher", body: "I will compare them." });
+  const remaining = runAction("list_recent_updates", { unread_only: true, limit: 100 }) as { updates: Item[] };
+  assert.ok(!remaining.updates.some((item) => item.source === "note" && item.id === noteComment.id));
+  assert.ok(!remaining.updates.some((item) => item.source === "task" && item.id === taskComment.id));
+
+  assert.equal(callAction("remove_member", { slug: "researcher" }).status, 400);
+  runAction("update_task", { id: task.id, specialist: "penny" });
+  runAction("upsert_note", { slug: note.slug, kept_by: "chief" });
+  const removed = runAction("remove_member", { slug: "researcher" }) as { removed: string };
+  assert.equal(removed.removed, "researcher");
+});
+
 test("notes carry tags for finding them later; list_notes filters by one tag and searches tags", () => {
   runAction("upsert_note", { slug: "brand-guide", title: "Brand guide", markdown: "Warm and earthy.", tags: ["Brand", " colors ", "brand", "decision"] });
   runAction("upsert_note", { slug: "bills", title: "Bills and due dates", markdown: "Taxes on the 30th.", tags: ["money", "taxes"] });

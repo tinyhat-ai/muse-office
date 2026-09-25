@@ -1,6 +1,6 @@
 # Actions: how the Muse changes the Office
 
-The user never fills in a form. They tell their Muse, and the Muse changes the Office through these actions. Every page is view-only except one place: on a task's page the user can comment or reply, and the Muse reads that through `list_new_comments`.
+The user normally tells Muse, and Muse changes the Office through these actions. On task and note pages the user can comment; on tasks they can also reply. Muse checks the ordered, paginated `list_recent_updates` feed on a schedule.
 
 In the reference app each action is an HTTP call: `POST /api/actions/<name>` with a JSON body, returning `{ "ok": true, "data": ... }` or `{ "ok": false, "error": "..." }`. `GET /api/actions` lists every action with its arguments. When the Muse builds the Office as an artifact, it publishes these same names as the artifact's actions, with the same arguments.
 
@@ -11,8 +11,13 @@ Names are `snake_case`. Slugs are short, lowercase, `kebab-case`. Dates are ISO 
 | Action | Arguments | What it does |
 | --- | --- | --- |
 | `upsert_member` | `slug`, `name`, `role`, `hat?`, `job`, `avatar_url?`, `color?`, `does?: string[]`, `never?`, `skills?: string[]`, `is_chief?` | Adds or updates one card on the Team page. |
+| `set_member_avatar` | `slug`, `avatar_url` | Changes any existing member's portrait, including the chief. Use the chief's actual Muse avatar image or Office asset URL, not the bundled sample. |
 | `set_member_rule` | `slug`, `rule` | Sets the "last rule learned" shown in the specialist's detail. |
 | `remove_member` | `slug` | Removes a specialist. Refused while they have open tasks, and refused for the chief. Their finished work stays; it is unlinked from them. Never called without the user's yes. |
+
+The chief's portrait comes from that Muse's own avatar, with its recognizable face preserved under the small hat. Use `set_member_avatar` to put that image on the Team card; the bundled sample image is only for this repository's standalone preview. For a new specialist, `avatar_url` holds a real, specialty-relevant face or mascot image in the same illustration style and crop as the chief. `hat` is only a wearable accessory; writing an animal name there does not create its image. Verify the image loads on Team, in the detail panel, and on a task card before reporting setup complete. If an image cannot yet be made or the chief's image cannot be accessed, leave an avatar task open and say which portrait still uses initials.
+
+Both avatar actions accept an HTTPS image URL or an Office asset path beginning with `/`. They reject local paths such as `/Users/...`, `file://...`, `~/...`, and relative paths that a visitor cannot open. To clear a portrait, pass an empty `avatar_url` to `upsert_member`; `set_member_avatar` requires a nonempty URL.
 
 The Team page works out each specialist's status ("working on", "next", "waiting on you") and their latest finished work from `tasks`; there is no action for those.
 
@@ -37,15 +42,20 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 | `get_task` | `id` | Everything on the task's page. |
 | `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, due, updated_at. |
 
-## Comments (the one thing the user writes)
+## Comments and updates
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
+| `list_recent_updates` | `limit?`, `cursor?`, `unread_only?` | Newest task updates and note comments, with target, owner, reply context, and unread status. Returns `updates` and `next_cursor`; follow pages until null. `unread_only: true` finds comments needing action. |
 | `list_new_comments` | — | Every comment or reply the user wrote that the Muse has not read yet, with its task and, if it is a reply, the update it answers. |
-| `reply_to_comment` | `comment_id`, `author`, `body` | Answers in the same thread. |
-| `mark_comments_read` | `ids: number[]` | Clears `unread_by_agent`. |
+| `reply_to_comment` | `source: "task" \| "note"`, `target_id`, `comment_id`, `author`, `body` | Answers a user comment on its task or note page and marks it read. Copy `source`, `target_id`, and `id` from one feed item. |
+| `mark_comments_read` | `source: "task" \| "note"`, `target_id`, `ids: number[]` | Marks handled comments on one task or note read. Every id must belong to that page. |
 
-When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted); `list_new_comments` shows that question as `replying_to`. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
+Each open task has an owner (`specialist`, then project lead, then chief). Its owner checks comments until it is closed. A note's `kept_by` member owns its comments, or the chief when unset. The chief's scheduled 30-minute job pages through unread updates, delegates to the owner, and verifies follow-up. Comments on completed tasks still appear and need triage.
+
+Treat an update's identity as `(source, target_id, id)`, never the integer id alone. The same reply and read actions handle both kinds of page; they choose the table from `source` and verify that the id belongs to `target_id`. Copy all three fields from the same `list_recent_updates` item. Do not infer `source` from an action name or retry with a different value to bypass a page mismatch. Replace any old scheduled job that calls `list_new_comments` with `list_recent_updates`; the old list contains task comments only.
+
+When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted). `list_recent_updates` returns that id and `replying_to_body`; the old `list_new_comments` action returns a `replying_to` object. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
 
 ## Customers
 

@@ -1,39 +1,51 @@
-# muse-office
+# Muse Office
 
-Promote your Muse to chief of staff. It manages a small team of specialist
-agents for you and shows you what is going on in one private app, **Office**,
-but it does the managing itself. Your Muse does more; you run nothing.
+## Give your Muse a chief of staff hat
 
-This repository holds two things:
+Keep talking to the Muse you already know. With this hat, it organizes work,
+keeps a team of agents and their instructions current, checks results, and
+brings decisions back to you. Their work stays visible in a private **Office**
+that your Muse builds for you. The sample team is a starting point: you can
+ask Muse to add, change, or remove agents as your work changes.
 
-1. **The hat** (`hat/`): the instructions a Muse follows to become a chief
-   of staff, set up its office, build the Office app, and run it every day.
-2. **The Office** (`src/`, `db/`, `spec/`): the reference application, a
-   small Next.js + SQLite app you can run locally, with the database schema,
-   the pages, and the actions a Muse uses to change it.
+### [Open and copy the stable message →](https://github.com/tinyhat-ai/muse-office/blob/channels/lts/hat/PROMPT.md)
 
-## For people: promote your Muse
+Paste it into your chat with Muse. Muse shows you its plan and waits for your
+approval before setting up the team and Office. You can edit the message
+before you send it. The one-click landing page will be at `tinyhat.ai/muse`
+after deployment.
 
-A Muse does not take standing instructions from a web page (it will read one
-and then ask you to say it in your own words, which is the right behaviour).
-So the promotion is a message from you: copy the text in
-[`hat/PROMPT.md`](hat/PROMPT.md), change anything you like, and send it to
-your Muse. It shows you its plan, waits for your yes, sets up its office,
-builds your Office app from this repository, and hands you the link. You keep
-talking to it the way you always have.
+**What changes:**
 
-The long form of the promotion, which your Muse reads as build material, is
-[`hat/HAT.md`](hat/HAT.md), also served at <https://tinyhat.ai/hats/chief-of-staff.md>.
+- **A way to organize work.** Muse turns substantial requests into owned tasks,
+  gives agents focused briefings, checks their results, and records decisions.
+  Muse keeps its own avatar, and each specialist gets a distinct face in the
+  same visual style, plus its own instructions, skills, and memory. Ask Muse to
+  create, change, or retire an agent; the initial roles are examples.
+- **A place to see the work.** Projects shows the tasks and what is waiting on
+  you. Team shows who does what. Customers keeps track of people. Reports
+  shows visual charts. Notes keeps decisions and useful knowledge. You can
+  comment on a task or note; Muse checks comments on a schedule and routes
+  each one to its owner for follow-up.
+- **Your approval still matters.** Muse asks before anything is sent, bought,
+  published, or deleted. The Office starts with real setup work and clearly
+  labeled public example charts; it does not invent customers or business
+  results for you.
 
-## What a Muse builds from this hat
+The hat is a set of instructions, not an app you need to install by hand. This
+repository also contains the Office reference app and the files Muse uses to
+build your copy.
 
-Built by a Muse from the message in `hat/PROMPT.md`, on a freshly reset agent, with the specialists named by the Muse itself: the Team page after a few requests were routed (a post with the marketer and a lead with sales, both waiting on the person; a receipt pile next for the bookkeeper; the designer's finished task), and the Notes page. That build predates note tags; a Muse that refines its Office from the current spec gets the tag chips above.
+## See an Office made by Muse
+
+These are pages from an Office a Muse built from the promotion message. The
+current reference app adds tagged notes and a more useful first visit.
 
 ![Team page of an Office built by a Muse](docs/live/team.png)
 
 ![Notes page of an Office built by a Muse](docs/live/notes.png)
 
-## Run the Office locally
+## For developers: run the reference Office locally
 
 ```bash
 npm install
@@ -50,8 +62,8 @@ data; the next start seeds the starter again. Use `OFFICE_SEED=demo npm run dev`
 for the fictional consultant showcase shown in some screenshots, or
 `OFFICE_SEED=none npm run dev` for an empty database.
 
-The pages are view-only. The one thing you can write is a comment or a reply
-on a task's page. Everything else changes through the actions.
+The pages are mostly for reading. You can comment on tasks and notes, and reply
+to a task update. Everything else changes through Muse and the Office actions.
 
 ## First visit
 
@@ -77,7 +89,7 @@ The board: lanes with a coloured rule, sticky notes in the project's colour, and
 
 ![The Projects board](docs/screenshots/projects.png)
 
-A task's page, the one place the person can write: the pinned question with a one-tap answer, what the task is, done-when, the plan, and the conversation.
+A task's page shows the pinned question with a one-tap answer, what the task is, done-when, the plan, and the conversation. People can comment on tasks and notes.
 
 ![A task waiting on a money question](docs/screenshots/task-waiting-money.png)
 
@@ -112,10 +124,10 @@ in [`spec/ACTIONS.md`](spec/ACTIONS.md).
 
 | Path | What |
 | --- | --- |
-| `hat/HAT.md` | The entry instruction. tinyhat.ai serves this file. |
+| `hat/HAT.md` | The entry instruction, published with each release and channel. |
 | `hat/SOUL.md` | How the chief of staff behaves every day. |
 | `hat/skills/` | Setup, running a task, improving a process, the avatar. |
-| `hat/team/` | The five specialists. |
+| `hat/team/` | Five optional starter specialist briefings; Muse can change the team. |
 | `hat/processes/` | Five ways a project can run. |
 | `hat/apps/office.json` | The build request for the Office app. |
 | `spec/PAGES.md` | What every page shows. |
@@ -128,6 +140,13 @@ in [`spec/ACTIONS.md`](spec/ACTIONS.md).
 
 `VERSION` and the `version:` line in `hat/HAT.md` move together; see
 [`RELEASING.md`](RELEASING.md) and [`CHANGELOG.md`](CHANGELOG.md).
+
+[`channels/lts`](https://github.com/tinyhat-ai/muse-office/tree/channels/lts)
+carries the stable promotion message. [`channels/latest`](https://github.com/tinyhat-ai/muse-office/tree/channels/latest)
+tracks the newest published release. `main` is for upcoming changes and may
+move ahead of both channels. The message currently links Muse to build
+materials on `main`, so those files can change independently of the LTS
+message. See the [first release](https://github.com/tinyhat-ai/muse-office/releases/tag/v0.0.1).
 
 ## License
 

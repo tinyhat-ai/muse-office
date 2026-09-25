@@ -30,7 +30,7 @@ interface CommentFormProps {
   placeholder: string;
   buttonLabel: string;
   compact?: boolean;
-  /** The small line left of the button ("The one place you can write in Office", "Muse and Penny will see this."). */
+  /** The small line left of the button ("Your comment stays with this task.", "Muse and Penny will see this."). */
   hint?: string;
   /** The textarea id; the page's main box is "new-comment" so the pinned question can focus it. */
   id?: string;

@@ -364,7 +364,7 @@ export default async function TaskPage({ params }: Props) {
       <div className="tk-composer">
         <You size="md" />
         <div className="cbox">
-          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="✎ The one place you can write in Office" />
+          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Your comment stays with this task." />
         </div>
       </div>
 

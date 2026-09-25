@@ -7,6 +7,7 @@
 
 /* ---- the chief's card ---- */
 .tm-chief { display: flex; gap: 20px; align-items: center; }
+.tm-chief .av.xl { width: 96px; height: 96px; font-size: 32px; }
 .tm-chief .tm-nm { font-size: var(--t-h2); font-weight: 750; letter-spacing: -0.02em; }
 .tm-chief .tm-rl { font-size: var(--t-cap); color: var(--soft); font-weight: 600; }
 .tm-chief p { font-size: var(--t-sec); color: #3d3c38; margin-top: 8px; line-height: 1.45; }
@@ -23,7 +24,8 @@
 }
 .tm-mate:hover { border-color: #cfcdc6; transform: translateY(-1px); }
 .tm-mate.tm-on { outline: 2px solid var(--ink); outline-offset: 1px; }
-.tm-top { display: flex; gap: 10px; align-items: center; }
+.tm-top { display: flex; gap: 14px; align-items: center; }
+.tm-mate .av.md { width: 56px; height: 56px; font-size: 20px; }
 .tm-mate .tm-nm { font-weight: 750; font-size: var(--t-body); }
 .tm-mate .tm-rl { font-size: var(--t-cap); color: var(--soft); font-weight: 600; }
 .tm-job { font-size: var(--t-cap); color: #3d3c38; line-height: 1.4; }
@@ -52,6 +54,7 @@
 .tm-detail { position: sticky; top: 72px; }
 .tm-detail-inline { display: none; }
 .tm-hd { display: flex; gap: 14px; align-items: center; }
+.tm-detail .av.lg { width: 80px; height: 80px; font-size: 28px; }
 .tm-dnm { font-size: var(--t-h2); font-weight: 750; letter-spacing: -0.01em; }
 .tm-drl { font-size: var(--t-cap); color: var(--soft); font-weight: 600; }
 .tm-detail h3 { font-size: var(--t-badge); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--soft); margin-top: 16px; }

@@ -1,7 +1,7 @@
 ---
 name: Chief of Staff
 handle: tinyhat/hats/chief-of-staff
-version: 0.0.1
+version: 0.1.0
 description: >
   Promote your Muse to chief of staff. It manages a team of specialist
   agents for you and shows you what is going on in one private app,
@@ -104,8 +104,9 @@ task also has its own page.
 
 The person only looks. They never fill in a form. Wherever a control would
 normally be, the page says "To change this, tell <your name> in chat." The
-one exception: on a task's page they can write a comment or reply, and answer
-a money question with one tap. You read those comments and act on them.
+one exception: on task and note pages they can write a comment, and on tasks
+they can reply or answer a money question with one tap. You read those
+comments and act on them.
 Everything else changes through the app's **actions**, which you call.
 
 The Office is not a design idea; it is a real, runnable application in the
@@ -125,7 +126,7 @@ Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/
 | `hat/skills/run-a-task/SKILL.md` | How a task moves from a card to a result through a specialist. |
 | `hat/skills/improve-a-process/SKILL.md` | Corrections, Mondays, new projects, hiring. |
 | `hat/skills/hat-avatar/SKILL.md` | Your hat, and one avatar per specialist. |
-| `hat/team/*.md` | The five specialists: designer, developer, marketer, sales, bookkeeper. |
+| `hat/team/*.md` | Five sample briefings to adapt, replace, or remove as the work changes. |
 | `hat/processes/*.md` | Five ways a project can run: general, build, publish, follow-up, money. |
 | `hat/apps/office.json` | The build request for the Office app. |
 | `spec/PAGES.md` | What every page of the Office shows. |
@@ -216,21 +217,29 @@ Do these before the hand-over, and again after any change to the app:
 - The top bar has exactly Projects · Team · Customers · Reports · Notes, and
   a project page, a task page, and a note page open from them.
 - The actions list (`GET /api/actions` in the reference app, or your
-  platform's action list) has all 33 actions from `spec/ACTIONS.md`, with
+  platform's action list) has the actions from `spec/ACTIONS.md`, with
   the same names.
 - `create_task` puts a sticky note on the board within a minute;
   `move_task` to `waiting_on_you` without a `question` is refused with a
   message that names the rule; a comment written on a task's page comes back
-  from `list_new_comments`; `reply_to_comment` shows under it.
+  from `list_recent_updates` with `unread_only=true`; `reply_to_comment`
+  with that item's `source`, `target_id`, and `id` shows under it. A note
+  comment is returned in the same feed and the same action answers it.
+  A missing source or target, or a comment id that does not belong to the
+  named page, must fail. Copy all three values from one feed item because
+  task and note comment ids can overlap.
 - The database has the tables in `db/schema.sql`: members, projects,
   process_steps, project_rules, tasks, task_checks, task_plan, task_files,
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,
-  settings.
-- Nothing on any page is a form, except the comment box on a task's page.
+  note_comments, settings.
+- Nothing on any page is a form, except comment boxes on task and note pages.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
-  identifies the chief on their avatar.
-- Team has exactly one chief (you) and five distinct specialists. Compare the
-  member list and starter tasks with what was already there before adding rows;
+  identifies the chief on their own Muse avatar, not on a bundled sample face.
+- `set_member_avatar` can replace any member's Team image, including the
+  chief's, and Team portraits are large enough to distinguish at a glance.
+- Team has exactly one chief (you) and a starter set of distinct specialists
+  that the user may change. Compare the member list and starter tasks with
+  what was already there before adding rows;
   no setup task, first-priority question, or orientation contact appears twice.
 - No page is empty on the first visit: the board has cards in To do, Waiting
   on you, and Done; Customers has at least the person and Tinyhat (`in_funnel:
@@ -246,6 +255,7 @@ Do these before the hand-over, and again after any change to the app:
 ## Updates
 
 Once a week, read the version line at the top of
-<https://tinyhat.ai/hats/chief-of-staff.md>. If it is newer than the one in
-`~/workspace/office/HAT.md`, tell the person in one message what changed
-(the repository's `CHANGELOG.md` says) and ask before applying anything.
+<https://raw.githubusercontent.com/tinyhat-ai/muse-office/channels/lts/hat/HAT.md>.
+If it is newer than the one in `~/workspace/office/HAT.md`, tell the person
+in one message what changed (read `CHANGELOG.md` from the same LTS channel)
+and ask before applying anything.
