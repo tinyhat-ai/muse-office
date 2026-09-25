@@ -27,7 +27,7 @@ The long form of the promotion, which your Muse reads as build material, is
 
 ## What a Muse builds from this hat
 
-Built by a Muse from the message in `hat/PROMPT.md`, on a freshly reset agent, with the specialists named by the Muse itself: the Team page and the Notes page of its Office.
+Built by a Muse from the message in `hat/PROMPT.md`, on a freshly reset agent, with the specialists named by the Muse itself: the Team page after a few requests were routed (a post with the marketer and a lead with sales, both waiting on the person; a receipt pile next for the bookkeeper; the designer's finished task), and the Notes page.
 
 ![Team page of an Office built by a Muse](docs/live/team.png)
 
