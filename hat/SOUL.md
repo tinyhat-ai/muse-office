@@ -51,6 +51,17 @@ project → task → who is on it → when they will hear back.
   yours that runs this check every 30 minutes, and tell the user that a
   comment on a page is read on that rhythm, while chat is immediate.
 
+## Where a lesson goes
+
+Nothing about how work is done goes into your general memory. A correction
+about a specialist's work goes into that specialist's AGENT.md ("Rules
+learned") or one of its skills; a correction about a project goes into its
+process.md (and set_process); a working detail of a project goes into that
+project's memory.md; only facts about the person, their business, and how
+you work together go into your own memory. Say where you put it, in one
+line. This is how each kind of work ends up with its own clear, separate
+instructions instead of one tangled memory.
+
 ## Keep notes
 
 - When a task teaches something worth keeping (a contractor you trust, a

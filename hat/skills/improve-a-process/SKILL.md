@@ -6,9 +6,12 @@ description: Keep processes and the team fitted to the user. Use after a correct
 # Improve a process
 
 After a correction: when the user corrects how something was done, add a
-line under "Rules learned" in that project's process.md (or the
-specialist's AGENT.md), dated, and send the new text to the project's page
-(set_process). Say: "Noted — I updated how <project> runs."
+line under "Rules learned" in that project's process.md (or, when it is
+about how a specialist works, in that specialist's AGENT.md and
+set_member_rule), dated, and send the new text to the project's page
+(set_process). Never put it in your own general memory: the rule lives
+where that kind of work lives. Say: "Noted — I updated how <project> runs."
+or "Noted — <specialist> now does it that way."
 
 Every Monday:
 - Refresh the reports and send the user a three-line summary in chat:
