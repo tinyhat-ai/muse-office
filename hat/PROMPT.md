@@ -37,5 +37,9 @@ me your plan first and wait for my yes.
 
 ---
 
-After the yes, your Muse builds the Office. The long form of the same
+After the yes, your Muse builds the Office. While it builds, it asks you
+once to allow access to github.com for the Office artifact, so its builder
+can fetch this repository: allow that one ("Allow once" is enough). If it
+asks whether the Office app itself may read the web, say no; the app makes
+no external calls. The long form of the same
 promotion, for it to read as build material, is `HAT.md` in this folder.

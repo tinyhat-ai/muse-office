@@ -12,15 +12,19 @@
     "pages": "spec/PAGES.md",
     "design": "spec/DESIGN.md",
     "actions": "spec/ACTIONS.md",
-    "actions_catalog": "GET /api/actions on the running app lists every action with its arguments"
+    "actions_catalog": "GET /api/actions on the running app lists every action with its arguments",
+    "note": "You (the Muse) read these files; the app itself needs no web access and makes no external calls. When your builder fetches the repository, the platform asks the person to confirm access to github.com for this artifact; that confirmation is expected and the person should allow it. A declined confirmation stops the build; ask them to try again."
   },
   "capabilities": {
-    "public_web_read": true,
+    "public_web_read": false,
     "connectors": []
   },
   "seed_data": {
     "note": "Start EMPTY (the reference app's demo seed is for people trying it locally; set OFFICE_SEED=none or do not run the seed). The chief of staff loads the real team, projects, and notes through the actions right after the build.",
-    "settings": { "office_name": "Office", "user_name": "you" },
+    "settings": {
+      "office_name": "Office",
+      "user_name": "you"
+    },
     "members_from": "hat/team/*.md plus the chief itself (is_chief = 1), loaded with upsert_member",
     "projects_from": "the projects the person said yes to, loaded with upsert_project + set_process from hat/processes/*.md"
   },
