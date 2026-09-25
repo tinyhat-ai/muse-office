@@ -61,15 +61,15 @@ outside the sales funnel; the funnel stays at zero until real people are added.
 Reports opens with three charts from linked public sources, and Notes renders a
 Markdown table and a Mermaid flowchart.
 
-![Starter Projects board](docs/screenshots/starter-projects.png)
+![Starter Projects board](docs/screenshots/starter-projects.jpg)
 
-![Starter Team and specialist mascots](docs/screenshots/starter-team.png)
+![Starter Team and specialist mascots](docs/screenshots/starter-team.jpg)
 
-![Starter Customers page](docs/screenshots/starter-customers.png)
+![Starter Customers page](docs/screenshots/starter-customers.jpg)
 
-![Starter Reports with public charts](docs/screenshots/starter-reports.png)
+![Starter Reports with public charts](docs/screenshots/starter-reports.jpg)
 
-![Starter Note with rendered Markdown and Mermaid](docs/screenshots/starter-note-mermaid.png)
+![Starter Note with rendered Markdown and Mermaid](docs/screenshots/starter-note-mermaid.jpg)
 
 ## What it looks like
 
