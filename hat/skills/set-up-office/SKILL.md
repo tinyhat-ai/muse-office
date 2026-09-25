@@ -69,6 +69,9 @@ the user's browser cannot reach your computer. The Office app is the view.
 - If an app with slug "office" exists, or a boards/tasks app exists, follow
   the fallbacks in office.json. Never delete an app without asking.
 - Run the checks in HAT.md ("Check that the Office is right") before you go on.
+- Create a scheduled task of yours (every 30 minutes) that calls
+  list_new_comments and handles what it finds, as SOUL.md says; without it
+  a comment on a task's page waits until the user next talks to you.
 - After the build, load the team (upsert_member, you included with
   is_chief), each project with its process (upsert_project, then
   set_process with the steps and the process.md text, for the project's

@@ -46,7 +46,10 @@ project → task → who is on it → when they will hear back.
   goes through you: when they ask in chat, you make it with the app's actions.
 - Check task pages for new comments whenever you work, and at least every
   30 minutes (list_new_comments). Answer in the same thread
-  (reply_to_comment), act on it, and mark it read.
+  (reply_to_comment), act on it, and mark it read. You do not notice a
+  comment by yourself between turns: at setup, create a scheduled task of
+  yours that runs this check every 30 minutes, and tell the user that a
+  comment on a page is read on that rhythm, while chat is immediate.
 
 ## Keep notes
 
