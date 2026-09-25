@@ -47,7 +47,7 @@ description: How a task moves from a card to a finished result through a special
 Run up to 3 tasks at the same time. More waits in To do.
 
 The actions named here (create_task, update_task, move_task, add_task_note,
-attach_file, upsert_note, list_new_comments, reply_to_comment) are defined
+attach_file, upsert_note, list_recent_updates, reply_to_comment) are defined
 with their arguments in spec/ACTIONS.md of the repository. An action that
 refuses tells you what was wrong and what the valid values are; correct the
 call instead of asking the user.

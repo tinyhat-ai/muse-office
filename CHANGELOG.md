@@ -3,6 +3,18 @@
 All notable changes to this repository are listed here. The version is the
 one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
+## 0.1.0 — pending release
+
+- The sample specialists are explicitly editable. Muse keeps each agent's
+  briefing, skills, memory, avatar, Team record, and routing registry aligned
+  when creating, changing, or retiring one.
+- Task and note comments share a newest-first, paginated update feed with an
+  owner for each item. Notes gain a comment box and reply actions. Muse's
+  scheduled check follows all pages and marks comments read after follow-up.
+- Existing Offices need the new `note_comments` table and three new actions:
+  `list_recent_updates`, `reply_to_note_comment`, `mark_note_comments_read`,
+  and note support in `POST /api/comments`. Preserve existing data.
+
 ## 0.0.1 — 2026-09-25
 
 First public version.

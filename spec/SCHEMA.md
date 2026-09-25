@@ -14,7 +14,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 | Team | `members`, `tasks` (for "working on" and "latest") |
 | Customers | `contacts`, `touches`, `stage_changes` |
 | Reports | `reports`, `metrics`, plus `contacts`/`stage_changes` for the funnel numbers |
-| Notes | `notes`, `tasks` (for "came from these tasks") |
+| Notes | `notes`, `tasks` (for "came from these tasks"), `note_comments` |
 
 ## Tables, one line each
 
@@ -33,16 +33,17 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 - **reports** — one row per report card: section, title, chart type, who keeps it, where the numbers come from.
 - **metrics** — every number on the Reports page: `report`, `series`, `label`, `value`, plus a JSON note for chart-specific fields.
 - **notes** — the Notes page: title, lede, markdown, who keeps it, which tasks it came from, and `pinned = 1` for "Start here".
+- **note_comments** — user comments and owner replies on a note, with `reply_to` and `unread_by_agent` so the chief can follow them up.
 - **settings** — a few key/value pairs: the office name, the user's name, the hat version, when the Muse last checked in.
 
 ## Rules the Muse must keep
 
 - Columns are exactly `todo`, `in_progress`, `waiting_on_you`, `done`. The pages show them as "To do", "In progress", "Waiting on you", "Done".
 - Moving a task to `waiting_on_you` requires a `question`. Moving it anywhere else clears the question.
-- A task belongs to exactly one project. A note, a file, or an update belongs to exactly one task or project.
+- A task belongs to exactly one project. A task update belongs to one task; a note comment belongs to one note.
 - Stages are exactly `lead`, `talking`, `proposal`, `customer`, `past`. Changing a stage adds a `stage_changes` row.
 - Times are ISO 8601 in UTC. The pages render them as "2 hours ago" or "Sep 24".
-- The agent writes only through the actions in `spec/ACTIONS.md`. The one thing the user writes is a comment or reply on a task's page, which the app stores as a `task_updates` row with `author = 'you'` and `unread_by_agent = 1`.
+- The agent writes only through the actions in `spec/ACTIONS.md`. The user may comment on a task or note page. The app stores user comments in `task_updates` or `note_comments` with `author = 'you'` and `unread_by_agent = 1`; `list_recent_updates` pages through both kinds.
 
 ## How the reports use `metrics`
 

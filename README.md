@@ -2,10 +2,11 @@
 
 ## Give your Muse a chief of staff hat
 
-Keep talking to the Muse you already know. With this hat, it organizes bigger
-requests, gives work to five specialists, checks what they do, and brings the
-decisions back to you. Their work stays visible in a private **Office** that
-your Muse builds for you.
+Keep talking to the Muse you already know. With this hat, it organizes work,
+keeps a team of agents and their instructions current, checks results, and
+brings decisions back to you. Their work stays visible in a private **Office**
+that your Muse builds for you. The sample team is a starting point: you can
+ask Muse to add, change, or remove agents as your work changes.
 
 ### [Copy the message →](https://tinyhat.ai/muse)
 
@@ -15,12 +16,15 @@ before you send it. [Read the stable message first](https://github.com/tinyhat-a
 
 **What changes:**
 
-- **A team with distinct roles.** A Designer, Developer, Marketer, Sales
-  specialist, and Bookkeeper each have their own face, instructions, skills, and
-  memory. Muse coordinates them and remains the one you talk to.
+- **A way to organize work.** Muse turns substantial requests into owned tasks,
+  gives agents focused briefings, checks their results, and records decisions.
+  Each agent has its own face, instructions, skills, and memory. Ask Muse to
+  create, change, or retire an agent; the initial roles are examples.
 - **A place to see the work.** Projects shows the tasks and what is waiting on
   you. Team shows who does what. Customers keeps track of people. Reports
-  shows visual charts. Notes keeps decisions and useful knowledge.
+  shows visual charts. Notes keeps decisions and useful knowledge. You can
+  comment on a task or note; Muse checks comments on a schedule and routes
+  each one to its owner for follow-up.
 - **Your approval still matters.** Muse asks before anything is sent, bought,
   published, or deleted. The Office starts with real setup work and clearly
   labeled public example charts; it does not invent customers or business
@@ -57,8 +61,8 @@ data; the next start seeds the starter again. Use `OFFICE_SEED=demo npm run dev`
 for the fictional consultant showcase shown in some screenshots, or
 `OFFICE_SEED=none npm run dev` for an empty database.
 
-The pages are view-only. The one thing you can write is a comment or a reply
-on a task's page. Everything else changes through the actions.
+The pages are mostly for reading. You can comment on tasks and notes, and reply
+to a task update. Everything else changes through Muse and the Office actions.
 
 ## First visit
 
@@ -122,7 +126,7 @@ in [`spec/ACTIONS.md`](spec/ACTIONS.md).
 | `hat/HAT.md` | The entry instruction. tinyhat.ai serves this file. |
 | `hat/SOUL.md` | How the chief of staff behaves every day. |
 | `hat/skills/` | Setup, running a task, improving a process, the avatar. |
-| `hat/team/` | The five specialists. |
+| `hat/team/` | Five optional starter specialist briefings; Muse can change the team. |
 | `hat/processes/` | Five ways a project can run. |
 | `hat/apps/office.json` | The build request for the Office app. |
 | `spec/PAGES.md` | What every page shows. |
