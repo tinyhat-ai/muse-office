@@ -124,7 +124,7 @@ in [`spec/ACTIONS.md`](spec/ACTIONS.md).
 
 | Path | What |
 | --- | --- |
-| `hat/HAT.md` | The entry instruction. tinyhat.ai serves this file. |
+| `hat/HAT.md` | The entry instruction, published with each release and channel. |
 | `hat/SOUL.md` | How the chief of staff behaves every day. |
 | `hat/skills/` | Setup, running a task, improving a process, the avatar. |
 | `hat/team/` | Five optional starter specialist briefings; Muse can change the team. |

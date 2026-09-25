@@ -41,7 +41,7 @@ can prepare reviewable promotion PRs but cannot move those branches themselves.
    gh api --method PATCH repos/tinyhat-ai/muse-office/git/refs/heads/channels/latest \
      -f sha=TAG_SHA -F force=false
    git ls-remote https://github.com/tinyhat-ai/muse-office \
-     refs/heads/channels/latest refs/tags/vX.Y.Z
+     refs/heads/channels/latest 'refs/tags/vX.Y.Z^{}'
    curl -fsS https://raw.githubusercontent.com/tinyhat-ai/muse-office/channels/latest/hat/PROMPT.md
    ```
 

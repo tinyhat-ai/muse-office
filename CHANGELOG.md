@@ -11,6 +11,8 @@ one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 - The Office exposes `set_member_avatar` for the chief and specialists. Muse
   uses its own current avatar on Team, keeps specialist portraits in the same
   illustration style, and shows larger portraits on Team cards and details.
+  Both avatar actions reject paths on Muse's computer that the person cannot
+  open; an empty `avatar_url` through `upsert_member` clears a portrait.
 - Task and note comments share a newest-first, paginated update feed with an
   owner for each item. Notes gain a comment box and reply actions. Muse's
   scheduled check follows all pages and marks comments read after follow-up.

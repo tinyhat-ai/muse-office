@@ -17,6 +17,8 @@ Names are `snake_case`. Slugs are short, lowercase, `kebab-case`. Dates are ISO 
 
 The chief's portrait comes from that Muse's own avatar, with its recognizable face preserved under the small hat. Use `set_member_avatar` to put that image on the Team card; the bundled sample image is only for this repository's standalone preview. For a new specialist, `avatar_url` holds a real, specialty-relevant face or mascot image in the same illustration style and crop as the chief. `hat` is only a wearable accessory; writing an animal name there does not create its image. Verify the image loads on Team, in the detail panel, and on a task card before reporting setup complete. If an image cannot yet be made or the chief's image cannot be accessed, leave an avatar task open and say which portrait still uses initials.
 
+Both avatar actions accept an HTTPS image URL or an Office asset path beginning with `/`. They reject local paths such as `/Users/...`, `file://...`, `~/...`, and relative paths that a visitor cannot open. To clear a portrait, pass an empty `avatar_url` to `upsert_member`; `set_member_avatar` requires a nonempty URL.
+
 The Team page works out each specialist's status ("working on", "next", "waiting on you") and their latest finished work from `tasks`; there is no action for those.
 
 ## Projects

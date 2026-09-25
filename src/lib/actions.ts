@@ -307,7 +307,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       if (present(input, "hat")) patch.hat = optionalString(input, "hat");
       if (present(input, "avatar_url")) {
         const avatarUrl = optionalString(input, "avatar_url");
-        patch.avatar_url = avatarUrl ? openableUrl(input, "avatar_url") : "";
+        patch.avatar_url = avatarUrl ? openableUrl(input, "avatar_url") : null;
       }
       if (present(input, "color")) patch.color = optionalString(input, "color");
       if (present(input, "does")) patch.does_json = JSON.stringify(stringArray(input, "does"));

@@ -255,6 +255,7 @@ Do these before the hand-over, and again after any change to the app:
 ## Updates
 
 Once a week, read the version line at the top of
-<https://tinyhat.ai/hats/chief-of-staff.md>. If it is newer than the one in
-`~/workspace/office/HAT.md`, tell the person in one message what changed
-(the repository's `CHANGELOG.md` says) and ask before applying anything.
+<https://raw.githubusercontent.com/tinyhat-ai/muse-office/channels/lts/hat/HAT.md>.
+If it is newer than the one in `~/workspace/office/HAT.md`, tell the person
+in one message what changed (read `CHANGELOG.md` from the same LTS channel)
+and ask before applying anything.
