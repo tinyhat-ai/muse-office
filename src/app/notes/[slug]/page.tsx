@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
-import { marked } from "marked";
+import { renderMarkdown, sanitizeRendered } from "@/lib/markdown";
 import { all, get, json, type MemberRow, type NoteRow, type ProjectRow, type TaskRow } from "@/lib/db";
 import { ago } from "@/lib/time";
 import { Avatar } from "@/components/Avatar";
@@ -68,8 +68,9 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
   const sameProject = related.length > 0;
   if (!sameProject) related = all<NoteRow>("SELECT * FROM notes WHERE slug <> ? ORDER BY updated_at DESC LIMIT 3", note.slug);
 
-  const rendered = marked.parse(note.markdown, { async: false }) as string;
-  const { html, headings } = addHeadingIds(labelTableCells(rendered));
+  const rendered = renderMarkdown(note.markdown);
+  const { html: withIds, headings } = addHeadingIds(labelTableCells(rendered));
+  const html = sanitizeRendered(withIds);
   const words = note.markdown.split(/\s+/).filter(Boolean).length;
   const minutes = Math.max(1, Math.round(words / 200));
   const label = note.project === "general" ? "Start here" : project?.name ?? "Note";

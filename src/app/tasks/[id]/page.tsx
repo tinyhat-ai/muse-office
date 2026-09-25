@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { marked } from "marked";
+import { renderMarkdown } from "@/lib/markdown";
 import {
   all,
   get,
@@ -280,7 +280,7 @@ export default async function TaskPage({ params }: Props) {
       {/* 3. what this is */}
       <h2 className="tk-h2">What this is</h2>
       {task.job_definition ? (
-        <div className="md tk-def" dangerouslySetInnerHTML={{ __html: marked.parse(task.job_definition, { async: false }) as string }} />
+        <div className="md tk-def" dangerouslySetInnerHTML={{ __html: renderMarkdown(task.job_definition) }} />
       ) : (
         <p className="tk-empty">Not written yet.</p>
       )}

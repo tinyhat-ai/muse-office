@@ -1,5 +1,5 @@
-import { marked } from "marked";
 import Link from "next/link";
+import { renderMarkdown } from "@/lib/markdown";
 import { notFound } from "next/navigation";
 import type { CSSProperties } from "react";
 import { all, get, COLUMN_LABEL, type Column, type MemberRow, type ProjectRow, type RuleRow, type StepRow, type TaskRow } from "@/lib/db";
@@ -32,7 +32,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   // The process text as the Muse wrote it; "Done when" is added only when the text left it out.
   let md = project.process_markdown ?? "";
   if (project.done_when && !/done when/i.test(md)) md += `\n\n## Done when\n\n${project.done_when}\n`;
-  const html = marked.parse(md, { async: false }) as string;
+  const html = renderMarkdown(md);
 
   const stepNode = (s: StepRow) => {
     const here = open.filter((t) => t.step === s.position);

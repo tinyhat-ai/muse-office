@@ -28,6 +28,8 @@ npm install
 npm run dev
 ```
 
+`npm test` runs the small test suite (the Markdown sanitizer and the question/answer loop) with Node's built-in runner.
+
 Open <http://localhost:3007>. The first start creates `data/office.db` and
 fills it with a demo office (a consultant who runs workshops, five
 specialists, five projects, a few tasks, customers, reports, and notes).

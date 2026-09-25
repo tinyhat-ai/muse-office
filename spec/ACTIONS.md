@@ -4,7 +4,7 @@ The user never fills in a form. They tell their Muse, and the Muse changes the O
 
 In the reference app each action is an HTTP call: `POST /api/actions/<name>` with a JSON body, returning `{ "ok": true, "data": ... }` or `{ "ok": false, "error": "..." }`. `GET /api/actions` lists every action with its arguments. When the Muse builds the Office as an artifact, it publishes these same names as the artifact's actions, with the same arguments.
 
-Names are `snake_case`. Slugs are short, lowercase, `kebab-case`. Dates are ISO 8601. Money is in dollars as a number.
+Names are `snake_case`. Slugs are short, lowercase, `kebab-case`. Dates are ISO 8601. Money is in dollars as a number. Text fields that render as Markdown (`job_definition`, `markdown` on notes and processes) are sanitized before they reach a page: no scripts, event handlers, or `javascript:` links survive, so pasting text from a page or an email is safe.
 
 ## Team
 

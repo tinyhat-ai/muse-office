@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": ".test-out",
+    "rootDir": ".",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "jsx": "preserve",
+    "incremental": false,
+    "plugins": []
+  },
+  "include": ["src/lib/**/*.ts", "test/**/*.ts"],
+  "exclude": ["node_modules", ".next", ".test-out"]
+}
