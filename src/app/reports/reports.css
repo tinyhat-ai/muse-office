@@ -19,7 +19,9 @@
   margin: 32px 0 0; display: flex; align-items: center; gap: 10px;
 }
 .rp-sec::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.rp-examples { margin-top: 8px; color: var(--soft); font-size: var(--t-sec); line-height: 1.45; }
 .rp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; align-items: start; } /* a card ends after its own footer */
+.rp-grid-examples { grid-template-columns: repeat(2, 1fr); }
 .rp-wide { grid-column: span 2; }
 
 /* ---- a card ---- */
@@ -34,6 +36,7 @@
   margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line);
   font-size: var(--t-cap); color: var(--soft); display: flex; align-items: center; gap: 8px;
 }
+.rp-src a { color: var(--ink); text-decoration: underline; text-underline-offset: 2px; }
 .rp-empty { margin-top: 16px; }
 .rp-empty-page { margin-top: 24px; }
 

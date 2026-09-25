@@ -47,6 +47,25 @@ test("empty input renders nothing", () => {
   assert.equal(renderMarkdown(""), "");
 });
 
+test("a note's table, emphasis, and Mermaid fence survive as renderable markup", () => {
+  const html = renderMarkdown([
+    "## How work moves",
+    "",
+    "| Who | Work |",
+    "| --- | --- |",
+    "| Muse | **Routes** requests |",
+    "",
+    "~~~mermaid",
+    "flowchart LR",
+    "  Ask --> Task",
+    "~~~",
+  ].join("\n"));
+  assert.match(html, /<h2>How work moves<\/h2>/);
+  assert.match(html, /<table>/);
+  assert.match(html, /<strong>Routes<\/strong>/);
+  assert.match(html, /<code class="language-mermaid">flowchart LR/);
+});
+
 test("a small inline SVG survives as a visual, but nothing that runs or reaches out", () => {
   const html = renderMarkdown([
     "## Timeline",

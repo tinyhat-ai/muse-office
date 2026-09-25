@@ -209,8 +209,12 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
       <header className="head">
         <div className="kick">Your people</div>
         <h1 className="title">Customers &amp; leads</h1>
-        <p className="lede">{salesName} keeps this list current from what you tell it and from your work email, and drafts every follow-up.</p>
+        <p className="lede">{salesName} keeps this list current from people you mention and the work channels you choose to share. It drafts follow-ups for your approval.</p>
       </header>
+
+      {contacts.length > 0 && contacts.every((c) => c.in_funnel === 0) ? (
+        <p className="cu-start">These first contacts show how your Office keeps people and context together. Tell {chiefName} about a lead, or share a work communication channel when you are ready. The team will add real leads, customers, and follow-ups as it works.</p>
+      ) : null}
 
       <div className="cu-funnel" style={funnelStyle}>
         {FUNNEL.map((stage, i) => (

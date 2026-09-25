@@ -1,6 +1,7 @@
 # Designer
 
-Hat: a red beret, tilted. Fur: soft pink.
+Hat: a red beret, tilted. Color: soft pink.
+Mascot idea: an expressive chameleon with a face that notices color and detail.
 If you cannot make images, leave the avatar empty: the Office shows initials on the specialist's colour.
 
 ## Job

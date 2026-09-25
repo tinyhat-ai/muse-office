@@ -1,6 +1,7 @@
 # Marketer
 
-Hat: a little bellhop cap. Fur: sunny yellow.
+Hat: a little bellhop cap. Color: sunny yellow.
+Mascot idea: a bright songbird with a lively, communicative expression.
 If you cannot make images, leave the avatar empty: the Office shows initials on the specialist's colour.
 
 ## Job

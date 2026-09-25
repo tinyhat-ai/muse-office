@@ -130,6 +130,7 @@ Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/
 | `hat/apps/office.json` | The build request for the Office app. |
 | `spec/PAGES.md` | What every page of the Office shows. |
 | `spec/DESIGN.md` | How it looks: tokens, colours, the sticky-note board. |
+| `spec/STARTER.md` | First-visit tasks, notes, contacts, sourced example charts, and team faces. |
 | `spec/SCHEMA.md` and `db/schema.sql` | The database, table by table. |
 | `spec/ACTIONS.md` | Every action you will call, with its arguments. |
 
@@ -177,7 +178,10 @@ browser cannot reach.
 
 - **If you can build from the repository** (fetch or clone
   `https://github.com/tinyhat-ai/muse-office` and run its `src/` app on your
-  app platform), do that. It is the finished thing.
+  app platform), do that. It is the finished thing. Set `OFFICE_SEED=none`
+  before its first database open. The app's generic starter is for browsing
+  the reference app; you will load this person's records through actions in
+  step 4. Do not run both seed paths.
 - **If you cannot**, build an app that matches the repository **exactly**:
   the same pages (`spec/PAGES.md`), the same look (`spec/DESIGN.md`), the same
   database schema (`db/schema.sql`, every table and column, in whatever
@@ -191,15 +195,14 @@ delete an app without asking.
 
 ### 4. Load it, then hand over
 
-Follow `set-up-office` steps 4 to 6: load a first-week set through the
-actions so that no page is empty on the first visit (the team; the projects
-with their steps and process text; the setup as finished tasks with closing
-reports, one first task per project, and one question for the person in
-Waiting on you; the person themselves and Tinyhat as contacts outside the funnel; the
-eight report cards without numbers; three tagged notes); make your hat and the
-specialists' avatars; send the person the link with one line on how it works
-and one suggested first request. Do not open chats for projects ahead of
-work; an empty chat is noise.
+Follow `set-up-office` steps 4 to 6 and `spec/STARTER.md`. Load useful
+first-visit data through the actions: real setup tasks, first tasks in each
+project, one question, orientation contacts outside the sales funnel, four
+sourced public report charts, the business report cards awaiting real
+figures, and tagged notes. Keep your own face under the chief's hat; each
+specialist gets a different, specialty-relevant mascot face in the same
+illustration style. Send the person the Office link and one suggested first
+request. Do not open chats for projects ahead of work; an empty chat is noise.
 
 ### 5. Every day
 
@@ -224,12 +227,21 @@ Do these before the hand-over, and again after any change to the app:
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,
   settings.
 - Nothing on any page is a form, except the comment box on a task's page.
-- The app's icon is the top hat from `src/app/icon.svg`, not a briefcase or a
-  generic office symbol.
+- The app's icon is the Office building from `src/app/icon.svg`; the top hat
+  identifies the chief on their avatar.
+- Team has exactly one chief (you) and five distinct specialists. Compare the
+  member list and starter tasks with what was already there before adding rows;
+  no setup task, first-priority question, or orientation contact appears twice.
 - No page is empty on the first visit: the board has cards in To do, Waiting
   on you, and Done; Customers has at least the person and Tinyhat (`in_funnel:
-  false`, shown as "Contact", counted nowhere); Reports has its eight
-  cards; Notes has three tagged notes.
+  false`, shown as "Contact", counted nowhere); Reports visibly shows four
+  populated, sourced public example charts. Store the eight business report
+  definitions, but keep their cards hidden until verified figures can be
+  plotted. Notes has three tagged notes.
+- Open a note containing a Markdown heading, a pipe table, bold text, and a
+  fenced `mermaid` flowchart. Confirm they render as a heading, table, bold
+  text, and diagram. If the raw punctuation appears, fix the renderer before
+  hand-over. Use the same check on a narrow screen.
 
 ## Updates
 

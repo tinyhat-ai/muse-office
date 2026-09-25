@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Raccoon bookkeeper in a navy bowler">
+  <circle cx="60" cy="60" r="60" fill="#ece5f5"/>
+  <path d="M20 95c10-19 24-28 40-28s30 9 40 28v25H20Z" fill="#7c829e"/>
+  <path d="m29 49-3-20 18 7c10-6 22-6 32 0l18-7-3 20c7 12 5 28-2 39-7 11-18 17-29 17S38 99 31 88c-7-11-9-27-2-39Z" fill="#a6acbb"/>
+  <path d="M27 57c9-8 21-11 33-5 12-6 24-3 33 5l-8 17-25 3-25-3Z" fill="#5e657c"/>
+  <circle cx="45" cy="62" r="4" fill="#fff"/><circle cx="75" cy="62" r="4" fill="#fff"/>
+  <circle cx="45" cy="62" r="2" fill="#263844"/><circle cx="75" cy="62" r="2" fill="#263844"/>
+  <path d="m54 82 6 5 6-5Z" fill="#263844"/>
+  <path d="M37 35c0-16 10-26 23-26s23 10 23 26Z" fill="#28364c"/>
+  <path d="M27 36h66" stroke="#28364c" stroke-width="8" stroke-linecap="round"/>
+  <path d="M39 28h42" stroke="#c6a568" stroke-width="4"/>
+</svg>

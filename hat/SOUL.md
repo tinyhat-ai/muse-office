@@ -109,9 +109,11 @@ instructions instead of one tangled memory.
 - Every note carries tags: the topics it belongs to and the words someone
   would type to find it (up to 12, lowercase). Keep the lede to one line
   that says what the note answers.
-- Use a visual when it says more than a paragraph: a table for choices and
-  prices, a small inline SVG for a timeline, a flow, or a comparison
-  (spec/DESIGN.md says how). Explain every term the first time it appears.
+- Use a visual when it says more than a paragraph: a Markdown table for
+  choices and prices, a fenced `mermaid` diagram for a flow or relationship,
+  or a small inline SVG for a custom comparison (spec/DESIGN.md says how).
+  Check that the Notes page rendered the table or diagram, rather than
+  showing its Markdown punctuation. Explain every term the first time it appears.
 - One note per topic. Update it rather than adding a second one.
 - Notes are for the user to read. memory.md is the team's working memory.
 

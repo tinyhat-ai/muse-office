@@ -3,8 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 // One SQLite file holds the whole Office. The schema is applied on first
-// open; the demo seed runs when the database is empty (set OFFICE_SEED=none
-// to start with an empty office).
+// open; a truthful starter office is seeded when the database is empty.
+// OFFICE_SEED=demo loads the fictional showcase instead, and none skips seeds.
 
 const DATA_DIR = process.env.OFFICE_DATA_DIR || path.join(process.cwd(), "data");
 const DB_PATH = process.env.OFFICE_DB_PATH || path.join(DATA_DIR, "office.db");
@@ -29,11 +29,18 @@ function open(): Db {
   if (!noteCols.includes("tags_json")) db.exec("ALTER TABLE notes ADD COLUMN tags_json TEXT NOT NULL DEFAULT '[]'");
   const contactCols = (db.prepare("PRAGMA table_info(contacts)").all() as Array<{ name: string }>).map((c) => c.name);
   if (!contactCols.includes("in_funnel")) db.exec("ALTER TABLE contacts ADD COLUMN in_funnel INTEGER NOT NULL DEFAULT 1");
+  const reportCols = (db.prepare("PRAGMA table_info(reports)").all() as Array<{ name: string }>).map((c) => c.name);
+  if (!reportCols.includes("source_url")) db.exec("ALTER TABLE reports ADD COLUMN source_url TEXT");
   const count = db.prepare("SELECT COUNT(*) AS n FROM members").get() as { n: number };
   if (count.n === 0 && process.env.OFFICE_SEED !== "none") {
-    // Lazy import keeps the seed out of the hot path once the office exists.
-    const { seed } = require("./seed") as typeof import("./seed");
-    seed(db);
+    // Lazy imports keep seed data out of the hot path once the office exists.
+    if (process.env.OFFICE_SEED === "demo") {
+      const { seed } = require("./seed") as typeof import("./seed");
+      seed(db);
+    } else {
+      const { seedStarter } = require("./starter-seed") as typeof import("./starter-seed");
+      seedStarter(db);
+    }
   }
   return db;
 }
@@ -120,7 +127,7 @@ export interface TouchRow { id: number; contact: string; channel: string; summar
 export interface StageChangeRow { id: number; contact: string; stage: Stage; changed_at: string }
 export interface ReportRow {
   slug: string; section: string; title: string; description: string | null; chart: string; owner: string | null;
-  source: string | null; sort_order: number; updated_at: string;
+  source: string | null; source_url: string | null; sort_order: number; updated_at: string;
 }
 export interface MetricRow { id: number; report: string; series: string | null; label: string; value: number; note_json: string; recorded_at: string }
 export interface NoteRow {

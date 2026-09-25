@@ -17,12 +17,26 @@ Then preview, get the user's approval, and activate.
 - Add, don't redesign. Tiny. Unambiguous silhouette. No extras.
 - One preview round at a time.
 
-# Specialist avatars
+# Specialist faces
 
-For each specialist, make a new image from your own avatar:
+Create five original mascots, one per specialist. They must look like a team
+through a common illustration style, crop, and background, while each has a
+**different face and recognizable character**. Choose a species, facial
+expression, and visual detail that suggest the specialty without relying on
+text or stereotypes. The hat and color in each `team/*.md` file are useful
+starting cues, not the entire identity. Recoloring the chief's face five
+times, or changing only the hats, does not meet this requirement.
 
-"Use this character as the reference. Make a sibling: same body shape,
-face, rendering style, and texture. Change the fur color to <color>.
-Give it one small <hat> that clearly says <role>. No text, no extra props."
+Use this prompt for each role, adapted to that role's cue:
 
-If you cannot make images, use the default avatar listed in the template.
+"Create an original friendly mascot portrait for my <role> specialist.
+Give this specialist a distinct face, silhouette, and expression that fit
+<what the role does>. Keep the same illustration style and head crop as the
+other team portraits. Use <role color> and a small <role hat or prop> as a
+recognizable cue. No words, logos, or borrowed characters."
+
+Compare the five portraits side by side at Team-card size. If two faces are
+easy to confuse, revise them. Store each image with that member through
+`upsert_member.avatar_url`, then verify it appears on Team, a task page,
+and a board card. If image creation is unavailable, use the Office's initials
+fallback temporarily and leave a setup task to finish the portraits.
