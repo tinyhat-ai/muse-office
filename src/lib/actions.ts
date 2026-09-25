@@ -305,7 +305,10 @@ export const ACTIONS: Record<string, ActionDef> = {
       if (present(input, "role")) patch.role = requiredString(input, "role", "e.g. Bookkeeper");
       if (present(input, "job")) patch.job = requiredString(input, "job", "one line, what they do");
       if (present(input, "hat")) patch.hat = optionalString(input, "hat");
-      if (present(input, "avatar_url")) patch.avatar_url = optionalString(input, "avatar_url");
+      if (present(input, "avatar_url")) {
+        const avatarUrl = optionalString(input, "avatar_url");
+        patch.avatar_url = avatarUrl ? openableUrl(input, "avatar_url") : "";
+      }
       if (present(input, "color")) patch.color = optionalString(input, "color");
       if (present(input, "does")) patch.does_json = JSON.stringify(stringArray(input, "does"));
       if (present(input, "never")) patch.never = optionalString(input, "never");
@@ -329,7 +332,7 @@ export const ACTIONS: Record<string, ActionDef> = {
     run(input) {
       const slug = requiredString(input, "slug", "an existing member id");
       mustMember(slug);
-      const avatarUrl = requiredString(input, "avatar_url", "the member's image URL");
+      const avatarUrl = openableUrl(input, "avatar_url");
       patchRow("members", "slug", slug, { avatar_url: avatarUrl });
       return memberOut(mustMember(slug));
     },

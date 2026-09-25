@@ -82,6 +82,11 @@ test("the team can change, and task and note comments reach an ordered paginated
   const portrait = runAction("set_member_avatar", { slug: "researcher", avatar_url: "/avatars/researcher.svg" }) as { avatar_url: string };
   assert.equal(portrait.avatar_url, "/avatars/researcher.svg");
   assert.equal(callAction("set_member_avatar", { slug: "unknown", avatar_url: "/avatars/unknown.svg" }).status, 404);
+  for (const avatar_url of ["/Users/example/avatar.png", "file:///tmp/avatar.png", "~/avatar.png"]) {
+    assert.equal(callAction("set_member_avatar", { slug: "researcher", avatar_url }).status, 400);
+    assert.equal(callAction("upsert_member", { slug: "researcher", avatar_url }).status, 400);
+  }
+  assert.equal((getDb().prepare("SELECT avatar_url FROM members WHERE slug = ?").get("researcher") as { avatar_url: string }).avatar_url, "/avatars/researcher.svg");
   const task = runAction("create_task", { project: "money", title: "Investigate a market", specialist: "researcher" }) as { id: string };
   const note = runAction("upsert_note", { slug: "market-brief", title: "Market brief", markdown: "# Brief", kept_by: "researcher" }) as { slug: string };
   const taskComment = postComment({ task: task.id, body: "Please compare two sources." });
