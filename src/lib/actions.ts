@@ -322,6 +322,18 @@ export const ACTIONS: Record<string, ActionDef> = {
       return memberOut(mustMember(slug));
     },
   },
+  set_member_avatar: {
+    section: "Team",
+    description: "Sets any team member's portrait, including the chief's own Muse avatar. Use an image URL or Office asset URL, then verify it renders on Team.",
+    params: { slug: "string · existing member id · required", avatar_url: "string · image or Office asset URL · required" },
+    run(input) {
+      const slug = requiredString(input, "slug", "an existing member id");
+      mustMember(slug);
+      const avatarUrl = requiredString(input, "avatar_url", "the member's image URL");
+      patchRow("members", "slug", slug, { avatar_url: avatarUrl });
+      return memberOut(mustMember(slug));
+    },
+  },
   set_member_rule: {
     section: "Team",
     description: "Sets the \"last rule learned\" shown in the specialist's detail, dated today.",

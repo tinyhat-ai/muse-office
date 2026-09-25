@@ -232,7 +232,9 @@ Do these before the hand-over, and again after any change to the app:
   note_comments, settings.
 - Nothing on any page is a form, except comment boxes on task and note pages.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
-  identifies the chief on their avatar.
+  identifies the chief on their own Muse avatar, not on a bundled sample face.
+- `set_member_avatar` can replace any member's Team image, including the
+  chief's, and Team portraits are large enough to distinguish at a glance.
 - Team has exactly one chief (you) and a starter set of distinct specialists
   that the user may change. Compare the member list and starter tasks with
   what was already there before adding rows;

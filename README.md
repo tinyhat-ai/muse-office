@@ -19,7 +19,8 @@ after deployment.
 
 - **A way to organize work.** Muse turns substantial requests into owned tasks,
   gives agents focused briefings, checks their results, and records decisions.
-  Each agent has its own face, instructions, skills, and memory. Ask Muse to
+  Muse keeps its own avatar, and each specialist gets a distinct face in the
+  same visual style, plus its own instructions, skills, and memory. Ask Muse to
   create, change, or retire an agent; the initial roles are examples.
 - **A place to see the work.** Projects shows the tasks and what is waiting on
   you. Team shows who does what. Customers keeps track of people. Reports

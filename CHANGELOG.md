@@ -8,6 +8,9 @@ one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 - The sample specialists are explicitly editable. Muse keeps each agent's
   briefing, skills, memory, avatar, Team record, and routing registry aligned
   when creating, changing, or retiring one.
+- The Office exposes `set_member_avatar` for the chief and specialists. Muse
+  uses its own current avatar on Team, keeps specialist portraits in the same
+  illustration style, and shows larger portraits on Team cards and details.
 - Task and note comments share a newest-first, paginated update feed with an
   owner for each item. Notes gain a comment box and reply actions. Muse's
   scheduled check follows all pages and marks comments read after follow-up.

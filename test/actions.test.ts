@@ -79,6 +79,9 @@ test("moving to waiting_on_you without a question is refused with the valid kind
 test("the team can change, and task and note comments reach an ordered paginated owner feed", () => {
   runAction("upsert_member", { slug: "researcher", name: "Rae", role: "Researcher", job: "Checks sources." });
   runAction("upsert_member", { slug: "researcher", job: "Checks sources and writes briefs." });
+  const portrait = runAction("set_member_avatar", { slug: "researcher", avatar_url: "/avatars/researcher.svg" }) as { avatar_url: string };
+  assert.equal(portrait.avatar_url, "/avatars/researcher.svg");
+  assert.equal(callAction("set_member_avatar", { slug: "unknown", avatar_url: "/avatars/unknown.svg" }).status, 404);
   const task = runAction("create_task", { project: "money", title: "Investigate a market", specialist: "researcher" }) as { id: string };
   const note = runAction("upsert_note", { slug: "market-brief", title: "Market brief", markdown: "# Brief", kept_by: "researcher" }) as { slug: string };
   const taskComment = postComment({ task: task.id, body: "Please compare two sources." });

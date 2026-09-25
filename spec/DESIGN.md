@@ -70,9 +70,9 @@ Cards: white, `--r-card`, `--shadow-card`, 20px padding. Small chips: `--r-chip`
 
 ## Avatars
 
-Always round, always the head crop: 20px on cards and in lists, 32px in card headers, 40px in page headers, 64px for the chief of staff's card. People (contacts) get initials on a coloured circle instead.
+Always round, always the head crop: 20px on project cards and in lists; on the Team page, 56px on specialist cards, 80px in the selected specialist's detail panel, and 96px for the chief. People (contacts) get initials on a coloured circle instead.
 
-The chief keeps its recognizable face and gains a small top hat. The five specialists each get a different face and mascot suited to their specialty, with a shared illustration style. A hat or color change on the chief's face is not a specialist identity. Compare the five faces side by side at card size; they should be recognizable without reading the name. `hat/skills/hat-avatar/SKILL.md` owns the creation steps.
+Use the Muse's actual current avatar as the chief's Team portrait and add only a small top hat, preserving its recognizable face. The sample chief image in this standalone repository must not replace the Muse's own avatar. Specialists each get a different face and mascot suited to their specialty, rendered in the chief avatar's overall illustration style and crop. A hat or color change on the chief's face is not a specialist identity. Compare the faces side by side at card size; they should be recognizable without reading the name. `hat/skills/hat-avatar/SKILL.md` owns the creation steps.
 
 ## Charts
 
