@@ -31,8 +31,8 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 | --- | --- | --- |
 | `create_task` | `project`, `title`, `specialist?`, `id?`, `column?`, `step?`, `job_definition?`, `original_request?`, `done_when?: string[]`, `plan?: string[]`, `due?`, `note?` | Creates the task and its page (`column` may be `todo`, `in_progress`, or `done`; to wait on the user, create it and then `move_task` with a question). Adds the event "Made this task". Returns the task id. |
 | `update_task` | `id`, then any of `title`, `specialist`, `step`, `note`, `job_definition`, `original_request`, `due`, `done_when: [{text, met}]`, `plan: [{text, state}]` | Changes the description parts of the task's page. `plan` states are `done`, `now`, `later`. |
-| `move_task` | `id`, `column`, `question?`, `question_kind?` | Moves the card and adds a small event. `waiting_on_you` requires `question` (one clear question) and takes `question_kind`: `money` (the page shows "Yes, pay …" / "Not yet"), `approve`, or `answer` (the default). Moving out of `waiting_on_you` clears the question. Moving to `done` sets `done_at`; moving out of `done` clears it. |
-| `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to the conversation on the task's page. `author` is a member slug. Files also appear under "Files from this task". A `question` note while the task waits on the user gives the pinned question its author and time. |
+| `move_task` | `id`, `column`, `question?`, `question_kind?` | Moves the card and adds a small event. `waiting_on_you` requires `question` (one clear question) and takes `question_kind`: `money` (the page shows "Yes, pay …" / "Not yet"), `approve`, or `answer` (the default). The move also posts the question on the task's page (a `question` update by the specialist) and returns its id as `question_update_id`; the page pins that row, and the user's answer is a reply to it. Moving out of `waiting_on_you` clears the question. Moving to `done` sets `done_at`; moving out of `done` clears it. |
+| `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to the conversation on the task's page. `author` is a member slug. Files also appear under "Files from this task". Posting the task's current question again as a `question` note returns the row `move_task` already posted instead of adding a second one. |
 | `attach_file` | `id`, `name`, `url` | Adds a file to "Files from this task". The URL must open for the user (a file artifact link, or a file stored in the app), never a path on the Muse's computer. |
 | `get_task` | `id` | Everything on the task's page. |
 | `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, due, updated_at. |
@@ -45,7 +45,7 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 | `reply_to_comment` | `comment_id`, `author`, `body` | Answers in the same thread. |
 | `mark_comments_read` | `ids: number[]` | Clears `unread_by_agent`. |
 
-When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes`. The Muse treats that reply as the user's OK.
+When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted); `list_new_comments` shows that question as `replying_to`. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
 
 ## Customers
 

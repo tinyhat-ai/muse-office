@@ -135,7 +135,10 @@ export default async function TaskPage({ params }: Props) {
 
   // The pinned question: the latest question row is its author and the thing
   // a yes replies to; the text is the task's own question.
-  const questionRow = waiting ? [...updates].reverse().find((u) => u.kind === "question") : undefined;
+  // The current question is the newest question row whose text is the task's question
+  // (move_task posts it). An answer counts only when it replies to that row, so a yes
+  // to an earlier question can never show as the answer to a new one.
+  const questionRow = waiting ? [...updates].reverse().find((u) => u.kind === "question" && (!task.question || u.body === task.question)) : undefined;
   const questionText = waiting ? (task.question ?? questionRow?.body ?? null) : null;
   const askerSlug = questionRow?.author ?? worker?.slug ?? "";
   const askerName = questionRow ? nameOf(questionRow.author) : workerName;
@@ -263,8 +266,8 @@ export default async function TaskPage({ params }: Props) {
               </div>
             ) : (
               <div className="tk-cm-f">
-                {task.question_kind === "money" ? (
-                  <MoneyButtons task={task.id} questionId={questionRow?.id ?? null} yesLabel={yesLabel(questionText)} />
+                {task.question_kind === "money" && questionRow ? (
+                  <MoneyButtons task={task.id} questionId={questionRow.id} yesLabel={yesLabel(questionText)} />
                 ) : questionRow ? (
                   <ReplyToggle task={task.id} replyTo={questionRow.id} label={`Reply to ${askerName}`} placeholder={`Reply to ${askerName}…`} hint={replyHint} />
                 ) : (

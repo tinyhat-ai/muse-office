@@ -25,10 +25,11 @@ description: How a task moves from a card to a finished result through a special
    Anything worth remembering goes into that project's memory.md only.
    If something looks like it belongs to another project, the worker asks
    you instead of guessing.
-4. If a step needs the user, the worker stops, moves the card to
-   Waiting on you, and posts one clear question on the task's page.
-   You ask the user in chat too. They may answer in either place; pass
-   the answer on.
+4. If a step needs the user, the worker stops and moves the card to
+   Waiting on you with one clear question (move_task posts it on the
+   task's page). You ask the user in chat too. They may answer in either
+   place; an answer on the page is a reply to that question, so read
+   which question it answers before you act on it.
 5. When the worker says done, check the result against done_when before you
    tell the user. If it falls short, send it back once with one clear note.
    Then post the output to the task's page: attach each deliverable so the

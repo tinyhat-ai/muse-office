@@ -170,6 +170,13 @@ function addUpdate(task: string, author: string, kind: UpdateRow["kind"], body: 
   );
   return get<UpdateRow>("SELECT * FROM task_updates WHERE id = ?", Number(r.lastInsertRowid)) as UpdateRow;
 }
+/** The update row that carries the task's current question: the newest question whose text is the task's. */
+function currentQuestionId(task: string): number | null {
+  const t = get<TaskRow>("SELECT column_name, question FROM tasks WHERE id = ?", task);
+  if (!t || t.column_name !== "waiting_on_you" || !t.question) return null;
+  const row = get<{ id: number }>("SELECT id FROM task_updates WHERE task = ? AND kind = 'question' AND body = ? ORDER BY id DESC LIMIT 1", task, t.question);
+  return row?.id ?? null;
+}
 function touchTask(id: string, at = nowIso()): void {
   run("UPDATE tasks SET updated_at = ? WHERE id = ?", at, id);
 }
@@ -561,7 +568,14 @@ export const ACTIONS: Record<string, ActionDef> = {
         const doneAt = column === "done" ? (t.column_name === "done" ? t.done_at : now) : null;
         run("UPDATE tasks SET column_name = ?, question = ?, question_kind = ?, done_at = ?, updated_at = ? WHERE id = ?", column, question, kind, doneAt, now, t.id);
         if (moved) addUpdate(t.id, t.specialist ?? chiefSlug(), "event", `Moved to ${COLUMN_LABEL[column]}`, [], null, 0, now);
-        return { ...taskOut(mustTask(t.id)), moved };
+        // The question is posted in the same transaction, so the page always has a
+        // current question row to pin, and an answer can only ever reply to that row.
+        // An earlier "yes" to an earlier question stays attached to the earlier row.
+        let questionUpdate: UpdateRow | null = null;
+        if (question && (moved || question !== t.question)) {
+          questionUpdate = addUpdate(t.id, t.specialist ?? chiefSlug(), "question", question, [], null, 0, now);
+        }
+        return { ...taskOut(mustTask(t.id)), moved, question_update_id: questionUpdate?.id ?? currentQuestionId(t.id) };
       });
     },
   },
@@ -584,6 +598,12 @@ export const ACTIONS: Record<string, ActionDef> = {
       const files = normalizeFiles(array(input, "files") ?? []);
       return tx(() => {
         const now = nowIso();
+        // move_task already posted the task's current question; asking it again
+        // must not make a second card (or a second thing for the user to answer).
+        if (kind === "question" && t.column_name === "waiting_on_you" && t.question === body) {
+          const current = currentQuestionId(t.id);
+          if (current) return updateOut(get<UpdateRow>("SELECT * FROM task_updates WHERE id = ?", current) as UpdateRow);
+        }
         const u = addUpdate(t.id, author, kind, body, files, null, 0, now);
         for (const f of files) attach(t.id, f, now);
         touchTask(t.id, now);
@@ -1113,6 +1133,17 @@ export function postComment(raw: unknown): { id: number; kind: "comment" | "repl
   const replyTo = int(input, "reply_to", { min: 1 }) ?? null;
   if (replyTo !== null && !get("SELECT 1 FROM task_updates WHERE id = ? AND task = ?", replyTo, taskId)) {
     throw new ActionError(`reply_to must be the id of an update on task '${taskId}'; ${replyTo} is not one.`);
+  }
+  // A money answer is only meaningful as a reply to the question it answers.
+  // A bare "yes" on a task waiting on a payment is refused rather than stored
+  // as something the agent might read as approval.
+  const task = get<TaskRow>("SELECT column_name, question_kind FROM tasks WHERE id = ?", taskId) as TaskRow;
+  if (replyTo === null && task.column_name === "waiting_on_you" && task.question_kind === "money" && /^(yes|no|not yet)[.!]?$/i.test(body.trim())) {
+    const current = currentQuestionId(taskId);
+    throw new ActionError(
+      `This task is waiting on a money question. Answer it with the Yes / Not yet buttons on the task's page` +
+        (current ? ` (reply_to: ${current})` : "") + `, so the answer is tied to that question.`,
+    );
   }
   const kind = replyTo === null ? "comment" : "reply";
   return tx(() => {
