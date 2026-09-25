@@ -1,53 +1,33 @@
 # Muse Office
 
-## Get more done with Muse by organizing the work
+## Promote your Muse to Chief of Staff
 
-Give Muse a way to organize bigger jobs. With the Chief of Staff hat,
-**Muse manages a team of specialist agents** while remaining the one you talk
-to. It plans the work, gives each part an owner, checks the results, and brings
-decisions back to you. You can do more with Muse without keeping every detail
-in one long chat.
-
-Each specialist has its own instructions and memory. When you teach Muse how
-you like something done, it can keep that lesson with the agent who does that
-kind of work, so the right specialist gets better at the job. The sample team
-is only a starting point: ask Muse to add, change, pause, or retire agents as
-your work changes.
+Instead of trying to do every job in one chat, Muse becomes your chief of
+staff. You still talk to Muse; **it manages a team of specialists**, checks
+their work, and keeps you informed. What you teach a specialist stays with that
+specialist, so each one gets better at its job. Follow the team's progress and
+decisions in one private Office. Nothing is sent, bought, published, or deleted
+without your OK.
 
 ### Give Muse the hat
 
-1. [Open and copy the stable message →](https://github.com/tinyhat-ai/muse-office/blob/channels/lts/hat/PROMPT.md)
-2. Paste it into your chat with Muse.
-3. Review Muse's plan. It waits for your approval before setting up the team and your Office.
+1. [Open the message to send Muse →](https://github.com/tinyhat-ai/muse-office/blob/channels/lts/hat/PROMPT.md)
+2. Copy the text between the two horizontal lines and paste it into your Muse chat.
+3. Review Muse's plan and approve it when you're ready.
 
-The hat is a message for Muse, so you do not need to install an app yourself.
-You can edit the message before you send it.
+The hat is simply a message you send Muse. There is no app to install yourself.
+You can change the message before sending it. The team starts with examples;
+ask Muse to add, change, or remove specialists as your work changes.
 
-### What you get
+### See the work
 
-- **One conversation, a coordinated team.** Tell Muse what you want to achieve.
-  It can plan the work, give each part to an owner, and follow up without making
-  you manage every agent separately.
-- **A private place to see progress.** Muse builds an Office with Projects for
-  tasks, Team for the agents doing them, Notes for decisions, Customers for
-  contacts, and Reports for visual charts. You can comment on tasks and notes;
-  Muse checks those comments and follows up with their owners.
-- **Your say on important actions.** Muse asks before anything is sent, bought,
-  published, or deleted. The first visit shows real setup work and clearly
-  labeled public example charts. It does not invent your customers or results.
+Ask Muse to help launch a workshop. It can give the page, announcement, and
+follow-up to the right specialists. Your Office shows who owns each part, what
+needs your decision, and the notes and reports worth keeping. You can comment
+on a task or note; Muse follows up with its owner.
 
-For example, you can ask, “Help me launch a workshop. Plan the page, the
-announcement, and the follow-up. Show me what needs my decision.” Muse can
-organize those parts as visible work while you keep talking to Muse.
+![Muse and an example specialist team in Office](docs/screenshots/team-larger-avatars.png)
 
-## See what Office looks like
-
-The Team page shows Muse coordinating specialists you can change at any time.
-
-![Muse and its specialist team in Office](docs/screenshots/team-larger-avatars.png)
-
-## Explore the open source project
-
-This repository contains the Chief of Staff instructions and the Office app
-Muse can build for you. If you want to inspect or run the app yourself, see the
-[developer guide](docs/DEVELOPING.md). The project is [MIT licensed](LICENSE).
+This open source repository has the message and the Office Muse builds. See the
+[developer guide](docs/DEVELOPING.md) if you want to explore the code. The
+project is [MIT licensed](LICENSE).
