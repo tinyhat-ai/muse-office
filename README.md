@@ -27,7 +27,7 @@ The long form of the promotion, which your Muse reads as build material, is
 
 ## What a Muse builds from this hat
 
-Built by a Muse from the message in `hat/PROMPT.md`, on a freshly reset agent, with the specialists named by the Muse itself: the Team page after a few requests were routed (a post with the marketer and a lead with sales, both waiting on the person; a receipt pile next for the bookkeeper; the designer's finished task), and the Notes page.
+Built by a Muse from the message in `hat/PROMPT.md`, on a freshly reset agent, with the specialists named by the Muse itself: the Team page after a few requests were routed (a post with the marketer and a lead with sales, both waiting on the person; a receipt pile next for the bookkeeper; the designer's finished task), and the Notes page. That build predates note tags; a Muse that refines its Office from the current spec gets the tag chips above.
 
 ![Team page of an Office built by a Muse](docs/live/team.png)
 
@@ -67,7 +67,13 @@ Customers (a small funnel, this week's follow-ups, the people table) and Reports
 
 ![Reports](docs/screenshots/reports.png)
 
-More in [`docs/screenshots/`](docs/screenshots/): a project's page, Team, Notes, a note, the board on a phone, and a task whose money question was asked again with a new amount (the earlier yes stays with the earlier question).
+Notes carry tags for finding them later, and a note can hold a small visual (here, how a change goes live), which scales down on a phone:
+
+![Notes with tags](docs/screenshots/notes.png)
+
+![A note with tags and an inline visual](docs/screenshots/note-page.png)
+
+More in [`docs/screenshots/`](docs/screenshots/): a project's page, Team, the board and a note on a phone, and a task whose money question was asked again with a new amount (the earlier yes stays with the earlier question).
 
 ## The actions
 
