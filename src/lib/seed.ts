@@ -193,13 +193,13 @@ export function seed(db: Database.Database) {
 
     // ----------------------------------------------------------- customers
     const contact = db.prepare(
-      `INSERT INTO contacts (slug, name, company, title, stage, source, next_step, next_due, next_waiting_on_you, notes_json, value_cents, created_at, updated_at)
-       VALUES (@slug, @name, @company, @title, @stage, @source, @next_step, @next_due, @next_waiting_on_you, @notes, @value_cents, @created_at, @updated_at)`,
+      `INSERT INTO contacts (slug, name, company, title, stage, source, next_step, next_due, next_waiting_on_you, notes_json, value_cents, in_funnel, created_at, updated_at)
+       VALUES (@slug, @name, @company, @title, @stage, @source, @next_step, @next_due, @next_waiting_on_you, @notes, @value_cents, @in_funnel, @created_at, @updated_at)`,
     );
     const touch = db.prepare(`INSERT INTO touches (contact, channel, summary, by, task, happened_at) VALUES (?, ?, ?, ?, ?, ?)`);
     const stage = db.prepare(`INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)`);
     const people: Array<{
-      slug: string; name: string; company: string; title?: string; stage: string; source?: string; next_step?: string; next_due?: string; waiting?: number; notes?: string[]; value?: number; created: number;
+      slug: string; name: string; company: string; title?: string; stage: string; source?: string; next_step?: string; next_due?: string; waiting?: number; notes?: string[]; value?: number; in_funnel?: number; created: number;
       stages: Array<[string, number]>; touches: Array<[channel: string, summary: string, msAgo: number, by?: string, task?: string]>;
     }> = [
       { slug: "sarah-chen", name: "Sarah Chen", company: "Acme Co.", title: "Head of People", stage: "proposal", source: "met at a business expo", next_step: "Send the workshop proposal", next_due: day(-1), waiting: 1, notes: ["Prefers email.", "Decides by the end of October."], created: 12 * D,
@@ -226,12 +226,15 @@ export function seed(db: Database.Database) {
         stages: [["lead", 14 * D], ["talking", 7 * D]], touches: [["email", "Asked for an example of past work", 7 * D, "scout"]] },
       { slug: "tom-becker", name: "Tom Becker", company: "Becker Logistics", title: "COO", stage: "proposal", source: "referral", next_step: "Follow up on the proposal", next_due: day(6), value: 720000, created: 30 * D,
         stages: [["lead", 30 * D], ["talking", 20 * D], ["proposal", 8 * D]], touches: [["email", "Proposal sent: three workshops, $7,200", 8 * D, "scout"], ["meeting", "Discovery call", 20 * D, "you"]] },
+      // Kept on the page without being sold to: no stage shown, counted nowhere.
+      { slug: "you", name: "You", company: "Your business", stage: "past", source: "you", in_funnel: 0, notes: ["Your own details, so the team has them."], created: 30 * D, stages: [], touches: [] },
+      { slug: "tinyhat", name: "Tinyhat", company: "Tinyhat", stage: "past", source: "made this hat", in_funnel: 0, next_step: "Check for hat updates", next_due: day(7), notes: ["https://tinyhat.ai", "support@tinyhat.ai"], created: 30 * D, stages: [], touches: [] },
       { slug: "grace-okafor", name: "Grace Okafor", company: "Sunrise Yoga", title: "Owner", stage: "past", source: "referral", next_step: "Ask about a repeat session", next_due: day(21), value: 120000, created: 150 * D,
         stages: [["lead", 150 * D], ["customer", 120 * D], ["past", 60 * D]], touches: [["meeting", "Half-day workshop, June", 104 * D, "you"]] },
     ];
     for (const c of people) {
-      contact.run({ slug: c.slug, name: c.name, company: c.company, title: c.title ?? null, stage: c.stage, source: c.source ?? null, next_step: c.next_step ?? null, next_due: c.next_due ?? null, next_waiting_on_you: c.waiting ?? 0,
-        notes: JSON.stringify(c.notes ?? []), value_cents: c.value ?? null, created_at: t(c.created), updated_at: t(Math.min(...c.touches.map((x) => x[2]), c.created)) });
+      contact.run({ slug: c.slug, name: c.name, company: c.company, title: c.title ?? null, stage: c.stage, source: c.source ?? null, next_step: c.next_step ?? null, next_due: c.next_due ?? null, next_waiting_on_you: c.waiting ?? 0, in_funnel: c.in_funnel ?? 1,
+        notes: JSON.stringify(c.notes ?? []), value_cents: c.value ?? null, created_at: t(c.created), updated_at: t(c.touches.length ? Math.min(...c.touches.map((x) => x[2]), c.created) : c.created) });
       for (const [s, msAgo] of c.stages) stage.run(c.slug, s, t(msAgo));
       for (const [channel, summary, msAgo, by, taskId] of c.touches) touch.run(c.slug, channel, summary, by ?? null, taskId ?? null, t(msAgo));
     }

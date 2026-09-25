@@ -61,7 +61,7 @@ A task's page, the one place the person can write: the pinned question with a on
 
 ![A task waiting on a money question](docs/screenshots/task-waiting-money.png)
 
-Customers (a small funnel, this week's follow-ups, the people table) and Reports (results, not activity):
+Customers (a small funnel, this week's follow-ups, the people table; the person and the hat's maker kept as contacts outside the funnel) and Reports (results, not activity):
 
 ![Customers](docs/screenshots/customers.png)
 
