@@ -78,6 +78,8 @@ The chief keeps its recognizable face and gains a small top hat. The five specia
 
 Inline SVG, drawn at 640×230 for wide cards and 320×180 for narrow ones (redrawn at 320 wide on a phone). Axis and legend text 12px `--soft`. Bars have 2–3px radius. The spending chart is stacked with a dashed average line and the label "8-week average $680". Money in and out are grouped bars in `#5b8a5a` (in) and `#3d5a6c` (out). Website visitors are one series of blue-grey bars with the last one darker.
 
+Donut slices use distinct colours keyed to their labels, regardless of metric insertion order. The Earth example always uses sand `#c8b990` for Land and blue `#5f8497` for Ocean. Other donuts sort labels before assigning palette colours; the legend uses the same colours as the slices.
+
 ## Icon
 
 The Office's icon is the small building in `src/app/icon.svg`: two windows,

@@ -4,6 +4,7 @@ import { all, get, json, type MemberRow, type MetricRow, type ProjectRow, type R
 import { ago, dueWord, money, shortDate } from "@/lib/time";
 import { Avatar, Initials } from "@/components/Avatar";
 import { Bars, Donut, GroupedBars, HBars, StackedBars, Timeline, blend, fmt } from "@/components/charts/Charts";
+import { colorDonutSegments } from "@/lib/donut-colors";
 import "./reports.css";
 
 // The Reports page: every card is a `reports` row and every number a `metrics`
@@ -448,7 +449,7 @@ function GenericCard({ report, rows, ctx, wide }: CardProps) {
     </>;
   }
   if (report.chart === "donut") {
-    return <Donut title={report.title} segments={rows.map((r, i) => ({ label: r.label, value: r.value, color: i === 0 ? "#c8b990" : colorFor(report, ctx) }))} />;
+    return <Donut title={report.title} segments={colorDonutSegments(rows, report.slug)} />;
   }
   if (report.chart === "grouped-bars" || report.chart === "stacked-bars") {
     const lastTotal = series.reduce((a, s) => a + (s.values[s.values.length - 1] ?? 0), 0);
