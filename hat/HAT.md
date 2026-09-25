@@ -228,9 +228,10 @@ Do these before the hand-over, and again after any change to the app:
   generic office symbol.
 - No page is empty on the first visit: the board has cards in To do, Waiting
   on you, and Done; Customers has at least the person and Tinyhat (`in_funnel:
-  false`, shown as "Contact", counted nowhere); Reports has three populated,
-  sourced public example charts plus the eight business cards; Notes has
-  three tagged notes.
+  false`, shown as "Contact", counted nowhere); Reports visibly shows three
+  populated, sourced public example charts. Store the eight business report
+  definitions, but keep their cards hidden until verified figures can be
+  plotted. Notes has three tagged notes.
 - Open a note containing a Markdown heading, a pipe table, bold text, and a
   fenced `mermaid` flowchart. Confirm they render as a heading, table, bold
   text, and diagram. If the raw punctuation appears, fix the renderer before
