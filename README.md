@@ -3,11 +3,11 @@
 ## Promote your Muse to Chief of Staff
 
 Instead of trying to do every job in one chat, Muse becomes your chief of
-staff. You still talk to Muse; **it manages a team of specialists**, checks
-their work, and keeps you informed. What you teach a specialist stays with that
-specialist, so each one gets better at its job. Follow the team's progress and
-decisions in one private Office. Nothing is sent, bought, published, or deleted
-without your OK.
+staff. You still talk to Muse; **it manages a team of specialist agents**,
+checks their work, and keeps you informed. What you teach a specialist becomes
+part of that agent's own skills and memory, so each one gets better at its job.
+Follow the team's progress and decisions in one private Office. Nothing is sent,
+bought, published, or deleted without your OK.
 
 ### Give Muse the hat
 
