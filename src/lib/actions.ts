@@ -760,9 +760,10 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   reply_to_comment: {
     section: "Comments",
-    description: "Answers a comment in the same thread and marks it read.",
-    params: { comment_id: "integer · id from list_new_comments · required", author: "string · member slug · required", body: "string · the answer, in plain words · required" },
+    description: "Answers a task comment in the same thread and marks it read. Pass source from list_recent_updates so a note id cannot route the reply to an unrelated task.",
+    params: { source: "string · task · required", comment_id: "integer · task comment id · required", author: "string · member slug · required", body: "string · the answer, in plain words · required" },
     run(input) {
+      oneOf(input, "source", ["task"], { required: true });
       const id = int(input, "comment_id", { required: true, min: 1 }) as number;
       const parent = get<UpdateRow>("SELECT * FROM task_updates WHERE id = ?", id);
       if (!parent) throw new ActionError(`No comment with id ${id}. list_new_comments returns the ids of the user's unread comments.`, 404);
@@ -793,9 +794,10 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   reply_to_note_comment: {
     section: "Comments",
-    description: "Answers a user comment on a note and marks it read. The note's keeper owns the follow-up.",
-    params: { comment_id: "integer · note comment id · required", author: "string · member slug · required", body: "string · answer · required" },
+    description: "Answers a user comment on a note and marks it read. The note's keeper owns the follow-up. Pass source from list_recent_updates so a task id cannot route the reply to an unrelated note.",
+    params: { source: "string · note · required", comment_id: "integer · note comment id · required", author: "string · member slug · required", body: "string · answer · required" },
     run(input) {
+      oneOf(input, "source", ["note"], { required: true });
       const id = int(input, "comment_id", { required: true, min: 1 }) as number;
       const parent = get<NoteCommentRow>("SELECT * FROM note_comments WHERE id = ?", id);
       if (!parent || parent.author !== "you") throw new ActionError(`No user note comment with id ${id}.`, 404);

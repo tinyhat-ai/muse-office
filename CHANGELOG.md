@@ -16,9 +16,9 @@ one in `VERSION` and in the `version:` line of `hat/HAT.md`.
   and note support in `POST /api/comments`. Their scheduled comment job must
   switch from task-only `list_new_comments` to `list_recent_updates`, follow
   every cursor page, and use each item's `(source, id)` when replying or
-  marking it read. `mark_comments_read` and `mark_note_comments_read` now
-  require `source: "task"` and `source: "note"`, respectively, to prevent an
-  overlapping integer id from silently marking another comment read.
+  marking it read. Both reply actions and both read actions now require
+  `source: "task"` or `source: "note"` as appropriate, preventing an
+  overlapping integer id from routing a reply or read receipt to another page.
   Preserve existing data.
 
 ## 0.0.1 — 2026-09-25

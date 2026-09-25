@@ -93,8 +93,9 @@ write it down in its place first and link to it.
   who reads the context, acts or delegates, and replies in the same thread
   (`reply_to_comment` or `reply_to_note_comment`). Mark it read only after
   follow-up. Use each update's `source` and `id` together: task and note ids
-  can overlap. Pass `source: "task"` to `mark_comments_read` or
-  `source: "note"` to `mark_note_comments_read`. You verify completion and handle
+  can overlap. Pass `source: "task"` to `reply_to_comment` and
+  `mark_comments_read`, or `source: "note"` to `reply_to_note_comment` and
+  `mark_note_comments_read`. You verify completion and handle
   comments on closed tasks too.
   Tell the user comments are checked on this rhythm; chat is immediate.
 
