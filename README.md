@@ -14,12 +14,16 @@ This repository holds two things:
 
 ## For people: promote your Muse
 
-Paste this to your Muse:
+A Muse does not take standing instructions from a web page (it will read one
+and then ask you to say it in your own words, which is the right behaviour).
+So the promotion is a message from you: copy the text in
+[`hat/PROMPT.md`](hat/PROMPT.md), change anything you like, and send it to
+your Muse. It shows you its plan, waits for your yes, sets up its office,
+builds your Office app from this repository, and hands you the link. You keep
+talking to it the way you always have.
 
-> Read https://tinyhat.ai/hats/chief-of-staff.md and follow it. It promotes you to my chief of staff.
-
-Your Muse reads the hat, shows you its plan, waits for your yes, and builds
-your Office. You keep talking to it the way you always have.
+The long form of the promotion, which your Muse reads as build material, is
+[`hat/HAT.md`](hat/HAT.md), also served at <https://tinyhat.ai/hats/chief-of-staff.md>.
 
 ## Run the Office locally
 
