@@ -27,6 +27,8 @@ function open(): Db {
   // does not add them). Keep this list short and append-only.
   const noteCols = (db.prepare("PRAGMA table_info(notes)").all() as Array<{ name: string }>).map((c) => c.name);
   if (!noteCols.includes("tags_json")) db.exec("ALTER TABLE notes ADD COLUMN tags_json TEXT NOT NULL DEFAULT '[]'");
+  const contactCols = (db.prepare("PRAGMA table_info(contacts)").all() as Array<{ name: string }>).map((c) => c.name);
+  if (!contactCols.includes("in_funnel")) db.exec("ALTER TABLE contacts ADD COLUMN in_funnel INTEGER NOT NULL DEFAULT 1");
   const count = db.prepare("SELECT COUNT(*) AS n FROM members").get() as { n: number };
   if (count.n === 0 && process.env.OFFICE_SEED !== "none") {
     // Lazy import keeps the seed out of the hot path once the office exists.
@@ -112,7 +114,7 @@ export interface UpdateRow {
 export interface ContactRow {
   slug: string; name: string; company: string | null; title: string | null; stage: Stage; source: string | null;
   next_step: string | null; next_due: string | null; next_waiting_on_you: number; notes_json: string;
-  value_cents: number | null; created_at: string; updated_at: string;
+  value_cents: number | null; in_funnel: number; created_at: string; updated_at: string;
 }
 export interface TouchRow { id: number; contact: string; channel: string; summary: string; by: string | null; task: string | null; happened_at: string }
 export interface StageChangeRow { id: number; contact: string; stage: Stage; changed_at: string }

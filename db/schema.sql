@@ -125,6 +125,7 @@ CREATE TABLE IF NOT EXISTS contacts (
   company             TEXT,
   title               TEXT,                     -- their role at the company
   stage               TEXT NOT NULL DEFAULT 'lead',   -- 'lead' | 'talking' | 'proposal' | 'customer' | 'past'
+  in_funnel           INTEGER NOT NULL DEFAULT 1,    -- 0 for someone kept here without selling to them (the person, the maker of the hat): no stage shown, not counted anywhere
   source              TEXT,                     -- where they came from: 'website inquiry', 'referral', ...
   next_step           TEXT,
   next_due            TEXT,                     -- ISO date

@@ -150,7 +150,7 @@ function updateOut(u: UpdateRow) {
 }
 function contactOut(c: ContactRow) {
   const { notes_json, value_cents, ...rest } = c;
-  return { ...rest, notes: json<string[]>(notes_json, []), value: value_cents == null ? null : value_cents / 100, next_waiting_on_you: !!c.next_waiting_on_you };
+  return { ...rest, notes: json<string[]>(notes_json, []), value: value_cents == null ? null : value_cents / 100, next_waiting_on_you: !!c.next_waiting_on_you, in_funnel: !!c.in_funnel };
 }
 function metricOut(m: MetricRow) {
   const { note_json, ...rest } = m;
@@ -740,6 +740,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       source: "string · where they came from, e.g. website inquiry · optional",
       notes: "string[] · short facts, e.g. Prefers email. · optional",
       value: "number · what they are worth this year, in dollars · optional",
+      in_funnel: "boolean · false for someone kept here without selling to them (the person themselves, the maker of the hat): shown as Contact, no stage, not counted in the funnel or the reports · optional, default true",
     },
     run(input) {
       const slug = slugFrom(input, "name", "sarah-chen");
@@ -755,18 +756,27 @@ export const ACTIONS: Record<string, ActionDef> = {
         patch.value_cents = v == null ? null : Math.round(v * 100);
       }
       const stage = oneOf(input, "stage", STAGES);
+      const inFunnel = bool(input, "in_funnel");
       return tx(() => {
         const now = nowIso();
         if (existing) {
-          if (stage && stage !== existing.stage) {
+          // Someone kept outside the funnel enters it when given a stage (or in_funnel true);
+          // that entry is the first recorded stage change.
+          const enters = existing.in_funnel === 0 && (inFunnel === true || (stage !== undefined && inFunnel !== false));
+          if (inFunnel === false) patch.in_funnel = 0;
+          if (enters) patch.in_funnel = 1;
+          if (stage && (stage !== existing.stage || enters)) {
             patch.stage = stage;
-            run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, stage, now);
+            if (inFunnel !== false) run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, stage, now);
+          } else if (enters) {
+            run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, existing.stage, now);
           }
           patchRow("contacts", "slug", slug, patch);
         } else {
           requireForNew(patch, ["name"], `contact '${slug}'`);
-          insertRow("contacts", { slug, notes_json: "[]", ...patch, stage: stage ?? "lead", created_at: now, updated_at: now });
-          run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, stage ?? "lead", now);
+          const off = inFunnel === false;
+          insertRow("contacts", { slug, notes_json: "[]", ...patch, stage: stage ?? (off ? "past" : "lead"), in_funnel: off ? 0 : 1, created_at: now, updated_at: now });
+          if (!off) run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", slug, stage ?? "lead", now);
         }
         return contactOut(mustContact(slug));
       });
@@ -817,17 +827,17 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   set_stage: {
     section: "Customers",
-    description: "Moves a person along the funnel; the change is recorded when the stage actually changes.",
+    description: "Moves a person along the funnel; the change is recorded when the stage actually changes. Someone kept outside the funnel enters it.",
     params: { contact: "string · contact slug · required", stage: "string · lead, talking, proposal, customer, or past · required" },
     run(input) {
       const c = mustContact(requiredString(input, "contact", "the person's slug"));
       const stage = oneOf(input, "stage", STAGES, { required: true });
-      const changed = stage !== c.stage;
+      const changed = stage !== c.stage || c.in_funnel === 0;
       return tx(() => {
         if (changed) {
           const now = nowIso();
           run("INSERT INTO stage_changes (contact, stage, changed_at) VALUES (?, ?, ?)", c.slug, stage, now);
-          patchRow("contacts", "slug", c.slug, { stage });
+          patchRow("contacts", "slug", c.slug, { stage, in_funnel: 1 });
         }
         return { ...contactOut(mustContact(c.slug)), changed };
       });

@@ -64,4 +64,4 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 
 ## People outside the funnel
 
-A contact with stage `past` is shown in the people table but counted nowhere: not in the funnel blocks, not in the new-customers report, which counts only `lead` and `customer` changes in `stage_changes`. Use `past` for the person themselves and for the maker of the hat, so that the page is never empty without the numbers lying. There is no email column; an email goes in `notes`.
+`contacts.in_funnel` is 1 for everyone in the funnel and 0 for someone kept on the page without being sold to: the person themselves, the maker of the hat, a partner. Such a contact shows the pill "Contact" instead of a stage, gets no `stage_changes` row, and is counted nowhere: not in the funnel blocks, not in the new-customers report. `set_stage` (or `upsert_contact` with a stage) moves them into the funnel, and that entry is their first recorded change. There is no email column; an email goes in `notes`.

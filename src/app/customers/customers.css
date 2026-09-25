@@ -127,3 +127,6 @@
   .cu-table tr.cu-detail-row { display: block; padding: 0; border-top: 0; }
   .cu-table tr.cu-detail-row td { display: block; }
 }
+
+/* Someone kept on the page without a funnel stage. */
+.cu-s-contact { background: #fff; color: var(--soft); border: 1px solid var(--line); }

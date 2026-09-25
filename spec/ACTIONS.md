@@ -51,10 +51,10 @@ When a user answers a `money` question with the "Yes, pay …" button, the app s
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `upsert_contact` | `slug`, `name`, `company?`, `title?`, `stage?`, `source?`, `notes?: string[]`, `value?` | Adds or updates a person. A stage change is recorded for the funnel. |
+| `upsert_contact` | `slug`, `name`, `company?`, `title?`, `stage?`, `source?`, `notes?: string[]`, `value?`, `in_funnel?` | Adds or updates a person. A stage change is recorded for the funnel. `in_funnel: false` keeps someone on the page without selling to them (the person themselves, the maker of the hat): shown as "Contact", no stage, not counted anywhere. |
 | `log_touch` | `contact`, `channel`, `summary`, `by?`, `task?`, `happened_at?` | Adds a line to the person's timeline and to "Lately". `channel` is one of `email`, `call`, `meeting`, `message`, `website`, `invoice`, `note`. |
 | `set_next_step` | `contact`, `text`, `due?`, `waiting_on_you?` | Sets what happens next and when. |
-| `set_stage` | `contact`, `stage` | Moves a person along the funnel. `past` is also the stage for people who are not in the funnel at all (the person themselves, the maker of the hat): the funnel blocks and the reports count only `lead`, `talking`, `proposal`, and `customer`. |
+| `set_stage` | `contact`, `stage` | Moves a person along the funnel. Someone kept outside the funnel (`in_funnel: false`) enters it with the first stage they are given. |
 | `find_contacts` | `q?`, `stage?` | Search by name or company. |
 | `list_followups` | `days?` (default 7) | Everyone with a next step due in the window, waiting-on-you first. |
 

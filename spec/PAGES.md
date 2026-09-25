@@ -55,7 +55,7 @@ No statistics strip, no project chips, no counts.
 3. Two cards side by side: **Follow up this week** (waiting-on-you first, then due soonest: avatar initials, name · company, the next step, and the day on the right in orange when it waits on the user) and **Lately** (the last touches the team logged).
 4. The **people table**: Person (initials, name, company), Stage (a pill), Last contact ("Email · Sep 18"), Next step (bold, with the day under it in orange when waiting on the user). Tapping a row opens the **detail panel**: initials, name, title · company, stage pill; "Next step" in a peach box; "Timeline" (touches, newest first, the waiting one with an orange dot); "Notes"; and "To change anything here, tell <Muse>, for example 'move Sarah's follow-up to next Thursday.'"
 
-Eight to ten people is the right size for the table. Stage pills: Lead (sand), Talking (sage), Proposal (green), Customer (dark green), Past (grey).
+Eight to ten people is the right size for the table. Stage pills: Lead (sand), Talking (sage), Proposal (green), Customer (dark green), Past (grey); a person kept outside the funnel (`in_funnel = 0`: the person themselves, the maker of the hat) shows a plain "Contact" pill, has no "Became …" line, and is counted in no block.
 
 ## Reports (`/reports`)
 

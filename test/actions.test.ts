@@ -87,3 +87,17 @@ test("notes carry tags for finding them later; list_notes filters by one tag and
   assert.deepEqual(byWord.map((n) => n.slug), ["brand-guide"]);
   assert.throws(() => runAction("upsert_note", { slug: "bills", tags: Array.from({ length: 13 }, (_, i) => `t${i}`) }), /at most 12/);
 });
+
+test("a contact kept outside the funnel has no stage change and is not counted until it enters", () => {
+  const you = runAction("upsert_contact", { slug: "you", name: "You", in_funnel: false, source: "you", notes: ["hello@example.com"] }) as { in_funnel: boolean; stage: string };
+  assert.equal(you.in_funnel, false);
+  const changes = () => (getDb().prepare("SELECT COUNT(*) n FROM stage_changes WHERE contact = 'you'").get() as { n: number }).n;
+  assert.equal(changes(), 0);
+  // Becomes a real lead: enters the funnel, and that entry is recorded once.
+  const entered = runAction("set_stage", { contact: "you", stage: "lead" }) as { in_funnel: boolean; stage: string; changed: boolean };
+  assert.deepEqual([entered.in_funnel, entered.stage, entered.changed], [true, "lead", true]);
+  assert.equal(changes(), 1);
+  // A new contact without the flag is in the funnel as before.
+  const lead = runAction("upsert_contact", { slug: "new-lead", name: "New Lead" }) as { in_funnel: boolean; stage: string };
+  assert.deepEqual([lead.in_funnel, lead.stage], [true, "lead"]);
+});

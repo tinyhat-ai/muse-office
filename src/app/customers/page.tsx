@@ -26,8 +26,13 @@ const personHref = (slug: string) => `/customers?person=${encodeURIComponent(slu
 const byUrgency = (a: ContactRow, b: ContactRow) =>
   b.next_waiting_on_you - a.next_waiting_on_you || (a.next_due ?? "~").localeCompare(b.next_due ?? "~") || a.name.localeCompare(b.name);
 
-function StagePill({ stage, className }: { stage: Stage; className?: string }) {
-  return <span className={`pill cu-stage cu-s-${stage}${className ? ` ${className}` : ""}`}>{STAGE_LABEL[stage] ?? stage}</span>;
+// A person kept here without being sold to (the user, the maker of the hat) shows
+// "Contact" instead of a stage, and is counted nowhere.
+function StagePill({ c, className }: { c: Pick<ContactRow, "stage" | "in_funnel">; className?: string }) {
+  if (c.in_funnel === 0) {
+    return <span className={`pill cu-stage cu-s-contact${className ? ` ${className}` : ""}`} title="Not in the funnel">Contact</span>;
+  }
+  return <span className={`pill cu-stage cu-s-${c.stage}${className ? ` ${className}` : ""}`}>{STAGE_LABEL[c.stage] ?? c.stage}</span>;
 }
 
 type DetailProps = {
@@ -61,7 +66,8 @@ function PersonDetail({ c, touches, changes, member, chiefName, variant }: Detai
         <div>
           <h2 className="cu-dnm">{c.name}</h2>
           <div className="cu-drl">{[c.title, c.company].filter(Boolean).join(" · ")}</div>
-          <StagePill stage={c.stage} className="cu-hd-stage" />
+          <StagePill c={c} className="cu-hd-stage" />
+          {c.in_funnel === 0 ? <div className="cu-drl">Kept here without selling to them{c.source ? ` · ${c.source}` : ""}</div> : null}
         </div>
       </div>
 
@@ -147,9 +153,10 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
   // Funnel: who is in each stage today, and who moved into it in the last 30 days.
   const since = new Date(Date.now() - 30 * DAY).toISOString();
   const recent = changes.filter((s) => s.changed_at >= since);
-  const inStage = (stage: Stage) => contacts.filter((c) => c.stage === stage).length;
+  const inFunnel = contacts.filter((c) => c.in_funnel !== 0);
+  const inStage = (stage: Stage) => inFunnel.filter((c) => c.stage === stage).length;
   const movedInto = (stage: Stage) => new Set(recent.filter((s) => s.stage === stage).map((s) => s.contact)).size;
-  const waitingProposals = contacts.filter((c) => c.stage === "proposal" && c.next_waiting_on_you === 1).length;
+  const waitingProposals = inFunnel.filter((c) => c.stage === "proposal" && c.next_waiting_on_you === 1).length;
   const wonSlugs = new Set(recent.filter((s) => s.stage === "customer").map((s) => s.contact));
   const wonCents = contacts.filter((c) => wonSlugs.has(c.slug)).reduce((sum, c) => sum + (c.value_cents ?? 0), 0);
   const movement = (stage: Stage): ReactNode => {
@@ -324,7 +331,7 @@ export default async function CustomersPage({ searchParams }: { searchParams: Se
                       </td>
                       <td>
                         <Link href={href} scroll={false} className="cu-cell" tabIndex={-1}>
-                          <StagePill stage={c.stage} />
+                          <StagePill c={c} />
                         </Link>
                       </td>
                       <td>
