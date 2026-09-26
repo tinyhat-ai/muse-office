@@ -389,7 +389,7 @@ export const ACTIONS: Record<string, ActionDef> = {
     description: "Adds or updates a project tile and its page header. Only the fields passed change; colours default to the next free pastel.",
     params: {
       slug: "string · kebab-case id, e.g. website · optional, made from the name when missing",
-      name: "string · the project's name · required for a new project",
+      name: "string · the project's name, up to 120 characters · required for a new project",
       create_only: "boolean · refuse to overwrite an existing project · optional",
       description: "string · one line · optional",
       color: "string · pastel fill, e.g. #f2e4a9 · optional",
@@ -399,11 +399,23 @@ export const ACTIONS: Record<string, ActionDef> = {
       done_when: "string · one line, what done means · optional",
     },
     run(input) {
-      const slug = slugFrom(input, "name", "website");
-      const existing = get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", slug);
+      let slug = slugFrom(input, "name", "website");
+      const name = present(input, "name") ? requiredString(input, "name", "the project's name") : null;
+      if (name && [...name].length > 120) throw new ActionError("Project names must be 120 characters or fewer.");
+      let existing = get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", slug);
+      if (!optionalString(input, "slug") && name) {
+        const sameName = all<ProjectRow>("SELECT * FROM projects").find((p) => p.name.normalize("NFC").toLowerCase() === name.normalize("NFC").toLowerCase());
+        if (sameName) { slug = sameName.slug; existing = sameName; }
+        else if (existing) {
+          const base = slug;
+          let n = 2;
+          while (get("SELECT slug FROM projects WHERE slug = ?", slug)) slug = `${base}-${n++}`;
+          existing = undefined;
+        }
+      }
       if (existing && bool(input, "create_only")) throw new ActionError("A project with this name already exists. Edit it or choose another name.");
       const patch: Patch = {};
-      if (present(input, "name")) patch.name = requiredString(input, "name", "the project's name");
+      if (name) patch.name = name;
       if (present(input, "description")) patch.description = optionalString(input, "description");
       if (present(input, "color")) patch.color = requiredString(input, "color", "a pastel fill like #f2e4a9");
       if (present(input, "color_dark")) patch.color_dark = requiredString(input, "color_dark", "a darker shade like #b89a3a");

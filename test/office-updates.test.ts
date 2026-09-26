@@ -59,7 +59,7 @@ test("archive preserves task history and progress, restore returns work, checks 
   assert.throws(() => act("create_task", {project:"school", title:"Invisible work"}), /Restore/);
   act("archive_project", {slug:"school", archived:false}, "you");
   assert.equal(act("get_project", {slug:"school"}).archived_at, null);
-  assert.throws(() => act("upsert_project", {name:"school", create_only:true}), /already exists/);
+  assert.throws(() => act("upsert_project", {name:"Family school", create_only:true}), /already exists/);
   const p = act("get_project", {slug:"school"}).progress;
   const view = getDb().prepare("SELECT done, total, percent, waiting, column_name FROM project_progress WHERE project = 'school'").get() as any;
   assert.deepEqual(view, {done:p.done,total:p.total,percent:p.percent,waiting:p.waiting,column_name:p.column});
@@ -85,5 +85,16 @@ test("archived work is paused in active reads but retained for history and resto
   act("archive_project", {slug:"paused", archived:false});
   assert.equal(act("list_tasks", {project:"paused"})[0].project_archived_at, null);
   assert.equal(act("summary").columns.waiting_on_you, before.columns.waiting_on_you);
+});
+
+test("project names in any language do not collide or silently rename an unrelated project", () => {
+  const a = act("upsert_project", {name:"Школа", create_only:true}, "you");
+  const b = act("upsert_project", {name:"学校", create_only:true}, "you");
+  const c = act("upsert_project", {name:"Дом"});
+  assert.equal(new Set([a.slug,b.slug,c.slug]).size, 3);
+  assert.equal(act("get_project", {slug:a.slug}).name, "Школа");
+  assert.throws(() => act("upsert_project", {name:"Школа", create_only:true}), /already exists/);
+  assert.equal(act("upsert_project", {name:"学校", description:"School"}).slug, b.slug);
+  assert.throws(() => act("upsert_project", {name:"x".repeat(121)}), /120 characters/);
 });
 
