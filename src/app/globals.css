@@ -135,16 +135,13 @@ textarea:focus, input:focus { border-color: #3d5a6c; }
 
 /* Pair foreground and background explicitly, including native form controls.
    This starting theme stays readable when Muse or the OS prefers dark mode. */
-:root { color-scheme: light; --needs: #a54619; }
+:root { color-scheme: light; }
 textarea, input, select { color: #1c1c19; }
 textarea::placeholder, input::placeholder { color: #66675f; opacity: 1; }
 textarea:focus-visible, input:focus-visible, button:focus-visible, a:focus-visible { outline: 2px solid #2d5a45; outline-offset: 3px; }
 .comment-follow-up { color: #565750; font-size: 14px; line-height: 1.6; margin: 10px 0 18px; }
 .comment-follow-up a { text-decoration: underline; font-weight: 650; }
 .comment-state { display: block; color: #415544; font-size: 13px; margin: 8px 0; }
-.comment-changes, .comment-attachment { display: block; font-size: 13px; color: #41433d; margin-top: 12px; }
-.comment-changes input { margin-right: 6px; }
+.comment-attachment { display: block; font-size: 13px; color: #41433d; margin-top: 12px; }
 .comment-attachment span { color: #565750; }
 .comment-attachment input { display: block; font: inherit; margin-top: 6px; max-width: 100%; }
-
-.office-yours { padding: 10px 24px; text-align: center; font-size: 13px; color: #565750; border-bottom: 1px solid #e2e1db; background: #fafaf6; }

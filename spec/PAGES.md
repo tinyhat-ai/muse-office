@@ -1,8 +1,12 @@
 # The pages
 
-Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. Muse builds this first version for the user and can change it with them. Say so in a short, visible line. Users can search, filter, manage projects, and comment. Muse updates the remaining work records. For those records a quiet line says: "To change this, tell <your Muse's name> in chat."
+Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. Muse builds this first version for the user and can change it with them. Say so in a short, visible line. Users can view, filter, search, and comment. Muse manages every other change through conversation. For those records a quiet line says: "To change this, tell <your Muse's name> in chat."
 
 Every page opens with the same header: a small kicker line, a large title, one line of lede. Then the content. Nothing is hidden behind tabs inside a page.
+
+## Interaction boundary
+
+The Office is a visualization of work managed by the chief of staff. The user talks to Muse to create or change projects, tasks, team members, and other records. Inside the Office, comments on a task, project, or note are the only user writes. Viewing, filtering, searching, and opening files are read-only. Keep the refined paper-and-sticky-note design: no management forms, drag-to-change status, progress percentages, checklist dashboards, or milestone controls. Use board lanes and short written updates to show progress; project rules are simple text. A comment supplies context for the owner to review; it does not itself change task status.
 
 ## Tasks (`/projects`, retained for existing links)
 
@@ -10,36 +14,28 @@ Use familiar board, status-list, and task-card meanings. Projects group related
 tasks: Website, Personal, School. “Launch a landing page” is a task in Website.
 Projects are user choices; the starter names are examples, not a fixed taxonomy.
 
-Show **All projects** and one selector per active project, then task search and
-owner filtering, matching counts, and Clear filters. Filters combine. Four status
-lists: To do, In progress, Waiting on you, Done. Each card is a task and opens its
-task page. Show project colour/name, task title, owner portrait/name (including
-Done), verified-check progress, due/updated date, and the question when waiting.
-Keep all completed tasks discoverable. Selected project context links to its
-separate detail page and shows completed tasks / all project tasks; filtering
-does not alter that denominator. Empty projects have zero tasks, not a completion.
-
-**Manage projects** lets the user add, rename, describe, archive, and restore
-projects. Archiving hides a project and its tasks from the active board and
-preserves notes, comments, files, process, and history. Explain this before the
-control. List archived projects here with Restore. Every save enters the unified
-updates feed so Muse learns what changed. Never turn status lists into projects.
+Show **All projects** and one selector per active project. Four status lists:
+To do, In progress, Waiting on you, Done. Each sticky-note card opens its task.
+Show the project colour/name, title, owner portrait/name (including Done),
+one short update or waiting question, and due/updated time. Preserve the
+optimized original colours, paper texture, and card proportions; no white
+speech bubbles. Keep all completed tasks discoverable. A selected project
+links to its context page. To add, rename, or archive a project, the person
+asks Muse in chat; Muse uses the actions and preserves its work and history.
 
 Use four lists on desktop, two on smaller screens, and one column on phones
 with Waiting on you first. No squeezed cards or clipped controls.
 
 ## A project's page (`/projects/<slug>`)
 
-Breadcrumb, project title and purpose, lead, derived status, completion count,
-and the current question or next due task. Show **all tasks**, including finished
-ones, with owner, status, next step or result, and a due/updated date. Open a task
-for its plan, criteria, conversation, and delivered output.
+Show the project name, purpose, and lead portrait, with a link back to its
+filtered task board. Show its working rules as readable text. No project
+completion percentage, milestones, process diagram, or separate management UI.
 
-**Project direction** holds comments for the project lead. Save them in
+A **Comments** section gives direction to the project lead. Save comments in
 `project_comments`, include them in the typed updates feed, and reply here.
 Explain the real checking interval when configured; distinguish awaiting reply
-from replied. Keep the written process, done criteria, and learned rules in an
-expandable “How this project runs” section.
+from replied. Only Muse changes the project after understanding the request.
 
 This is the starting layout. Muse may change it, including replacing the whole
 view, when the person asks. Keep the records and user choices intact.
@@ -49,14 +45,13 @@ view, when the person asks. Keep the records and user choices intact.
 Like an issue page, top to bottom:
 
 1. Breadcrumb "‹ Tasks / Money". The project name with its colour bar. The title, large. A status line: the column (orange dot for Waiting on you), "[avatar] Penny is on it", "Waiting 3 hours" or "Updated 2 hours ago", and "Due Thursday" when set.
-2. **When the task waits on the user**, the unanswered question is pinned right here, in a peach card: "[avatar] Penny asked you · 3 hours ago", the question, and either two buttons for a `money` question ("Yes, pay $1,240 on Sep 28" / "Not yet") or a "Reply to Penny" button, plus one line saying what a yes does. It disappears once answered.
+2. **When the task waits on the user**, the unanswered question is pinned right here, in a peach card: "[avatar] Penny asked you · 3 hours ago", the question, and a "Reply to Penny" button opening a contextual comment, plus one line saying what a yes does. It disappears once answered.
 3. **What this is**: the job definition. A collapsed "Original request" with the user's own words.
-4. **Done when**: a checklist; met items show a green check. Show verified count and percent from `task_progress`; no criteria means “Completion checks not set”, never a made-up percentage.
-5. **Plan**: a numbered list; the current step is bold with "· now"; done steps are grey.
-6. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Update cards with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files as chips. A question card is peach. The user's comments have a blue-grey header and show replies indented under them. Each card has a "Reply" link that opens a small box.
-7. **The comment box**: "[you] Add a comment for <Muse> and Penny…" with a "Comment" button and a small line "Your comment stays with this task." Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Note pages have their own comment box.
-8. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
-9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
+4. Keep any useful plan or working rules as short readable text with the description. No formal completion-check panels, percentages, or required structured checklist.
+5. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Update cards with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files as chips. A question card is peach. The user's comments have a blue-grey header and show replies indented under them. Each card has a "Reply" link that opens a small box.
+6. **The comment box**: "[you] Add a comment for <Muse> and Penny…" with a "Comment" button and a small line "Your comment stays with this task." Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Note pages have their own comment box.
+7. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
+8. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 
 ## Team (`/team`)
 
@@ -108,10 +103,10 @@ reply,” never “agent started.” Refresh replies without losing a draft.
 
 On a completed task, lead with **What changed**, **What was checked**, and an
 openable result when available. Older completed tasks with no evidence must
-say the summary is missing. The form offers **Request changes — reopen this
-task**; submitting a correction immediately moves Done to In progress and
-clears current completion claims while preserving history. An ordinary comment
-such as thanks does not reopen work. A screenshot can accompany task feedback:
+say the summary is missing. A correction is an ordinary comment. Its owner
+reviews it, reopens the task through an agent action when needed, and follows
+up on the same page. Saving any comment leaves task status unchanged.
+A screenshot can accompany task feedback:
 PNG/JPG/WebP up to 4 MB, stored privately, not an arbitrary executable upload.
 
 Voice summaries and update chats are personal preferences managed by Muse,

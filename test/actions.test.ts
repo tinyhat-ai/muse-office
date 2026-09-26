@@ -57,8 +57,8 @@ test("a bare yes on a money question is refused; a linked one is stored and repo
   const { id } = runAction("create_task", { project: "money", title: "Renew the domain", specialist: "penny" }) as { id: string };
   const moved = runAction("move_task", { id, column: "waiting_on_you", question: "OK to pay $16?", question_kind: "money" }) as { question_update_id: number };
 
-  assert.throws(() => postComment({ task: id, body: "yes" }), /Yes \/ Not yet buttons/);
-  assert.throws(() => postComment({ task: id, body: "Not yet." }), /Yes \/ Not yet buttons/);
+  assert.throws(() => postComment({ task: id, body: "yes" }), /Reply to the specific question/);
+  assert.throws(() => postComment({ task: id, body: "Not yet." }), /Reply to the specific question/);
   // An ordinary comment is still welcome.
   assert.equal(postComment({ task: id, body: "Use the business card, please." }).kind, "comment");
 
@@ -208,12 +208,10 @@ test("published report sources are HTTPS URLs", () => {
   assert.equal(report.source_url, "https://population.un.org/wpp/");
 });
 
-test("Done requires observed results, completed criteria and answered comments; a correction reopens it", () => {
+test("Done records checked results without mandatory checklists; only the agent reopens work", () => {
   assert.equal(callAction("create_task", { project: "money", title: "Skip verification", column: "done" }).status, 400);
-  const { id } = runAction("create_task", { project: "money", title: "Prepare a receipt summary", done_when: ["The total matches the receipt"], specialist: "penny" }) as { id: string };
+  const { id } = runAction("create_task", { project: "money", title: "Prepare a receipt summary", specialist: "penny" }) as { id: string };
   const completion = { id, column: "done", result_summary: "The receipt summary is ready.", verification: "Compared the total with the receipt; both show 12.", result_url: "/notes/receipt-summary" };
-  assert.equal(callAction("move_task", completion).status, 400);
-  runAction("update_task", { id, done_when: [{ text: "The total matches the receipt", met: true }] });
   assert.equal(callAction("move_task", { id, column: "done" }).status, 400);
   const comment = postComment({ task: id, body: "Please include the source." });
   assert.equal(callAction("move_task", completion).status, 400);
@@ -227,6 +225,8 @@ test("Done requires observed results, completed criteria and answered comments; 
   assert.equal(read().column, "done", "ordinary comments do not imply a change request");
   runAction("reply_to_comment", { source: "task", target_id: id, comment_id: thanks.id, author: "penny", body: "You're welcome." });
   postComment({ task: id, body: "The source link opens the wrong receipt.", request_changes: true });
+  assert.equal(read().column, "done", "even a legacy request_changes field cannot mutate task status");
+  runAction("move_task", { id, column: "in_progress" });
   assert.equal(read().column, "in_progress");
   assert.equal(read().done_at, null);
   assert.equal(read().verification, null);

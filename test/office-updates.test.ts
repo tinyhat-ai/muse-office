@@ -8,12 +8,12 @@ process.env.OFFICE_DB_PATH = path.join(dir, "office.db");
 process.env.OFFICE_SEED = "none";
 const {runAction, postComment} = require("../src/lib/actions") as typeof import("../src/lib/actions");
 const {getDb} = require("../src/lib/db") as typeof import("../src/lib/db");
-const act = (name: string, input: object = {}, actor: "agent"|"you" = "agent") => runAction(name, input, actor) as any;
+const act = (name: string, input: object = {}) => runAction(name, input) as any;
 after(() => { getDb().close(); fs.rmSync(dir, { recursive: true, force: true }); });
 
 test("all-page updates paginate a fixed batch without missing simultaneous or later changes", () => {
   act("upsert_member", {slug:"chief", name:"Noche", role:"Chief", job:"Coordinates", is_chief:true});
-  act("upsert_project", {slug:"school", name:"School"}, "you");
+  act("upsert_project", {slug:"school", name:"School"});
   const task = act("create_task", {project:"school", title:"Review school dates", done_when:["Dates checked"]});
   act("upsert_note", {slug:"dates", title:"School dates", markdown:"Ask for the dates", project:"school"});
   act("upsert_contact", {slug:"support", name:"Support", in_funnel:false});
@@ -27,14 +27,14 @@ test("all-page updates paginate a fixed batch without missing simultaneous or la
   getDb().prepare("UPDATE office_updates SET created_at = '2026-09-26T10:00:00.000Z'").run();
   let page = act("list_office_updates", {limit:2});
   const first = page.updates;
-  act("upsert_project", {slug:"school", name:"Family school"}, "you"); // lands after fixed upper bound
+  act("upsert_project", {slug:"school", name:"Family school"}); // lands after fixed upper bound
   let events = [...first];
   while(page.next_cursor) { page = act("list_office_updates", {cursor:page.next_cursor, limit:2}); events.push(...page.updates); }
   assert.equal(new Set(events.map((event:any) => event.id)).size, 9);
   assert.deepEqual([...new Set(events.map((event:any) => event.source))].sort(), ["contact","member","note","project","report","task"]);
   assert.equal(events.find((event:any) => event.action === "post_comment").comment_id, comment.id);
   assert.equal(events.find((event:any) => event.action === "post_comment").actor, "you");
-  assert.equal(events.find((event:any) => event.source === "project").actor, "you");
+  assert.equal(events.find((event:any) => event.source === "project").actor, "agent");
   const next = act("list_office_updates", {after:page.checkpoint});
   assert.equal(next.updates.length, 1); assert.equal(next.updates[0].changes.name, "Family school");
   act("summary"); act("set_setting", {key:"last_agent_visit", value:new Date().toISOString()});
@@ -46,23 +46,18 @@ test("all-page updates paginate a fixed batch without missing simultaneous or la
   assert.equal(act("list_office_updates", {after:before}).updates.length, 0); // failed write is atomic
 });
 
-test("archive preserves task history and progress, restore returns work, checks agree with SQL", () => {
+test("archive preserves task history, restore returns work, and comment feedback is honest", () => {
   const task = act("list_tasks", {project:"school"})[0];
   act("update_task", {id:task.id, done_when:[{text:"Dates checked", met:true}, {text:"Reply drafted", met:false}]});
   const read = act("get_task", {id:task.id});
-  assert.deepEqual(read.progress, {basis:"done_when", met:1, total:2, percent:50});
-  const sql = getDb().prepare("SELECT basis, met, total, percent FROM task_progress WHERE task = ?").get(task.id);
-  assert.deepEqual(sql, read.progress);
-  act("archive_project", {slug:"school", archived:true}, "you");
+  assert.equal(read.progress, undefined, "task progress is expressed by its column and note");
+  act("archive_project", {slug:"school", archived:true});
   assert.ok(act("get_project", {slug:"school"}).archived_at);
   assert.equal(act("get_task", {id:task.id}).updates.length, read.updates.length);
   assert.throws(() => act("create_task", {project:"school", title:"Invisible work"}), /Restore/);
-  act("archive_project", {slug:"school", archived:false}, "you");
+  act("archive_project", {slug:"school", archived:false});
   assert.equal(act("get_project", {slug:"school"}).archived_at, null);
   assert.throws(() => act("upsert_project", {name:"Family school", create_only:true}), /already exists/);
-  const p = act("get_project", {slug:"school"}).progress;
-  const view = getDb().prepare("SELECT done, total, percent, waiting, column_name FROM project_progress WHERE project = 'school'").get() as any;
-  assert.deepEqual(view, {done:p.done,total:p.total,percent:p.percent,waiting:p.waiting,column_name:p.column});
   act("set_setting", {key:"comment_check_minutes", value:"1"});
   const comment = postComment({project:"school", body:"Keep this project"});
   assert.match(comment.follow_up, /Noche checks Office updates every 1 minute/);
@@ -88,8 +83,8 @@ test("archived work is paused in active reads but retained for history and resto
 });
 
 test("project names in any language do not collide or silently rename an unrelated project", () => {
-  const a = act("upsert_project", {name:"Школа", create_only:true}, "you");
-  const b = act("upsert_project", {name:"学校", create_only:true}, "you");
+  const a = act("upsert_project", {name:"Школа", create_only:true});
+  const b = act("upsert_project", {name:"学校", create_only:true});
   const c = act("upsert_project", {name:"Дом"});
   assert.equal(new Set([a.slug,b.slug,c.slug]).size, 3);
   assert.equal(act("get_project", {slug:a.slug}).name, "Школа");
@@ -118,8 +113,8 @@ test("feed links and owners use normalized persisted ids", () => {
   assert.equal(e.target_id, t.id); assert.equal(e.url, "/tasks/acme-proposal"); assert.equal(e.owner, "test-owner");
 });
 
-test("task progress rounds consistently with its SQL view", () => {
-  const t = act("get_task", {id:"acme-proposal"});
-  assert.equal(act("get_task", {id:t.id}).progress.percent, 58);
-  assert.equal((getDb().prepare("SELECT percent FROM task_progress WHERE task = ?").get(t.id) as any).percent, 58);
+test("project rules can be plain text without process steps", () => {
+  const result = act("set_process", {project:"school", markdown:"Keep family dates private. Ask before sending."});
+  assert.equal(result.process_markdown, "Keep family dates private. Ask before sending.");
+  assert.deepEqual(result.steps, []);
 });

@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   column_name      TEXT NOT NULL DEFAULT 'todo', -- 'todo' | 'in_progress' | 'waiting_on_you' | 'done'
   step             INTEGER,                     -- index of the process step the task is on
   question         TEXT,                        -- set while waiting on the user: the one question
-  question_kind    TEXT,                        -- 'money' (yes / not-yet buttons) | 'approve' | 'answer'
+  question_kind    TEXT,                        -- 'money' | 'approve' | 'answer'; replies stay comments
   note             TEXT,                        -- one line shown on the card
   job_definition   TEXT,                        -- what this is, in plain words
   original_request TEXT,                        -- the user's own words
@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS tasks (
 CREATE INDEX IF NOT EXISTS tasks_project ON tasks(project);
 CREATE INDEX IF NOT EXISTS tasks_column ON tasks(column_name);
 
-CREATE TABLE IF NOT EXISTS task_checks (                -- "Done when"
+CREATE TABLE IF NOT EXISTS task_checks (                -- optional legacy completion notes
   id       INTEGER PRIMARY KEY AUTOINCREMENT,
   task     TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
   position INTEGER NOT NULL,
@@ -92,37 +92,13 @@ CREATE TABLE IF NOT EXISTS task_checks (                -- "Done when"
   met      INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS task_plan (                  -- "Plan"
+CREATE TABLE IF NOT EXISTS task_plan (                  -- optional legacy plan notes
   id       INTEGER PRIMARY KEY AUTOINCREMENT,
   task     TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
   position INTEGER NOT NULL,
   text     TEXT NOT NULL,
   state    TEXT NOT NULL DEFAULT 'later'        -- 'done' | 'now' | 'later'
 );
-
--- Read-only progress contracts. Percentages are derived from durable work,
--- never independently writable estimates. Filtering the board does not alter them.
--- A task with no criteria has unknown progress, even if a legacy status says Done.
-CREATE VIEW IF NOT EXISTS task_progress AS
-SELECT t.id AS task, 'done_when' AS basis,
-       COUNT(c.id) AS total, COALESCE(SUM(c.met != 0), 0) AS met,
-       CASE WHEN COUNT(c.id) = 0 THEN NULL
-            ELSE CAST(ROUND(100.0 * SUM(c.met != 0) / COUNT(c.id)) AS INTEGER) END AS percent
-FROM tasks t LEFT JOIN task_checks c ON c.task = t.id GROUP BY t.id;
-
--- This summarizes the current task collection, not the lifetime end of a project.
--- A project can be an ongoing area such as Personal or School.
-CREATE VIEW IF NOT EXISTS project_progress AS
-SELECT p.slug AS project, COUNT(t.id) AS total,
-       COALESCE(SUM(t.column_name = 'done'), 0) AS done,
-       COALESCE(SUM(t.column_name = 'waiting_on_you'), 0) AS waiting,
-       CASE WHEN COUNT(t.id) = 0 THEN 0
-            ELSE CAST(ROUND(100.0 * SUM(t.column_name = 'done') / COUNT(t.id)) AS INTEGER) END AS percent,
-       CASE WHEN SUM(t.column_name = 'waiting_on_you') > 0 THEN 'waiting_on_you'
-            WHEN COUNT(t.id) > 0 AND SUM(t.column_name = 'done') = COUNT(t.id) THEN 'done'
-            WHEN SUM(t.column_name IN ('in_progress', 'done')) > 0 THEN 'in_progress'
-            ELSE 'todo' END AS column_name
-FROM projects p LEFT JOIN tasks t ON t.project = p.slug GROUP BY p.slug;
 
 CREATE TABLE IF NOT EXISTS task_files (                 -- "Files from this task"
   id       INTEGER PRIMARY KEY AUTOINCREMENT,

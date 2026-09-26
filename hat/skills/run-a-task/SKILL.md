@@ -5,12 +5,11 @@ description: How a task moves from a card to a finished result through a special
 
 # Run a task
 
-1. Create the task in Office (create_task) with: project, title, the
-   specialist from process.md, step (which process step it is on),
-   job_definition (what and why, in plain words), original_request (the
-   user's own words), done_when (a short checklist), and plan (the steps,
-   one marked "now"). As work moves on, update_task: tick done_when, move
-   plan's "now", and change step.
+1. Create the task in Office (create_task) with its project, title, owner,
+   job_definition (what and why, in plain words), and original_request.
+   Put any useful plan or completion expectations in the description as text.
+   Keep its short card note current. No formal checklist, percentage, or
+   milestone model is required.
 2. Start a worker for that specialist. Brief it with exactly four things:
    - the task card
    - ~/workspace/office/team/<name>/AGENT.md and its skills/
@@ -31,14 +30,13 @@ description: How a task moves from a card to a finished result through a special
    Keep the details on the task; do not repeat them in the main chat. They may answer in either
    place; an answer on the page is a reply to that question, so read
    which question it answers before you act on it.
-5. When the worker says done, check the result against done_when before you
+5. When the worker says done, check the result against the user’s request before you
    tell the user. If it falls short, send it back once with one clear note.
    Then the task's page gets the closing report (add_task_note, kind
    update): what was done, the result, the files (attach_file, or a link to
    a file artifact), and what was learned. A file that only sits on your
    computer is not an output the user can see. Only then move_task to done, passing `result_summary`, `verification`,
-   and `result_url` when there is a linked output. Every done_when criterion
-   must be met and user comments answered. Verify the applied change in the
+   and `result_url` when there is a linked output. User comments must be answered. Verify the applied change in the
    actual app or delivered file; a worker claiming success is insufficient.
 6. The specialist writes what it learned about this kind of work for this
    user into its own AGENT.md, skills, or memory.md (one rule per line).
@@ -63,8 +61,8 @@ make a refused call pass.
 ## Corrections and comments
 
 If the user asks to redo or fix completed work, move it to In progress before
-starting. Clear old completion claims and recheck the criteria against the new
-result before closing again. Record the correction on the original task.
+starting. Clear old completion claims and check the new
+result against the request before closing again. Record the correction on the original task.
 A simple acknowledgement does not require reopening. Follow
 `adapt-your-office` for comment delivery, the checking schedule, and personal
 communication preferences. Never store another user's preference as a team rule.

@@ -10,7 +10,7 @@ Lead: Sales. Invoices: Bookkeeper.
 4. Your OK — the user approves it (waiting on you).
 5. Send and log — send, log it on the person's timeline, and move their stage.
 
-## Done when
+## Result
 
 The touch is logged, the stage is right, and the next step is set (or "none").
 

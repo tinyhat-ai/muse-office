@@ -1,13 +1,11 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { renderMarkdown } from "@/lib/markdown";
-import { taskProgress } from "@/lib/project-progress";
 import {
   all,
   get,
   json,
   COLUMN_LABEL,
-  type CheckRow,
   type FileRow,
   type MemberRow,
   type PlanRow,
@@ -18,7 +16,7 @@ import {
 import { ago, dueWord, span, stamp } from "@/lib/time";
 import { Avatar, You } from "@/components/Avatar";
 import { CommentForm, ReplyToggle } from "@/components/task/CommentForm";
-import { FocusCommentButton, MoneyButtons } from "@/components/task/MoneyButtons";
+import { FocusCommentButton } from "@/components/task/MoneyButtons";
 import { CommentFollowUp } from "@/components/CommentFollowUp";
 import { RefreshUpdates } from "@/components/RefreshUpdates";
 import "../tasks.css";
@@ -45,12 +43,6 @@ export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   const task = get<Pick<TaskRow, "title">>("SELECT title FROM tasks WHERE id = ?", id);
   return { title: task ? `${task.title} · Office` : "Office" };
-}
-
-/** "Yes, pay $1,240 on Sep 28": the amount (and a date right after it) lifted from the question. */
-function yesLabel(question: string): string {
-  const m = question.match(/\$\s?\d[\d,]*(?:\.\d{1,2})?(?:\s+on\s+[A-Z][a-z]{2,8}\.?\s+\d{1,2})?/);
-  return m ? `Yes, pay ${m[0].replace(/\s+/g, " ").replace("$ ", "$")}` : "Yes, pay";
 }
 
 /** One line under the question saying what a yes does. */
@@ -94,8 +86,6 @@ export default async function TaskPage({ params }: Props) {
   const chief = memberList.find((m) => m.is_chief) ?? memberList[0];
   const specialist = task.specialist ? members.get(task.specialist) : undefined;
   const worker = specialist ?? members.get(project?.lead ?? "") ?? chief; // the chief does the one-offs itself
-  const checks = all<CheckRow>("SELECT * FROM task_checks WHERE task = ? ORDER BY position, id", id);
-  const progress = taskProgress(checks);
   const plan = all<PlanRow>("SELECT * FROM task_plan WHERE task = ? ORDER BY position, id", id);
   const taskFiles = all<FileRow>("SELECT * FROM task_files WHERE task = ? ORDER BY added_at, id", id);
   const updates = all<UpdateRow>("SELECT * FROM task_updates WHERE task = ? ORDER BY created_at, id", id);
@@ -239,7 +229,7 @@ export default async function TaskPage({ params }: Props) {
         {projectName}
       </div>
       <h1 className="title">{task.title}</h1>
-      {project?.archived_at && <p className="lede">Archived project. Work is paused; restore this project in Manage projects to continue.</p>}
+      {project?.archived_at && <p className="lede">Archived project. Work is paused; ask {chiefName} in chat to resume it.</p>}
       <div className="tk-meta">
         <span className={`tk-st ${project?.archived_at && !isDone ? "todo" : task.column_name}`}>{project?.archived_at && !isDone ? "Paused" : COLUMN_LABEL[task.column_name] ?? task.column_name}</span>
         {worker ? (
@@ -254,12 +244,12 @@ export default async function TaskPage({ params }: Props) {
         {task.due && !isDone && !project?.archived_at ? <span>Due {dueWord(task.due)}</span> : null}
       </div>
 
-      {isDone && <section className="card tk-result" aria-label="Completed result">
+      {isDone && <section className="tk-result" aria-label="Completed result">
         <h2>What changed</h2>
-        <p>{task.result_summary ?? `This older task has no verified completion summary. Ask ${chiefName} to check the result, or request changes below.`}</p>
+        <p>{task.result_summary ?? `This older task has no verified completion summary. Ask ${chiefName} to check the result, or leave a comment below.`}</p>
         {task.verification && <><h3>What was checked</h3><p>{task.verification}</p></>}
         {task.result_url && <a className="btn" href={task.result_url} target="_blank" rel="noopener noreferrer">Open result ↗</a>}
-        <a className="tk-reply" href="#new-comment">Something needs fixing? Request changes below.</a>
+        <a className="tk-reply" href="#new-comment">Something needs fixing? Leave a comment below.</a>
       </section>}
 
       {/* 2. the unanswered question, pinned while the task waits on the user */}
@@ -285,9 +275,7 @@ export default async function TaskPage({ params }: Props) {
               </div>
             ) : (
               <div className="tk-cm-f">
-                {task.question_kind === "money" && questionRow ? (
-                  <MoneyButtons task={task.id} questionId={questionRow.id} yesLabel={yesLabel(questionText)} />
-                ) : questionRow ? (
+                {questionRow ? (
                   <ReplyToggle task={task.id} replyTo={questionRow.id} label={`Reply to ${askerName}`} placeholder={`Reply to ${askerName}…`} hint={replyHint} />
                 ) : (
                   <FocusCommentButton label={`Reply to ${askerName}`} />
@@ -313,43 +301,10 @@ export default async function TaskPage({ params }: Props) {
         </details>
       ) : null}
 
-      {/* 4. done when */}
-      <div className="tk-sec" />
-      <h3 className="tk-h3">Done when</h3>
-      <p className="tk-check-progress">{progress.percent === null ? "Completion checks not set" : `${progress.met} of ${progress.total} checks verified · ${progress.percent}%`}</p>
-      {progress.total > 0 && <progress className="tk-check-bar" value={progress.met} max={progress.total} aria-label="Verified completion criteria" />}
-      {checks.length ? (
-        <ul className="tk-chk">
-          {checks.map((c) => (
-            <li key={c.id} className={c.met ? "ok" : undefined}>
-              <span>{c.text}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="tk-empty">Not written yet.</p>
-      )}
-
-      {/* 5. plan */}
-      <div className="tk-sec" />
-      <h3 className="tk-h3">Plan</h3>
-      {plan.length ? (
-        <ol className="tk-plan">
-          {plan.map((p) => (
-            <li key={p.id} className={p.state === "now" || p.state === "done" ? p.state : undefined}>
-              {p.state === "done" ? (
-                <span className="tk-tick" aria-label="done">
-                  ✓
-                </span>
-              ) : null}
-              {p.text}
-              {p.state === "now" ? <span className="tk-now"> · now</span> : null}
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p className="tk-empty">No plan yet.</p>
-      )}
+      {plan.length > 0 && <section className="tk-def md">
+        <h3>Plan</h3>
+        <ol>{plan.map((item) => <li key={item.id}>{item.text}</li>)}</ol>
+      </section>}
 
       {/* 6. the conversation */}
       <div className="tk-sec" />
@@ -386,7 +341,7 @@ export default async function TaskPage({ params }: Props) {
       <div className="tk-composer">
         <You size="md" />
         <div className="cbox">
-          <CommentForm task={task.id} canRequestChanges={isDone} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Give direction, answer a question, or ask for a correction." />
+          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Give direction, answer a question, or ask for a correction." />
         </div>
       </div>
 

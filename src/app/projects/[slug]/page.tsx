@@ -1,18 +1,15 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { all, get, COLUMN_LABEL, type Column, type MemberRow, type ProjectRow, type TaskRow, type ProjectCommentRow, type RuleRow } from "@/lib/db";
-import { projectProgress } from "@/lib/project-progress";
+import type { CSSProperties } from "react";
+import { all, get, type MemberRow, type ProjectRow, type ProjectCommentRow, type RuleRow } from "@/lib/db";
 import { renderMarkdown } from "@/lib/markdown";
-import { ago, shortDate } from "@/lib/time";
-import { Avatar } from "@/components/Avatar";
+import { ago } from "@/lib/time";
+import { Avatar, You } from "@/components/Avatar";
 import { CommentForm } from "@/components/task/CommentForm";
 import { CommentFollowUp } from "@/components/CommentFollowUp";
 import { RefreshUpdates } from "@/components/RefreshUpdates";
 import "../projects.css";
 import "../../tasks/tasks.css";
-
-const PILL: Record<Column, string> = { todo: "next", in_progress: "working", waiting_on_you: "needs", done: "done" };
-const RANK: Record<Column, number> = { waiting_on_you: 0, in_progress: 1, todo: 2, done: 3 };
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -22,55 +19,40 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const member = new Map(members.map((item) => [item.slug, item]));
   const chief = members.find((item) => item.is_chief);
   const lead = member.get(project.lead ?? "") ?? chief;
-  const tasks = all<TaskRow>("SELECT * FROM tasks WHERE project = ? ORDER BY updated_at DESC", slug).sort((a, b) => RANK[a.column_name] - RANK[b.column_name]);
-  const progress = projectProgress(tasks);
   const comments = all<ProjectCommentRow>("SELECT * FROM project_comments WHERE project = ? ORDER BY id", slug);
   const roots = comments.filter((comment) => !comment.reply_to || !comments.some((parent) => parent.id === comment.reply_to));
+  const rules = all<RuleRow>("SELECT * FROM project_rules WHERE project = ? ORDER BY learned_at DESC", slug);
   function renderComment(comment: ProjectCommentRow) {
     const replies = comments.filter((reply) => reply.reply_to === comment.id);
     return <article key={comment.id} className={`pp-comment ${comment.reply_to ? "reply" : ""}`}>
+      {comment.author === "you" ? <You size="xs" /> : <Avatar member={member.get(comment.author)} size="xs" />} {" "}
       <b>{comment.author === "you" ? "You" : member.get(comment.author)?.name ?? comment.author}</b><time>{ago(comment.created_at)}</time>
       <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(comment.body, true) }} />
       {comment.author === "you" && <span className="comment-state">{comment.unread_by_agent ? `Awaiting ${lead?.name ?? "Muse"}’s reply` : replies.some((reply) => reply.author !== "you") ? "Replied" : "Seen"}</span>}
       {replies.map(renderComment)}
     </article>;
   }
-  const rules = all<RuleRow>("SELECT * FROM project_rules WHERE project = ? ORDER BY learned_at DESC", slug);
   return <main className="wrap pp-wrap">
     <RefreshUpdates />
     <nav className="crumb"><Link href="/projects">‹ Tasks</Link><span>/</span><span>{project.name}</span></nav>
-    <header className="pp-head">
-      <div><h1 className="title">{project.name}</h1><p className="lede">{project.description}</p>
-        <div className="pp-meta"><Avatar member={lead} size="sm" /><span>Led by {lead?.name ?? "Muse"}</span><span className={`pill ${project.archived_at ? "next" : PILL[progress.column]}`}>{project.archived_at ? "Archived · work paused" : COLUMN_LABEL[progress.column]}</span></div>
+    <header className="pp-head" style={{ "--c": project.color, "--d": project.color_dark } as CSSProperties}>
+      <span className="pp-bar" aria-hidden="true" />
+      <div><h1 className="title">{project.name}</h1><p className="pp-desc">{project.description}</p>
+        <div className="pp-meta"><span className="pp-pill"><Avatar member={lead} size="xs" />Led by {lead?.name ?? "Muse"}</span></div>
       </div>
     </header>
-    <section className="card pp-summary" aria-label="Project progress">
-      <div><b>{progress.percent}% complete</b><progress value={progress.done} max={progress.total || 1} aria-label="Tasks complete" /><span>{progress.done} of {progress.total} {progress.total === 1 ? "task" : "tasks"} done</span></div>
-      <div><b>{project.archived_at ? "Work paused" : progress.waiting ? "Needs your answer" : "Next milestone"}</b><p>{project.archived_at ? "Restore this project in Manage projects to continue. Its tasks and history are preserved." : progress.question ?? (progress.nextDue ? `Next task due ${shortDate(progress.nextDue)}` : progress.column === "done" ? "All task results are ready below." : "The team keeps the next steps on each task.")}</p></div>
-    </section>
-    <section className="pp-tasks" aria-labelledby="project-tasks">
-      <h2 id="project-tasks">Tasks and results</h2>
-      <p className="pp-help">Open a task to see the plan, completion checks, and conversation.</p>
-      <div className="pp-task-list">{tasks.map((task) => {
-        const owner = member.get(task.specialist ?? "") ?? lead;
-        return <Link className="pp-task-card" key={task.id} href={`/tasks/${task.id}`}>
-          <div className="pp-task-title"><h3>{task.title}</h3><span className={`pill ${project.archived_at && task.column_name !== "done" ? "next" : PILL[task.column_name]}`}>{project.archived_at && task.column_name !== "done" ? "Paused" : COLUMN_LABEL[task.column_name]}</span></div>
-          <p>{task.column_name === "done" ? task.result_summary ?? "Open this task to review its recorded result." : task.question ?? task.note ?? task.job_definition}</p>
-          <div className="pp-task-meta"><span><Avatar member={owner} size="xs" /> {owner?.name ?? "Muse"}</span><span>{task.due ? `Due ${shortDate(task.due)}` : `Updated ${ago(task.updated_at)}`}</span><b>{task.column_name === "done" ? "Review result ↗" : "Open task ↗"}</b></div>
-        </Link>;
-      })}</div>
-      {!tasks.length && <p className="dashed pj-none">Tell {lead?.name ?? "Muse"} what you want to achieve here.</p>}
-    </section>
+    {project.archived_at ? <p className="lede">This project is archived. Ask {chief?.name ?? "Muse"} in chat to resume it.</p> : <Link href={`/projects?project=${encodeURIComponent(slug)}`}>View tasks in {project.name} →</Link>}
+    {(project.process_markdown || rules.length > 0) && <section className="card pp-context">
+      {!project.process_markdown && <h2>How we work here</h2>}
+      <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(project.process_markdown ?? "") }} />
+      {rules.length > 0 && <ul>{rules.map((rule) => <li key={rule.id}>{rule.text}</li>)}</ul>}
+    </section>}
     <section className="card pp-comments" aria-labelledby="project-comments">
-      <h2 id="project-comments">Project direction</h2>
+      <h2 id="project-comments">Comments</h2>
       <CommentFollowUp owner={lead?.name ?? "Muse"} />
       {roots.map(renderComment)}
-      <CommentForm project={slug} placeholder="Add direction for the team…" buttonLabel="Comment" />
+      <CommentForm project={slug} placeholder={`Add a comment for ${lead?.name ?? "Muse"}…`} buttonLabel="Comment" hint="Your comment stays with this project." />
     </section>
-    <details className="card pp-process"><summary>How this project runs</summary>
-      <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(project.process_markdown ?? "") }} />
-      {project.done_when && <><h3>Done when</h3><p>{project.done_when}</p></>}
-      {rules.length > 0 && <><h3>What the team learned</h3><ul>{rules.map((rule) => <li key={rule.id}>{rule.text}</li>)}</ul></>}
-    </details>
+    <p className="tell">To change this project, tell {chief?.name ?? "Muse"} in chat.</p>
   </main>;
 }

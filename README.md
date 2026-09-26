@@ -27,8 +27,8 @@ sending it, too.
 
 Ask Muse to help launch a workshop. It can give the page, announcement, and
 follow-up to the right specialists. Your Office shows who owns each part, what
-needs your decision, and the notes and reports worth keeping. You can group tasks into your own projects and comment
-on a task or note; Muse follows up with its owner.
+needs your decision, and the notes and reports worth keeping. Ask Muse to group tasks into projects that fit your life. In the Office,
+leave a comment on a task, project, or note; Muse follows up with its owner.
 
 ![Muse and an example specialist team in Office](docs/screenshots/team-larger-avatars.png)
 

@@ -10,7 +10,7 @@ Lead: Marketer. Visuals: Designer.
 4. Your OK — the user approves it (waiting on you).
 5. Publish — the Marketer posts or sends it, and logs what it brought in.
 
-## Done when
+## Result
 
 It is out, and the result is on the Reports page.
 

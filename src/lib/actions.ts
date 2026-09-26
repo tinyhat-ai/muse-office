@@ -5,7 +5,6 @@ import {
 } from "./db";
 import { shortDate } from "./time";
 import { saveScreenshot } from "./screenshots";
-import { projectProgress, taskProgress } from "./project-progress";
 import {
   ActionError, notFound, listOf, present, isObject, asInput, requiredString, optionalString, oneOf, isoDate,
   int, num, bool, array, stringArray, intArray, object, openableUrl, within, type Input,
@@ -142,7 +141,7 @@ const stepOut = (s: StepRow) => ({ ...s, needs_you: !!s.needs_you });
 function taskOut(t: TaskRow) {
   const { column_name, ...rest } = t;
   const project_archived_at = get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", t.project)?.archived_at ?? null;
-  return { ...rest, column: column_name, project_archived_at, progress: taskProgress(all<CheckRow>("SELECT met FROM task_checks WHERE task = ?", t.id)) };
+  return { ...rest, column: column_name, project_archived_at };
 }
 const checkOut = (c: CheckRow) => ({ id: c.id, text: c.text, met: !!c.met });
 const planOut = (p: PlanRow) => ({ id: p.id, text: p.text, state: p.state });
@@ -450,17 +449,17 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   set_process: {
     section: "Projects",
-    description: "Replaces the project's steps (the diagram) and its process text, rendered as markdown on the project's page.",
+    description: "Updates the project’s plain-language rules. Optional legacy steps are changed only if supplied.",
     params: {
       project: "string · project slug · required",
-      steps: "[{name, who, note?, needs_you?}] · in order; who is a member slug, you, or any · required",
+      steps: "[{name, who, note?, needs_you?}] · legacy steps; who is a member slug, you, or any · optional",
       markdown: "string · the process written out · required",
     },
     run(input) {
       const p = mustProject(requiredString(input, "project", "the project's slug"));
       const markdown = requiredString(input, "markdown", "the process written out, in markdown");
       const who = [...memberSlugs(), "you", "any"];
-      const steps = (array(input, "steps", { required: true }) ?? []).map((s, i) => {
+      const steps = (array(input, "steps") ?? []).map((s, i) => {
         if (!isObject(s)) throw new ActionError(`steps[${i}] must be an object like {"name": "Design", "who": "pastel", "note": "...", "needs_you": true}.`);
         return within(`steps[${i}]`, () => {
           const doer = oneOf(s, "who", who, { required: true }) as string;
@@ -473,7 +472,7 @@ export const ACTIONS: Record<string, ActionDef> = {
         });
       });
       return tx(() => {
-        run("DELETE FROM process_steps WHERE project = ?", p.slug);
+        if (present(input, "steps")) run("DELETE FROM process_steps WHERE project = ?", p.slug);
         steps.forEach((s, i) => run("INSERT INTO process_steps (project, position, name, who, note, needs_you) VALUES (?, ?, ?, ?, ?, ?)", p.slug, i, s.name, s.who, s.note, s.needs_you ? 1 : 0));
         patchRow("projects", "slug", p.slug, { process_markdown: markdown });
         return { project: p.slug, steps: all<StepRow>("SELECT * FROM process_steps WHERE project = ? ORDER BY position", p.slug).map(stepOut), process_markdown: markdown };
@@ -512,19 +511,19 @@ export const ACTIONS: Record<string, ActionDef> = {
            (SELECT COUNT(*) FROM tasks t WHERE t.project = p.slug AND t.column_name = 'waiting_on_you') AS waiting,
            (SELECT COUNT(*) FROM tasks t WHERE t.project = p.slug) AS total
          FROM projects p ORDER BY p.sort_order, p.name`,
-      ).map((project) => ({ ...project, progress: projectProgress(all<TaskRow>("SELECT * FROM tasks WHERE project = ?", project.slug)) }));
+      );
     },
   },
 
   get_project: {
     section: "Projects",
-    description: "A project with derived progress, all tasks including completed results, and its conversation.",
+    description: "A project with its plain-language context, tasks, and conversation.",
     params: { slug: "string · project slug · required" },
     read: true,
     run(input) {
       const project = mustProject(requiredString(input, "slug", "the project slug"));
       const tasks = all<TaskRow>("SELECT * FROM tasks WHERE project = ? ORDER BY updated_at DESC", project.slug);
-      return { ...project, progress: projectProgress(tasks), tasks: tasks.map(taskOut), comments: all("SELECT * FROM project_comments WHERE project = ? ORDER BY id", project.slug) };
+      return { ...project, tasks: tasks.map(taskOut), comments: all("SELECT * FROM project_comments WHERE project = ? ORDER BY id", project.slug) };
     },
   },
 
@@ -541,7 +540,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       step: "integer · index of the process step it is on, from 0 · optional",
       job_definition: "string · what this is, in plain words · optional",
       original_request: "string · the user's own words · optional",
-      done_when: "string[] · the Done when checklist; or [{text, met}] · optional",
+      done_when: "string[] · legacy completion notes; prefer plain text in job_definition; or [{text, met}] · optional",
       plan: "string[] · the steps, first one now, the rest later; or [{text, state}] · optional",
       due: "string · ISO date · optional",
       note: "string · one line shown on the card · optional",
@@ -554,7 +553,7 @@ export const ACTIONS: Record<string, ActionDef> = {
         throw new ActionError("column cannot be waiting_on_you when creating a task: create it, then call move_task with a question. Valid here: todo, in_progress.");
       }
       const column = oneOf(input, "column", COLUMNS) ?? "todo";
-      if (column === "done") throw new ActionError("Create the task open, then move_task to done with result_summary and verification after checking every Done when criterion.");
+      if (column === "done") throw new ActionError("Create the task open, then move_task to done with result_summary and verification after checking the actual result.");
       const specialist = memberField(input, "specialist") ?? null;
       const step = stepField(input, project.slug) ?? null;
       const checks = normalizeChecks(array(input, "done_when") ?? []);
@@ -594,7 +593,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       job_definition: "string · optional",
       original_request: "string · optional",
       due: "string · ISO date, or null to clear · optional",
-      done_when: "[{text, met}] · replaces the checklist; plain strings are unmet · optional",
+      done_when: "[{text, met}] · legacy completion notes; prefer plain text in job_definition · optional",
       plan: "[{text, state}] · replaces the plan; states are done, now, later · optional",
     },
     run(input) {
@@ -623,12 +622,12 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   move_task: {
     section: "Tasks",
-    description: "Moves the task. Waiting needs a question. Done requires all Done when checks met, a result_summary and verification describing the actual result inspected. Reopen before correcting completed work.",
+    description: "Moves the task. Waiting needs a question. Done requires a result_summary and verification describing the actual result inspected. Reopen before correcting completed work.",
     params: {
       id: "string · task id · required",
       column: "string · todo, in_progress, waiting_on_you, or done · required",
       question: "string · the one question for the user · required when column is waiting_on_you",
-      question_kind: "string · money (Yes, pay / Not yet buttons), approve, or answer · optional, default answer",
+      question_kind: "string · money, approve, or answer · optional, default answer",
       result_summary: "string · what actually changed and what the user can check · required for done",
       verification: "string · what was inspected or tested, and the observed result · required for done",
       result_url: "string · link to the delivered result · optional for done",
@@ -648,8 +647,6 @@ export const ACTIONS: Record<string, ActionDef> = {
       const moved = column !== t.column_name;
       return tx(() => {
         if (column === "done") {
-          const checks = all<CheckRow>("SELECT * FROM task_checks WHERE task = ?", t.id);
-          if (!checks.length || checks.some((check) => !check.met)) throw new ActionError("Done needs a nonempty Done when checklist with every criterion verified and met. A plan or promise is not a completed result.");
           if (get("SELECT 1 FROM task_updates WHERE task = ? AND author = 'you' AND unread_by_agent = 1", t.id)) throw new ActionError("Reply to outstanding user comments before marking this task Done.");
           const summary = requiredString(input, "result_summary", "what changed and what the user can check");
           const verification = requiredString(input, "verification", "the checks performed on the actual result and what they showed");
@@ -1366,7 +1363,7 @@ function recordActionUpdate(name: string, section: string, input: Input, result:
 // ------------------------------------------------------------- entry points
 
 /** Runs one action. Throws ActionError (with an HTTP status) for anything the agent can fix. */
-export function runAction(name: string, input: unknown, actor: "agent" | "you" = "agent"): unknown {
+export function runAction(name: string, input: unknown): unknown {
   const def = ACTIONS[name];
   if (!def) throw new ActionError(`Unknown action ${name}. Known actions: ${Object.keys(ACTIONS).join(", ")}`, 404);
   const inp = asInput(input);
@@ -1374,8 +1371,8 @@ export function runAction(name: string, input: unknown, actor: "agent" | "you" =
   // One transaction per write: the change and the "the agent was here" stamp land together or not at all.
   return tx(() => {
     const data = def.run(inp);
-    if (actor === "agent" && !(name === "set_setting" && inp.key === "last_agent_visit")) setSetting("last_agent_visit", nowIso());
-    if (name !== "mark_comments_read" && !(name === "set_setting" && inp.key === "last_agent_visit")) recordActionUpdate(name, def.section, inp, data, actor);
+    if (!(name === "set_setting" && inp.key === "last_agent_visit")) setSetting("last_agent_visit", nowIso());
+    if (name !== "mark_comments_read" && !(name === "set_setting" && inp.key === "last_agent_visit")) recordActionUpdate(name, def.section, inp, data, "agent");
     return data;
   });
 }
@@ -1416,7 +1413,7 @@ export function postComment(raw: unknown): { id: number; kind: "comment" | "repl
     const result = saveComment(raw);
     const input = asInput(raw);
     const source = input.task ? "task" : input.note ? "note" : "project";
-    recordOfficeUpdate(source, String(input[source]), "post_comment", "you", { body: input.body, reply_to: input.reply_to ?? null, request_changes: input.request_changes ?? false, files: source === "task" ? json(get<UpdateRow>("SELECT files_json FROM task_updates WHERE id = ?", result.id)?.files_json, []) : [] }, result.id);
+    recordOfficeUpdate(source, String(input[source]), "post_comment", "you", { body: input.body, reply_to: input.reply_to ?? null, files: source === "task" ? json(get<UpdateRow>("SELECT files_json FROM task_updates WHERE id = ?", result.id)?.files_json, []) : [] }, result.id);
     return { ...result, follow_up: followUpMessage() };
   });
 }
@@ -1460,11 +1457,10 @@ function saveComment(raw: unknown): { id: number; kind: "comment" | "reply" } {
   if (replyTo === null && task.column_name === "waiting_on_you" && task.question_kind === "money" && /^(yes|no|not yet)[.!]?$/i.test(body.trim())) {
     const current = currentQuestionId(taskId);
     throw new ActionError(
-      `This task is waiting on a money question. Answer it with the Yes / Not yet buttons on the task's page` +
+      `This task is waiting on a money question. Reply to the specific question on the task's page` +
         (current ? ` (reply_to: ${current})` : "") + `, so the answer is tied to that question.`,
     );
   }
-  const requestChanges = bool(input, "request_changes") ?? false;
   const files = normalizeFiles(array(input, "files") ?? []);
   const kind = replyTo === null ? "comment" : "reply";
   return tx(() => {
@@ -1472,7 +1468,6 @@ function saveComment(raw: unknown): { id: number; kind: "comment" | "reply" } {
     const screenshot = optionalString(input, "screenshot");
     if (screenshot) files.push(saveScreenshot(taskId, screenshot));
     const u = addUpdate(taskId, "you", kind, body, files, replyTo, 1, now);
-    if (requestChanges && task.column_name === "done") reopenTask(taskId, "You requested changes; reopened for the owner to follow up.");
     touchTask(taskId, now);
     return { id: u.id, kind };
   });

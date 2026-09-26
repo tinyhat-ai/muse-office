@@ -3,7 +3,6 @@ import type { CSSProperties } from "react";
 import type { MemberRow, TaskRow } from "@/lib/db";
 import { ago, dueWord, span } from "@/lib/time";
 import { Avatar } from "@/components/Avatar";
-import type { TaskProgress } from "@/lib/project-progress";
 import "@/app/projects/projects.css";
 
 /** What a sticky note needs: the task's card fields plus its project's name and colours. */
@@ -11,7 +10,6 @@ export type StickyTask = Pick<TaskRow, "id" | "title" | "column_name" | "questio
   project_name: string;
   color: string;
   color_dark: string;
-  progress?: TaskProgress;
 };
 
 /** The time word in the footer: a due day beats a waiting span, which beats "x ago". */
@@ -46,12 +44,9 @@ export function Sticky({ task, specialist }: { task: StickyTask; specialist?: Me
       ) : task.note ? (
         <span className="pj-note-n">{task.note}</span>
       ) : null}
-      {task.progress && <span className="pj-task-progress">
-        {task.progress.percent === null ? "Completion checks not set" : <>{task.progress.met}/{task.progress.total} checks verified · {task.progress.percent}%<progress value={task.progress.met} max={task.progress.total} aria-label={`${task.title} verified criteria`} /></>}
-      </span>}
       <span className="pj-note-f">
-            <Avatar member={specialist} size="sm" />
-            <span className="pj-note-who">{specialist?.name ?? "No one yet"}</span>
+        <Avatar member={specialist} size="sm" />
+        <span className="pj-note-who">{specialist?.name ?? "No one yet"}</span>
         {done && <span className="pj-note-dn">Done</span>}
         <span className="pj-note-ago">{stickyTime(task)}</span>
       </span>

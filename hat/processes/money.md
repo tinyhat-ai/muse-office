@@ -9,7 +9,7 @@ Lead: Bookkeeper.
 3. Report — update the money reports.
 4. Your OK — any payment, transfer, or filing (waiting on you).
 
-## Done when
+## Result
 
 Sorted, reported, and anything to pay is approved or dismissed.
 

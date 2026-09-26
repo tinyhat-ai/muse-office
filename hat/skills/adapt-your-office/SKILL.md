@@ -21,6 +21,12 @@ when adapting it. Do not overwrite a customized Office to match a new hat.
 Never promise to change controls that belong to the Muse app itself; explain
 that boundary plainly and offer what you can change inside their Office.
 
+## Preserve the working model
+
+The Office is a visualization of work managed by the chief of staff. The user talks to Muse to create or change projects, tasks, team members, and other records. Inside the Office, comments on a task, project, or note are the only user writes. Viewing, filtering, searching, and opening files are read-only. Keep the refined paper-and-sticky-note design: no management forms, drag-to-change status, progress percentages, checklist dashboards, or milestone controls. Use board lanes and short written updates to show progress; project rules are simple text. A comment supplies context for the owner to review; it does not itself change task status. Feedback about readability or layout must be applied within
+this boundary. Do not infer a request to redesign the app or introduce direct
+management controls from someone else’s feedback.
+
 ## Keep personal choices personal
 
 Store the user's choices in `~/workspace/office/PREFERENCES.md`. Keep existing
@@ -53,8 +59,8 @@ are starting choices the user can change.
   the user can send you the task link in chat.
 
 Use one recurring job to review `list_office_updates` across the whole app,
-not only comments. It includes user project edits and every supported mutation
-of tasks, checklists, files, team, customers, reports, and notes. Start at the
+not only comments. It includes agent updates to projects, tasks, files, team,
+customers, reports, and notes, alongside user comments. Start at the
 saved checkpoint, process all cursor pages in order, and persist the returned
 checkpoint only after handling the full batch. Retry from the previous checkpoint
 on failure; use event ids to avoid duplicate work. Do not overlap runs, poll in a
@@ -104,10 +110,8 @@ rendered result, at a narrow phone width too. Confirm readable text/background
 pairs, including comments, inputs, focus, and selected cards. Show what changed,
 how to check it, and remind them they can keep adjusting it.
 
-Preserve the fundamentals while adapting layouts: the Tasks tab, project filters,
-search, owner portraits, task details, completion checks, results, files, comments,
-and project management. Reuse existing avatar assets; initials are a temporary
-fallback only when the image is unavailable. Verify actual image loading, not
-just a stored URL. Read the schema and actions before showing progress: tasks
-show verified criteria / all criteria, projects show completed tasks / all tasks.
-Filtering must not change these denominators. Never invent progress estimates.
+Preserve the fundamentals: the simple Tasks sticky-note board, project filters,
+real owner portraits, useful task descriptions, results, files, and comments.
+Reuse existing avatar assets; initials are temporary only when an image is
+unavailable. Verify that images load. Apply readability fixes within the
+existing design; avoid unrelated changes to colours, cards, or layout.

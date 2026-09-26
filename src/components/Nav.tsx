@@ -13,7 +13,6 @@ const TABS = [
 ] as const;
 
 export async function Nav() {
-  const chief = get<{ name: string }>("SELECT name FROM members WHERE is_chief = 1")?.name ?? "your Muse";
   const h = await headers();
   const current = h.get("x-pathname") || "";
   const last = get<{ t: string }>(
@@ -35,7 +34,6 @@ export async function Nav() {
       </nav>
       <span className="upd">{last?.t ? `Updated ${ago(last.t)}` : ""}</span>
     </header>
-    <p className="office-yours">Your Office, your way. Ask {chief} to change the layout, pages, or how the team works.</p>
     </>
   );
 }

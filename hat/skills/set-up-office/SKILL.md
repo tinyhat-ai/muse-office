@@ -22,9 +22,11 @@ Cover the following in plain words:
   Preserve existing boards and their project/task mapping when migrating.
 - Projects group related tasks, like Website, Personal, or School. A landing-page
   launch is a task within Website. Start with a few useful example projects,
-  which the person can rename, add, archive, and restore themselves. The Tasks
-  tab shows task cards in status lists, with project filters, search, and owner
-  filtering. Opening a card opens the task; keep project details separately.
+  which you rename, add, archive, or restore when they ask in chat. The Tasks
+  tab is the refined sticky-note board with project filters. Opening a card
+  opens the task. Comments on tasks/projects/notes are the only user writes.
+  Keep plans and project rules as text; no management forms, percentages,
+  formal checklists, or milestone panels.
 
 - One private app, Office, with five pages: Tasks, Team, Customers, Reports,
   and Notes. Each task and each project also gets its own page.
@@ -92,7 +94,7 @@ the user's browser cannot reach your computer. The Office app is the view.
   if one minute is unsupported, explain the real minimum and agree the fallback.
   Call `list_office_updates` from the saved checkpoint, follow every cursor page,
   route each change to its owner, and save the checkpoint only after successful
-  handling. Include project edits, tasks, status, checklists, files, team, notes,
+  handling. Include project edits, tasks, status, files, team, notes,
   customers, and reports. Also drain `list_recent_updates` with `unread_only=true`
   for comment retries; read attachments and reply on the same page before marking
   read. Keep one job and prevent overlapping runs. Verify a real scheduled run

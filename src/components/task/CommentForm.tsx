@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 
 export type ApiResult = { ok: true; data?: { follow_up?: string } } | { ok: false; error?: string };
 
-export async function postComment(payload: { task?: string; note?: string; project?: string; body: string; reply_to?: number | null; request_changes?: boolean; screenshot?: string }): Promise<ApiResult> {
+export async function postComment(payload: { task?: string; note?: string; project?: string; body: string; reply_to?: number | null; screenshot?: string }): Promise<ApiResult> {
   // reply_to is left out of the JSON when there is nothing to reply to, so
   // the API sees a plain comment.
   const body: Record<string, unknown> = { ...payload };
@@ -28,7 +28,6 @@ interface CommentFormProps {
   task?: string;
   note?: string;
   project?: string;
-  canRequestChanges?: boolean;
   replyTo?: number | null;
   placeholder: string;
   buttonLabel: string;
@@ -41,14 +40,13 @@ interface CommentFormProps {
   onDone?: () => void;
 }
 
-export function CommentForm({ task, note, project, canRequestChanges, replyTo, placeholder, buttonLabel, compact, hint, id, autoFocus, onDone }: CommentFormProps) {
+export function CommentForm({ task, note, project, replyTo, placeholder, buttonLabel, compact, hint, id, autoFocus, onDone }: CommentFormProps) {
   const router = useRouter();
   const ref = useRef<HTMLTextAreaElement>(null);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState("");
-  const [requestChanges, setRequestChanges] = useState(false);
   const [screenshot, setScreenshot] = useState<string>();
   const fileRef = useRef<HTMLInputElement>(null);
   const fileVersion = useRef(0);
@@ -72,7 +70,7 @@ export function CommentForm({ task, note, project, canRequestChanges, replyTo, p
     setSending(true);
     setError(null);
     setSaved("");
-    const res = await postComment({ task, note, project, body: text, reply_to: replyTo, request_changes: requestChanges, screenshot });
+    const res = await postComment({ task, note, project, body: text, reply_to: replyTo, screenshot });
     setSending(false);
     if (!res.ok) {
       setError(res.error || "That did not save. Try again.");
@@ -81,8 +79,7 @@ export function CommentForm({ task, note, project, canRequestChanges, replyTo, p
     setBody("");
     setScreenshot(undefined);
     if (fileRef.current) fileRef.current.value = "";
-    setSaved(`Saved${requestChanges ? "; task reopened" : ""}. ${res.data?.follow_up ?? "Awaiting the owner’s reply here."}`);
-    setRequestChanges(false);
+    setSaved(`Saved. ${res.data?.follow_up ?? "Awaiting the owner’s reply here."}`);
     startTransition(() => router.refresh());
     onDone?.();
   }
@@ -128,11 +125,10 @@ export function CommentForm({ task, note, project, canRequestChanges, replyTo, p
           reader.readAsDataURL(file);
         }} />
       </label>}
-      {canRequestChanges && <label className="comment-changes"><input type="checkbox" checked={requestChanges} onChange={(event) => setRequestChanges(event.target.checked)} /> Request changes — reopen this task</label>}
       <div className="row">
         {hint ? <span className={compact ? "hint" : "tk-onlyhere"}>{hint}</span> : <span />}
         <button type="submit" className="btn" disabled={busy || !body.trim()}>
-          {busy ? "Saving…" : requestChanges ? "Request changes" : buttonLabel}
+          {busy ? "Saving…" : buttonLabel}
         </button>
       </div>
       {saved && <p className="comment-state" role="status">{saved}</p>}

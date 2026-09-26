@@ -1,11 +1,8 @@
 import Link from "next/link";
-import { OfficeActivity } from "@/components/OfficeActivity";
-import { ProjectManager } from "@/components/board/ProjectManager";
 import type { CSSProperties } from "react";
-import { all, COLUMNS, COLUMN_LABEL, type Column, type MemberRow, type ProjectRow, type TaskRow, type CheckRow } from "@/lib/db";
+import { all, COLUMNS, COLUMN_LABEL, type Column, type MemberRow, type ProjectRow, type TaskRow } from "@/lib/db";
 import { Avatar } from "@/components/Avatar";
 import { RefreshUpdates } from "@/components/RefreshUpdates";
-import { taskProgress, projectProgress } from "@/lib/project-progress";
 import { ProjectTile } from "@/components/board/ProjectTile";
 import { Sticky } from "@/components/board/Sticky";
 import "./projects.css";
@@ -26,8 +23,8 @@ const finishedAt = (t: TaskRow) => Date.parse(t.done_at ?? t.updated_at);
 // Open lanes: due soonest first, then whatever has sat untouched the longest.
 const openOrder = (a: TaskRow, b: TaskRow) => cmp(a.due ?? "9999", b.due ?? "9999") || cmp(a.updated_at, b.updated_at);
 
-export default async function ProjectsPage({ searchParams }: { searchParams: Promise<{ project?: string; owner?: string; q?: string }> }) {
-  const { project: wanted, owner = "", q = "" } = await searchParams;
+export default async function ProjectsPage({ searchParams }: { searchParams: Promise<{ project?: string }> }) {
+  const { project: wanted } = await searchParams;
   const allProjects = all<ProjectRow>("SELECT * FROM projects ORDER BY sort_order, name");
   const projects = allProjects.filter((project) => !project.archived_at);
   const members = all<MemberRow>("SELECT * FROM members ORDER BY sort_order");
@@ -38,23 +35,13 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
   const chosen = projects.find((p) => p.slug === wanted); // an unknown slug just shows everything
   const lead = chosen?.lead ? member.get(chosen.lead) : undefined;
 
-  // Keep every task discoverable; filters never change progress denominators.
+  // Keep every task discoverable, including completed work.
   const doneAll = tasks.filter((t) => t.column_name === "done").sort((a, b) => finishedAt(b) - finishedAt(a));
-  const checks = all<CheckRow>("SELECT * FROM task_checks");
   const onBoard = [...tasks.filter((t) => t.column_name !== "done").sort(openOrder), ...doneAll];
-  const matchesOtherFilters = (t: BoardTask) => (!owner || (t.specialist ?? projects.find((p) => p.slug === t.project)?.lead ?? chief?.slug) === owner)
-    && `${t.title} ${t.note ?? ""} ${t.job_definition ?? ""} ${t.project_name}`.toLowerCase().includes(q.trim().toLowerCase());
-  const visible = onBoard.filter((t) => (!chosen || t.project === chosen.slug) && matchesOtherFilters(t));
+  const visible = onBoard.filter((t) => !chosen || t.project === chosen.slug);
   const counts = new Map<string, number>();
-  for (const t of onBoard.filter(matchesOtherFilters)) counts.set(t.project, (counts.get(t.project) ?? 0) + 1);
-  const filterHref = (slug?: string) => {
-    const params = new URLSearchParams();
-    if (slug) params.set("project", slug);
-    if (owner) params.set("owner", owner);
-    if (q) params.set("q", q);
-    return `/projects${params.size ? `?${params}` : ""}`;
-  };
-  const progress = chosen ? projectProgress(tasks.filter((t) => t.project === chosen.slug)) : null;
+  for (const t of onBoard) counts.set(t.project, (counts.get(t.project) ?? 0) + 1);
+  const filterHref = (slug?: string) => slug ? `/projects?project=${encodeURIComponent(slug)}` : "/projects";
 
   return (
     <main className="wrap">
@@ -68,21 +55,12 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
         </p>
       </header>
 
-      <div className="pj-tools"><ProjectManager projects={allProjects} /><OfficeActivity /></div>
       <nav className="pj-tiles" aria-label="Show one project">
-        <ProjectTile href={filterHref()} name="All projects" count={onBoard.filter(matchesOtherFilters).length} chosen={!chosen} />
+        <ProjectTile href={filterHref()} name="All projects" count={onBoard.length} chosen={!chosen} />
         {projects.map((p) => (
           <ProjectTile key={p.slug} href={filterHref(p.slug)} name={p.name} count={counts.get(p.slug) ?? 0} color={p.color} chosen={chosen?.slug === p.slug} />
         ))}
       </nav>
-      <form key={`${chosen?.slug ?? ""}:${owner}:${q}`} className="pj-filters" action="/projects" aria-label="Filter tasks">
-        {chosen && <input type="hidden" name="project" value={chosen.slug} />}
-        <label>Search tasks<input type="search" name="q" defaultValue={q} placeholder="Find a task…" /></label>
-        <label>Owner<select aria-label="Owner" name="owner" defaultValue={owner}><option value="">Everyone</option>{members.map((m) => <option key={m.slug} value={m.slug}>{m.name}</option>)}</select></label>
-        <button type="submit">Apply filters</button>
-        {(chosen || owner || q) && <Link href="/projects">Clear filters</Link>}
-        <span className="pj-filter-count" role="status">{visible.length} {visible.length === 1 ? "task" : "tasks"}</span>
-      </form>
       <div className="pj-info">
         {chosen ? (
           <>
@@ -90,7 +68,6 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
               {chosen.name}
               {lead ? ` · led by ${lead.name}` : ""}
             </span>
-            {progress && <span>{progress.done} of {progress.total} tasks complete · {progress.percent}%</span>}
             <Link href={`/projects/${chosen.slug}`}>Open the {chosen.name} page →</Link>
           </>
         ) : null}
@@ -115,7 +92,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
               {cards.length ? (
                 <div className="pj-notes">
                   {cards.map((t) => (
-                    <Sticky key={t.id} task={{ ...t, progress: taskProgress(checks.filter((c) => c.task === t.id)) }} specialist={member.get(t.specialist ?? projects.find((p) => p.slug === t.project)?.lead ?? "") ?? chief} />
+                    <Sticky key={t.id} task={t} specialist={member.get(t.specialist ?? projects.find((p) => p.slug === t.project)?.lead ?? "") ?? chief} />
                   ))}
                 </div>
               ) : (
@@ -125,7 +102,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
           );
         })}
       </div>
-      <p className="tell pj-tell">To add or move a task, tell {chiefName} in chat.</p>
+      <p className="tell pj-tell">To add or change projects and tasks, tell {chiefName} in chat.</p>
     </main>
   );
 }

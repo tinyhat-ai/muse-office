@@ -71,7 +71,7 @@ either is a minor bump at least, and the changelog entry must say what a
 Muse has to change in an Office it already built.
 
 For the next release, call out the new completion and comment contracts:
-create tasks open; verify every Done-when criterion before `move_task` to Done;
+create tasks open; check the actual result against the request before Done;
 provide `result_summary` and `verification`; answer comments on their original
 page before marking them read. Update scheduled checks to consume the durable,
 paginated `list_office_updates` feed, saving its checkpoint after handling the
@@ -81,13 +81,12 @@ the running job and record its actual interval in `comment_check_minutes`;
 preserve an existing user's chosen schedule and clear the setting if its job
 stops. Keep the existing Office's records and customizations.
 
-The Tasks board groups cards by status and filters them by user-managed
-projects. Apply the additive `archived_at` and `office_updates` schema changes;
-archive projects reversibly. Project progress is completed tasks / all tasks,
-and task progress is verified Done-when checks / all checks. An older task with
-no criteria has unknown progress until criteria are defined. Preserve existing
-portraits, files, comments, and task-to-project links during the upgrade.
-If a future release changes a SQL view definition, explicitly drop and recreate
-that view during migration; `CREATE VIEW IF NOT EXISTS` alone preserves the old
-definition. If an Office database is reset or replaced, discard its old feed
-checkpoint and review the new history from zero.
+The Tasks board keeps the refined sticky-note design and filters tasks by
+project. All management happens through Muse; user writes in the artifact
+are comments only. Remove any preview project forms, percentages, mandatory
+checklists, and comment-triggered status changes. Preserve existing legacy
+checklist/plan/process data but do not require it or show management controls.
+Apply the additive `archived_at` and `office_updates` changes. Agent actions
+archive reversibly. Preserve portraits, files, comments, and task/project links.
+If the Office database is reset or replaced, discard its old feed checkpoint
+and review the new history from zero.

@@ -102,12 +102,9 @@ In progress, Waiting on you, and Done, filtered by project), **Team**, **Custome
 Website or Personal; “Launch a landing page” is a task in Website. Opening a
 card opens that task. Project context and conversations have their own pages.
 
-The person can search and filter, create or rename projects, archive and restore
-projects, and comment on project, task, and note pages. Archiving preserves all
-work and history. They can also ask you to manage this for them. The remaining
-work records change through the app's actions. Explain when you will review
-changes and follow up. Follow `skills/adapt-your-office/SKILL.md` for the
-one-minute default update check and the unified Office updates feed.
+The Office is a visualization of work managed by the chief of staff. The user talks to Muse to create or change projects, tasks, team members, and other records. Inside the Office, comments on a task, project, or note are the only user writes. Viewing, filtering, searching, and opening files are read-only. Keep the refined paper-and-sticky-note design: no management forms, drag-to-change status, progress percentages, checklist dashboards, or milestone controls. Use board lanes and short written updates to show progress; project rules are simple text. A comment supplies context for the owner to review; it does not itself change task status. Explain when you will review comments and follow up. Follow
+`skills/adapt-your-office/SKILL.md` for the one-minute default update check
+and the unified Office updates feed.
 
 Tinyhat supplies the starting instructions and a runnable reference app.
 You build this person's Office from that starting point. Explain that they can
@@ -235,19 +232,18 @@ Do these before the hand-over, and again after any change to the app:
   A missing source or target, or a comment id that does not belong to the
   named page, must fail. Copy all three values from one feed item because
   project, task, and note comment ids can overlap.
-- On a setup verification task, try moving to Done with an unchecked criterion:
-  the action must refuse. Verify the result, set each criterion through
-  `update_task.done_when`, then complete with a result summary and verification.
-  Inspect the visible task and project list: Done, checked criteria, result,
-  and resolved correction state must agree. Request a correction, confirm it
-  reopens and resets checks, reply on that page, then verify and complete again.
-  Do not hand over an app that reports Done while its checks remain unmet.
-- Add and rename a project through the UI, then archive and restore it; verify its tasks, comments, and files remain. Check the resulting user edits in `list_office_updates`. Verify task and project progress against their source records.
-- The database has the tables in `db/schema.sql`: members, projects,
-  process_steps, project_rules, tasks, task_checks, task_plan, task_files,
-  task_updates, contacts, touches, stage_changes, reports, metrics, notes,
-  note_comments, project_comments, screenshots, office_updates, settings (or equivalent storage on your platform).
-- Users can search and filter tasks, manage projects, and comment on project, task, and note pages. Preserve these controls and agent portraits when restyling the Office.
+- On a setup verification task, verify the real result and record its summary.
+  Post a correction comment: saving it must not change task status. The owner
+  reads it, reopens via an action if needed, replies on the same page, and
+  verifies the correction before completing again. No checklist is required.
+- Create/rename/archive/restore projects through agent actions, preserving
+  tasks, comments, and files. Verify these events in `list_office_updates`.
+- Verify that the Tasks page is the refined sticky-note board with project
+  filters and real portraits. There are no management forms or percentages.
+  User writes are comments on project/task/note pages only.
+- The platform stores equivalent records for the action contracts; legacy
+  process-step and completion-check tables may be preserved but are not
+  required entities for the experience. Use plain text for plans and rules.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their own Muse avatar, not on a bundled sample face.
 - `set_member_avatar` can replace any member's Team image, including the
@@ -281,5 +277,5 @@ Follow `adapt-your-office` for the setup explanation, real build checkpoints,
 optional voice summaries, the chosen update chat, and the verified comment-check
 schedule. Do not prescribe another user's audio, layout, or timing preferences.
 Check comment/input contrast in the actual Office. Done requires actual result
-inspection, all completion criteria met, a result summary, and verification.
+inspection, a result summary, and verification against the user’s request.
 A correction reopens work before it starts; a saved comment shows awaiting reply.

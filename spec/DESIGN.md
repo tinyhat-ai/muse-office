@@ -53,10 +53,12 @@ Spare pastels for new projects: `#efd3d3` / `#b86e6e`, `#d3e0e6` / `#5f8497`, `#
 
 Use task cards in four status lists with project selectors above. Projects are
 umbrellas for related tasks. Keep a readable paper surface, project accent, task
-title, owner portrait/name, real verified-check progress, and the current question.
+title, owner portrait/name, a short update, and the current question.
 Open a card for task details. Keep project context accessible separately. No white
 speech bubbles inside coloured cards. Keep project filters and agent portraits
-when changing the layout. See `spec/PAGES.md` for controls and progress rules.
+when refining the layout. Keep the optimized sticky-note design. No percentage
+bars, checklist dashboards, project forms, or milestone panels. See
+`spec/PAGES.md` for the comments-only interaction boundary.
 
 Keep cards full lane width. Use four lanes on a wide desktop, two below 900px,
 and one column below 560px with Waiting on you first. Text must wrap; never

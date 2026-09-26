@@ -1,111 +1,79 @@
-# First-experience verification
+# Office feedback verification
 
-This change improves the starting instructions and reference Office. Each Muse builds its user's Office and may adapt the design, team, and communication choices. It does not automatically replace existing Offices.
+## Product boundary
+
+The final candidate restores the simple Office model: Muse manages the work
+through conversation; the artifact shows it. The Tasks page retains the original
+paper sticky notes and project selectors. Comments on a task, project, or note
+are the only user writes. There are no project management forms, completion
+percentages, formal checklist panels, milestones, or direct status controls.
+Project rules and useful plans are readable text. Previous preview screenshots
+and checks of those removed controls are superseded by this candidate.
 
 ## Reference app
 
-- `npm test`: 30 tests pass, including completion guards, correction requests, page-specific comment routing and pagination, owner replies, screenshot validation/rollback, project progress, and comment line breaks.
-- `npm run build`: production build passes.
-- Browser: Tasks shows task cards; project/owner/search filters combine and clear. Project progress still counts all its tasks when filters narrow the board. Cards open their task; completed tasks show result, verification, and result link.
-- User project management: created School, renamed it, archived it with a task, and restored it. The task returned intact. The unified feed records these edits with actor `you`.
-- Review follow-up: archiving a waiting task removes it from active `summary`, default `list_tasks`, and Team work. Direct history reads retain `project_archived_at`. Browser detail pages show Archived / Paused and keep the conversation; restoration returns the task. `archived-project.jpg` captures this. Three names without Latin letters created distinct projects through `/api/projects`; the disposable projects were archived afterward. Regression cases also cover normalized event links/owners and SQL/JavaScript rounding at 23 of 40 checks.
-- The Office-wide feed covers all supported mutation actions, with fixed-batch ascending pagination and a checkpoint. Tests cover simultaneous writes, writes arriving during pagination, failed mutations, and poll calls not generating new events. SQL progress views agree with action results.
-- At 375px: project and task pages fit the viewport; the comment field is #1c1c19 on white. A task screenshot was uploaded through the file picker and retrieved with the expected image MIME type, private/no-store, and nosniff.
-- A correction comment reopened a completed task, cleared its current completion fields, reset its checks, and kept the previous result in its history. A plain acknowledgement does not reopen work.
-- Project, task, and note comments were submitted through the browser, fetched through the typed updates action, answered by the relevant owner action, and displayed on the original page.
-- Notes still render their Markdown table and Mermaid diagram.
-- Review follow-up: two project comments posted before either reply retain their own nested reply; typed line breaks render as line breaks. Two result files with the same name and different URLs both appear, newest first.
+- 29 action, feed, rendering, avatar, and starter tests pass; TypeScript and the
+  production build pass. A task can be completed with a checked result and no
+  structured checklist. A correction comment leaves its status unchanged;
+  the owner may reopen it through an action after reading the request.
+- Project selectors filter task cards. Owner faces remain on open and completed
+  cards. Project context links back to its board and has plain rules plus comments.
+- Agent project actions preserve tasks/history on archive and restore. Active
+  task reads, Team, and Reports leave paused work out. Reports was inspected
+  after archiving a waiting project's work, then the project was restored.
+- The unified updates feed records all supported changes, not only comments.
+  Tests cover fixed-batch pagination, simultaneous writes, writes during a batch,
+  failed-write rollback, correct saved IDs, and reads not creating event loops.
+- Private screenshot attachments, same-page owner replies, Markdown tables,
+  Mermaid, line breaks, and distinct same-name files retain the earlier verified
+  behavior. The comment forms retain typed page references and honest save feedback.
+- Older databases retain their records and legacy plan/check fields. The new
+  UI does not expose those fields as a project management system, and new
+  starter records do not require process-step or checklist rows.
 
-Screenshots in `screenshots/feedback/` use reference-app records and a local verification task. No real customer data is included.
+Final desktop and 375-pixel phone checks show the original sticky cards and project
+selectors, with no page overflow. A browser-posted comment on a completed task
+left it Done; an action-posted reply appeared under that comment after reload.
+The project filter showed only its matching task. Current screenshots in
+`screenshots/feedback/` show reference or disposable test records only.
 
-## Muse platform boundary
+## Native Muse verification
 
-A documentation probe in Muse found scheduled checks and delivery to a chosen side chat, plus a documented speech tool. It did not find a supported immediate comment-to-agent wake-up action. The instructions require checking current platform capabilities, preserving the user's preferences, and showing only a verified polling interval. Saving a comment is not proof that an agent has started work.
+Muse built a separate private **Office Feedback Test** from the candidate
+instructions, then adapted it as the product direction was clarified. Its real
+Noche, Paleta, and Forja portraits were reused from the personal Office. The
+personal Office and its existing 30-minute job remained outside this test.
 
-## Native Muse integration
+An earlier actual one-minute scheduled run read a comment from the test Office's
+updates feed and posted Forja's reply on the original homepage-review task.
+The comment and reply were independently observed in Muse desktop. Muse reported
+the stored author, handled flag, saved checkpoint, and no duplicate on a later
+run. Both temporary jobs were removed. A subsequent UI comment independently
+showed: “Comment saved. Regular checks aren’t set up. Ask Noche in chat to
+continue.” This verifies the inactive-schedule wording, not an immediate wake.
 
-Muse built a separate private **Office Feedback Test** from candidate `a89b20d`
-and the earlier starting instructions. The initial test created two separate web goals, each with a
-task, plus a setup project and an orientation note. This was a deliberately
-small integration fixture, not the full starter Office. The existing personal
-Office and its scheduled job were kept outside the test.
+The first scheduled run had only drafted a reply. The instructions now explicitly
+require posting an owner reply in the private Office before marking feedback
+handled. Muse also inspected a previously missed screenshot after being asked;
+its description was qualitative, not a measured contrast audit.
 
-Through the Muse desktop UI, the tester posted a wording correction on the
-completed setup task, requested changes, and uploaded a real screenshot. The
-task reopened and its completion checks reset. Muse found the comments during
-its active verification, changed the rendered Projects introduction, and
-posted replies attributed to the task owner on that same task. Both the tester's
-screenshot and the builder's review capture remained attached. This proves the
-attachment was saved; it does not prove the owner read the screenshot, because
-the reply did not address its contrast request.
+After the final simplification, Muse desktop independently showed the restored
+colored project selectors, four desktop lanes, real portraits, and plain project
+rules with comments. Selecting Website showed only its two tasks. The existing
+scheduled owner reply remained visible. A new UI comment on the completed setup
+task left it Done and showed the truthful inactive-schedule message. Direct
+project controls, percentages, checklist panels, and comment-triggered reopening
+were absent from the inspected generated pages. Its
+three original tasks, conversations, files, checked result, and real portraits
+remain. Disposable archive/name-test projects are archived. These backend and
+scheduler statements are Muse's action receipts; screenshots and visible UI
+checks are separate evidence. No successful audio generation or instant wake-up
+is claimed.
 
-The first generated build then exposed a defect: it allowed Done while its
-criteria still appeared unchecked. The tester asked Muse to fix that contract.
-Muse added the completion guard and checklist update action, reported negative
-tests for unchecked criteria and an empty result, then re-verified and completed
-the task. Independent desktop inspection confirmed all three visible checks,
-the result and verification, the preserved conversation and files, and the
-project's Done/100% state with the active correction label cleared. The hat's
-handover checks now explicitly require this negative test and visible agreement.
+## Scope of proof
 
-Muse explained in chat that Tinyhat provides the starting instructions and it
-builds an Office whose layout, pages, and teamwork can change with the user.
-It treated voice as an individual option. This first pass used an active,
-requested follow-up with no recurring job. The separate scheduled test below
-covers polling; neither test claims an immediate comment wake-up or successful
-audio generation.
-
-The `muse-*.jpg` captures show the test artifact inside Muse. They contain only
-the integration fixture and its test conversation, not personal work records.
-
-## Restored task board and user-owned projects
-
-The initial project-card interpretation above was superseded by the product
-owner's clarification. Tasks are cards in status lists; projects group related
-work. The reference and hat now use Tasks, with project/owner/search filters,
-project management, preserved portraits, and defined task/project progress.
-
-Native desktop inspection confirmed that Muse rebuilt the test Office with a
-Tasks tab, task cards, Website project filtering (two of three tasks), separate
-project context, and loaded Noche, Paleta, and Forja portraits. Their images were
-reused from the existing Office through the avatar actions. The two web tasks
-now belong to Website, and their existing conversations and files remain.
-`muse-tasks-board.jpg`, `muse-project-filter.jpg`, and `muse-team-portraits.jpg`
-show this corrected version.
-
-Reference captures: `tasks-board.jpg`, `task-filters.jpg`, `manage-projects.jpg`,
-and `tasks-mobile.jpg`. The phone board is 375px wide with document width 375px;
-all ten visible agent portrait images loaded.
-
-## One-minute scheduled follow-up
-
-Muse created a temporary one-minute checker scoped to the private test Office.
-Its first run consumed project changes and a comment, persisted a checkpoint,
-but only drafted a reply. That was insufficient. The hat now explicitly says
-to post the owner's reply inside the private Office; drafting is not follow-up.
-
-The tester then posted a new comment through the native desktop task UI, asking
-to keep the homepage review within Website and confirm receipt. A second
-temporary scheduled checker posted Forja's reply on that same task. Independent
-desktop inspection confirmed the original comment, nested reply, actual Forja
-portrait, unchanged Website membership, and unchanged open task progress.
-`muse-scheduled-reply.jpg` captures that result.
-
-Muse's action/scheduler inspection reported the stored author `forja`, a reply
-linked to the original comment, the comment's unread flag cleared, checkpoint
-8 persisted, and a later run producing no duplicate. Muse confirmed both
-temporary jobs were deleted and the original personal Office's job remained
-unchanged. Those backend and scheduler receipts are Muse's report; the posted
-reply and its visible attribution were checked independently in the desktop.
-
-The tester also asked Muse to inspect the previously missed screenshot. Muse
-then described its actual phone layout, dark comment text on white, and the
-lighter helper text below the textarea. This corrected the earlier omission;
-it is a qualitative image inspection, not a measured contrast audit.
-
-After both temporary checkers were removed, Muse cleared the test Office's
-verified schedule setting and rebuilt its save feedback. The tester posted a
-harmless acknowledgement through the native task UI and independently observed:
-“Comment saved. Regular checks aren’t set up. Ask Noche in chat to continue.”
-The footer agreed. `muse-save-confirmation.jpg` records this disabled-schedule
-state; it does not imply that the user's personal Office polling was disabled.
+The local reference app and a Muse-generated private app are separate
+implementations. Passing the reference tests does not prove every future Muse
+build. The hat asks Muse to inspect its own rendered pages and actual action
+results during setup, preserve the user's preferences, and keep the interaction
+boundary when applying feedback. No personal Office was reset or replaced.
