@@ -64,8 +64,17 @@ Muse has to change in an Office it already built.
 For the next release, call out the new completion and comment contracts:
 create tasks open; verify every Done-when criterion before `move_task` to Done;
 provide `result_summary` and `verification`; answer comments on their original
-page before marking them read. Update existing scheduled checks to use the
-typed, paginated `list_recent_updates` feed, including project comments.
-Inspect the running job and record its actual interval in
-`comment_check_minutes`; do not silently change the user's schedule. Keep the
-existing Office's records and customizations when applying these changes.
+page before marking them read. Update scheduled checks to consume the durable,
+paginated `list_office_updates` feed, saving its checkpoint after handling the
+whole batch. Also drain `list_recent_updates` for unread comment retries,
+including project comments. New Offices default to a one-minute check. Inspect
+the running job and record its actual interval in `comment_check_minutes`;
+preserve an existing user's chosen schedule and clear the setting if its job
+stops. Keep the existing Office's records and customizations.
+
+The Tasks board groups cards by status and filters them by user-managed
+projects. Apply the additive `archived_at` and `office_updates` schema changes;
+archive projects reversibly. Project progress is completed tasks / all tasks,
+and task progress is verified Done-when checks / all checks. An older task with
+no criteria has unknown progress until criteria are defined. Preserve existing
+portraits, files, comments, and task-to-project links during the upgrade.

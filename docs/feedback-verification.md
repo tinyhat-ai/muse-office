@@ -49,10 +49,10 @@ handover checks now explicitly require this negative test and visible agreement.
 
 Muse explained in chat that Tinyhat provides the starting instructions and it
 builds an Office whose layout, pages, and teamwork can change with the user.
-It treated voice as an individual option. No recurring job was created for this
-test, and the Office visibly says to ask Muse in chat to review comments. This
-test verifies an active, requested follow-up; it does not claim an automatic
-comment wake-up, a scheduled-run test, or successful audio generation.
+It treated voice as an individual option. This first pass used an active,
+requested follow-up with no recurring job. The separate scheduled test below
+covers polling; neither test claims an immediate comment wake-up or successful
+audio generation.
 
 The `muse-*.jpg` captures show the test artifact inside Muse. They contain only
 the integration fixture and its test conversation, not personal work records.
@@ -75,3 +75,29 @@ show this corrected version.
 Reference captures: `tasks-board.jpg`, `task-filters.jpg`, `manage-projects.jpg`,
 and `tasks-mobile.jpg`. The phone board is 375px wide with document width 375px;
 all ten visible agent portrait images loaded.
+
+## One-minute scheduled follow-up
+
+Muse created a temporary one-minute checker scoped to the private test Office.
+Its first run consumed project changes and a comment, persisted a checkpoint,
+but only drafted a reply. That was insufficient. The hat now explicitly says
+to post the owner's reply inside the private Office; drafting is not follow-up.
+
+The tester then posted a new comment through the native desktop task UI, asking
+to keep the homepage review within Website and confirm receipt. A second
+temporary scheduled checker posted Forja's reply on that same task. Independent
+desktop inspection confirmed the original comment, nested reply, actual Forja
+portrait, unchanged Website membership, and unchanged open task progress.
+`muse-scheduled-reply.jpg` captures that result.
+
+Muse's action/scheduler inspection reported the stored author `forja`, a reply
+linked to the original comment, the comment's unread flag cleared, checkpoint
+8 persisted, and a later run producing no duplicate. Muse confirmed both
+temporary jobs were deleted and the original personal Office's job remained
+unchanged. Those backend and scheduler receipts are Muse's report; the posted
+reply and its visible attribution were checked independently in the desktop.
+
+The tester also asked Muse to inspect the previously missed screenshot. Muse
+then described its actual phone layout, dark comment text on white, and the
+lighter helper text below the textarea. This corrected the earlier omission;
+it is a qualitative image inspection, not a measured contrast audit.
