@@ -98,3 +98,16 @@ test("project names in any language do not collide or silently rename an unrelat
   assert.throws(() => act("upsert_project", {name:"x".repeat(121)}), /120 characters/);
 });
 
+test("feed links and owners use normalized persisted ids", () => {
+  const start = act("list_office_updates", {limit:100}).checkpoint;
+  act("upsert_member", {slug:"Test Owner", name:"Reviewer", role:"Tester", job:"Checks"});
+  const project = act("upsert_project", {slug:"Round Project", name:"Round project", lead:"test-owner"});
+  const t = act("create_task", {id:"Acme Proposal", title:"Review proposal", project:project.slug, specialist:"test-owner", done_when:Array.from({length:40},(_,i) => `Check ${i}`)});
+  act("update_task", {id:t.id, done_when:Array.from({length:40},(_,i) => ({text:`Check ${i}`,met:i<23}))});
+  const events = act("list_office_updates", {after:start, limit:100}).updates;
+  assert.equal(events.find((e:any) => e.action === "upsert_member").target_id, "test-owner");
+  assert.equal(events.find((e:any) => e.action === "upsert_project").url, "/projects/round-project");
+  const e = events.find((e:any) => e.action === "create_task");
+  assert.equal(e.target_id, t.id); assert.equal(e.url, "/tasks/acme-proposal"); assert.equal(e.owner, "test-owner");
+});
+

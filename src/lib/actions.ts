@@ -378,7 +378,7 @@ export const ACTIONS: Record<string, ActionDef> = {
         const notes = run("UPDATE notes SET kept_by = NULL WHERE kept_by = ?", m.slug).changes;
         const steps = run("UPDATE process_steps SET who = 'any' WHERE who = ?", m.slug).changes;
         run("DELETE FROM members WHERE slug = ?", m.slug);
-        return { removed: m.slug, unlinked: { projects, done_tasks: doneTasks, reports, notes, steps } };
+        return { removed: m.slug, name: m.name, unlinked: { projects, done_tasks: doneTasks, reports, notes, steps } };
       });
     },
   },
@@ -1350,6 +1350,8 @@ function recordActionUpdate(name: string, section: string, input: Input, result:
   const data = isObject(result) ? result : {};
   const source = ({Team:"member", Projects:"project", Tasks:"task", Customers:"contact", Reports:"report", Notes:"note"} as Record<string, string>)[section] ?? (name === "reply_to_comment" ? String(input.source) : "office");
   const id = name === "reply_to_comment" ? input.target_id
+    : name === "create_task" ? data.id
+    : name.startsWith("upsert_") ? data.slug
     : source === "task" ? (input.id ?? input.task ?? data.task ?? data.id)
     : input.slug ?? input[source] ?? data.slug ?? data.removed ?? input.key ?? "office";
   // Screenshot bytes live in private storage; event only needs its typed comment reference.
