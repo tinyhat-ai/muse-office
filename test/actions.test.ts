@@ -131,6 +131,8 @@ test("the team can change, and task and note comments reach an ordered paginated
   assert.equal((getDb().prepare("SELECT COUNT(*) AS count FROM task_updates WHERE reply_to = ?").get(taskCollision.id) as { count: number }).count, 0);
   assert.equal(callAction("mark_comments_read", { ids: [noteCollision.id] }).status, 400);
   assert.equal(callAction("mark_comments_read", { source: "task", target_id: note.slug, ids: [noteCollision.id] }).status, 404);
+  assert.equal(callAction("mark_comments_read", { source: "note", target_id: note.slug, ids: [noteCollision.id] }).status, 400);
+  runAction("reply_to_comment", { source: "note", target_id: note.slug, comment_id: noteCollision.id, author: "researcher", body: "Added the missing source date." });
   assert.equal((runAction("mark_comments_read", { source: "note", target_id: note.slug, ids: [noteCollision.id] }) as { marked: number }).marked, 1);
   const stillUnread = runAction("list_recent_updates", { unread_only: true }) as { updates: Item[] };
   assert.ok(stillUnread.updates.some((item) => item.source === "task" && item.id === taskCollision.id));
@@ -204,4 +206,67 @@ test("published report sources are HTTPS URLs", () => {
   assert.throws(() => runAction("upsert_report", { slug: "population", section: "Around the world", title: "Population", chart: "bars", source_url: "javascript:alert(1)" }), /https URL/);
   const report = runAction("upsert_report", { slug: "population", section: "Around the world", title: "Population", chart: "bars", source: "UN", source_url: "https://population.un.org/wpp/" }) as { source_url: string };
   assert.equal(report.source_url, "https://population.un.org/wpp/");
+});
+
+test("Done requires observed results, completed criteria and answered comments; a correction reopens it", () => {
+  assert.equal(callAction("create_task", { project: "money", title: "Skip verification", column: "done" }).status, 400);
+  const { id } = runAction("create_task", { project: "money", title: "Prepare a receipt summary", done_when: ["The total matches the receipt"], specialist: "penny" }) as { id: string };
+  const completion = { id, column: "done", result_summary: "The receipt summary is ready.", verification: "Compared the total with the receipt; both show 12.", result_url: "/notes/receipt-summary" };
+  assert.equal(callAction("move_task", completion).status, 400);
+  runAction("update_task", { id, done_when: [{ text: "The total matches the receipt", met: true }] });
+  assert.equal(callAction("move_task", { id, column: "done" }).status, 400);
+  const comment = postComment({ task: id, body: "Please include the source." });
+  assert.equal(callAction("move_task", completion).status, 400);
+  runAction("reply_to_comment", { source: "task", target_id: id, comment_id: comment.id, author: "penny", body: "The source is linked in the summary." });
+  runAction("move_task", completion);
+  type Task = { column: string; result_summary: string | null; verification: string | null; done_at: string | null; done_when: { met: boolean }[] };
+  const read = () => runAction("get_task", { id }) as Task;
+  assert.equal(read().column, "done");
+  assert.equal(read().result_summary, completion.result_summary);
+  const thanks = postComment({ task: id, body: "Thanks!" });
+  assert.equal(read().column, "done", "ordinary comments do not imply a change request");
+  runAction("reply_to_comment", { source: "task", target_id: id, comment_id: thanks.id, author: "penny", body: "You're welcome." });
+  postComment({ task: id, body: "The source link opens the wrong receipt.", request_changes: true });
+  assert.equal(read().column, "in_progress");
+  assert.equal(read().done_at, null);
+  assert.equal(read().verification, null);
+  assert.equal(read().result_summary, null);
+  assert.ok(read().done_when.every((check) => !check.met));
+  assert.equal(callAction("move_task", completion).status, 400, "old evidence cannot close the correction");
+});
+
+test("editing completed scope reopens work, and a project comment retains page identity through pagination", () => {
+  const { id } = runAction("create_task", { project: "money", title: "Finished scope", done_when: [{ text: "Source checked", met: true }] }) as { id: string };
+  runAction("move_task", { id, column: "done", result_summary: "Summary delivered.", verification: "Opened the summary and checked its source." });
+  runAction("update_task", { id, job_definition: "Also compare last month." });
+  assert.equal((runAction("get_task", { id }) as { column: string }).column, "in_progress");
+  const comment = postComment({ project: "money", body: "Focus on monthly costs." });
+  const found: { source: string; id: number; owner: string; url: string }[] = [];
+  let cursor: string | null = null;
+  do {
+    const page = runAction("list_recent_updates", { limit: 1, unread_only: true, ...(cursor ? { cursor } : {}) }) as { updates: typeof found; next_cursor: string | null };
+    found.push(...page.updates); cursor = page.next_cursor;
+  } while (cursor);
+  const item = found.find((update) => update.source === "project" && update.id === comment.id)!;
+  assert.equal(item.owner, "penny");
+  assert.equal(item.url, "/projects/money");
+  assert.equal(callAction("reply_to_comment", { source: "project", target_id: "wrong", comment_id: item.id, author: "penny", body: "Wrong page" }).status, 404);
+  assert.equal(callAction("mark_comments_read", { source: "project", target_id: "money", ids: [item.id] }).status, 400);
+  runAction("reply_to_comment", { source: "project", target_id: "money", comment_id: item.id, author: "penny", body: "I will start with monthly costs." });
+  assert.equal((runAction("mark_comments_read", { source: "project", target_id: "money", ids: [item.id] }) as { marked: number }).marked, 1);
+  assert.throws(() => postComment({ task: id, project: "money", body: "Ambiguous" }), /exactly one/);
+});
+
+test("task screenshot comments preserve image bytes and reject executable formats or oversized payloads", () => {
+  const { id } = runAction("create_task", { project: "money", title: "Screenshot feedback" }) as { id: string };
+  const png = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVQIHWP4z8DwHwAFgAI/ScLbtAAAAABJRU5ErkJggg==";
+  const comment = postComment({ task: id, body: "This amount is hard to read.", screenshot: png });
+  const update = getDb().prepare("SELECT files_json FROM task_updates WHERE id = ?").get(comment.id) as { files_json: string };
+  const file = JSON.parse(update.files_json)[0] as { url: string };
+  const row = getDb().prepare("SELECT mime, data FROM screenshots WHERE id = ?").get(file.url.split("/").at(-1)) as { mime: string; data: Buffer };
+  assert.equal(row.mime, "image/png"); assert.equal(row.data.toString("base64"), png);
+  for (const screenshot of [Buffer.from('<svg onload="alert(1)"/>').toString("base64"), "A".repeat(5600001)]) {
+    assert.throws(() => postComment({ task: id, body: "Invalid file", screenshot }), /PNG, JPG or WebP/);
+  }
+  assert.equal((getDb().prepare("SELECT COUNT(*) AS n FROM task_updates WHERE task = ? AND author = 'you'").get(id) as { n: number }).n, 1, "failed attachment rolls back its comment");
 });

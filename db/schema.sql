@@ -75,6 +75,9 @@ CREATE TABLE IF NOT EXISTS tasks (
   due              TEXT,                        -- ISO date, optional
   created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+  result_summary   TEXT,                        -- verified result, shown on completion
+  verification     TEXT,                        -- what was checked and observed
+  result_url       TEXT,                        -- openable result, when applicable
   done_at          TEXT
 );
 CREATE INDEX IF NOT EXISTS tasks_project ON tasks(project);
@@ -210,4 +213,21 @@ CREATE INDEX IF NOT EXISTS note_comments_unread ON note_comments(unread_by_agent
 CREATE TABLE IF NOT EXISTS settings (
   key   TEXT PRIMARY KEY,                       -- 'office_name', 'user_name', 'last_agent_visit', 'hat_version'
   value TEXT
+);
+-- Project direction is routed to its lead through the same typed comment feed.
+CREATE TABLE IF NOT EXISTS project_comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project TEXT NOT NULL REFERENCES projects(slug) ON DELETE CASCADE,
+  author TEXT NOT NULL,
+  body TEXT NOT NULL,
+  reply_to INTEGER REFERENCES project_comments(id) ON DELETE SET NULL,
+  unread_by_agent INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+);
+CREATE INDEX IF NOT EXISTS project_comments_page ON project_comments(project, id);
+CREATE TABLE IF NOT EXISTS screenshots (
+  id TEXT PRIMARY KEY,
+  task TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  mime TEXT NOT NULL,
+  data BLOB NOT NULL
 );
