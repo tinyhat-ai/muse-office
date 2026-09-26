@@ -5,11 +5,14 @@ description: One-time setup of the chief-of-staff office. Run when the user firs
 
 # Set up the office
 
-Read every file in this hat before you change anything.
+Read this hat and `../adapt-your-office/SKILL.md` before changing anything.
+This is a starting system the user can reshape, including the whole interface.
 
 ## 1. Show the plan and wait for yes
 
-Tell the user, in plain words and one message:
+Keep the plan scannable: a short opening and at most three bullets, about 120
+words. Offer details separately instead of pasting all implementation steps.
+Cover the following in plain words:
 - Tinyhat account: you will create or sign in to their Tinyhat account with
   their email. It is where hat updates live.
   It is optional.
@@ -18,15 +21,20 @@ Tell the user, in plain words and one message:
   Sales, and a Bookkeeper. Give each one a name in your own style.
   If you already keep lanes or boards folders (for example
   ~/workspace/boards/), say you will turn them into projects.
-- Projects: the four most solo businesses need, Website, Marketing,
-  Customers, and Money, plus General for one-offs. Drop any the user does
-  not need, and add any they name.
+- Projects are goals with a finish line, each holding its related tasks.
+  Propose a small Office setup project and only useful first goals from
+  spec/STARTER.md. Website or Marketing is an area, not a permanent project:
+  “Launch the landing page” and “Redesign the homepage” can be separate projects.
+  Keep existing user projects; split broad categories only with their agreement.
 - One private app, Office, with five pages: Projects, Team, Customers, Reports,
   and Notes. Each task and each project also gets its own page.
   It saves what you add, so it is private to them and has no public link.
   If they already have a boards or tasks app, say you will turn it into
   Office and keep its data.
 - A tiny chief-of-staff hat on your avatar, preview first.
+Include the proposed update chat and comment-check interval in this plan; offer
+voice summaries as a choice. Keep existing preferences. Explain that you build
+their Office and can change it when they ask.
 Before you start, ask at most two questions: which projects, and "shall I start?"
 (The avatar preview and the email code come later, only if needed.)
 
@@ -55,7 +63,8 @@ move each lane into projects/ and keep its memory.md. Ask first.
 
 Do not open chats for the projects ahead of work; a project chat, if your
 platform needs one to keep a specialist from seeing the main chat, is
-opened when the first task actually starts there.
+opened when the first task actually starts there. A user-approved Office
+side chat for routine updates is separate from these specialist work chats.
 Global memory keeps only facts that matter everywhere (name, timezone,
 family). Everything else lives in a project's or specialist's memory.md.
 
@@ -63,8 +72,10 @@ family). Everything else lives in a project's or specialist's memory.md.
 
 Build one web_fullstack app from apps/office.json, the way HAT.md step 3
 says: from the repository https://github.com/tinyhat-ai/muse-office when you
-can, otherwise an exact match of its schema (db/schema.sql), pages
-(spec/PAGES.md), look (spec/DESIGN.md), and actions (spec/ACTIONS.md).
+can, or use its schema (db/schema.sql), pages (spec/PAGES.md), design
+(spec/DESIGN.md), and actions (spec/ACTIONS.md) as a starting point for a
+native artifact. Adapt the interface to the user. Preserve action contracts
+or update your own skills alongside any changed action names and fields.
 When running the repository code for this person, set `OFFICE_SEED=none`
 **before the first database open**. The app's default starter is for browsing
 the reference app; loading it and then calling setup actions creates duplicate
@@ -77,11 +88,13 @@ the user's browser cannot reach your computer. The Office app is the view.
 - If an app with slug "office" exists, or a boards/tasks app exists, follow
   the fallbacks in office.json. Never delete an app without asking.
 - Run the checks in HAT.md ("Check that the Office is right") before you go on.
-- Create a scheduled task of yours (every 30 minutes) that calls
+- Create one scheduled task of yours at the interval agreed in the plan that calls
   `list_recent_updates` with `unread_only=true`, follows `next_cursor` on
-  every page, assigns each comment to its task owner or note keeper, and
+  every page, assigns each comment to its task owner, project lead, or note keeper, and
   verifies the reply and follow-up before marking it read. Without it,
-  comments wait until the user next talks to you.
+  comments wait until the user next talks to you. Verify the scheduled job and
+  its delivery, then set `comment_check_minutes` to its real interval. Use a
+  documented immediate trigger only when available. See `adapt-your-office`.
 - After the build, load the office through its actions exactly as
   `spec/STARTER.md` describes. That file names the first tasks, three notes,
   two real orientation contacts outside the sales funnel, and four sourced
@@ -109,5 +122,9 @@ missing, report that exact gap and keep its setup task open.
 
 ## 6. Hand over
 
-Send the Office link, one line on how it works ("tell me what you need;
-watch it here"), and one suggested first request.
+Send the Office link, one suggested first request, and this explanation:
+“I built this first version of your Office from Tinyhat’s starting instructions.
+Tell me what you want to change — the pages, the layout, or how the team works.
+Comments give the owner direction; replies appear on the same page.”
+State the actual comment-check interval and the chosen update chat. Never
+claim setup is finished while a required check or avatar is still missing.

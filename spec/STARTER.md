@@ -4,20 +4,20 @@ Build this with Office actions after the person approves the promotion. When run
 
 ## Projects and Notes
 
-Create the four standard projects and General with their processes. Finish two setup tasks, **Set up the specialist team** and **Build the Office app**, with closing reports that say what actually happened. Put these next tasks in To do, assigned by role:
+Each project is a shared goal with a finish line. Two website goals can be separate projects. Use **Get your Office ready** for setup, and propose only the other goals that fit the person. Keep the initial board small: the two actual setup completions, one proposed task per other area, and one priority question. Do not expand it into a backlog of speculative work. Finish two setup tasks, **Set up the specialist team** and **Build the Office app**, only after inspecting the result, with all Done when checks met and `move_task` completion fields recording what happened, how it was checked, and where to see it. Keep incomplete avatar or folder work open within the setup task. Put these next tasks in To do, assigned by role:
 
 | Project | First task | What its page explains |
 | --- | --- | --- |
-| Website | Gather the current site and brand links | The designer reviews what exists before suggesting changes. Ask for the site link when it is missing. |
-| Marketing | Draft a first-week communication plan | The marketer asks what the person sells and who they want to reach before drafting. Nothing is published yet. |
-| Customers | Map where customer conversations arrive | Sales asks which email or messaging channels may be read. It records only real people it finds or the person names. |
-| Money | Find where invoices and receipts live | The bookkeeper asks which records may be read and what period to start with. It never pays or sends anything. |
+| Collect your website brief | Gather the current site and brand links | The designer reviews what exists before suggesting changes. Ask for the site link when it is missing. |
+| Plan your first week of outreach | Draft a first-week communication plan | The marketer asks what the person sells and who they want to reach before drafting. Nothing is published yet. |
+| Set up customer follow-ups | Map where customer conversations arrive | Sales asks which email or messaging channels may be read. It records only real people it finds or the person names. |
+| Prepare your first money review | Find where invoices and receipts live | The bookkeeper asks which records may be read and what period to start with. It never pays or sends anything. |
 
 Put **Choose one priority for this week** in Waiting on you, with one direct question. This is the first decision the chief needs; it gives the board a real reason to use that lane. Do not invent a reply.
 
 Create three tagged notes in plain words:
 
-1. **How your Office works** (pin it; tags `office`, `start here`): the chief takes requests in chat, routes substantial work to specialists, and records task progress and decisions here. The person comments on task and note pages and asks the chief to change other pages. Include a small Markdown table of the team roles and a fenced `mermaid` flowchart showing request → routing → specialist → Office result. Use a top-to-bottom flow so its labels remain readable in the note's width. Confirm both render on the note page.
+1. **How your Office works** (pin it; tags `office`, `start here`): explain first that Tinyhat gives the starting instructions and Muse builds this first version for the person. They can ask Muse to change the layout, pages, team, or communication style. Voice summaries are a personal choice. The chief takes requests in chat, routes substantial work to specialists, and records task progress and decisions here. The person comments on project, task, and note pages. State the verified comment-check schedule, who follows up, and that replies appear on the same page. Show how Request changes reopens a completed task. The person asks the chief to change other pages. Include a small Markdown table of the team roles and a fenced `mermaid` flowchart showing request → routing → specialist → Office result. Use a top-to-bottom flow so its labels remain readable in the note's width. Confirm both render on the note page.
 2. **Your first week** (tags `office`, `first week`): list the first tasks above and the one priority question. Mark each dependency as unanswered until the person answers.
 3. **Where your information comes from** (tags `sources`, `reports`, `customers`): explain that Customers grows from real people the person names or communication channels they choose to share; business Reports grow from verified work sources. Access requires the person's choice, and outgoing communication waits for their approval.
 

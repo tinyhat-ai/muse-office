@@ -27,7 +27,8 @@ description: How a task moves from a card to a finished result through a special
    you instead of guessing.
 4. If a step needs the user, the worker stops and moves the card to
    Waiting on you with one clear question (move_task posts it on the
-   task's page). You ask the user in chat too. They may answer in either
+   task's page). Send a short link in the user's chosen Office update chat.
+   Keep the details on the task; do not repeat them in the main chat. They may answer in either
    place; an answer on the page is a reply to that question, so read
    which question it answers before you act on it.
 5. When the worker says done, check the result against done_when before you
@@ -35,12 +36,16 @@ description: How a task moves from a card to a finished result through a special
    Then the task's page gets the closing report (add_task_note, kind
    update): what was done, the result, the files (attach_file, or a link to
    a file artifact), and what was learned. A file that only sits on your
-   computer is not an output the user can see. Only then move_task to done.
+   computer is not an output the user can see. Only then move_task to done, passing `result_summary`, `verification`,
+   and `result_url` when there is a linked output. Every done_when criterion
+   must be met and user comments answered. Verify the applied change in the
+   actual app or delivered file; a worker claiming success is insufficient.
 6. The specialist writes what it learned about this kind of work for this
    user into its own AGENT.md, skills, or memory.md (one rule per line).
    Check that it did. If the lesson is a project matter, it goes into the
    project's process.md or memory.md instead.
-7. Tell the user in one line, with a link to the result or the task's page.
+7. Tell the user what changed and how to check it, with a link to the result
+   or task, in their chosen update chat. Follow their voice-summary preference.
    If the task taught something the user may want to find again, add or
    update a note (upsert_note) with tags, and link the task.
 
@@ -54,3 +59,12 @@ call instead of asking the user. For a comment reply or read receipt,
 re-read the original `list_recent_updates` item and copy its `source`,
 `target_id`, and `id` together. Never change one of those fields just to
 make a refused call pass.
+
+## Corrections and comments
+
+If the user asks to redo or fix completed work, move it to In progress before
+starting. Clear old completion claims and recheck the criteria against the new
+result before closing again. Record the correction on the original task.
+A simple acknowledgement does not require reopening. Follow
+`adapt-your-office` for comment delivery, the checking schedule, and personal
+communication preferences. Never store another user's preference as a team rule.

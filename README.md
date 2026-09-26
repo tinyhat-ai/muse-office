@@ -18,8 +18,10 @@ bought, published, or deleted without your OK.
 3. Review Muse's plan and approve it when you're ready.
 
 The hat is simply a message you send Muse. There is no app to install yourself.
-You can change the message before sending it. The team starts with examples;
-ask Muse to add, change, or remove specialists as your work changes.
+**Muse builds your Office from Tinyhat’s starting instructions.** It is a first
+version you can shape together. Ask Muse to change the layout, add a page,
+change the team, or give you voice summaries. You can change the message before
+sending it, too.
 
 ### See the work
 
@@ -30,6 +32,6 @@ on a task or note; Muse follows up with its owner.
 
 ![Muse and an example specialist team in Office](docs/screenshots/team-larger-avatars.png)
 
-This open source repository has the message and the Office Muse builds. See the
+This open source repository holds the starting instructions and an example Office. See the
 [developer guide](docs/DEVELOPING.md) if you want to explore the code. The
 project is [MIT licensed](LICENSE).

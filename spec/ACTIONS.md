@@ -34,9 +34,9 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `create_task` | `project`, `title`, `specialist?`, `id?`, `column?`, `step?`, `job_definition?`, `original_request?`, `done_when?: string[]`, `plan?: string[]`, `due?`, `note?` | Creates the task and its page (`column` may be `todo`, `in_progress`, or `done`; to wait on the user, create it and then `move_task` with a question). Adds the event "Made this task". Returns the task id. |
+| `create_task` | `project`, `title`, `specialist?`, `id?`, `column?`, `step?`, `job_definition?`, `original_request?`, `done_when?: string[]`, `plan?: string[]`, `due?`, `note?` | Creates the task and its page (`column` may be `todo` or `in_progress`; to wait on the user, create it and then `move_task` with a question). Adds the event "Made this task". Returns the task id. |
 | `update_task` | `id`, then any of `title`, `specialist`, `step`, `note`, `job_definition`, `original_request`, `due`, `done_when: [{text, met}]`, `plan: [{text, state}]` | Changes the description parts of the task's page. `plan` states are `done`, `now`, `later`. |
-| `move_task` | `id`, `column`, `question?`, `question_kind?` | Moves the card and adds a small event. `waiting_on_you` requires `question` (one clear question) and takes `question_kind`: `money` (the page shows "Yes, pay …" / "Not yet"), `approve`, or `answer` (the default). The move also posts the question on the task's page (a `question` update by the specialist) and returns its id as `question_update_id`; the page pins that row, and the user's answer is a reply to it. Moving out of `waiting_on_you` clears the question. Moving to `done` sets `done_at`; moving out of `done` clears it. |
+| `move_task` | `id`, `column`, `question?`, `question_kind?`, `result_summary?`, `verification?`, `result_url?` | Moves the card and adds a small event. `waiting_on_you` requires `question` (one clear question) and takes `question_kind`: `money` (the page shows "Yes, pay …" / "Not yet"), `approve`, or `answer` (the default). The move also posts the question on the task's page (a `question` update by the specialist) and returns its id as `question_update_id`; the page pins that row, and the user's answer is a reply to it. Moving out of `waiting_on_you` clears the question. Moving to `done` requires a nonempty all-met checklist, no unanswered user comments, `result_summary`, and `verification`; include an openable `result_url` when applicable. It records the result and sets `done_at`. Reopening clears current result fields and resets checks; historical updates remain. Editing completed scope or plan also reopens it. |
 | `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to the conversation on the task's page. `author` is a member slug. Files also appear under "Files from this task". Posting the task's current question again as a `question` note returns the row `move_task` already posted instead of adding a second one. The last `update` before a task moves to `done` is its closing report: what was done, the result, the files, what was learned. |
 | `attach_file` | `id`, `name`, `url` | Adds a file to "Files from this task". The URL must open for the user (a file artifact link, or a file stored in the app), never a path on the Muse's computer. |
 | `get_task` | `id` | Everything on the task's page. |
@@ -46,14 +46,14 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `list_recent_updates` | `limit?`, `cursor?`, `unread_only?` | Newest task updates and note comments, with target, owner, reply context, and unread status. Returns `updates` and `next_cursor`; follow pages until null. `unread_only: true` finds comments needing action. |
+| `list_recent_updates` | `limit?`, `cursor?`, `unread_only?` | Newest task updates, project comments, and note comments, with target, owner, reply context, and unread status. Returns `updates` and `next_cursor`; follow pages until null. `unread_only: true` finds comments needing action. |
 | `list_new_comments` | — | Every comment or reply the user wrote that the Muse has not read yet, with its task and, if it is a reply, the update it answers. |
-| `reply_to_comment` | `source: "task" \| "note"`, `target_id`, `comment_id`, `author`, `body` | Answers a user comment on its task or note page and marks it read. Copy `source`, `target_id`, and `id` from one feed item. |
-| `mark_comments_read` | `source: "task" \| "note"`, `target_id`, `ids: number[]` | Marks handled comments on one task or note read. Every id must belong to that page. |
+| `reply_to_comment` | `source: "task" \| "note" \| "project"`, `target_id`, `comment_id`, `author`, `body` | Answers a user comment on its task, project, or note page and marks it read. Copy `source`, `target_id`, and `id` from one feed item. |
+| `mark_comments_read` | `source: "task" \| "note" \| "project"`, `target_id`, `ids: number[]` | Marks handled comments on one task, project, or note read after a same-page agent reply. Every id must belong to that page. |
 
-Each open task has an owner (`specialist`, then project lead, then chief). Its owner checks comments until it is closed. A note's `kept_by` member owns its comments, or the chief when unset. The chief's scheduled 30-minute job pages through unread updates, delegates to the owner, and verifies follow-up. Comments on completed tasks still appear and need triage.
+Each open task has an owner (`specialist`, then project lead, then chief). Its owner checks comments until it is closed. A note's `kept_by` member owns its comments, or the chief when unset. The chief's scheduled job at the interval agreed with the user pages through unread updates, delegates to the owner, and verifies follow-up. Comments on completed tasks still appear and need triage.
 
-Treat an update's identity as `(source, target_id, id)`, never the integer id alone. The same reply and read actions handle both kinds of page; they choose the table from `source` and verify that the id belongs to `target_id`. Copy all three fields from the same `list_recent_updates` item. Do not infer `source` from an action name or retry with a different value to bypass a page mismatch. Replace any old scheduled job that calls `list_new_comments` with `list_recent_updates`; the old list contains task comments only.
+Treat an update's identity as `(source, target_id, id)`, never the integer id alone. The same reply and read actions handle all three kinds of page; they choose the table from `source` and verify that the id belongs to `target_id`. Copy all three fields from the same `list_recent_updates` item. Do not infer `source` from an action name or retry with a different value to bypass a page mismatch. Replace any old scheduled job that calls `list_new_comments` with `list_recent_updates`; the old list contains task comments only.
 
 When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted). `list_recent_updates` returns that id and `replying_to_body`; the old `list_new_comments` action returns a `replying_to` object. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
 
@@ -99,3 +99,24 @@ Notes are where anything worth finding later goes: a decision, a how-to, a price
 ## Errors
 
 Every action answers `{ "ok": false, "error": "…" }` with HTTP 400 for a bad argument, 404 for a row that does not exist (or an unknown action), and 500 for anything else. Every action checks its arguments and refuses clearly: an unknown project, a task that does not exist, a column that is not one of the four, a stage that is not one of the five, a move to `waiting_on_you` without a question. The error text says what was wrong and what the valid values are, so the Muse can correct itself without asking the user.
+
+## Project progress and personal settings
+
+`get_project {slug}` returns the project, derived progress, all tasks and their
+result fields, and project comments. `list_projects` includes the same derived
+progress (column, total, done, percent, waiting, question, nextDue).
+
+A project comment posts to `/api/comments` as `{project, body, reply_to?}`.
+A task comment can include `request_changes: true`; if Done, this reopens it.
+It may also include `screenshot`, base64 PNG/JPG/WebP bytes up to 4 MB, or
+`files: [{name,url}]`. Screenshots are served inside the private Office through
+`/api/screenshots/<id>` with the verified image type and no-store/nosniff headers.
+On other app platforms, use equivalent private file storage, not public hosting.
+The owner/chief must answer via `reply_to_comment`; `mark_comments_read` refuses
+comments that have no same-page agent reply.
+
+`set_setting` also accepts `comment_check_minutes` (1–1440 as a string) and
+`office_chat_url` (an openable link). Set them only after verifying the actual
+scheduled job and selected chat. They describe the real setup; setting them does
+not create a job or a chat. Clear the relevant setting with `value: null` if
+the job or chat is removed, so the page does not advertise an inactive check. Follow `hat/skills/adapt-your-office/SKILL.md`.

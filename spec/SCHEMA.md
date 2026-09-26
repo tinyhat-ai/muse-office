@@ -68,3 +68,15 @@ For the first visit, put four published examples in an **Around the world** sect
 ## People outside the funnel
 
 `contacts.in_funnel` is 1 for everyone in the funnel and 0 for someone kept on the page without being sold to: the person themselves, the maker of the hat, a partner. Such a contact shows the pill "Contact" instead of a stage, gets no `stage_changes` row, and is counted nowhere: not in the funnel blocks, not in the new-customers report. `set_stage` (or `upsert_contact` with a stage, or `in_funnel: true`, which enters them as a lead when no stage is named) moves them into the funnel, and that entry is their first recorded change. Moving someone with sales history outside the funnel removes that history: the flag says it was never sales, and the funnel and the reports only ever count people with `in_funnel = 1`. There is no email column; an email goes in `notes`.
+
+## Project comments, completion evidence, and screenshots
+
+`project_comments` has the same author/body/reply/unread fields as note comments,
+with a `project` foreign key. Its owner is the project lead (chief if unset).
+Treat comment identifiers as `(source, target_id, id)` across all three tables.
+`tasks.result_summary`, `verification`, and `result_url` hold the current verified
+completion. Reopening clears them and `done_at`, and resets checks; the completion
+update remains in task history. The reference app adds these nullable columns
+when opening an existing database, without replacing personal data.
+`screenshots` stores task-scoped, size-limited raster image bytes under random ids.
+Keep equivalent artifact-platform storage private to the same Office user.
