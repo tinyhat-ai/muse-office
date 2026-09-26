@@ -520,7 +520,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       const project = mustProject(requiredString(input, "project", "the project's slug"));
       const title = requiredString(input, "title", "the card's title");
       if (optionalString(input, "column") === "waiting_on_you") {
-        throw new ActionError("column cannot be waiting_on_you when creating a task: create it, then call move_task with a question. Valid here: todo, in_progress, done.");
+        throw new ActionError("column cannot be waiting_on_you when creating a task: create it, then call move_task with a question. Valid here: todo, in_progress.");
       }
       const column = oneOf(input, "column", COLUMNS) ?? "todo";
       if (column === "done") throw new ActionError("Create the task open, then move_task to done with result_summary and verification after checking every Done when criterion.");
@@ -780,8 +780,8 @@ export const ACTIONS: Record<string, ActionDef> = {
       const page = rows.slice(0, limit);
       const last = page.at(-1);
       return {
-        updates: page.map((r) => ({
-          ...r, files: json<FileRef[]>(r.files_json, []), owner: r.owner ?? chiefSlug(), unread_by_agent: !!r.unread_by_agent,
+        updates: page.map(({ files_json, ...r }) => ({
+          ...r, files: json<FileRef[]>(files_json, []), owner: r.owner ?? chiefSlug(), unread_by_agent: !!r.unread_by_agent,
           url: r.source === "task" ? `/tasks/${r.target_id}` : r.source === "project" ? `/projects/${r.target_id}` : `/notes/${r.target_id}`,
         })),
         next_cursor: rows.length > limit && last
