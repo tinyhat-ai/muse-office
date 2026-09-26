@@ -11,7 +11,7 @@ The Office should feel like one calm, everyday app: a paper-coloured page, reada
   --ink: #1c1c19;       /* text */
   --soft: #6d6c66;      /* secondary text */
   --line: #e2e1db;      /* hairlines */
-  --needs: #b3541e;     /* the one accent: waiting on you */
+  --needs: #a54619;     /* the one accent: waiting on you */
   --needs-bg: #fbeee6;
   --done: #2d5a45;
 
@@ -54,7 +54,10 @@ Spare pastels for new projects: `#efd3d3` / `#b86e6e`, `#d3e0e6` / `#5f8497`, `#
 Use task cards in four status lists with project selectors above. Projects are
 umbrellas for related tasks. Keep a readable paper surface, project accent, task
 title, owner portrait/name, a short update, and the current question.
-Open a card for task details. Keep project context accessible separately. No white
+Open a card for task details. Each project selector has a separate **Open project →**
+footer, accessible without first filtering. Use sibling links, a 44px footer touch
+target, and at least 8px outer padding for selection/focus outlines. On phones,
+scroll the row horizontally without a fade mask over the tiles. No white
 speech bubbles inside coloured cards. Keep project filters and agent portraits
 when refining the layout. Keep the optimized sticky-note design. No percentage
 bars, checklist dashboards, project forms, or milestone panels. See

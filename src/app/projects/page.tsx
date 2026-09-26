@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { CSSProperties } from "react";
 import { all, COLUMNS, COLUMN_LABEL, type Column, type MemberRow, type ProjectRow, type TaskRow } from "@/lib/db";
 import { Avatar } from "@/components/Avatar";
@@ -58,7 +57,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       <nav className="pj-tiles" aria-label="Show one project">
         <ProjectTile href={filterHref()} name="All projects" count={onBoard.length} chosen={!chosen} />
         {projects.map((p) => (
-          <ProjectTile key={p.slug} href={filterHref(p.slug)} name={p.name} count={counts.get(p.slug) ?? 0} color={p.color} chosen={chosen?.slug === p.slug} />
+          <ProjectTile key={p.slug} href={filterHref(p.slug)} projectHref={`/projects/${encodeURIComponent(p.slug)}`} name={p.name} count={counts.get(p.slug) ?? 0} color={p.color} chosen={chosen?.slug === p.slug} />
         ))}
       </nav>
       <div className="pj-info">
@@ -68,7 +67,6 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
               {chosen.name}
               {lead ? ` · led by ${lead.name}` : ""}
             </span>
-            <Link href={`/projects/${chosen.slug}`}>Open the {chosen.name} page →</Link>
           </>
         ) : null}
       </div>

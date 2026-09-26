@@ -19,8 +19,11 @@ To do, In progress, Waiting on you, Done. Each sticky-note card opens its task.
 Show the project colour/name, title, owner portrait/name (including Done),
 one short update or waiting question, and due/updated time. Preserve the
 optimized original colours, paper texture, and card proportions; no white
-speech bubbles. Keep all completed tasks discoverable. A selected project
-links to its context page. To add, rename, or archive a project, the person
+speech bubbles. Keep all completed tasks discoverable. Each project tile has
+two distinct targets: its name/count filters tasks; a separate **Open project →**
+footer opens its context page directly. All projects is filter-only. Leave at
+least 8px padding around the selector row so selected/focus borders are visible,
+including at either end of phone scrolling. To add, rename, or archive a project, the person
 asks Muse in chat; Muse uses the actions and preserves its work and history.
 
 Use four lists on desktop, two on smaller screens, and one column on phones
