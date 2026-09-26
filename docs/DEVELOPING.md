@@ -82,5 +82,8 @@ is in [the actions specification](../spec/ACTIONS.md).
 [`channels/lts`](https://github.com/tinyhat-ai/muse-office/tree/channels/lts)
 carries the stable promotion message. [`channels/latest`](https://github.com/tinyhat-ai/muse-office/tree/channels/latest)
 tracks the newest published release. `main` is for upcoming changes and may
-move ahead of both channels. The message currently links Muse to build files
-on `main`, so those files can change independently of the LTS message.
+move ahead of both channels. The hat's build-file links use `channels/lts`
+too. For an unreleased integration test, give Muse the candidate commit and
+explicitly read all build files from it; the public LTS links will not contain
+new files until the complete release is promoted. See the rollout checks in
+[Releasing](../RELEASING.md).

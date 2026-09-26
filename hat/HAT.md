@@ -230,6 +230,13 @@ Do these before the hand-over, and again after any change to the app:
   A missing source or target, or a comment id that does not belong to the
   named page, must fail. Copy all three values from one feed item because
   project, task, and note comment ids can overlap.
+- On a setup verification task, try moving to Done with an unchecked criterion:
+  the action must refuse. Verify the result, set each criterion through
+  `update_task.done_when`, then complete with a result summary and verification.
+  Inspect the visible task and project list: Done, checked criteria, result,
+  and resolved correction state must agree. Request a correction, confirm it
+  reopens and resets checks, reply on that page, then verify and complete again.
+  Do not hand over an app that reports Done while its checks remain unmet.
 - The database has the tables in `db/schema.sql`: members, projects,
   process_steps, project_rules, tasks, task_checks, task_plan, task_files,
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,

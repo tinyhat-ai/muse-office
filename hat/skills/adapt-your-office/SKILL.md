@@ -56,6 +56,8 @@ The task owner follows up on task comments, the project lead on project
 direction, and the note keeper on note comments. The chief is the fallback.
 Route `(source, target_id, id)` from `list_recent_updates` unchanged. Paginate
 until exhausted, reply on that same page, then mark handled. A read receipt
+does not replace reading the comment's attached files: open its screenshots
+and other relevant evidence before deciding what to change. A read receipt
 alone is not a reply or proof that work was done. Check closed tasks too; if a
 comment asks for a correction, reopen before starting. A “thanks” does not
 reopen work. Keep one recurring job, not one per task.

@@ -5,8 +5,11 @@ name. `channels/latest` follows the newest published release, while
 `channels/lts` is the stable promotion channel. The Muse landing page copies
 `hat/PROMPT.md` from LTS, so work merged to `main` does not change the
 message people send their Muse until the stable channel is promoted. The
-current message still links to build files on `main`; promoting the
-channel pins the message text, not all files Muse will read.
+hat's build-file links use that same LTS channel. Promote the complete tested
+release before shipping website copy that describes its new behavior.
+When testing unreleased changes, explicitly give Muse the candidate commit
+and have it read every build file from that commit instead of the LTS links.
+Keep the public copy button on LTS until promotion is complete.
 
 Both channel branches are protected and restricted to the maintainer. Agents
 can prepare reviewable promotion PRs but cannot move those branches themselves.
@@ -57,3 +60,12 @@ The actions' names and arguments (`spec/ACTIONS.md`) and the database schema
 (`db/schema.sql`) are the contract between a Muse and its Office. Changing
 either is a minor bump at least, and the changelog entry must say what a
 Muse has to change in an Office it already built.
+
+For the next release, call out the new completion and comment contracts:
+create tasks open; verify every Done-when criterion before `move_task` to Done;
+provide `result_summary` and `verification`; answer comments on their original
+page before marking them read. Update existing scheduled checks to use the
+typed, paginated `list_recent_updates` feed, including project comments.
+Inspect the running job and record its actual interval in
+`comment_check_minutes`; do not silently change the user's schedule. Keep the
+existing Office's records and customizations when applying these changes.
