@@ -3,6 +3,14 @@
 All notable changes to this repository are listed here. The version is the
 one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
+## 0.1.1 — 2026-09-25
+
+- The repository's first page now explains how Muse organizes work with a team
+  of specialist agents, and gives a short path to the message you send Muse.
+- Setup and developer details live in a separate guide, leaving the first page
+  focused on what the hat does for you. The Office app and promotion message
+  have not changed.
+
 ## 0.1.0 — 2026-09-25
 
 - The sample specialists are explicitly editable. Muse keeps each agent's

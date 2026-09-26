@@ -1,7 +1,7 @@
 ---
 name: Chief of Staff
 handle: tinyhat/hats/chief-of-staff
-version: 0.1.0
+version: 0.1.1
 description: >
   Promote your Muse to chief of staff. It manages a team of specialist
   agents for you and shows you what is going on in one private app,
