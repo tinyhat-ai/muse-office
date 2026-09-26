@@ -17,7 +17,6 @@ import { ago, dueWord, span, stamp } from "@/lib/time";
 import { Avatar, You } from "@/components/Avatar";
 import { CommentForm, ReplyToggle } from "@/components/task/CommentForm";
 import { FocusCommentButton } from "@/components/task/MoneyButtons";
-import { CommentFollowUp } from "@/components/CommentFollowUp";
 import { RefreshUpdates } from "@/components/RefreshUpdates";
 import "../tasks.css";
 
@@ -163,7 +162,6 @@ export default async function TaskPage({ params }: Props) {
           <When iso={r.created_at} />
           <br />
           <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(r.body, true) }} />
-          {r.author === "you" && <span className="comment-state">{r.unread_by_agent ? `Awaiting ${workerName}’s reply` : updates.some((reply) => reply.reply_to === r.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
         </div>
       </div>
     );
@@ -187,7 +185,6 @@ export default async function TaskPage({ params }: Props) {
           </div>
           <div className="tk-cm-b">
             <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(u.body, true) }} />
-            {mine && <span className="comment-state">{u.unread_by_agent ? `Awaiting ${workerName}’s reply` : updates.some((reply) => reply.reply_to === u.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
             {attachedHere.length ? (
               <div className="tk-chips">
                 {attachedHere.map((f) => (
@@ -314,7 +311,6 @@ export default async function TaskPage({ params }: Props) {
           {updateCount} {updateCount === 1 ? "update" : "updates"}
         </span>
       </h2>
-      <CommentFollowUp owner={workerName} />
       {top.length ? (
         <div className="tk-conv">
           {top.map((u) =>
@@ -341,7 +337,7 @@ export default async function TaskPage({ params }: Props) {
       <div className="tk-composer">
         <You size="md" />
         <div className="cbox">
-          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Give direction, answer a question, or ask for a correction." />
+          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" />
         </div>
       </div>
 

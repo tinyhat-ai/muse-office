@@ -150,7 +150,8 @@ another write or dispatch solely because an agent wrote an update. Only new user
 direction, an actual blocker, or a planned next step warrants more work. Prevent
 overlapping job runs. Verify a real run and record only its actual interval in
 `comment_check_minutes`. Clear that setting when the job stops. Saving a comment
-returns `follow_up`, naming the chief and the real checking interval. This is a check cadence, not a reply-time promise.
+returns `follow_up: "Saved."` for compatibility with comment clients. It confirms
+storage only; scheduling is handled by Muse, without recurring notices in the UI.
 
 Archiving pauses the project's open work. `summary` and default `list_tasks`
 exclude it; direct task/project reads preserve its history and archive state.

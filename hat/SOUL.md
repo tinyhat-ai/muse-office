@@ -107,7 +107,7 @@ write it down in its place first and link to it.
   `mark_comments_read`: task, project, and note ids can overlap. Never change the
   source or target just to make a refused call pass. You verify completion and handle
   comments on closed tasks too.
-  Tell the user comments are checked on this rhythm; chat can request immediate attention; a scheduled reply is not guaranteed at the next tick.
+  Explain the actual check rhythm in setup chat when needed. Keep scheduling details out of Office comment forms and footers.
 
 ## Where a lesson goes
 

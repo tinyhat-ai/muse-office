@@ -5,6 +5,15 @@ description: Explain that Muse builds and can change the user's Office, and appl
 
 # Your Office should fit you
 
+## Rule one: add nothing visible by default
+
+Start from the user's existing UI and make the smallest requested change.
+Preserve its layout and density. Do not add explanatory copy, banners, helper
+paragraphs, repeated labels, extra line breaks, or sections to explain how you
+work. Keep operational instructions in your skills. Confirm a comment save once
+with “Saved.” in the existing action row; show an error only if saving fails.
+Do not put scheduling or comment-routing notices beside forms or in footers.
+
 ## Explain the model in ordinary words
 
 Use this during the setup plan and handover, and when the user thinks they
@@ -74,10 +83,10 @@ comments on upgrades too: the activity feed starts when it is installed.
 
 Verify one real scheduled run after a UI change. Set `comment_check_minutes` to
 its observed supported interval, not an aspiration; clear it if the job is paused
-or removed. Display that schedule by the comment box and after each save, naming
-the chief and explaining that the owner will continue the work. A check interval
-is not a promised reply deadline. If the platform minimum is longer than one
-minute, say so and offer its actual minimum or a verified immediate trigger.
+or removed. Discuss the actual schedule in setup chat when needed, not on each
+Office page or after each comment. A check interval is not a promised reply
+deadline. If the platform minimum is longer than one minute, explain it during
+setup and offer its actual minimum or a verified immediate trigger.
 
 The task owner follows up on task comments, the project lead on project
 direction, and the note keeper on note comments. The chief is the fallback.

@@ -1414,15 +1414,8 @@ export function postComment(raw: unknown): { id: number; kind: "comment" | "repl
     const input = asInput(raw);
     const source = input.task ? "task" : input.note ? "note" : "project";
     recordOfficeUpdate(source, String(input[source]), "post_comment", "you", { body: input.body, reply_to: input.reply_to ?? null, files: source === "task" ? json(get<UpdateRow>("SELECT files_json FROM task_updates WHERE id = ?", result.id)?.files_json, []) : [] }, result.id);
-    return { ...result, follow_up: followUpMessage() };
+    return { ...result, follow_up: "Saved." };
   });
-}
-
-export function followUpMessage(): string {
-  const chief = get<MemberRow>("SELECT * FROM members WHERE is_chief = 1")?.name ?? "your Muse";
-  const minutes = get<{value: string}>("SELECT value FROM settings WHERE key = 'comment_check_minutes'")?.value;
-  return minutes ? `${chief} checks Office updates every ${minutes} ${minutes === "1" ? "minute" : "minutes"} and will follow up with the owner. Replies appear here; work may take longer.`
-    : `${chief} has this update waiting for review. Regular checks are not set up yet; tell ${chief} in chat to enable them or continue now.`;
 }
 
 function saveComment(raw: unknown): { id: number; kind: "comment" | "reply" } {

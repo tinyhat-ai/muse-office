@@ -6,7 +6,6 @@ import { renderMarkdown } from "@/lib/markdown";
 import { ago } from "@/lib/time";
 import { Avatar, You } from "@/components/Avatar";
 import { CommentForm } from "@/components/task/CommentForm";
-import { CommentFollowUp } from "@/components/CommentFollowUp";
 import { RefreshUpdates } from "@/components/RefreshUpdates";
 import "../projects.css";
 import "../../tasks/tasks.css";
@@ -28,7 +27,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       {comment.author === "you" ? <You size="xs" /> : <Avatar member={member.get(comment.author)} size="xs" />} {" "}
       <b>{comment.author === "you" ? "You" : member.get(comment.author)?.name ?? comment.author}</b><time>{ago(comment.created_at)}</time>
       <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(comment.body, true) }} />
-      {comment.author === "you" && <span className="comment-state">{comment.unread_by_agent ? `Awaiting ${lead?.name ?? "Muse"}’s reply` : replies.some((reply) => reply.author !== "you") ? "Replied" : "Seen"}</span>}
       {replies.map(renderComment)}
     </article>;
   }
@@ -49,10 +47,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     </section>}
     <section className="card pp-comments" aria-labelledby="project-comments">
       <h2 id="project-comments">Comments</h2>
-      <CommentFollowUp owner={lead?.name ?? "Muse"} />
       {roots.map(renderComment)}
-      <CommentForm project={slug} placeholder={`Add a comment for ${lead?.name ?? "Muse"}…`} buttonLabel="Comment" hint="Your comment stays with this project." />
+      <CommentForm project={slug} placeholder={`Add a comment for ${lead?.name ?? "Muse"}…`} buttonLabel="Comment" />
     </section>
-    <p className="tell">To change this project, tell {chief?.name ?? "Muse"} in chat.</p>
   </main>;
 }

@@ -1,6 +1,6 @@
 # The pages
 
-Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. During setup, Muse explains in chat that it builds this first version for the user and can change it with them. Users can view, filter, search, and comment. Muse manages every other change through conversation. For those records a quiet line says: "To change this, tell <your Muse's name> in chat."
+Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. During setup, Muse explains in chat that it builds this first version for the user and can change it with them. Users can view, filter, search, and comment. Muse manages every other change through conversation.
 
 Every page opens with the same header: a small kicker line, a large title, one line of lede. Then the content. Nothing is hidden behind tabs inside a page.
 
@@ -42,8 +42,7 @@ completion percentage, milestones, process diagram, or separate management UI.
 
 A **Comments** section gives direction to the project lead. Save comments in
 `project_comments`, include them in the typed updates feed, and reply here.
-Explain the real checking interval when configured; distinguish awaiting reply
-from replied. Only Muse changes the project after understanding the request.
+Only Muse changes the project after understanding the request.
 
 This is the starting layout. Muse may change it, including replacing the whole
 view, when the person asks. Keep the records and user choices intact.
@@ -57,7 +56,7 @@ Like an issue page, top to bottom:
 3. **What this is**: the job definition. A collapsed "Original request" with the user's own words.
 4. Keep any useful plan or working rules as short readable text with the description. No formal completion-check panels, percentages, or required structured checklist.
 5. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Update cards with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files as chips. A question card is peach. The user's comments have a blue-grey header and show replies indented under them. Each card has a "Reply" link that opens a small box.
-6. **The comment box**: "[you] Add a comment for <Muse> and Penny…" with a "Comment" button and a small line "Your comment stays with this task." Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Note pages have their own comment box.
+6. **The comment box**: "[you] Add a comment for <Muse> and Penny…" with a "Comment" button. Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Note pages have their own comment box.
 7. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
 8. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 
@@ -104,10 +103,11 @@ Relative within a week ("just now", "20 min ago", "2 hours ago", "yesterday", "3
 
 ## Comments and completed results
 
-Every comment form explains who follows up and where their reply appears.
-Show the configured interval only after the scheduled job is verified; otherwise
-say the user can ask Muse to enable checks. A saved comment says “awaiting
-reply,” never “agent started.” Refresh replies without losing a draft.
+Keep the existing layout and density. Do not add standing explanations, cadence
+notices, missing-check warnings, or repeated footer text. A successful comment
+save shows “Saved.” once in the existing action row; keep actual save errors
+visible. Refresh replies without losing a draft. Scheduling belongs in Muse's
+instructions and setup chat, not in every comment form.
 
 On a completed task, lead with **What changed**, **What was checked**, and an
 openable result when available. Older completed tasks with no evidence must

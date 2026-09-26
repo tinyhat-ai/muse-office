@@ -15,10 +15,12 @@ privately with the comment and enforce file type/size limits. Do not lose a draf
 on refresh or failure. The owner must be able to retrieve the actual media, not
 just see that an attachment exists. Sanitize rendered formatted text.
 
-Save feedback must distinguish **saved, awaiting review, replied**. Name the
-chief/owner and show the configured checking interval only when verified. An
-interval describes checks, not a promised completion deadline. If no checker
-is active, say so and direct the user to Muse in chat to enable it.
+Confirm a successful save once with “Saved.” in the existing action row, without
+adding a paragraph or changing the layout. Keep real save failures actionable.
+Replies appear in the existing thread; receipt state stays available to agents.
+Do not display recurring-check warnings, cadence, routing explanations, or
+repeated helper text around comment forms or in page footers. Discuss scheduling
+in setup chat when needed, and only describe verified behavior.
 
 ## One agent inbox
 

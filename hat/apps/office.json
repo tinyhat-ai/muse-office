@@ -60,6 +60,6 @@
     "action": "list_office_updates",
     "coverage": "Every supported mutation across projects, tasks, team, notes, customers, reports, comments and files",
     "default_check_minutes": 1,
-    "rules": "One recurring job. Verify a real scheduled run. Save checkpoint only after all cursor pages succeed; retry unread comments through list_recent_updates. Explain actual interval and follow-up after saves. Respect supported minimum and user preferences. Never claim immediate wake without a verified trigger."
+    "rules": "One recurring job. Verify a real scheduled run. Save checkpoint only after all cursor pages succeed; retry unread comments through list_recent_updates. Discuss the actual interval in setup chat. Keep scheduling notices out of the UI; a comment save shows only Saved. once in its action row. Respect supported minimum and user preferences. Never claim immediate wake without a verified trigger."
   }
 }

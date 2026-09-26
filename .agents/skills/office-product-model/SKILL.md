@@ -5,6 +5,15 @@ description: Apply Muse Office's conversational working model when changing its 
 
 # Build Office around the chief of staff
 
+## Rule one: add nothing visible by default
+
+Start from the existing UI. Make the smallest change that solves the requested
+problem; preserve its layout and density. Do not add explanatory copy, banners,
+helper paragraphs, repeated labels, extra line breaks, or sections to describe
+agent behavior. Operational requirements belong in agent instructions. Keep
+necessary save/error feedback brief and local to the action. Review every visible
+addition against the user's request before keeping it.
+
 ## The product model
 
 Tinyhat provides starting instructions and a reference app. Muse builds its own
@@ -94,6 +103,6 @@ Do not silently default to 30 minutes or claim receipt means work has started.
    comment through the feed to an owner reply on the original page, including
    attachments and retries when those paths change. Verify an actual scheduled
    run before claiming automatic follow-up works.
-5. Review the diff for new user writes, lost fundamentals, invented data, and
+5. Review the diff for unnecessary visible additions, new user writes, lost fundamentals, invented data, and
    globalized personal preferences. Report tested behavior and remaining gaps
    separately; include screenshots for visible changes.

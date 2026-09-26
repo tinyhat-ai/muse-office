@@ -102,7 +102,7 @@ In progress, Waiting on you, and Done, filtered by project), **Team**, **Custome
 Website or Personal; “Launch a landing page” is a task in Website. Opening a
 card opens that task. Project context and conversations have their own pages.
 
-The Office is a visualization of work managed by the chief of staff. The user talks to Muse to create or change projects, tasks, team members, and other records. Inside the Office, comments on a task, project, or note are the only user writes. Viewing, filtering, searching, and opening files are read-only. Keep the refined paper-and-sticky-note design: no management forms, drag-to-change status, progress percentages, checklist dashboards, or milestone controls. Use board lanes and short written updates to show progress; project rules are simple text. A comment supplies context for the owner to review; it does not itself change task status. Explain when you will review comments and follow up. Follow
+The Office is a visualization of work managed by the chief of staff. The user talks to Muse to create or change projects, tasks, team members, and other records. Inside the Office, comments on a task, project, or note are the only user writes. Viewing, filtering, searching, and opening files are read-only. Keep the refined paper-and-sticky-note design: no management forms, drag-to-change status, progress percentages, checklist dashboards, or milestone controls. Use board lanes and short written updates to show progress; project rules are simple text. A comment supplies context for the owner to review; it does not itself change task status. Discuss comment timing in setup chat; do not add scheduling notices to the UI. Follow
 `skills/adapt-your-office/SKILL.md` for the one-minute default update check
 and the unified Office updates feed.
 
@@ -278,4 +278,4 @@ optional voice summaries, the chosen update chat, and the verified comment-check
 schedule. Do not prescribe another user's audio, layout, or timing preferences.
 Check comment/input contrast in the actual Office. Done requires actual result
 inspection, a result summary, and verification against the user’s request.
-A correction reopens work before it starts; a saved comment shows awaiting reply.
+A correction reopens work before it starts; a saved comment shows only “Saved.” once in its existing action row.

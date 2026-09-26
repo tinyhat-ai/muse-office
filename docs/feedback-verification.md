@@ -48,9 +48,8 @@ An earlier actual one-minute scheduled run read a comment from the test Office's
 updates feed and posted Forja's reply on the original homepage-review task.
 The comment and reply were independently observed in Muse desktop. Muse reported
 the stored author, handled flag, saved checkpoint, and no duplicate on a later
-run. Both temporary jobs were removed. A subsequent UI comment independently
-showed: “Comment saved. Regular checks aren’t set up. Ask Noche in chat to
-continue.” This verifies the inactive-schedule wording, not an immediate wake.
+run. Both temporary jobs were removed. Earlier screenshots included a repeated
+inactive-schedule notice; the minimal-copy pass below supersedes that UI.
 
 The first scheduled run had only drafted a reply. The instructions now explicitly
 require posting an owner reply in the private Office before marking feedback
@@ -61,7 +60,7 @@ After the final simplification, Muse desktop independently showed the restored
 colored project selectors, four desktop lanes, real portraits, and plain project
 rules with comments. Selecting Website showed only its two tasks. The existing
 scheduled owner reply remained visible. A new UI comment on the completed setup
-task left it Done and showed the truthful inactive-schedule message. Direct
+task left it Done. The earlier save message was replaced in the minimal-copy pass. Direct
 project controls, percentages, checklist panels, and comment-triggered reopening
 were absent from the inspected generated pages. A final pass removed derived
 project status labels: project selectors show only the name and task count.
@@ -117,6 +116,35 @@ from `AGENTS.md` and the developer guide, with a Claude skill adapter. Its
 frontmatter passed the skill validator. The contextual-feedback reference
 records formatted text, screenshots, and voice as requirements and explicitly
 lists today's media support gaps; it does not claim an audio composer exists.
+
+## Minimal visible changes
+
+Reviewed the full UI delta against the original reference app. Removed the new
+standing follow-up component on task, project, and note pages, per-comment
+receipt labels, and extra project/task helper copy. A save now says only
+“Saved.” in the existing action row and clears when a new comment is typed.
+Real save errors remain visible. The API keeps its compatible `follow_up` key
+with the same short acknowledgement, with or without a configured schedule.
+No storage, unread-state, owner routing, pagination, or scheduler behavior changed.
+
+The contributor and runtime skills now start with the rule to add nothing visible
+by default: preserve existing layout/density, no extra explanations or line breaks.
+Removed conflicting requirements to display check cadence beside forms and after
+saves from the page/action contracts, builder manifest, and runtime instructions.
+
+All 29 tests, TypeScript, the production build, both changed skill validators,
+and whitespace checks pass. A browser-posted project comment at 375px saved and
+showed one “Saved.” beside the button. Task and note comment areas have no
+recurring-check notice; existing owner replies remain visible. Phone document
+width matches the viewport (375px). Screenshots use viewport captures where the
+browser's full-page capture changed responsive layout during capture.
+
+The generated Office was then updated through Muse (reported version 22).
+Native desktop independently showed no schedule footer on the board and no
+routing/check notices on project, task, or note detail. A new task comment saved
+with only “Saved.”; the earlier scheduled Forja reply is still present. Project
+navigation, real portraits, rules, and all three original tasks remained visible.
+No scheduler or personal Office was changed by this copy pass.
 
 ## Scope of proof
 

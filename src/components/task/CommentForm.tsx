@@ -79,7 +79,7 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
     setBody("");
     setScreenshot(undefined);
     if (fileRef.current) fileRef.current.value = "";
-    setSaved(`Saved. ${res.data?.follow_up ?? "Awaiting the owner’s reply here."}`);
+    setSaved("Saved.");
     startTransition(() => router.refresh());
     onDone?.();
   }
@@ -104,7 +104,7 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
         id={id}
         name="body"
         value={body}
-        onChange={(e) => setBody(e.target.value)}
+        onChange={(e) => { setBody(e.target.value); setSaved(""); }}
         onKeyDown={onKey}
         placeholder={placeholder}
         aria-label={placeholder}
@@ -126,12 +126,11 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
         }} />
       </label>}
       <div className="row">
-        {hint ? <span className={compact ? "hint" : "tk-onlyhere"}>{hint}</span> : <span />}
+        {saved ? <span role="status">{saved}</span> : hint ? <span className={compact ? "hint" : "tk-onlyhere"}>{hint}</span> : <span />}
         <button type="submit" className="btn" disabled={busy || !body.trim()}>
           {busy ? "Saving…" : buttonLabel}
         </button>
       </div>
-      {saved && <p className="comment-state" role="status">{saved}</p>}
       {error ? (
         <p className="tk-form-err" role="alert">
           {error}

@@ -60,9 +60,9 @@ test("archive preserves task history, restore returns work, and comment feedback
   assert.throws(() => act("upsert_project", {name:"Family school", create_only:true}), /already exists/);
   act("set_setting", {key:"comment_check_minutes", value:"1"});
   const comment = postComment({project:"school", body:"Keep this project"});
-  assert.match(comment.follow_up, /Noche checks Office updates every 1 minute/);
+  assert.equal(comment.follow_up, "Saved.");
   act("set_setting", {key:"comment_check_minutes", value:null});
-  assert.match(postComment({note:"dates", body:"Please review"}).follow_up, /Regular checks are not set up/);
+  assert.equal(postComment({note:"dates", body:"Please review"}).follow_up, "Saved.");
 });
 
 test("archived work is paused in active reads but retained for history and restored intact", () => {
