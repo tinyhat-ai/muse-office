@@ -41,12 +41,12 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     <nav className="crumb"><Link href="/projects">‹ Tasks</Link><span>/</span><span>{project.name}</span></nav>
     <header className="pp-head">
       <div><h1 className="title">{project.name}</h1><p className="lede">{project.description}</p>
-        <div className="pp-meta"><Avatar member={lead} size="sm" /><span>Led by {lead?.name ?? "Muse"}</span><span className={`pill ${PILL[progress.column]}`}>{COLUMN_LABEL[progress.column]}</span></div>
+        <div className="pp-meta"><Avatar member={lead} size="sm" /><span>Led by {lead?.name ?? "Muse"}</span><span className={`pill ${project.archived_at ? "next" : PILL[progress.column]}`}>{project.archived_at ? "Archived · work paused" : COLUMN_LABEL[progress.column]}</span></div>
       </div>
     </header>
     <section className="card pp-summary" aria-label="Project progress">
       <div><b>{progress.percent}% complete</b><progress value={progress.done} max={progress.total || 1} aria-label="Tasks complete" /><span>{progress.done} of {progress.total} {progress.total === 1 ? "task" : "tasks"} done</span></div>
-      <div><b>{progress.waiting ? "Needs your answer" : "Next milestone"}</b><p>{progress.question ?? (progress.nextDue ? `Next task due ${shortDate(progress.nextDue)}` : progress.column === "done" ? "All task results are ready below." : "The team keeps the next steps on each task.")}</p></div>
+      <div><b>{project.archived_at ? "Work paused" : progress.waiting ? "Needs your answer" : "Next milestone"}</b><p>{project.archived_at ? "Restore this project in Manage projects to continue. Its tasks and history are preserved." : progress.question ?? (progress.nextDue ? `Next task due ${shortDate(progress.nextDue)}` : progress.column === "done" ? "All task results are ready below." : "The team keeps the next steps on each task.")}</p></div>
     </section>
     <section className="pp-tasks" aria-labelledby="project-tasks">
       <h2 id="project-tasks">Tasks and results</h2>

@@ -102,7 +102,7 @@ export default async function TeamPage({ searchParams }: { searchParams: Search 
   const members = all<MemberRow>("SELECT * FROM members ORDER BY is_chief DESC, sort_order, name");
   const chief = members.find((m) => m.is_chief === 1);
   const specialists = members.filter((m) => m !== chief);
-  const tasks = all<TaskRow>("SELECT * FROM tasks WHERE specialist IS NOT NULL ORDER BY updated_at DESC");
+  const tasks = all<TaskRow>("SELECT t.* FROM tasks t JOIN projects p ON p.slug = t.project WHERE p.archived_at IS NULL AND t.specialist IS NOT NULL ORDER BY t.updated_at DESC");
   const projects = all<ProjectRow>("SELECT * FROM projects ORDER BY sort_order, name");
 
   const chiefName = chief?.name ?? "your chief of staff";

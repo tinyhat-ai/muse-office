@@ -109,7 +109,7 @@ export default async function TaskPage({ params }: Props) {
   const projectSlug = project?.slug ?? task.project;
   const barColor = project?.color_dark ?? "#9a978c";
   const isDone = task.column_name === "done";
-  const waiting = task.column_name === "waiting_on_you";
+  const waiting = !project?.archived_at && task.column_name === "waiting_on_you";
 
   // Replies hang under the top-level update they answer, following a chain
   // of replies up to its root. A reply whose parent is gone stands on its own.
@@ -239,6 +239,7 @@ export default async function TaskPage({ params }: Props) {
         {projectName}
       </div>
       <h1 className="title">{task.title}</h1>
+      {project?.archived_at && <p className="lede">Archived project. Work is paused; restore this project in Manage projects to continue.</p>}
       <div className="tk-meta">
         <span className={`tk-st ${task.column_name}`}>{COLUMN_LABEL[task.column_name] ?? task.column_name}</span>
         {worker ? (

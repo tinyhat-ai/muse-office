@@ -41,6 +41,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 - Columns are exactly `todo`, `in_progress`, `waiting_on_you`, `done`. The pages show them as "To do", "In progress", "Waiting on you", "Done".
 - Moving a task to `waiting_on_you` requires a `question`. Moving it anywhere else clears the question.
 - A task belongs to exactly one project. A task update belongs to one task; a note comment belongs to one note.
+- A project's non-null `archived_at` pauses its open tasks without changing their saved status or deleting history. Task actions return `project_archived_at`; active summaries exclude archived projects. Restoring clears the timestamp.
 - Stages are exactly `lead`, `talking`, `proposal`, `customer`, `past`. Changing a stage adds a `stage_changes` row.
 - Times are ISO 8601 in UTC. The pages render them as "2 hours ago" or "Sep 24".
 - The agent writes only through the actions in `spec/ACTIONS.md`. The user can manage projects and comment on a task, project, or note page. The app stores user comments in `task_updates`, `project_comments`, or `note_comments` with `author = 'you'` and `unread_by_agent = 1`; `list_recent_updates` pages through all three kinds.

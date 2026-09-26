@@ -69,3 +69,21 @@ test("archive preserves task history and progress, restore returns work, checks 
   act("set_setting", {key:"comment_check_minutes", value:null});
   assert.match(postComment({note:"dates", body:"Please review"}).follow_up, /Regular checks are not set up/);
 });
+
+test("archived work is paused in active reads but retained for history and restored intact", () => {
+  act("upsert_project", {slug:"paused", name:"Paused work"});
+  const t = act("create_task", {project:"paused", title:"Choose dates", done_when:["Date agreed"]});
+  act("move_task", {id:t.id, column:"waiting_on_you", question:"Which date?"});
+  const before = act("summary");
+  act("archive_project", {slug:"paused", archived:true});
+  assert.equal(act("summary").columns.waiting_on_you, before.columns.waiting_on_you - 1);
+  assert.equal(act("summary").waiting_on_you.some((r:any) => r.id === t.id), false);
+  assert.deepEqual(act("list_tasks", {project:"paused"}), []);
+  assert.ok(act("list_tasks", {project:"paused", include_archived:true})[0].project_archived_at);
+  assert.ok(act("get_task", {id:t.id}).project_archived_at);
+  assert.equal(act("get_task", {id:t.id}).question, "Which date?");
+  act("archive_project", {slug:"paused", archived:false});
+  assert.equal(act("list_tasks", {project:"paused"})[0].project_archived_at, null);
+  assert.equal(act("summary").columns.waiting_on_you, before.columns.waiting_on_you);
+});
+

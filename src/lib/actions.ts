@@ -141,7 +141,8 @@ function memberOut(m: MemberRow) {
 const stepOut = (s: StepRow) => ({ ...s, needs_you: !!s.needs_you });
 function taskOut(t: TaskRow) {
   const { column_name, ...rest } = t;
-  return { ...rest, column: column_name, progress: taskProgress(all<CheckRow>("SELECT met FROM task_checks WHERE task = ?", t.id)) };
+  const project_archived_at = get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", t.project)?.archived_at ?? null;
+  return { ...rest, column: column_name, project_archived_at, progress: taskProgress(all<CheckRow>("SELECT met FROM task_checks WHERE task = ?", t.id)) };
 }
 const checkOut = (c: CheckRow) => ({ id: c.id, text: c.text, met: !!c.met });
 const planOut = (p: PlanRow) => ({ id: p.id, text: p.text, state: p.state });
@@ -422,7 +423,7 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   archive_project: {
     section: "Projects",
-    description: "Archives or restores a project. Archiving hides its tasks from the active board but preserves every record and conversation. Only at the user's request.",
+    description: "Archives or restores a project. Open work is paused until restored; every record and conversation is preserved. Only at the user's request.",
     params: { slug: "string · project slug · required", archived: "boolean · true to archive, false to restore · required" },
     run(input) {
       const project = mustProject(requiredString(input, "slug"));
@@ -717,19 +718,20 @@ export const ACTIONS: Record<string, ActionDef> = {
   list_tasks: {
     section: "Tasks",
     description: "The cards, with title, column, specialist, step, question, note, due, and updated_at. Filters combine.",
-    params: { project: "string · project slug · optional", column: "string · todo, in_progress, waiting_on_you, or done · optional", specialist: "string · member slug · optional" },
+    params: { project: "string · project slug · optional", column: "string · todo, in_progress, waiting_on_you, or done · optional", specialist: "string · member slug · optional", include_archived: "boolean · include paused archived-project tasks for history · default false" },
     read: true,
     run(input) {
       const project = projectField(input, "project") ?? null;
       const column = oneOf(input, "column", COLUMNS) ?? null;
       const specialist = memberField(input, "specialist") ?? null;
+      const includeArchived = bool(input, "include_archived") ?? false;
       type Row = TaskRow & { project_name: string; specialist_name: string | null };
       return all<Row>(
         `SELECT t.*, p.name AS project_name, m.name AS specialist_name
          FROM tasks t JOIN projects p ON p.slug = t.project LEFT JOIN members m ON m.slug = t.specialist
-         WHERE (? IS NULL OR t.project = ?) AND (? IS NULL OR t.column_name = ?) AND (? IS NULL OR t.specialist = ?)
+         WHERE (? OR p.archived_at IS NULL) AND (? IS NULL OR t.project = ?) AND (? IS NULL OR t.column_name = ?) AND (? IS NULL OR t.specialist = ?)
          ORDER BY CASE t.column_name WHEN 'todo' THEN 0 WHEN 'in_progress' THEN 1 WHEN 'waiting_on_you' THEN 2 ELSE 3 END, t.updated_at DESC`,
-        project, project, column, column, specialist, specialist,
+        includeArchived ? 1 : 0, project, project, column, column, specialist, specialist,
       ).map(({ project_name, specialist_name, ...t }) => ({ ...taskOut(t), project_name, specialist_name }));
     },
   },
@@ -1275,12 +1277,12 @@ export const ACTIONS: Record<string, ActionDef> = {
     read: true,
     run() {
       const columns: Record<Column, number> = { todo: 0, in_progress: 0, waiting_on_you: 0, done: 0 };
-      for (const r of all<{ column_name: Column; n: number }>("SELECT column_name, COUNT(*) AS n FROM tasks GROUP BY column_name")) {
+      for (const r of all<{ column_name: Column; n: number }>("SELECT t.column_name, COUNT(*) AS n FROM tasks t JOIN projects p ON p.slug = t.project WHERE p.archived_at IS NULL GROUP BY t.column_name")) {
         if (r.column_name in columns) columns[r.column_name] = r.n;
       }
       const waiting = all(
         `SELECT t.id, t.title, t.project, p.name AS project_name, t.specialist, t.question, t.question_kind, t.updated_at AS since
-         FROM tasks t JOIN projects p ON p.slug = t.project WHERE t.column_name = 'waiting_on_you' ORDER BY t.updated_at`,
+         FROM tasks t JOIN projects p ON p.slug = t.project WHERE p.archived_at IS NULL AND t.column_name = 'waiting_on_you' ORDER BY t.updated_at`,
       );
       const taskUnread = get<{ n: number }>("SELECT COUNT(*) AS n FROM task_updates WHERE author = 'you' AND unread_by_agent = 1")?.n ?? 0;
       const noteUnread = get<{ n: number }>("SELECT COUNT(*) AS n FROM note_comments WHERE author = 'you' AND unread_by_agent = 1")?.n ?? 0;
