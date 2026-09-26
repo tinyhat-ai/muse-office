@@ -111,3 +111,8 @@ test("feed links and owners use normalized persisted ids", () => {
   assert.equal(e.target_id, t.id); assert.equal(e.url, "/tasks/acme-proposal"); assert.equal(e.owner, "test-owner");
 });
 
+test("task progress rounds consistently with its SQL view", () => {
+  const t = act("get_task", {id:"acme-proposal"});
+  assert.equal(act("get_task", {id:t.id}).progress.percent, 58);
+  assert.equal((getDb().prepare("SELECT percent FROM task_progress WHERE task = ?").get(t.id) as any).percent, 58);
+});

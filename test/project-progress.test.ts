@@ -13,4 +13,5 @@ test("projects derive status from work without hiding a decision or calling an e
   assert.equal(waiting.percent, 33); assert.equal(waiting.nextDue, "2026-10-01");
   assert.equal(projectProgress([task("done")]).percent, 100);
   assert.equal(projectProgress([task("done")]).column, "done");
+  assert.equal(projectProgress(Array.from({length:40}, (_,i) => task(i < 23 ? "done" : "todo"))).percent, 58);
 });
