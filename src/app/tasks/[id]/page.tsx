@@ -147,14 +147,17 @@ export default async function TaskPage({ params }: Props) {
   const answer = questionRow ? [...updates].reverse().find((u) => u.author === "you" && u.reply_to === questionRow.id) : undefined;
   const pinnedId = questionRow && !answer ? questionRow.id : null;
 
-  // Files: the task's own files first, then anything attached to an update, once each.
+  // Distinct URLs remain visible even when two revisions share a filename.
   const files: FileChip[] = [];
   const seen = new Set<string>();
   const attached = updates.flatMap((u) => json<Array<Partial<FileChip>>>(u.files_json, []));
-  for (const f of [...taskFiles, ...attached]) {
-    if (!f || typeof f.name !== "string" || !f.name || seen.has(f.name)) continue;
-    seen.add(f.name);
-    files.push({ name: f.name, url: typeof f.url === "string" && f.url ? f.url : null });
+  for (const f of [...[...taskFiles].reverse(), ...[...attached].reverse()]) {
+    if (!f || typeof f.name !== "string" || !f.name) continue;
+    const url = typeof f.url === "string" && f.url ? f.url : null;
+    const key = url ?? f.name;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    files.push({ name: f.name, url });
   }
 
   const replyHint = `${audience} will see this.`;
@@ -167,7 +170,7 @@ export default async function TaskPage({ params }: Props) {
           <b>{nameOf(r.author)}</b>
           <When iso={r.created_at} />
           <br />
-          <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(r.body) }} />
+          <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(r.body, true) }} />
           {r.author === "you" && <span className="comment-state">{r.unread_by_agent ? `Awaiting ${workerName}’s reply` : updates.some((reply) => reply.reply_to === r.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
         </div>
       </div>
@@ -191,12 +194,12 @@ export default async function TaskPage({ params }: Props) {
             <When iso={u.created_at} />
           </div>
           <div className="tk-cm-b">
-            <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(u.body) }} />
+            <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(u.body, true) }} />
             {mine && <span className="comment-state">{u.unread_by_agent ? `Awaiting ${workerName}’s reply` : updates.some((reply) => reply.reply_to === u.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
             {attachedHere.length ? (
               <div className="tk-chips">
                 {attachedHere.map((f) => (
-                  <Chip key={f.name} file={{ name: f.name, url: f.url ?? null }} />
+                  <Chip key={f.url ?? f.name} file={{ name: f.name, url: f.url ?? null }} />
                 ))}
               </div>
             ) : null}
@@ -250,7 +253,7 @@ export default async function TaskPage({ params }: Props) {
 
       {isDone && <section className="card tk-result" aria-label="Completed result">
         <h2>What changed</h2>
-        <p>{task.result_summary ?? "This older task has no verified completion summary. Ask Muse to check the result, or request changes below."}</p>
+        <p>{task.result_summary ?? `This older task has no verified completion summary. Ask ${chiefName} to check the result, or request changes below.`}</p>
         {task.verification && <><h3>What was checked</h3><p>{task.verification}</p></>}
         {task.result_url && <a className="btn" href={task.result_url} target="_blank" rel="noopener noreferrer">Open result ↗</a>}
         <a className="tk-reply" href="#new-comment">Something needs fixing? Request changes below.</a>
@@ -389,7 +392,7 @@ export default async function TaskPage({ params }: Props) {
         {files.length ? (
           <div className="tk-files">
             {files.map((f) => (
-              <Chip key={f.name} file={f} />
+              <Chip key={f.url ?? f.name} file={f} />
             ))}
           </div>
         ) : (

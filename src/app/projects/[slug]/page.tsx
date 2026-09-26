@@ -25,6 +25,16 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const tasks = all<TaskRow>("SELECT * FROM tasks WHERE project = ? ORDER BY updated_at DESC", slug).sort((a, b) => RANK[a.column_name] - RANK[b.column_name]);
   const progress = projectProgress(tasks);
   const comments = all<ProjectCommentRow>("SELECT * FROM project_comments WHERE project = ? ORDER BY id", slug);
+  const roots = comments.filter((comment) => !comment.reply_to || !comments.some((parent) => parent.id === comment.reply_to));
+  function renderComment(comment: ProjectCommentRow) {
+    const replies = comments.filter((reply) => reply.reply_to === comment.id);
+    return <article key={comment.id} className={`pp-comment ${comment.reply_to ? "reply" : ""}`}>
+      <b>{comment.author === "you" ? "You" : member.get(comment.author)?.name ?? comment.author}</b><time>{ago(comment.created_at)}</time>
+      <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(comment.body, true) }} />
+      {comment.author === "you" && <span className="comment-state">{comment.unread_by_agent ? `Awaiting ${lead?.name ?? "Muse"}’s reply` : replies.some((reply) => reply.author !== "you") ? "Replied" : "Seen"}</span>}
+      {replies.map(renderComment)}
+    </article>;
+  }
   const rules = all<RuleRow>("SELECT * FROM project_rules WHERE project = ? ORDER BY learned_at DESC", slug);
   return <main className="wrap pp-wrap">
     <RefreshUpdates />
@@ -54,11 +64,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     <section className="card pp-comments" aria-labelledby="project-comments">
       <h2 id="project-comments">Project direction</h2>
       <CommentFollowUp owner={lead?.name ?? "Muse"} />
-      {comments.map((comment) => <article key={comment.id} className={`pp-comment ${comment.reply_to ? "reply" : ""}`}>
-        <b>{comment.author === "you" ? "You" : member.get(comment.author)?.name ?? comment.author}</b><time>{ago(comment.created_at)}</time>
-        <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(comment.body) }} />
-        {comment.author === "you" && <span className="comment-state">{comment.unread_by_agent ? `Awaiting ${lead?.name ?? "Muse"}’s reply` : comments.some((reply) => reply.reply_to === comment.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
-      </article>)}
+      {roots.map(renderComment)}
       <CommentForm project={slug} placeholder="Add direction for the team…" buttonLabel="Comment" />
     </section>
     <details className="card pp-process"><summary>How this project runs</summary>

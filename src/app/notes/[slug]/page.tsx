@@ -148,7 +148,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
               <div className="nt-comment">
                 <b>{comment.author === "you" ? "You" : members.get(comment.author)?.name ?? comment.author}</b>
                 <time dateTime={comment.created_at}>{ago(comment.created_at, now)}</time>
-                <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(comment.body) }} />
+                <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(comment.body, true) }} />
                 {comment.author === "you" && <span className="comment-state">{comment.unread_by_agent ? `Awaiting ${keeper?.name ?? chiefName}’s reply` : comments.some((reply) => reply.reply_to === comment.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
               </div>
               {comments.filter((reply) => reply.reply_to === comment.id).map((reply) => <div className="nt-comment nt-comment-reply" key={reply.id}>

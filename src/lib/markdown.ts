@@ -97,9 +97,9 @@ function stripLinksAndImagesInsideSvg(html: string): string {
 }
 
 /** Markdown → safe HTML for a page. Never render Markdown any other way. */
-export function renderMarkdown(markdown: string | null | undefined): string {
+export function renderMarkdown(markdown: string | null | undefined, preserveLineBreaks = false): string {
   if (!markdown) return "";
-  const html = marked.parse(markdown, { async: false }) as string;
+  const html = marked.parse(markdown, { async: false, breaks: preserveLineBreaks }) as string;
   return stripLinksAndImagesInsideSvg(sanitizeHtml(html, SANITIZE));
 }
 
