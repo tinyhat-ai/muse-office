@@ -38,7 +38,7 @@ export default async function Projects({ searchParams }: { searchParams: Promise
             return <Link key={item.slug} href={`/projects/${item.slug}`} className="pj-project-card" style={{ "--project-accent": item.color_dark } as CSSProperties}>
               <h3>{item.name}</h3><p className="pj-project-desc">{item.description}</p>
               {item.progress.question && <p className="pj-project-question">{item.progress.question}</p>}
-              <div className="pj-progress-label"><span>{item.progress.done} of {item.progress.total} tasks done</span><b>{item.progress.percent}%</b></div>
+              <div className="pj-progress-label"><span>{item.progress.done} of {item.progress.total} {item.progress.total === 1 ? "task" : "tasks"} done</span><b>{item.progress.percent}%</b></div>
               <progress value={item.progress.done} max={item.progress.total || 1} aria-label={`${item.name} task completion`} />
               <div className="pj-project-owner"><Avatar member={owner} size="sm" /><span>{owner?.name ?? "Your Muse"}</span><span aria-hidden="true">↗</span></div>
             </Link>;

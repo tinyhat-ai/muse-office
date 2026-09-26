@@ -35,7 +35,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       </div>
     </header>
     <section className="card pp-summary" aria-label="Project progress">
-      <div><b>{progress.percent}% complete</b><progress value={progress.done} max={progress.total || 1} aria-label="Tasks complete" /><span>{progress.done} of {progress.total} tasks done</span></div>
+      <div><b>{progress.percent}% complete</b><progress value={progress.done} max={progress.total || 1} aria-label="Tasks complete" /><span>{progress.done} of {progress.total} {progress.total === 1 ? "task" : "tasks"} done</span></div>
       <div><b>{progress.waiting ? "Needs your answer" : "Next milestone"}</b><p>{progress.question ?? (progress.nextDue ? `Next task due ${shortDate(progress.nextDue)}` : progress.column === "done" ? "All task results are ready below." : "The team keeps the next steps on each task.")}</p></div>
     </section>
     <section className="pp-tasks" aria-labelledby="project-tasks">

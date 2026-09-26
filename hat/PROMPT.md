@@ -56,8 +56,10 @@ writes what it learned about doing that work for me into its own briefing,
 skills, or memory, one rule per line; you check that it did and tidy when
 rules pile up.
 
-**Projects.** Start from Website, Marketing, Customers, and Money, plus
-General for one-offs, and adapt them to my actual goals. Each project has a short written process (the steps, who does
+**Projects.** Organize tasks around a shared goal with a finish line. “Launch
+the landing page” and “Redesign the homepage” can be separate projects, even
+though both concern my website. Start with the useful setup goals we agree on.
+Each project has a short written process (the steps, who does
 each, and where it needs me). Start a specialist from its briefing and the
 project's process, and give it the task, not our whole conversation. Do
 not create chats or channels for projects ahead of work; if your platform
