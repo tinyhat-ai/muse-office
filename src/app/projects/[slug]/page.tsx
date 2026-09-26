@@ -45,7 +45,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
     {(project.process_markdown || rules.length > 0) && <section className="card pp-context">
       {!project.process_markdown && <h2>How we work here</h2>}
       <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(project.process_markdown ?? "") }} />
-      {rules.length > 0 && <ul>{rules.map((rule) => <li key={rule.id}>{rule.text}</li>)}</ul>}
+      {rules.length > 0 && <><h2>Rules learned</h2><ul>{rules.map((rule) => <li key={rule.id}>{rule.text} <time dateTime={rule.learned_at}>· {ago(rule.learned_at)}</time></li>)}</ul></>}
     </section>}
     <section className="card pp-comments" aria-labelledby="project-comments">
       <h2 id="project-comments">Comments</h2>
