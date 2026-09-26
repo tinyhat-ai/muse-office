@@ -54,7 +54,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <div className="pp-task-list">{tasks.map((task) => {
         const owner = member.get(task.specialist ?? "") ?? lead;
         return <Link className="pp-task-card" key={task.id} href={`/tasks/${task.id}`}>
-          <div className="pp-task-title"><h3>{task.title}</h3><span className={`pill ${PILL[task.column_name]}`}>{COLUMN_LABEL[task.column_name]}</span></div>
+          <div className="pp-task-title"><h3>{task.title}</h3><span className={`pill ${project.archived_at && task.column_name !== "done" ? "next" : PILL[task.column_name]}`}>{project.archived_at && task.column_name !== "done" ? "Paused" : COLUMN_LABEL[task.column_name]}</span></div>
           <p>{task.column_name === "done" ? task.result_summary ?? "Open this task to review its recorded result." : task.question ?? task.note ?? task.job_definition}</p>
           <div className="pp-task-meta"><span><Avatar member={owner} size="xs" /> {owner?.name ?? "Muse"}</span><span>{task.due ? `Due ${shortDate(task.due)}` : `Updated ${ago(task.updated_at)}`}</span><b>{task.column_name === "done" ? "Review result ↗" : "Open task ↗"}</b></div>
         </Link>;

@@ -241,17 +241,17 @@ export default async function TaskPage({ params }: Props) {
       <h1 className="title">{task.title}</h1>
       {project?.archived_at && <p className="lede">Archived project. Work is paused; restore this project in Manage projects to continue.</p>}
       <div className="tk-meta">
-        <span className={`tk-st ${task.column_name}`}>{COLUMN_LABEL[task.column_name] ?? task.column_name}</span>
+        <span className={`tk-st ${project?.archived_at && !isDone ? "todo" : task.column_name}`}>{project?.archived_at && !isDone ? "Paused" : COLUMN_LABEL[task.column_name] ?? task.column_name}</span>
         {worker ? (
           <span className="tk-who">
             <Avatar member={worker} size="xs" />
-            {isDone ? `Done by ${workerName}` : `${workerName} is on it`}
+            {isDone ? `Done by ${workerName}` : project?.archived_at ? `Owner: ${workerName}` : `${workerName} is on it`}
           </span>
         ) : null}
         <span>
           {waiting ? `Waiting ${span(task.updated_at)}` : `Updated ${ago(task.updated_at)}`}
         </span>
-        {task.due && !isDone ? <span>Due {dueWord(task.due)}</span> : null}
+        {task.due && !isDone && !project?.archived_at ? <span>Due {dueWord(task.due)}</span> : null}
       </div>
 
       {isDone && <section className="card tk-result" aria-label="Completed result">
