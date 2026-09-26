@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS members (
 
 -- ------------------------------------------------------------ Projects
 CREATE TABLE IF NOT EXISTS projects (
-  slug             TEXT PRIMARY KEY,            -- 'website', 'marketing', 'customers', 'money', 'general'
+  slug             TEXT PRIMARY KEY,            -- related-work collection: 'website', 'personal', 'school'
   name             TEXT NOT NULL,
   description      TEXT,                        -- one line
   color            TEXT NOT NULL,               -- pastel fill, e.g. '#f2e4a9'
@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS projects (
   kind             TEXT,                        -- how it runs: 'Build', 'Publish', 'Follow up', 'Money', 'General'
   process_markdown TEXT,                        -- the process, written out (rendered on the project page)
   done_when        TEXT,                        -- one line
+  archived_at      TEXT,                        -- removed from the active board; restore keeps every task
   sort_order       INTEGER NOT NULL DEFAULT 0,
   created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
@@ -98,6 +99,30 @@ CREATE TABLE IF NOT EXISTS task_plan (                  -- "Plan"
   text     TEXT NOT NULL,
   state    TEXT NOT NULL DEFAULT 'later'        -- 'done' | 'now' | 'later'
 );
+
+-- Read-only progress contracts. Percentages are derived from durable work,
+-- never independently writable estimates. Filtering the board does not alter them.
+-- A task with no criteria has unknown progress, even if a legacy status says Done.
+CREATE VIEW IF NOT EXISTS task_progress AS
+SELECT t.id AS task, 'done_when' AS basis,
+       COUNT(c.id) AS total, COALESCE(SUM(c.met != 0), 0) AS met,
+       CASE WHEN COUNT(c.id) = 0 THEN NULL
+            ELSE CAST(ROUND(100.0 * SUM(c.met != 0) / COUNT(c.id)) AS INTEGER) END AS percent
+FROM tasks t LEFT JOIN task_checks c ON c.task = t.id GROUP BY t.id;
+
+-- This summarizes the current task collection, not the lifetime end of a project.
+-- A project can be an ongoing area such as Personal or School.
+CREATE VIEW IF NOT EXISTS project_progress AS
+SELECT p.slug AS project, COUNT(t.id) AS total,
+       COALESCE(SUM(t.column_name = 'done'), 0) AS done,
+       COALESCE(SUM(t.column_name = 'waiting_on_you'), 0) AS waiting,
+       CASE WHEN COUNT(t.id) = 0 THEN 0
+            ELSE CAST(ROUND(100.0 * SUM(t.column_name = 'done') / COUNT(t.id)) AS INTEGER) END AS percent,
+       CASE WHEN SUM(t.column_name = 'waiting_on_you') > 0 THEN 'waiting_on_you'
+            WHEN COUNT(t.id) > 0 AND SUM(t.column_name = 'done') = COUNT(t.id) THEN 'done'
+            WHEN SUM(t.column_name IN ('in_progress', 'done')) > 0 THEN 'in_progress'
+            ELSE 'todo' END AS column_name
+FROM projects p LEFT JOIN tasks t ON t.project = p.slug GROUP BY p.slug;
 
 CREATE TABLE IF NOT EXISTS task_files (                 -- "Files from this task"
   id       INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -230,4 +255,20 @@ CREATE TABLE IF NOT EXISTS screenshots (
   task TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
   mime TEXT NOT NULL,
   data BLOB NOT NULL
+);
+
+-- Durable Office-wide activity, written atomically with every supported mutation.
+-- IDs are monotonic even after deletion; checkpoints never depend on timestamps.
+-- No foreign keys: history survives removal of its target.
+CREATE TABLE IF NOT EXISTS office_updates (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source TEXT NOT NULL,
+  target_id TEXT NOT NULL,
+  target_title TEXT NOT NULL,
+  owner TEXT,
+  actor TEXT NOT NULL,
+  action TEXT NOT NULL,
+  changes_json TEXT NOT NULL DEFAULT '{}',
+  comment_id INTEGER,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );

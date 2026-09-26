@@ -31,6 +31,8 @@ function open(): Db {
   if (!contactCols.includes("in_funnel")) db.exec("ALTER TABLE contacts ADD COLUMN in_funnel INTEGER NOT NULL DEFAULT 1");
   const reportCols = (db.prepare("PRAGMA table_info(reports)").all() as Array<{ name: string }>).map((c) => c.name);
   if (!reportCols.includes("source_url")) db.exec("ALTER TABLE reports ADD COLUMN source_url TEXT");
+  const projectCols = (db.prepare("PRAGMA table_info(projects)").all() as Array<{ name: string }>).map((c) => c.name);
+  if (!projectCols.includes("archived_at")) db.exec("ALTER TABLE projects ADD COLUMN archived_at TEXT");
   const taskCols = (db.prepare("PRAGMA table_info(tasks)").all() as Array<{ name: string }>).map((c) => c.name);
   for (const column of ["result_summary", "verification", "result_url"]) {
     if (!taskCols.includes(column)) db.exec(`ALTER TABLE tasks ADD COLUMN ${column} TEXT`);
@@ -106,7 +108,7 @@ export interface MemberRow {
 export interface ProjectRow {
   slug: string; name: string; description: string | null; color: string; color_dark: string;
   lead: string | null; kind: string | null; process_markdown: string | null; done_when: string | null;
-  sort_order: number; created_at: string; updated_at: string;
+  archived_at: string | null; sort_order: number; created_at: string; updated_at: string;
 }
 export interface StepRow { id: number; project: string; position: number; name: string; who: string; note: string | null; needs_you: number }
 export interface RuleRow { id: number; project: string; text: string; origin: string; learned_at: string }
