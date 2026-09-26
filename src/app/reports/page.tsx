@@ -562,7 +562,9 @@ export default function ReportsPage() {
   const metrics = all<MetricRow>("SELECT * FROM metrics ORDER BY report, id");
   // Money questions first: they carry the amount the line quotes.
   const waiting = all<TaskRow>(
-    "SELECT * FROM tasks WHERE column_name = 'waiting_on_you' ORDER BY CASE WHEN question_kind = 'money' THEN 0 ELSE 1 END, updated_at",
+    `SELECT t.* FROM tasks t JOIN projects p ON p.slug = t.project
+     WHERE t.column_name = 'waiting_on_you' AND p.archived_at IS NULL
+     ORDER BY CASE WHEN t.question_kind = 'money' THEN 0 ELSE 1 END, t.updated_at`,
   );
   const ctx: Ctx = {
     chiefName: chief?.name ?? "your chief of staff",

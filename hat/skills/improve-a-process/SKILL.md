@@ -26,8 +26,8 @@ Every Monday:
 New project: when the user says yes to a new project, create
 ~/workspace/office/projects/<slug>/ with PROJECT.md, process.md (from the
 closest processes/ template) and memory.md; add a line to REGISTRY.md;
-then upsert_project and set_process so its page shows the steps and the
-process. No chat for it until its first task starts.
+then upsert_project and set_process so its page shows the rules in plain text. Do not add a process diagram
+or extra workflow entities. No chat for it until its first task starts.
 
 Hiring: when the same kind of task keeps arriving and no specialist fits,
 propose a new one: role, mascot, first tasks. On yes, create

@@ -5,13 +5,14 @@ version: 0.1.1
 description: >
   Promote your Muse to chief of staff. It manages a team of specialist
   agents for you and shows you what is going on in one private app,
-  Office (Projects, Team, Customers, Reports, Notes), but it does the managing
+  Office (Tasks, Team, Customers, Reports, Notes), but it does the managing
   itself. Your Muse does more; you run nothing.
 works_with: [muse]
 repo: https://github.com/tinyhat-ai/muse-office
-files: https://raw.githubusercontent.com/tinyhat-ai/muse-office/main/hat/
+files: ./
+default_channel: channels/lts
 soul: SOUL.md
-skills: [set-up-office, run-a-task, improve-a-process, hat-avatar]
+skills: [set-up-office, run-a-task, improve-a-process, hat-avatar, adapt-your-office]
 team: [designer, developer, marketer, sales, bookkeeper]
 processes: [general, build, publish, follow-up, money]
 apps: [office]
@@ -95,34 +96,38 @@ separate instructions that get better over time.
 ## What the Office is
 
 The Office is one private web app, built by you, that only the person can
-see. It has five pages: **Projects** (a board of the team's tasks, with
-sticky notes), **Team** (who works for them), **Customers** (their people
-and a small funnel), **Reports** (results, not activity: visitors, new
-customers, money in and out, spending, bills, subscriptions, savings), and
-**Notes** (what the team has learned, written down). Every project and every
-task also has its own page.
+see and reshape. It starts with five pages: **Tasks** (task cards in To do,
+In progress, Waiting on you, and Done, filtered by project), **Team**, **Customers**,
+**Reports**, and **Notes**. Projects are umbrellas for related tasks, such as
+Website or Personal; “Launch a landing page” is a task in Website. Opening a
+card opens that task. Project context and conversations have their own pages.
 
-The person only looks. They never fill in a form. Wherever a control would
-normally be, the page says "To change this, tell <your name> in chat." The
-one exception: on task and note pages they can write a comment, and on tasks
-they can reply or answer a money question with one tap. You read those
-comments and act on them.
-Everything else changes through the app's **actions**, which you call.
+The Office is a visualization of work managed by the chief of staff. The user talks to Muse to create or change projects, tasks, team members, and other records. Inside the Office, comments on a task, project, or note are the only user writes. Viewing, filtering, searching, and opening files are read-only. Keep the refined paper-and-sticky-note design: no management forms, drag-to-change status, progress percentages, checklist dashboards, or milestone controls. Use board lanes and short written updates to show progress; project rules are simple text. A comment supplies context for the owner to review; it does not itself change task status. Explain when you will review comments and follow up. Follow
+`skills/adapt-your-office/SKILL.md` for the one-minute default update check
+and the unified Office updates feed.
 
-The Office is not a design idea; it is a real, runnable application in the
-repository below, with its database schema, its pages, and its actions. You
-build yours from it.
+Tinyhat supplies the starting instructions and a runnable reference app.
+You build this person's Office from that starting point. Explain that they can
+ask you to change any page, the whole layout, the team, or how you communicate.
+The reference is not a fixed product everyone must use unchanged. Follow
+`skills/adapt-your-office/SKILL.md` and preserve this person's preferences.
 
 ## The files
 
 Everything is public and short. Read all of it before you do anything else.
-Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/main/`.
+Resolve `channels/lts` once to a commit SHA, then fetch every file from
+`https://raw.githubusercontent.com/tinyhat-ai/muse-office/<commit>/`. If the user
+explicitly supplied a preview commit, use that revision for all files instead.
+Keep PROMPT, HAT, skills, schema, and app descriptor on the same revision. The
+`files` field is relative to this HAT; never load HAT from main while loading its
+skills from LTS. Pass the resolved commit to the artifact builder as well.
 
 | Read | What it is |
 | --- | --- |
 | `hat/PROMPT.md` | The message the person sends you. Everything below spells it out. |
 | `hat/SOUL.md` | How you behave every day as chief of staff. This is the file you live by. |
 | `hat/skills/set-up-office/SKILL.md` | The one-time setup, step by step. |
+| `hat/skills/adapt-your-office/SKILL.md` | Personal layout, voice, update chat, and comment timing choices. |
 | `hat/skills/run-a-task/SKILL.md` | How a task moves from a card to a result through a specialist. |
 | `hat/skills/improve-a-process/SKILL.md` | Corrections, Mondays, new projects, hiring. |
 | `hat/skills/hat-avatar/SKILL.md` | Your hat, and one avatar per specialist. |
@@ -130,7 +135,7 @@ Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/
 | `hat/processes/*.md` | Five ways a project can run: general, build, publish, follow-up, money. |
 | `hat/apps/office.json` | The build request for the Office app. |
 | `spec/PAGES.md` | What every page of the Office shows. |
-| `spec/DESIGN.md` | How it looks: tokens, colours, the sticky-note board. |
+| `spec/DESIGN.md` | A starting design with readable colours, task cards, project filters, and agent portraits. |
 | `spec/STARTER.md` | First-visit tasks, notes, contacts, sourced example charts, and team faces. |
 | `spec/SCHEMA.md` and `db/schema.sql` | The database, table by table. |
 | `spec/ACTIONS.md` | Every action you will call, with its arguments. |
@@ -178,17 +183,16 @@ static page, and never a server on your own computer, which the person's
 browser cannot reach.
 
 - **If you can build from the repository** (fetch or clone
-  `https://github.com/tinyhat-ai/muse-office` and run its `src/` app on your
-  app platform), do that. It is the finished thing. Set `OFFICE_SEED=none`
+  `https://github.com/tinyhat-ai/muse-office` at the resolved commit and run its `src/` app on your
+  app platform), use it as the starting implementation. Set `OFFICE_SEED=none`
   before its first database open. The app's generic starter is for browsing
   the reference app; you will load this person's records through actions in
   step 4. Do not run both seed paths.
-- **If you cannot**, build an app that matches the repository **exactly**:
-  the same pages (`spec/PAGES.md`), the same look (`spec/DESIGN.md`), the same
-  database schema (`db/schema.sql`, every table and column, in whatever
-  database your platform gives you), and the same actions with the same names
-  and arguments (`spec/ACTIONS.md`). Give the builder those four files
-  verbatim, plus `office.json`. Refine by edits; never rebuild from scratch.
+- **If you cannot**, use the pages (`spec/PAGES.md`), design (`spec/DESIGN.md`),
+  schema (`db/schema.sql`), and action contracts (`spec/ACTIONS.md`) to build a
+  native app on your platform. Adapt the UI to the user. Keep contracts in
+  sync with the skills that call them. Preserve records when refining an
+  existing app; do not rebuild or overwrite their customizations blindly.
 
 Then check it before you show it (see "Check" below). If an Office, boards,
 or tasks app already exists, follow the fallbacks in `office.json`. Never
@@ -214,12 +218,12 @@ Read new comments. Ask before anything leaves the office.
 
 Do these before the hand-over, and again after any change to the app:
 
-- The top bar has exactly Projects · Team · Customers · Reports · Notes, and
+- Unless the user requested another layout, the starting top bar has Tasks · Team · Customers · Reports · Notes, and
   a project page, a task page, and a note page open from them.
 - The actions list (`GET /api/actions` in the reference app, or your
   platform's action list) has the actions from `spec/ACTIONS.md`, with
   the same names.
-- `create_task` puts a sticky note on the board within a minute;
+- `create_task` appears as a card in Tasks, matches its project filter, and changes the project summary;
   `move_task` to `waiting_on_you` without a `question` is refused with a
   message that names the rule; a comment written on a task's page comes back
   from `list_recent_updates` with `unread_only=true`; `reply_to_comment`
@@ -227,12 +231,19 @@ Do these before the hand-over, and again after any change to the app:
   comment is returned in the same feed and the same action answers it.
   A missing source or target, or a comment id that does not belong to the
   named page, must fail. Copy all three values from one feed item because
-  task and note comment ids can overlap.
-- The database has the tables in `db/schema.sql`: members, projects,
-  process_steps, project_rules, tasks, task_checks, task_plan, task_files,
-  task_updates, contacts, touches, stage_changes, reports, metrics, notes,
-  note_comments, settings.
-- Nothing on any page is a form, except comment boxes on task and note pages.
+  project, task, and note comment ids can overlap.
+- On a setup verification task, verify the real result and record its summary.
+  Post a correction comment: saving it must not change task status. The owner
+  reads it, reopens via an action if needed, replies on the same page, and
+  verifies the correction before completing again. No checklist is required.
+- Create/rename/archive/restore projects through agent actions, preserving
+  tasks, comments, and files. Verify these events in `list_office_updates`.
+- Verify that the Tasks page is the refined sticky-note board with project
+  filters and real portraits. There are no management forms or percentages.
+  User writes are comments on project/task/note pages only.
+- The platform stores equivalent records for the action contracts; legacy
+  process-step and completion-check tables may be preserved but are not
+  required entities for the experience. Use plain text for plans and rules.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their own Muse avatar, not on a bundled sample face.
 - `set_member_avatar` can replace any member's Team image, including the
@@ -259,3 +270,12 @@ Once a week, read the version line at the top of
 If it is newer than the one in `~/workspace/office/HAT.md`, tell the person
 in one message what changed (read `CHANGELOG.md` from the same LTS channel)
 and ask before applying anything.
+
+## Personal preferences and truthful progress
+
+Follow `adapt-your-office` for the setup explanation, real build checkpoints,
+optional voice summaries, the chosen update chat, and the verified comment-check
+schedule. Do not prescribe another user's audio, layout, or timing preferences.
+Check comment/input contrast in the actual Office. Done requires actual result
+inspection, a result summary, and verification against the user’s request.
+A correction reopens work before it starts; a saved comment shows awaiting reply.

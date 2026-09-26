@@ -1,20 +1,30 @@
+"use client";
+
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, FocusEvent } from "react";
 import "@/app/projects/projects.css";
 
 /**
- * One square above the board: the project's pastel with its name top-left and its
- * task count bottom-left. Without a colour it is the white "All projects" tile.
- * The chosen tile wears an ink outline.
+ * The main target filters tasks; the separate footer opens project context.
+ * Keeping sibling links makes both destinations explicit and keyboard accessible.
  */
-export function ProjectTile({ href, name, count, color, chosen }: { href: string; name: string; count: number; color?: string; chosen: boolean }) {
+export function ProjectTile({ href, projectHref, name, count, color, chosen }: { href: string; projectHref?: string; name: string; count: number; color?: string; chosen: boolean }) {
   const fill = color ? ({ "--c": color } as CSSProperties) : undefined;
+  function revealTile(event: FocusEvent<HTMLAnchorElement>) {
+    // Pointer focus happens before click/tap completes; moving its target here
+    // would lose that click. Only keyboard focus needs automatic scrolling.
+    if (!event.currentTarget.matches(":focus-visible")) return;
+    // Native focus scrolling can leave a partially visible tile clipped. Reveal
+    // the whole tile; the row's scroll-padding also reserves room for its ring.
+    event.currentTarget.parentElement?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }
   return (
-    <Link href={href} className={"pj-tile" + (color ? "" : " all") + (chosen ? " on" : "")} style={fill} aria-current={chosen ? "true" : undefined}>
-      <span className="pj-tile-nm">{name}</span>
-      <span className="pj-tile-n">
-        {count} {count === 1 ? "task" : "tasks"}
-      </span>
-    </Link>
+    <div className={"pj-tile" + (color ? "" : " all") + (chosen ? " on" : "")} style={fill}>
+      <Link href={href} className="pj-tile-filter" aria-current={chosen ? "true" : undefined} onFocus={revealTile}>
+        <span className="pj-tile-nm">{name}</span>
+        <span className="pj-tile-n">{count} {count === 1 ? "task" : "tasks"}</span>
+      </Link>
+      {projectHref ? <Link href={projectHref} className="pj-tile-open" onFocus={revealTile} aria-label={`Open project: ${name}`}>Open project <span aria-hidden="true">→</span></Link> : null}
+    </div>
   );
 }

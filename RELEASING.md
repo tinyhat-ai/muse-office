@@ -5,8 +5,20 @@ name. `channels/latest` follows the newest published release, while
 `channels/lts` is the stable promotion channel. The Muse landing page copies
 `hat/PROMPT.md` from LTS, so work merged to `main` does not change the
 message people send their Muse until the stable channel is promoted. The
-current message still links to build files on `main`; promoting the
-channel pins the message text, not all files Muse will read.
+hat resolves that same LTS channel once to a commit and uses it for every build file. Promote the complete tested
+release before shipping website copy that describes its new behavior.
+When testing unreleased changes, explicitly give Muse the candidate commit
+and have it read every build file from that commit instead of the LTS links.
+Keep the public copy button on LTS until promotion is complete.
+
+**Transition from v0.1.1:** its live copied message still opens the repository
+on `main`. Between merging this change and promoting it, that older message can
+reach the new HAT.md, which refers to older LTS files lacking the new skill and
+actions. Release and promote this change to LTS immediately after merging;
+coordinate these as one rollout. The message text stays unchanged until
+promotion, but its current repository link means its build behavior can change
+earlier. Once this release is on LTS, the explicit channel and commit rules
+remove that mixed-version path for newly copied messages.
 
 Both channel branches are protected and restricted to the maintainer. Agents
 can prepare reviewable promotion PRs but cannot move those branches themselves.
@@ -57,3 +69,24 @@ The actions' names and arguments (`spec/ACTIONS.md`) and the database schema
 (`db/schema.sql`) are the contract between a Muse and its Office. Changing
 either is a minor bump at least, and the changelog entry must say what a
 Muse has to change in an Office it already built.
+
+For the next release, call out the new completion and comment contracts:
+create tasks open; check the actual result against the request before Done;
+provide `result_summary` and `verification`; answer comments on their original
+page before marking them read. Update scheduled checks to consume the durable,
+paginated `list_office_updates` feed, saving its checkpoint after handling the
+whole batch. Also drain `list_recent_updates` for unread comment retries,
+including project comments. New Offices default to a one-minute check. Inspect
+the running job and record its actual interval in `comment_check_minutes`;
+preserve an existing user's chosen schedule and clear the setting if its job
+stops. Keep the existing Office's records and customizations.
+
+The Tasks board keeps the refined sticky-note design and filters tasks by
+project. All management happens through Muse; user writes in the artifact
+are comments only. Remove any preview project forms, percentages, mandatory
+checklists, and comment-triggered status changes. Preserve existing legacy
+checklist/plan/process data but do not require it or show management controls.
+Apply the additive `archived_at` and `office_updates` changes. Agent actions
+archive reversibly. Preserve portraits, files, comments, and task/project links.
+If the Office database is reset or replaced, discard its old feed checkpoint
+and review the new history from zero.

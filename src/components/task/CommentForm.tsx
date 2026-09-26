@@ -7,12 +7,12 @@ import { useRouter } from "next/navigation";
 // update. Both post to /api/comments, which stores a task_updates row with
 // author 'you' and unread_by_agent = 1, then the page re-reads itself.
 
-export type ApiResult = { ok: true; data?: unknown } | { ok: false; error?: string };
+export type ApiResult = { ok: true; data?: { follow_up?: string } } | { ok: false; error?: string };
 
-export async function postComment(payload: { task: string; body: string; reply_to?: number | null }): Promise<ApiResult> {
+export async function postComment(payload: { task?: string; note?: string; project?: string; body: string; reply_to?: number | null; screenshot?: string }): Promise<ApiResult> {
   // reply_to is left out of the JSON when there is nothing to reply to, so
   // the API sees a plain comment.
-  const body: Record<string, unknown> = { task: payload.task, body: payload.body };
+  const body: Record<string, unknown> = { ...payload };
   if (payload.reply_to != null) body.reply_to = payload.reply_to;
   try {
     const res = await fetch("/api/comments", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
@@ -25,7 +25,9 @@ export async function postComment(payload: { task: string; body: string; reply_t
 }
 
 interface CommentFormProps {
-  task: string;
+  task?: string;
+  note?: string;
+  project?: string;
   replyTo?: number | null;
   placeholder: string;
   buttonLabel: string;
@@ -38,16 +40,21 @@ interface CommentFormProps {
   onDone?: () => void;
 }
 
-export function CommentForm({ task, replyTo, placeholder, buttonLabel, compact, hint, id, autoFocus, onDone }: CommentFormProps) {
+export function CommentForm({ task, note, project, replyTo, placeholder, buttonLabel, compact, hint, id, autoFocus, onDone }: CommentFormProps) {
   const router = useRouter();
   const ref = useRef<HTMLTextAreaElement>(null);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState("");
+  const [screenshot, setScreenshot] = useState<string>();
+  const fileRef = useRef<HTMLInputElement>(null);
+  const fileVersion = useRef(0);
+  const [readingFile, setReadingFile] = useState(false);
   // The refresh is a transition so the form stays disabled until the new
   // conversation is on screen, not just until the POST returns.
   const [refreshing, startTransition] = useTransition();
-  const busy = sending || refreshing;
+  const busy = sending || refreshing || readingFile;
 
   useEffect(() => {
     if (autoFocus) ref.current?.focus();
@@ -62,13 +69,17 @@ export function CommentForm({ task, replyTo, placeholder, buttonLabel, compact, 
     }
     setSending(true);
     setError(null);
-    const res = await postComment({ task, body: text, reply_to: replyTo });
+    setSaved("");
+    const res = await postComment({ task, note, project, body: text, reply_to: replyTo, screenshot });
     setSending(false);
     if (!res.ok) {
       setError(res.error || "That did not save. Try again.");
       return;
     }
     setBody("");
+    setScreenshot(undefined);
+    if (fileRef.current) fileRef.current.value = "";
+    setSaved(`Saved. ${res.data?.follow_up ?? "Awaiting the owner’s reply here."}`);
     startTransition(() => router.refresh());
     onDone?.();
   }
@@ -100,12 +111,27 @@ export function CommentForm({ task, replyTo, placeholder, buttonLabel, compact, 
         rows={compact ? 2 : 3}
         disabled={busy}
       />
+      {task && !compact && <label className="comment-attachment">Attach a screenshot <span>(PNG, JPG or WebP, up to 4 MB)</span>
+        <input ref={fileRef} type="file" accept="image/png,image/jpeg,image/webp" disabled={busy} onChange={(event) => {
+          const version = ++fileVersion.current;
+          setScreenshot(undefined);
+          const file = event.target.files?.[0];
+          if (!file) return;
+          if (file.size > 4 * 1024 * 1024) { setError("Choose a screenshot smaller than 4 MB."); event.target.value = ""; return; }
+          const reader = new FileReader();
+          setReadingFile(true);
+          reader.onload = () => { if (version === fileVersion.current) { setScreenshot(String(reader.result).split(",")[1]); setError(null); setReadingFile(false); } };
+          reader.onerror = () => { if (version === fileVersion.current) { setError("Could not read that screenshot."); setReadingFile(false); } };
+          reader.readAsDataURL(file);
+        }} />
+      </label>}
       <div className="row">
         {hint ? <span className={compact ? "hint" : "tk-onlyhere"}>{hint}</span> : <span />}
-        <button type="submit" className="btn" disabled={busy}>
-          {busy ? "Sending…" : buttonLabel}
+        <button type="submit" className="btn" disabled={busy || !body.trim()}>
+          {busy ? "Saving…" : buttonLabel}
         </button>
       </div>
+      {saved && <p className="comment-state" role="status">{saved}</p>}
       {error ? (
         <p className="tk-form-err" role="alert">
           {error}
@@ -134,7 +160,7 @@ export function ReplyToggle({ task, replyTo, label, placeholder, hint }: ReplyTo
       </button>
       {open ? (
         <div className="tk-rbox">
-          <CommentForm task={task} replyTo={replyTo} placeholder={placeholder} buttonLabel="Reply" compact hint={hint} autoFocus onDone={() => setOpen(false)} />
+          <CommentForm task={task} replyTo={replyTo} placeholder={placeholder} buttonLabel="Reply" compact hint={hint} autoFocus  />
         </div>
       ) : null}
     </>

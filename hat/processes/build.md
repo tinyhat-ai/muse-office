@@ -11,7 +11,7 @@ Lead: Developer. Design: Designer.
 5. Your OK — the user looks at the preview (waiting on you).
 6. Launch — the Developer puts it live and writes down how to change it.
 
-## Done when
+## Result
 
 It is live and the how-to is in Notes.
 

@@ -4,6 +4,10 @@ Muse Office is an open source reference app for the Chief of Staff hat. The
 [README](../README.md) explains what it does for a person using Muse. This page
 covers the app, its actions, and its files.
 
+Before contributing, read the [Office product skill](../.agents/skills/office-product-model/SKILL.md).
+It keeps changes aligned with chat as the main interface, Office as the work
+visualization, and contextual comments as the input exception.
+
 ## Run the reference app
 
 ```bash
@@ -21,7 +25,7 @@ next start seeds the starter again. Use `OFFICE_SEED=demo npm run dev` for the
 fictional consultant showcase shown in some screenshots, or
 `OFFICE_SEED=none npm run dev` for an empty database.
 
-Most pages are for reading. A person can comment on tasks and notes, and reply
+Most pages are for reading. A person can comment on tasks, projects, and notes, and reply
 to a task update. Muse changes the other records through Office actions.
 
 ## What the starter shows
@@ -82,5 +86,8 @@ is in [the actions specification](../spec/ACTIONS.md).
 [`channels/lts`](https://github.com/tinyhat-ai/muse-office/tree/channels/lts)
 carries the stable promotion message. [`channels/latest`](https://github.com/tinyhat-ai/muse-office/tree/channels/latest)
 tracks the newest published release. `main` is for upcoming changes and may
-move ahead of both channels. The message currently links Muse to build files
-on `main`, so those files can change independently of the LTS message.
+move ahead of both channels. The hat's build-file links use `channels/lts`
+too. For an unreleased integration test, give Muse the candidate commit and
+explicitly read all build files from it; the public LTS links will not contain
+new files until the complete release is promoted. See the rollout checks in
+[Releasing](../RELEASING.md).

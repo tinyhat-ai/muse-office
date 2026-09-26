@@ -16,6 +16,7 @@ test("first visit contains real setup, source-backed charts, and no invented cus
     assert.equal(count("members"), 6);
     assert.equal(count("projects"), 5);
     assert.equal(count("tasks"), 7);
+    assert.equal(count("task_checks"), 0, "the starter does not require a formal checklist");
     assert.equal(count("notes"), 3);
     assert.equal(count("reports"), 12);
     assert.equal(count("metrics"), 10);

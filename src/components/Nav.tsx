@@ -5,7 +5,7 @@ import { get } from "@/lib/db";
 import { ago } from "@/lib/time";
 
 const TABS = [
-  ["/projects", "Projects"],
+  ["/projects", "Tasks"],
   ["/team", "Team"],
   ["/customers", "Customers"],
   ["/reports", "Reports"],
@@ -16,9 +16,10 @@ export async function Nav() {
   const h = await headers();
   const current = h.get("x-pathname") || "";
   const last = get<{ t: string }>(
-    "SELECT MAX(t) AS t FROM (SELECT MAX(updated_at) t FROM tasks UNION SELECT MAX(updated_at) FROM contacts UNION SELECT MAX(updated_at) FROM notes UNION SELECT MAX(updated_at) FROM reports)",
+    "SELECT MAX(t) AS t FROM (SELECT MAX(updated_at) t FROM tasks UNION SELECT MAX(updated_at) FROM contacts UNION SELECT MAX(updated_at) FROM notes UNION SELECT MAX(updated_at) FROM reports UNION SELECT MAX(created_at) FROM office_updates UNION SELECT MAX(updated_at) FROM projects UNION SELECT MAX(updated_at) FROM members)",
   );
   return (
+    <>
     <header className="nav">
       <Link href="/projects" className="brand">
         <Image src="/icon.svg" width={28} height={28} alt="" />
@@ -33,5 +34,6 @@ export async function Nav() {
       </nav>
       <span className="upd">{last?.t ? `Updated ${ago(last.t)}` : ""}</span>
     </header>
+    </>
   );
 }

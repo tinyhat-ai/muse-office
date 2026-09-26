@@ -3,10 +3,10 @@
   "kind_reason": "The Office keeps the person's tasks, customers, numbers, and notes, so it needs its own database and its own actions. It is private to one person and must never have a public link. A static page cannot do any of that.",
   "name": "Office",
   "slug": "office",
-  "verbatim_request": "Build me a private Office app where my Muse organizes work with a team I can change. The initial specialist roles are examples; I can ask Muse to create, modify, or retire agents. Five pages in one top bar: Projects, Team, Customers, Reports, Notes, plus a page for every project, every task, and every note. I mostly read; I can comment on task and note pages and reply to a task update (including one-tap Yes / Not yet on a money question). Everything else changes through the app's actions, which my chief of staff calls. Give every open task an owner and every note a keeper. Expose newest-first, cursor-paginated task and note updates so Muse can check comments on a schedule and route follow-up to the owner. Build it from https://github.com/tinyhat-ai/muse-office: the same pages (spec/PAGES.md), the same look (spec/DESIGN.md), the same database schema (db/schema.sql), and the same actions with the same names and arguments (spec/ACTIONS.md). Notes must render Markdown tables and fenced Mermaid diagrams, not show their source punctuation as prose.",
+  "verbatim_request": "Build my private Office from this repository as a useful first version I can shape by talking to Muse. The Office is a visualization of work managed by the chief of staff. The user talks to Muse to create or change projects, tasks, team members, and other records. Inside the Office, comments on a task, project, or note are the only user writes. Viewing, filtering, searching, and opening files are read-only. Keep the refined paper-and-sticky-note design: no management forms, drag-to-change status, progress percentages, checklist dashboards, or milestone controls. Use board lanes and short written updates to show progress; project rules are simple text. A comment supplies context for the owner to review; it does not itself change task status. Start with Tasks, Team, Customers, Reports, and Notes. Projects group related tasks: Website, Personal, or School; a landing-page launch is a task in Website. Preserve existing records, actual agent portraits, personal preferences, refined paper colours and sticky-note cards. Keep contextual comments, private screenshot attachments, useful files and real checked results. Explain that Muse builds my Office from Tinyhat’s starting instructions. Notes render Markdown and Mermaid. Read spec/PAGES.md, spec/DESIGN.md, and spec/ACTIONS.md at the resolved commit. Provide the durable unified updates feed and truthful comment-save feedback. Do not impose voice messages or invent an immediate wake trigger.",
   "source": {
     "repo": "https://github.com/tinyhat-ai/muse-office",
-    "branch": "main",
+    "branch": "channels/lts",
     "app": "the repository root is a Next.js app (src/); for a person's Office, set OFFICE_SEED=none before its first run, then npm install && npm run dev serves it on port 3007 with a SQLite file in data/. The default starter seed is only for browsing the reference app.",
     "schema": "db/schema.sql",
     "pages": "spec/PAGES.md",
@@ -14,7 +14,8 @@
     "starter": "spec/STARTER.md",
     "actions": "spec/ACTIONS.md",
     "actions_catalog": "GET /api/actions on the running app lists every action with its arguments",
-    "note": "You (the Muse) read these files; the app itself needs no web access and makes no external calls. When your builder fetches the repository, the platform asks the person to confirm access to github.com for this artifact; that confirmation is expected and the person should allow it. A declined confirmation stops the build; ask them to try again."
+    "note": "You (the Muse) read these files; the app itself needs no web access and makes no external calls. When your builder fetches the repository, the platform asks the person to confirm access to github.com for this artifact; that confirmation is expected and the person should allow it. A declined confirmation stops the build; ask them to try again.",
+    "revision_rule": "Resolve source.branch once to a commit SHA and use that commit for every file and the builder checkout. If the user explicitly selected a preview commit, use it for every file instead. Never mix main, a preview, and LTS."
   },
   "capabilities": {
     "public_web_read": false,
@@ -23,26 +24,30 @@
   "seed_data": {
     "note": "Choose exactly one seed path. For a person's Office, set OFFICE_SEED=none before the first database open, then load spec/STARTER.md through actions with the person's real name and chosen specialists. Do not run the reference app's generic starter and then load these actions: that creates duplicate chiefs, tasks, contacts, notes, and reports. The default generic starter is only for browsing the reference app; OFFICE_SEED=demo is a fictional showcase. Never invent business results or customers to fill space.",
     "members_from": "hat/team/*.md are optional starter briefings, not a fixed roster; load the chief (is_chief = 1) and the specialists the person accepts with upsert_member",
-    "projects_from": "the projects the person said yes to, loaded with upsert_project + set_process from hat/processes/*.md"
+    "projects_from": "The project groups the person accepted, created by Muse through upsert_project; use set_process with markdown for plain-language rules."
   },
   "builder_notes": [
-    "Prefer running the repository's own code. Only when that is impossible, re-create it exactly from the four spec files; do not invent pages, controls, or fields.",
+    "The Office is a visualization of work managed by the chief of staff. The user talks to Muse to create or change projects, tasks, team members, and other records. Inside the Office, comments on a task, project, or note are the only user writes. Viewing, filtering, searching, and opening files are read-only. Keep the refined paper-and-sticky-note design: no management forms, drag-to-change status, progress percentages, checklist dashboards, or milestone controls. Use board lanes and short written updates to show progress; project rules are simple text. A comment supplies context for the owner to review; it does not itself change task status.",
+    "The reference app is a starting point. Adapt it to this user; preserve existing records and preferences. Explain that the user can ask Muse to change any part of their Office.",
+    "Implement the action contract with the same names and arguments initially. If customization changes contracts, update the local skills that call them too. Discover the actual platform action schema; never guess tools.",
+    "The Tasks board shows tasks in four status lanes, filtered by project. Keep project context as plain text and comments. No project percentages or derived lifecycle.",
+    "Use POST /api/comments or equivalent for task, project, and note comments. This is the only user write in the artifact. Preserve author you, unread state, screenshot context, and reply_to binding. Posting a comment never changes task status; the owner decides through agent actions.",
+    "Provide list_recent_updates with stable newest-first cursor pagination across task, project, and note comments, including owner, files, source, target_id, and id. Copy those typed identifiers unchanged for replies. Handle comments on closed tasks too.",
+    "Follow hat/skills/adapt-your-office/SKILL.md for personal communication preferences and the comment-check schedule. Only show comment_check_minutes after verifying the job; only link office_chat_url after verifying the chosen chat. Do not invent a wake webhook.",
+    "Before Done, check the actual result and record a plain-language summary and verification, with an openable result when available. Reply to outstanding comments. No mandatory structured checklist; preserve legacy fields without displaying checklist/progress panels.",
+    "Pair text and backgrounds explicitly, including typed comments and selected pastel tiles. Check at least 4.5:1 normal text contrast and 3:1 large text/control boundaries in the theme actually rendered. Preserve the user’s theme choice.",
+    "Show honest comment feedback: saved, awaiting owner reply, then replied. Never label a saved comment as work already started. Refresh replies without discarding a draft. Support screenshots privately if your platform supports uploads; explain a platform limitation if it cannot.",
     "Before the person's Office starts for the first time, set OFFICE_SEED=none. Verify members, tasks, notes, contacts, and reports are empty, then load spec/STARTER.md once through actions. If refining an existing Office, inspect its rows first and update them in place; never append a second starter set.",
     "The app's icon is the small Office building in src/app/icon.svg (see the icon field). Keep the top hat on the chief's avatar only.",
-    "Pages are for reading except task and note comments. Wherever another edit control would normally sit, show the line: To change this, tell <chief name> in chat. The chief's name comes from the members table (is_chief = 1).",
-    "The UI writes only comments: POST /api/comments {task, body, reply_to?} creates a task_updates row; {note, body, reply_to?} creates a note_comments row. User comments carry author 'you' and unread_by_agent 1. Money buttons post body 'yes' or 'not yet' with reply_to = the question's update id.",
-    "Actions are POST /api/actions/<name> with a JSON body, returning {ok:true, data} or {ok:false, error}. Every error names what was wrong and the valid values. Publish the full action catalog in spec/ACTIONS.md, including list_recent_updates with ordered cursor pagination across task and note comments, so the chief can call them.",
-    "The chief schedules a recurring comment check every 30 minutes. It calls list_recent_updates with unread_only=true and follows next_cursor until null; it routes each item to the task owner or note keeper, verifies a reply or other follow-up, and only then marks it read. Copy source, target_id, and id from the same feed item into reply_to_comment and mark_comments_read; task and note integer ids can overlap. The owner checks its open tasks until they close; the chief still triages comments on closed tasks.",
     "Columns are exactly todo, in_progress, waiting_on_you, done. Stages are exactly lead, talking, proposal, customer, past. waiting_on_you requires a question. Times are ISO 8601 UTC.",
-    "The board uses the sticky-note look in spec/DESIGN.md: lanes with a coloured top rule, one readable note per lane in the project's pastel with a folded corner, project tiles as plain coloured rounded squares.",
     "Parse GitHub-flavored Markdown in Notes before display. Tables are real tables, bold text is styled, and fenced mermaid code draws a responsive diagram with strict security. Keep invalid diagram source visible for correction.",
     "The chief's Team portrait uses this Muse's actual current avatar image, recognizable under the small top hat, not the repository's bundled sample face. Publish set_member_avatar(slug, avatar_url) as an agent action for any existing member, including the chief; verify its image on the Team card and detail. Each specialist gets a distinct face and specialty-relevant mascot sharing the chief avatar's overall illustration style and crop; changing only the hat or color is insufficient. Make Team portraits large enough to recognize: 96px chief, 56px specialist cards, 80px detail.",
     "Reports lead with four sourced public visual charts using bars, a timeline, and a donut. Keep business templates hidden until verified numbers exist; then show results, never task counts: website visitors and inquiries, new customers, money owed, money in and out, spending by category, bills coming up, subscriptions, savings the team found. Charts are inline SVG.",
     "Private to one person. No public link, no sign-in for others, no analytics, no external calls from the app itself."
   ],
   "fallbacks": [
-    "An app with slug 'office' already exists: refine it by edits until it matches the checks in HAT.md; never rebuild from scratch and never delete it.",
-    "A boards or tasks app already exists: ask the person, then turn it into Office and carry its cards over as tasks (one project per lane) before anything else.",
+    "An Office already exists: inspect its data and personal preferences first, then refine it in place. Preserve its customizations. Do not replace its whole layout unless the user asks.",
+    "A boards or tasks app already exists: ask the person, then turn it into Office and preserve its projects and carry its cards over as tasks (status lists are not projects) before anything else.",
     "The repository cannot be fetched: ask the person to paste db/schema.sql, spec/PAGES.md, spec/DESIGN.md, spec/STARTER.md, and spec/ACTIONS.md, then build from those.",
     "The platform has no full-stack app kind: stop and tell the person; a static page is not an Office."
   ],
@@ -50,5 +55,11 @@
     "use": "src/app/icon.svg from the repository: a small Office building with two windows and an orange doorway on warm off-white #f3f3ef",
     "never": "the chief's top hat as the app icon, a briefcase, a suitcase, or an unrelated stock icon",
     "fallback": "if the platform cannot take an SVG, render the same Office building as a small PNG"
+  },
+  "update_delivery": {
+    "action": "list_office_updates",
+    "coverage": "Every supported mutation across projects, tasks, team, notes, customers, reports, comments and files",
+    "default_check_minutes": 1,
+    "rules": "One recurring job. Verify a real scheduled run. Save checkpoint only after all cursor pages succeed; retry unread comments through list_recent_updates. Explain actual interval and follow-up after saves. Respect supported minimum and user preferences. Never claim immediate wake without a verified trigger."
   }
 }

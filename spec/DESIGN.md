@@ -1,6 +1,6 @@
 # The look
 
-The Office should feel like one calm, everyday app: a paper-coloured page, sticky notes for tasks, soft cards for everything else, and exactly one loud colour, which means "waiting on you".
+The Office should feel like one calm, everyday app: a paper-coloured page, readable project and task cards, and one strong colour, which means "waiting on you".
 
 ## Tokens
 
@@ -11,7 +11,7 @@ The Office should feel like one calm, everyday app: a paper-coloured page, stick
   --ink: #1c1c19;       /* text */
   --soft: #6d6c66;      /* secondary text */
   --line: #e2e1db;      /* hairlines */
-  --needs: #b3541e;     /* the one accent: waiting on you */
+  --needs: #a54619;     /* the one accent: waiting on you */
   --needs-bg: #fbeee6;
   --done: #2d5a45;
 
@@ -37,7 +37,7 @@ Spacing on an 8px grid: 20px inside cards, 16px between cards, 32px between sect
 
 ## Project colours
 
-Each project has a pastel fill and a darker shade. The tiles, the sticky notes, the project label bars, and the chart series all use them, so the board and the reports agree.
+Each project has a pastel fill and a darker shade. Project accents, task labels, and chart series use them, so the board and the reports agree.
 
 | Project | Fill | Dark |
 | --- | --- | --- |
@@ -51,18 +51,35 @@ Spare pastels for new projects: `#efd3d3` / `#b86e6e`, `#d3e0e6` / `#5f8497`, `#
 
 ## The board
 
-Lanes: a 3px top rule in the lane colour (To do `#c9c8c1`, In progress `#3d5a6c`, Waiting on you `#b3541e`, Done `#2d5a45`), then the title (15px/700), a one-line subtitle (12px, soft), and a round count badge (24px, `#e7e6e0`; orange with white text on the Waiting lane). The Waiting lane sits on a faint peach wash (`#fbeee6` at 60%, rounded, 8px inside).
+Use task cards in four status lists with project selectors above. Projects are
+umbrellas for related tasks. Keep a readable paper surface, project accent, task
+title, owner portrait/name, a short update, and the current question.
+Open a card for task details. Each project selector has a separate **Open project →**
+footer, accessible without first filtering. Use sibling links, a 44px footer touch
+target, and at least 8px outer padding for selection/focus outlines. On phones,
+scroll the row horizontally without a fade mask over the tiles. No white
+speech bubbles inside coloured cards. Keep project filters and agent portraits
+when refining the layout. Keep the optimized sticky-note design. No percentage
+bars, checklist dashboards, project forms, or milestone panels. See
+`spec/PAGES.md` for the comments-only interaction boundary.
 
-Cards are **sticky notes**, laid out **one per lane** with a 12px vertical gap. Four desktop lanes leave too little width for two readable notes in each lane.
+Keep cards full lane width. Use four lanes on a wide desktop, two below 900px,
+and one column below 560px with Waiting on you first. Text must wrap; never
+squeeze two narrow cards into a lane or clip controls on a phone.
 
-- Filled with the project's pastel, with faint ruled lines: `repeating-linear-gradient(0deg, rgba(0,0,0,.022) 0 1px, transparent 1px 7px)`.
-- A 1px border `rgba(0,0,0,.07)`, corners `3px 3px 16px 3px` (the bottom-right corner is the big one), and a folded corner drawn with a small diagonal gradient in that corner.
-- A soft shadow: `0 1px 1px rgba(0,0,0,.05), 0 6px 14px rgba(0,0,0,.05)`; lifts 1px on hover.
-- Desktop height 206px, width at most 270px, padding 12px 13px 10px. Keep every note the same size; the task page carries the full text.
-- Inside: the project name (12px/650, soft) with a 3.5px × 13px bar in the project's dark shade; the title (15px/750, ink, two lines at most); up to three lines of summary or a waiting question directly on the pastel paper with a small orange dot, without a bubble; and a footer pushed to the bottom: the specialist's 20px round avatar and name on the left, the time on the right. A done card's footer reads "✓ Done" in green with a small green check circle, then the time.
-- On a phone: one column of notes per lane, lanes stacked, Waiting on you first.
+## Readability and personal choice
 
-Project tiles above the board: 118px squares (88px on a phone), the pastel fill, no border, no stripe; name top-left (14px/750), count bottom-left (13px/600 soft); the chosen tile gets a 2px ink outline; "All projects" is white with a hairline border.
+Pair foreground and background colors explicitly, including typed comments,
+placeholders, selected cards, and buttons. Normal text needs at least 4.5:1
+contrast; large text and meaningful control boundaries need 3:1. Never inherit
+white host text onto a light pastel. Check the actual app in the user's theme,
+including focus, error, pending, and selected states. The reference starts with
+an explicit light color scheme; a requested dark theme needs its own verified
+pairs, not an automatic color inversion.
+
+This is a polished starting design, not a restriction on the user's Office.
+Muse can replace any layout or palette when asked. Explain that the Office was
+built for them from Tinyhat's starting instructions and can keep evolving.
 
 ## Cards and pills
 

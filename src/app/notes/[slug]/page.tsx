@@ -7,7 +7,10 @@ import { ago } from "@/lib/time";
 import { Avatar } from "@/components/Avatar";
 import { RenderedNote } from "@/components/notes/RenderedNote";
 import { NoteCommentForm } from "@/components/notes/NoteCommentForm";
+import { CommentFollowUp } from "@/components/CommentFollowUp";
+import { RefreshUpdates } from "@/components/RefreshUpdates";
 import "../notes.css";
+import "../../tasks/tasks.css";
 
 // One note, rendered from its markdown. The headings get ids so "On this page"
 // can link to them, and table cells get the header's text as data-label so the
@@ -84,6 +87,7 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
 
   return (
     <main className="nt-page">
+      <RefreshUpdates />
       <nav className="crumb nt-bar" aria-label="Breadcrumb">
         <Link href="/notes">Notes</Link>
         {project ? (
@@ -139,12 +143,13 @@ export default async function NotePage({ params }: { params: Promise<{ slug: str
 
           <section className="nt-comments" aria-labelledby="note-comments-title">
             <h2 id="note-comments-title">Comments</h2>
-            <p>Questions and corrections here reach {keeper?.name ?? chiefName}. For an immediate answer, use chat.</p>
+            <CommentFollowUp owner={keeper?.name ?? chiefName} />
             {topComments.map((comment) => <div className="nt-comment-thread" key={comment.id}>
               <div className="nt-comment">
                 <b>{comment.author === "you" ? "You" : members.get(comment.author)?.name ?? comment.author}</b>
                 <time dateTime={comment.created_at}>{ago(comment.created_at, now)}</time>
-                <p>{comment.body}</p>
+                <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(comment.body, true) }} />
+                {comment.author === "you" && <span className="comment-state">{comment.unread_by_agent ? `Awaiting ${keeper?.name ?? chiefName}’s reply` : comments.some((reply) => reply.reply_to === comment.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
               </div>
               {comments.filter((reply) => reply.reply_to === comment.id).map((reply) => <div className="nt-comment nt-comment-reply" key={reply.id}>
                 <b>{reply.author === "you" ? "You" : members.get(reply.author)?.name ?? reply.author}</b>

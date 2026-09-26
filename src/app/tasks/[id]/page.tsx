@@ -6,7 +6,6 @@ import {
   get,
   json,
   COLUMN_LABEL,
-  type CheckRow,
   type FileRow,
   type MemberRow,
   type PlanRow,
@@ -17,7 +16,9 @@ import {
 import { ago, dueWord, span, stamp } from "@/lib/time";
 import { Avatar, You } from "@/components/Avatar";
 import { CommentForm, ReplyToggle } from "@/components/task/CommentForm";
-import { FocusCommentButton, MoneyButtons } from "@/components/task/MoneyButtons";
+import { FocusCommentButton } from "@/components/task/MoneyButtons";
+import { CommentFollowUp } from "@/components/CommentFollowUp";
+import { RefreshUpdates } from "@/components/RefreshUpdates";
 import "../tasks.css";
 
 // A task's page, like an issue: the description on top, then the
@@ -42,12 +43,6 @@ export async function generateMetadata({ params }: Props) {
   const { id } = await params;
   const task = get<Pick<TaskRow, "title">>("SELECT title FROM tasks WHERE id = ?", id);
   return { title: task ? `${task.title} · Office` : "Office" };
-}
-
-/** "Yes, pay $1,240 on Sep 28": the amount (and a date right after it) lifted from the question. */
-function yesLabel(question: string): string {
-  const m = question.match(/\$\s?\d[\d,]*(?:\.\d{1,2})?(?:\s+on\s+[A-Z][a-z]{2,8}\.?\s+\d{1,2})?/);
-  return m ? `Yes, pay ${m[0].replace(/\s+/g, " ").replace("$ ", "$")}` : "Yes, pay";
 }
 
 /** One line under the question saying what a yes does. */
@@ -90,8 +85,7 @@ export default async function TaskPage({ params }: Props) {
   const members = new Map(memberList.map((m) => [m.slug, m]));
   const chief = memberList.find((m) => m.is_chief) ?? memberList[0];
   const specialist = task.specialist ? members.get(task.specialist) : undefined;
-  const worker = specialist ?? chief; // the chief does the one-offs itself
-  const checks = all<CheckRow>("SELECT * FROM task_checks WHERE task = ? ORDER BY position, id", id);
+  const worker = specialist ?? members.get(project?.lead ?? "") ?? chief; // the chief does the one-offs itself
   const plan = all<PlanRow>("SELECT * FROM task_plan WHERE task = ? ORDER BY position, id", id);
   const taskFiles = all<FileRow>("SELECT * FROM task_files WHERE task = ? ORDER BY added_at, id", id);
   const updates = all<UpdateRow>("SELECT * FROM task_updates WHERE task = ? ORDER BY created_at, id", id);
@@ -105,7 +99,7 @@ export default async function TaskPage({ params }: Props) {
   const projectSlug = project?.slug ?? task.project;
   const barColor = project?.color_dark ?? "#9a978c";
   const isDone = task.column_name === "done";
-  const waiting = task.column_name === "waiting_on_you";
+  const waiting = !project?.archived_at && task.column_name === "waiting_on_you";
 
   // Replies hang under the top-level update they answer, following a chain
   // of replies up to its root. A reply whose parent is gone stands on its own.
@@ -145,14 +139,17 @@ export default async function TaskPage({ params }: Props) {
   const answer = questionRow ? [...updates].reverse().find((u) => u.author === "you" && u.reply_to === questionRow.id) : undefined;
   const pinnedId = questionRow && !answer ? questionRow.id : null;
 
-  // Files: the task's own files first, then anything attached to an update, once each.
+  // Distinct URLs remain visible even when two revisions share a filename.
   const files: FileChip[] = [];
   const seen = new Set<string>();
   const attached = updates.flatMap((u) => json<Array<Partial<FileChip>>>(u.files_json, []));
-  for (const f of [...taskFiles, ...attached]) {
-    if (!f || typeof f.name !== "string" || !f.name || seen.has(f.name)) continue;
-    seen.add(f.name);
-    files.push({ name: f.name, url: typeof f.url === "string" && f.url ? f.url : null });
+  for (const f of [...[...taskFiles].reverse(), ...[...attached].reverse()]) {
+    if (!f || typeof f.name !== "string" || !f.name) continue;
+    const url = typeof f.url === "string" && f.url ? f.url : null;
+    const key = url ?? f.name;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    files.push({ name: f.name, url });
   }
 
   const replyHint = `${audience} will see this.`;
@@ -165,7 +162,8 @@ export default async function TaskPage({ params }: Props) {
           <b>{nameOf(r.author)}</b>
           <When iso={r.created_at} />
           <br />
-          <span className="body">{r.body}</span>
+          <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(r.body, true) }} />
+          {r.author === "you" && <span className="comment-state">{r.unread_by_agent ? `Awaiting ${workerName}’s reply` : updates.some((reply) => reply.reply_to === r.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
         </div>
       </div>
     );
@@ -188,11 +186,12 @@ export default async function TaskPage({ params }: Props) {
             <When iso={u.created_at} />
           </div>
           <div className="tk-cm-b">
-            <div className="body">{u.body}</div>
+            <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(u.body, true) }} />
+            {mine && <span className="comment-state">{u.unread_by_agent ? `Awaiting ${workerName}’s reply` : updates.some((reply) => reply.reply_to === u.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
             {attachedHere.length ? (
               <div className="tk-chips">
                 {attachedHere.map((f) => (
-                  <Chip key={f.name} file={{ name: f.name, url: f.url ?? null }} />
+                  <Chip key={f.url ?? f.name} file={{ name: f.name, url: f.url ?? null }} />
                 ))}
               </div>
             ) : null}
@@ -218,30 +217,40 @@ export default async function TaskPage({ params }: Props) {
 
   return (
     <main className="wrap tk">
+      <RefreshUpdates />
       {/* 1. where this task lives, its title, and where it stands */}
       <nav className="crumb tk-crumb" aria-label="Breadcrumb">
-        <Link href="/projects">‹ Projects</Link>
+        <Link href="/projects">‹ Tasks</Link>
         <span>/</span>
-        <Link href={`/projects?project=${encodeURIComponent(projectSlug)}`}>{projectName}</Link>
+        <Link href={`/projects/${encodeURIComponent(projectSlug)}`}>{projectName}</Link>
       </nav>
       <div className="tk-proj">
         <span className="stripe" style={{ background: barColor }} aria-hidden="true" />
         {projectName}
       </div>
       <h1 className="title">{task.title}</h1>
+      {project?.archived_at && <p className="lede">Archived project. Work is paused; ask {chiefName} in chat to resume it.</p>}
       <div className="tk-meta">
-        <span className={`tk-st ${task.column_name}`}>{COLUMN_LABEL[task.column_name] ?? task.column_name}</span>
+        <span className={`tk-st ${project?.archived_at && !isDone ? "todo" : task.column_name}`}>{project?.archived_at && !isDone ? "Paused" : COLUMN_LABEL[task.column_name] ?? task.column_name}</span>
         {worker ? (
           <span className="tk-who">
             <Avatar member={worker} size="xs" />
-            {isDone ? `Done by ${workerName}` : `${workerName} is on it`}
+            {isDone ? `Done by ${workerName}` : project?.archived_at ? `Owner: ${workerName}` : `${workerName} is on it`}
           </span>
         ) : null}
         <span>
           {waiting ? `Waiting ${span(task.updated_at)}` : `Updated ${ago(task.updated_at)}`}
         </span>
-        {task.due && !isDone ? <span>Due {dueWord(task.due)}</span> : null}
+        {task.due && !isDone && !project?.archived_at ? <span>Due {dueWord(task.due)}</span> : null}
       </div>
+
+      {isDone && <section className="tk-result" aria-label="Completed result">
+        <h2>What changed</h2>
+        <p>{task.result_summary ?? `This older task has no verified completion summary. Ask ${chiefName} to check the result, or leave a comment below.`}</p>
+        {task.verification && <><h3>What was checked</h3><p>{task.verification}</p></>}
+        {task.result_url && <a className="btn" href={task.result_url} target="_blank" rel="noopener noreferrer">Open result ↗</a>}
+        <a className="tk-reply" href="#new-comment">Something needs fixing? Leave a comment below.</a>
+      </section>}
 
       {/* 2. the unanswered question, pinned while the task waits on the user */}
       {waiting && questionText ? (
@@ -266,9 +275,7 @@ export default async function TaskPage({ params }: Props) {
               </div>
             ) : (
               <div className="tk-cm-f">
-                {task.question_kind === "money" && questionRow ? (
-                  <MoneyButtons task={task.id} questionId={questionRow.id} yesLabel={yesLabel(questionText)} />
-                ) : questionRow ? (
+                {questionRow ? (
                   <ReplyToggle task={task.id} replyTo={questionRow.id} label={`Reply to ${askerName}`} placeholder={`Reply to ${askerName}…`} hint={replyHint} />
                 ) : (
                   <FocusCommentButton label={`Reply to ${askerName}`} />
@@ -294,41 +301,10 @@ export default async function TaskPage({ params }: Props) {
         </details>
       ) : null}
 
-      {/* 4. done when */}
-      <div className="tk-sec" />
-      <h3 className="tk-h3">Done when</h3>
-      {checks.length ? (
-        <ul className="tk-chk">
-          {checks.map((c) => (
-            <li key={c.id} className={c.met ? "ok" : undefined}>
-              <span>{c.text}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="tk-empty">Not written yet.</p>
-      )}
-
-      {/* 5. plan */}
-      <div className="tk-sec" />
-      <h3 className="tk-h3">Plan</h3>
-      {plan.length ? (
-        <ol className="tk-plan">
-          {plan.map((p) => (
-            <li key={p.id} className={p.state === "now" || p.state === "done" ? p.state : undefined}>
-              {p.state === "done" ? (
-                <span className="tk-tick" aria-label="done">
-                  ✓
-                </span>
-              ) : null}
-              {p.text}
-              {p.state === "now" ? <span className="tk-now"> · now</span> : null}
-            </li>
-          ))}
-        </ol>
-      ) : (
-        <p className="tk-empty">No plan yet.</p>
-      )}
+      {plan.length > 0 && <section className="tk-def md">
+        <h3>Plan</h3>
+        <ol>{plan.map((item) => <li key={item.id}>{item.text}</li>)}</ol>
+      </section>}
 
       {/* 6. the conversation */}
       <div className="tk-sec" />
@@ -338,6 +314,7 @@ export default async function TaskPage({ params }: Props) {
           {updateCount} {updateCount === 1 ? "update" : "updates"}
         </span>
       </h2>
+      <CommentFollowUp owner={workerName} />
       {top.length ? (
         <div className="tk-conv">
           {top.map((u) =>
@@ -364,7 +341,7 @@ export default async function TaskPage({ params }: Props) {
       <div className="tk-composer">
         <You size="md" />
         <div className="cbox">
-          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Your comment stays with this task." />
+          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Give direction, answer a question, or ask for a correction." />
         </div>
       </div>
 
@@ -375,7 +352,7 @@ export default async function TaskPage({ params }: Props) {
         {files.length ? (
           <div className="tk-files">
             {files.map((f) => (
-              <Chip key={f.name} file={f} />
+              <Chip key={f.url ?? f.name} file={f} />
             ))}
           </div>
         ) : (

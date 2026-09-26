@@ -47,6 +47,13 @@ test("empty input renders nothing", () => {
   assert.equal(renderMarkdown(""), "");
 });
 
+test("comments preserve typed line breaks without changing document Markdown or sanitization", () => {
+  const message = 'First line\nSecond **line**\n<img src=x onerror="alert(1)">';
+  assert.match(renderMarkdown(message, true), /First line<br\s*\/>Second <strong>line<\/strong>/);
+  assert.doesNotMatch(renderMarkdown(message, true), /onerror/);
+  assert.match(renderMarkdown('First line\nSecond line'), /First line\nSecond line/);
+});
+
 test("a note's table, emphasis, and Mermaid fence survive as renderable markup", () => {
   const html = renderMarkdown([
     "## How work moves",

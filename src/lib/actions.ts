@@ -4,6 +4,7 @@ import {
   type PlanRow, type FileRow, type UpdateRow, type ContactRow, type TouchRow, type ReportRow, type MetricRow, type NoteRow, type NoteCommentRow,
 } from "./db";
 import { shortDate } from "./time";
+import { saveScreenshot } from "./screenshots";
 import {
   ActionError, notFound, listOf, present, isObject, asInput, requiredString, optionalString, oneOf, isoDate,
   int, num, bool, array, stringArray, intArray, object, openableUrl, within, type Input,
@@ -29,7 +30,7 @@ const PLAN_STATES = ["done", "now", "later"] as const;
 const RULE_ORIGINS = ["you", "ok"] as const;
 const CHANNELS = ["email", "call", "meeting", "message", "website", "invoice", "note"] as const;
 const CHARTS = ["bars", "timeline", "donut", "grouped-bars", "stacked-bars", "bars-horizontal", "list", "savings", "number"] as const;
-const SETTING_KEYS = ["office_name", "user_name", "hat_version", "last_agent_visit"] as const;
+const SETTING_KEYS = ["office_name", "user_name", "hat_version", "last_agent_visit", "comment_check_minutes", "office_chat_url"] as const;
 // Project pastels from spec/DESIGN.md, the five in use then the spares; a new project takes the first free pair.
 const PASTELS: ReadonlyArray<readonly [string, string]> = [
   ["#f2e4a9", "#b89a3a"], ["#d5eaea", "#2f8a8a"], ["#d8e7d3", "#5b8a5a"], ["#e3dcf0", "#7e6aa6"], ["#e9e7df", "#9a978c"],
@@ -139,7 +140,8 @@ function memberOut(m: MemberRow) {
 const stepOut = (s: StepRow) => ({ ...s, needs_you: !!s.needs_you });
 function taskOut(t: TaskRow) {
   const { column_name, ...rest } = t;
-  return { ...rest, column: column_name };
+  const project_archived_at = get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", t.project)?.archived_at ?? null;
+  return { ...rest, column: column_name, project_archived_at };
 }
 const checkOut = (c: CheckRow) => ({ id: c.id, text: c.text, met: !!c.met });
 const planOut = (p: PlanRow) => ({ id: p.id, text: p.text, state: p.state });
@@ -258,6 +260,12 @@ function taskPage(id: string) {
   };
 }
 
+function reopenTask(id: string, reason: string): void {
+  run("UPDATE tasks SET column_name = 'in_progress', done_at = NULL, result_summary = NULL, verification = NULL, result_url = NULL, question = NULL, question_kind = NULL, updated_at = ? WHERE id = ?", nowIso(), id);
+  run("UPDATE task_checks SET met = 0 WHERE task = ?", id);
+  addUpdate(id, chiefSlug(), "event", reason);
+}
+
 // ---------------------------------------------------------- customer helpers
 
 function nextPastel(): readonly [string, string] {
@@ -369,7 +377,7 @@ export const ACTIONS: Record<string, ActionDef> = {
         const notes = run("UPDATE notes SET kept_by = NULL WHERE kept_by = ?", m.slug).changes;
         const steps = run("UPDATE process_steps SET who = 'any' WHERE who = ?", m.slug).changes;
         run("DELETE FROM members WHERE slug = ?", m.slug);
-        return { removed: m.slug, unlinked: { projects, done_tasks: doneTasks, reports, notes, steps } };
+        return { removed: m.slug, name: m.name, unlinked: { projects, done_tasks: doneTasks, reports, notes, steps } };
       });
     },
   },
@@ -380,7 +388,8 @@ export const ACTIONS: Record<string, ActionDef> = {
     description: "Adds or updates a project tile and its page header. Only the fields passed change; colours default to the next free pastel.",
     params: {
       slug: "string · kebab-case id, e.g. website · optional, made from the name when missing",
-      name: "string · the project's name · required for a new project",
+      name: "string · the project's name, up to 120 characters · required for a new project",
+      create_only: "boolean · refuse to overwrite an existing project · optional",
       description: "string · one line · optional",
       color: "string · pastel fill, e.g. #f2e4a9 · optional",
       color_dark: "string · darker shade for bars and chart series, e.g. #b89a3a · optional",
@@ -389,10 +398,26 @@ export const ACTIONS: Record<string, ActionDef> = {
       done_when: "string · one line, what done means · optional",
     },
     run(input) {
-      const slug = slugFrom(input, "name", "website");
-      const existing = get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", slug);
+      let slug = slugFrom(input, "name", "website");
+      const name = present(input, "name") ? requiredString(input, "name", "the project's name") : null;
+      if (name && [...name].length > 120) throw new ActionError("Project names must be 120 characters or fewer.");
+      let existing = get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", slug);
+      if (!optionalString(input, "slug") && name) {
+        const sameName = all<ProjectRow>("SELECT * FROM projects").find((p) => p.name.normalize("NFC").toLowerCase() === name.normalize("NFC").toLowerCase());
+        if (sameName) { slug = sameName.slug; existing = sameName; }
+        else if (existing) {
+          const base = slug;
+          let n = 2;
+          while (get("SELECT slug FROM projects WHERE slug = ?", slug)) {
+            const suffix = `-${n++}`;
+            slug = `${base.slice(0, 60 - suffix.length).replace(/-+$/, "")}${suffix}`;
+          }
+          existing = undefined;
+        }
+      }
+      if (existing && bool(input, "create_only")) throw new ActionError("A project with this name already exists. Edit it or choose another name.");
       const patch: Patch = {};
-      if (present(input, "name")) patch.name = requiredString(input, "name", "the project's name");
+      if (name) patch.name = name;
       if (present(input, "description")) patch.description = optionalString(input, "description");
       if (present(input, "color")) patch.color = requiredString(input, "color", "a pastel fill like #f2e4a9");
       if (present(input, "color_dark")) patch.color_dark = requiredString(input, "color_dark", "a darker shade like #b89a3a");
@@ -410,19 +435,31 @@ export const ACTIONS: Record<string, ActionDef> = {
       return mustProject(slug);
     },
   },
+  archive_project: {
+    section: "Projects",
+    description: "Archives or restores a project. Open work is paused until restored; every record and conversation is preserved. Only at the user's request.",
+    params: { slug: "string · project slug · required", archived: "boolean · true to archive, false to restore · required" },
+    run(input) {
+      const project = mustProject(requiredString(input, "slug"));
+      const archived = bool(input, "archived");
+      if (archived === undefined || archived === null) throw new ActionError("archived must be true or false.");
+      patchRow("projects", "slug", project.slug, { archived_at: archived ? nowIso() : null });
+      return mustProject(project.slug);
+    },
+  },
   set_process: {
     section: "Projects",
-    description: "Replaces the project's steps (the diagram) and its process text, rendered as markdown on the project's page.",
+    description: "Updates the project’s plain-language rules. Optional legacy steps are changed only if supplied.",
     params: {
       project: "string · project slug · required",
-      steps: "[{name, who, note?, needs_you?}] · in order; who is a member slug, you, or any · required",
+      steps: "[{name, who, note?, needs_you?}] · legacy steps; who is a member slug, you, or any · optional",
       markdown: "string · the process written out · required",
     },
     run(input) {
       const p = mustProject(requiredString(input, "project", "the project's slug"));
       const markdown = requiredString(input, "markdown", "the process written out, in markdown");
       const who = [...memberSlugs(), "you", "any"];
-      const steps = (array(input, "steps", { required: true }) ?? []).map((s, i) => {
+      const steps = (array(input, "steps") ?? []).map((s, i) => {
         if (!isObject(s)) throw new ActionError(`steps[${i}] must be an object like {"name": "Design", "who": "pastel", "note": "...", "needs_you": true}.`);
         return within(`steps[${i}]`, () => {
           const doer = oneOf(s, "who", who, { required: true }) as string;
@@ -435,7 +472,7 @@ export const ACTIONS: Record<string, ActionDef> = {
         });
       });
       return tx(() => {
-        run("DELETE FROM process_steps WHERE project = ?", p.slug);
+        if (present(input, "steps")) run("DELETE FROM process_steps WHERE project = ?", p.slug);
         steps.forEach((s, i) => run("INSERT INTO process_steps (project, position, name, who, note, needs_you) VALUES (?, ?, ?, ?, ?, ?)", p.slug, i, s.name, s.who, s.note, s.needs_you ? 1 : 0));
         patchRow("projects", "slug", p.slug, { process_markdown: markdown });
         return { project: p.slug, steps: all<StepRow>("SELECT * FROM process_steps WHERE project = ? ORDER BY position", p.slug).map(stepOut), process_markdown: markdown };
@@ -478,6 +515,18 @@ export const ACTIONS: Record<string, ActionDef> = {
     },
   },
 
+  get_project: {
+    section: "Projects",
+    description: "A project with its plain-language context, tasks, and conversation.",
+    params: { slug: "string · project slug · required" },
+    read: true,
+    run(input) {
+      const project = mustProject(requiredString(input, "slug", "the project slug"));
+      const tasks = all<TaskRow>("SELECT * FROM tasks WHERE project = ? ORDER BY updated_at DESC", project.slug);
+      return { ...project, tasks: tasks.map(taskOut), comments: all("SELECT * FROM project_comments WHERE project = ? ORDER BY id", project.slug) };
+    },
+  },
+
   // --------------------------------------------------------------- Tasks
   create_task: {
     section: "Tasks",
@@ -487,22 +536,24 @@ export const ACTIONS: Record<string, ActionDef> = {
       title: "string · the card's title · required",
       specialist: "string · member slug who does it · optional",
       id: "string · kebab-case id, e.g. acme-proposal · optional, made unique from the title when missing",
-      column: "string · todo, in_progress, or done · optional, default todo (use move_task for waiting_on_you)",
+      column: "string · todo or in_progress · optional, default todo (use move_task for waiting_on_you or verified completion)",
       step: "integer · index of the process step it is on, from 0 · optional",
       job_definition: "string · what this is, in plain words · optional",
       original_request: "string · the user's own words · optional",
-      done_when: "string[] · the Done when checklist; or [{text, met}] · optional",
+      done_when: "string[] · legacy completion notes; prefer plain text in job_definition; or [{text, met}] · optional",
       plan: "string[] · the steps, first one now, the rest later; or [{text, state}] · optional",
       due: "string · ISO date · optional",
       note: "string · one line shown on the card · optional",
     },
     run(input) {
       const project = mustProject(requiredString(input, "project", "the project's slug"));
+      if (project.archived_at) throw new ActionError("Restore this archived project before adding a task.");
       const title = requiredString(input, "title", "the card's title");
       if (optionalString(input, "column") === "waiting_on_you") {
-        throw new ActionError("column cannot be waiting_on_you when creating a task: create it, then call move_task with a question. Valid here: todo, in_progress, done.");
+        throw new ActionError("column cannot be waiting_on_you when creating a task: create it, then call move_task with a question. Valid here: todo, in_progress.");
       }
       const column = oneOf(input, "column", COLUMNS) ?? "todo";
+      if (column === "done") throw new ActionError("Create the task open, then move_task to done with result_summary and verification after checking the actual result.");
       const specialist = memberField(input, "specialist") ?? null;
       const step = stepField(input, project.slug) ?? null;
       const checks = normalizeChecks(array(input, "done_when") ?? []);
@@ -521,7 +572,7 @@ export const ACTIONS: Record<string, ActionDef> = {
           job_definition: optionalString(input, "job_definition") ?? null,
           original_request: optionalString(input, "original_request") ?? null,
           due: isoDate(input, "due") ?? null,
-          created_at: now, updated_at: now, done_at: column === "done" ? now : null,
+          created_at: now, updated_at: now, done_at: null,
         });
         replaceChecks(id, checks);
         replacePlan(id, plan);
@@ -542,7 +593,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       job_definition: "string · optional",
       original_request: "string · optional",
       due: "string · ISO date, or null to clear · optional",
-      done_when: "[{text, met}] · replaces the checklist; plain strings are unmet · optional",
+      done_when: "[{text, met}] · legacy completion notes; prefer plain text in job_definition · optional",
       plan: "[{text, state}] · replaces the plan; states are done, now, later · optional",
     },
     run(input) {
@@ -558,6 +609,9 @@ export const ACTIONS: Record<string, ActionDef> = {
       const checks = present(input, "done_when") ? normalizeChecks(array(input, "done_when") ?? []) : undefined;
       const plan = present(input, "plan") ? normalizePlan(array(input, "plan") ?? []) : undefined;
       return tx(() => {
+        if (t.column_name === "done" && (checks || plan || present(input, "job_definition") || present(input, "original_request"))) {
+          reopenTask(t.id, "Scope or plan changed; reopened for verification.");
+        }
         let changed = patchRow("tasks", "id", t.id, patch);
         if (checks) { replaceChecks(t.id, checks); changed = true; }
         if (plan) { replacePlan(t.id, plan); changed = true; }
@@ -568,12 +622,15 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   move_task: {
     section: "Tasks",
-    description: "Moves the card. waiting_on_you needs one clear question (and its kind); leaving it clears the question; done sets done_at. Adds the event \"Moved to …\".",
+    description: "Moves the task. Waiting needs a question. Done requires a result_summary and verification describing the actual result inspected. Reopen before correcting completed work.",
     params: {
       id: "string · task id · required",
       column: "string · todo, in_progress, waiting_on_you, or done · required",
       question: "string · the one question for the user · required when column is waiting_on_you",
-      question_kind: "string · money (Yes, pay / Not yet buttons), approve, or answer · optional, default answer",
+      question_kind: "string · money, approve, or answer · optional, default answer",
+      result_summary: "string · what actually changed and what the user can check · required for done",
+      verification: "string · what was inspected or tested, and the observed result · required for done",
+      result_url: "string · link to the delivered result · optional for done",
     },
     run(input) {
       const t = mustTask(requiredString(input, "id", "the task's id"));
@@ -589,6 +646,16 @@ export const ACTIONS: Record<string, ActionDef> = {
       }
       const moved = column !== t.column_name;
       return tx(() => {
+        if (column === "done") {
+          if (get("SELECT 1 FROM task_updates WHERE task = ? AND author = 'you' AND unread_by_agent = 1", t.id)) throw new ActionError("Reply to outstanding user comments before marking this task Done.");
+          const summary = requiredString(input, "result_summary", "what changed and what the user can check");
+          const verification = requiredString(input, "verification", "the checks performed on the actual result and what they showed");
+          const url = optionalString(input, "result_url") ? openableUrl(input, "result_url") : null;
+          run("UPDATE tasks SET result_summary = ?, verification = ?, result_url = ? WHERE id = ?", summary, verification, url, t.id);
+          addUpdate(t.id, t.specialist ?? chiefSlug(), "update", `## Result\n\n${summary}\n\n## Checked\n\n${verification}`, url ? [{ name: "Open result", url }] : []);
+        } else if (t.column_name === "done") {
+          reopenTask(t.id, "Work reopened; the previous result needs checking again.");
+        }
         const now = nowIso();
         const doneAt = column === "done" ? (t.column_name === "done" ? t.done_at : now) : null;
         run("UPDATE tasks SET column_name = ?, question = ?, question_kind = ?, done_at = ?, updated_at = ? WHERE id = ?", column, question, kind, doneAt, now, t.id);
@@ -653,7 +720,7 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   get_task: {
     section: "Tasks",
-    description: "Everything on the task's page: the card, done when, plan, files, and the conversation.",
+    description: "The task’s details, optional legacy plan/check records, result, files, and conversation.",
     params: { id: "string · task id · required" },
     read: true,
     run(input) {
@@ -663,27 +730,57 @@ export const ACTIONS: Record<string, ActionDef> = {
   list_tasks: {
     section: "Tasks",
     description: "The cards, with title, column, specialist, step, question, note, due, and updated_at. Filters combine.",
-    params: { project: "string · project slug · optional", column: "string · todo, in_progress, waiting_on_you, or done · optional", specialist: "string · member slug · optional" },
+    params: { project: "string · project slug · optional", column: "string · todo, in_progress, waiting_on_you, or done · optional", specialist: "string · member slug · optional", include_archived: "boolean · include paused archived-project tasks for history · default false" },
     read: true,
     run(input) {
       const project = projectField(input, "project") ?? null;
       const column = oneOf(input, "column", COLUMNS) ?? null;
       const specialist = memberField(input, "specialist") ?? null;
+      const includeArchived = bool(input, "include_archived") ?? false;
       type Row = TaskRow & { project_name: string; specialist_name: string | null };
       return all<Row>(
         `SELECT t.*, p.name AS project_name, m.name AS specialist_name
          FROM tasks t JOIN projects p ON p.slug = t.project LEFT JOIN members m ON m.slug = t.specialist
-         WHERE (? IS NULL OR t.project = ?) AND (? IS NULL OR t.column_name = ?) AND (? IS NULL OR t.specialist = ?)
+         WHERE (? OR p.archived_at IS NULL) AND (? IS NULL OR t.project = ?) AND (? IS NULL OR t.column_name = ?) AND (? IS NULL OR t.specialist = ?)
          ORDER BY CASE t.column_name WHEN 'todo' THEN 0 WHEN 'in_progress' THEN 1 WHEN 'waiting_on_you' THEN 2 ELSE 3 END, t.updated_at DESC`,
-        project, project, column, column, specialist, specialist,
+        includeArchived ? 1 : 0, project, project, column, column, specialist, specialist,
       ).map(({ project_name, specialist_name, ...t }) => ({ ...taskOut(t), project_name, specialist_name }));
     },
   },
 
   // ------------------------------------------------------------ Comments
+  list_office_updates: {
+    section: "Office",
+    description: "All supported Office changes, oldest first by durable id: tasks, projects, team, customers, reports, notes, comments, files and settings. Save checkpoint only after processing every page. Read calls never generate events.",
+    params: { after: "integer · last fully handled checkpoint, default 0", limit: "integer · 1 to 100, default 50", cursor: "string · next_cursor from the prior page; omit after while paging" },
+    read: true,
+    run(input) {
+      const limit = int(input, "limit", { min: 1, max: 100 }) ?? 50;
+      let after = int(input, "after", { min: 0 }) ?? 0;
+      let through = get<{ id: number }>("SELECT COALESCE(MAX(id), 0) id FROM office_updates")!.id;
+      const cursor = optionalString(input, "cursor");
+      if (cursor) {
+        if (present(input, "after")) throw new ActionError("Use cursor or after, not both.");
+        try {
+          const value = JSON.parse(Buffer.from(cursor, "base64url").toString("utf8"));
+          if (!Number.isSafeInteger(value.after) || !Number.isSafeInteger(value.through) || value.after < 0 || value.after > value.through || value.through > through) throw new Error();
+          after = value.after; through = value.through;
+        } catch { throw new ActionError("cursor must come from list_office_updates."); }
+      }
+      if (after > through) throw new ActionError("Checkpoint is ahead of this Office; verify the Office and reset the checkpoint after reviewing its history.");
+      const rows = all<{id: number; source: string; target_id: string; target_title: string; owner: string | null; actor: string; action: string; changes_json: string; comment_id: number | null; created_at: string}>("SELECT * FROM office_updates WHERE id > ? AND id <= ? ORDER BY id LIMIT ?", after, through, limit + 1);
+      const page = rows.slice(0, limit);
+      const more = rows.length > limit;
+      return {
+        updates: page.map(({ changes_json, ...row }) => ({ ...row, changes: json(changes_json, {}), url: updateUrl(row.source, row.target_id) })),
+        next_cursor: more ? Buffer.from(JSON.stringify({ after: page.at(-1)!.id, through })).toString("base64url") : null,
+        checkpoint: more ? null : through,
+      };
+    },
+  },
   list_recent_updates: {
     section: "Comments",
-    description: "Newest task updates and note comments, including every user comment. Cursor pagination stays stable as new updates arrive. Use unread_only for the scheduled comment check and follow next_cursor until null.",
+    description: "Newest task updates, project comments, and note comments, including every user comment. Cursor pagination stays stable as new updates arrive. Use unread_only for the scheduled comment check and follow next_cursor until null.",
     params: {
       limit: "integer · 1 to 100, default 30 · optional",
       cursor: "string · next_cursor returned by an earlier page · optional",
@@ -694,36 +791,42 @@ export const ACTIONS: Record<string, ActionDef> = {
       const limit = int(input, "limit", { min: 1, max: 100 }) ?? 30;
       const unreadOnly = bool(input, "unread_only") ?? false;
       const cursorText = optionalString(input, "cursor");
-      type UpdateCursor = { at: string; source: "task" | "note"; id: number };
+      type UpdateCursor = { at: string; source: "task" | "note" | "project"; id: number };
       let cursor: UpdateCursor | null = null;
       if (cursorText) {
         try {
           const parsed = JSON.parse(Buffer.from(cursorText, "base64url").toString("utf8")) as UpdateCursor;
-          if (!parsed || typeof parsed.at !== "string" || !["task", "note"].includes(parsed.source) || !Number.isSafeInteger(parsed.id) || parsed.id < 1) throw new Error("invalid cursor");
+          if (!parsed || typeof parsed.at !== "string" || !["task", "note", "project"].includes(parsed.source) || !Number.isSafeInteger(parsed.id) || parsed.id < 1) throw new Error("invalid cursor");
           cursor = parsed;
         } catch {
           throw new ActionError("cursor must be a next_cursor returned by list_recent_updates.");
         }
       }
       type Row = {
-        id: number; source: "task" | "note"; target_id: string; target_title: string;
+        id: number; source: "task" | "note" | "project"; target_id: string; target_title: string;
         owner: string | null; author: string; kind: string; body: string;
         reply_to: number | null; replying_to_body: string | null;
-        unread_by_agent: number; created_at: string;
+        unread_by_agent: number; created_at: string; files_json: string;
       };
       const rows = all<Row>(
         `SELECT * FROM (
            SELECT u.id, 'task' AS source, t.id AS target_id, t.title AS target_title,
                   COALESCE(t.specialist, p.lead) AS owner, u.author, u.kind, u.body,
-                  u.reply_to, r.body AS replying_to_body, u.unread_by_agent, u.created_at
+                  u.reply_to, r.body AS replying_to_body, u.unread_by_agent, u.created_at, u.files_json
            FROM task_updates u JOIN tasks t ON t.id = u.task
            JOIN projects p ON p.slug = t.project LEFT JOIN task_updates r ON r.id = u.reply_to
            UNION ALL
            SELECT c.id, 'note' AS source, n.slug AS target_id, n.title AS target_title,
                   n.kept_by AS owner, c.author, CASE WHEN c.reply_to IS NULL THEN 'comment' ELSE 'reply' END AS kind,
-                  c.body, c.reply_to, r.body AS replying_to_body, c.unread_by_agent, c.created_at
+                  c.body, c.reply_to, r.body AS replying_to_body, c.unread_by_agent, c.created_at, '[]' AS files_json
            FROM note_comments c JOIN notes n ON n.slug = c.note
            LEFT JOIN note_comments r ON r.id = c.reply_to
+           UNION ALL
+           SELECT c.id, 'project' AS source, p.slug AS target_id, p.name AS target_title,
+                  p.lead AS owner, c.author, CASE WHEN c.reply_to IS NULL THEN 'comment' ELSE 'reply' END AS kind,
+                  c.body, c.reply_to, r.body AS replying_to_body, c.unread_by_agent, c.created_at, '[]' AS files_json
+           FROM project_comments c JOIN projects p ON p.slug = c.project
+           LEFT JOIN project_comments r ON r.id = c.reply_to
          ) WHERE (? = 0 OR (author = 'you' AND unread_by_agent = 1))
            AND (? IS NULL OR created_at < ? OR (created_at = ? AND (source < ? OR (source = ? AND id < ?))))
          ORDER BY created_at DESC, source DESC, id DESC LIMIT ?`,
@@ -735,9 +838,9 @@ export const ACTIONS: Record<string, ActionDef> = {
       const page = rows.slice(0, limit);
       const last = page.at(-1);
       return {
-        updates: page.map((r) => ({
-          ...r, owner: r.owner ?? chiefSlug(), unread_by_agent: !!r.unread_by_agent,
-          url: r.source === "task" ? `/tasks/${r.target_id}` : `/notes/${r.target_id}`,
+        updates: page.map(({ files_json, ...r }) => ({
+          ...r, files: json<FileRef[]>(files_json, []), owner: r.owner ?? chiefSlug(), unread_by_agent: !!r.unread_by_agent,
+          url: r.source === "task" ? `/tasks/${r.target_id}` : r.source === "project" ? `/projects/${r.target_id}` : `/notes/${r.target_id}`,
         })),
         next_cursor: rows.length > limit && last
           ? Buffer.from(JSON.stringify({ at: last.created_at, source: last.source, id: last.id })).toString("base64url")
@@ -775,22 +878,30 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   reply_to_comment: {
     section: "Comments",
-    description: "Answers a task or note comment on its original page and marks it read. Copy source, target_id, and comment_id from one list_recent_updates item.",
-    params: { source: "string · task or note, copied from the update · required", target_id: "string · page id, copied from the update · required", comment_id: "integer · update id · required", author: "string · member slug · required", body: "string · the answer, in plain words · required" },
+    description: "Answers a task, project, or note comment on its original page and marks it read. Copy source, target_id, and comment_id from one list_recent_updates item.",
+    params: { source: "string · task, project, or note, copied from the update · required", target_id: "string · page id, copied from the update · required", comment_id: "integer · update id · required", author: "string · member slug · required", body: "string · the answer, in plain words · required" },
     run(input) {
-      const source = oneOf(input, "source", ["task", "note"], { required: true });
+      const source = oneOf(input, "source", ["task", "note", "project"], { required: true });
       const targetId = requiredString(input, "target_id", "the page id from list_recent_updates");
       const id = int(input, "comment_id", { required: true, min: 1 }) as number;
       const author = memberField(input, "author");
       if (!author) throw new ActionError(`author is required: a member slug, one of: ${listOf(memberSlugs())}.`);
       const body = requiredString(input, "body", "the answer, in plain words");
-      if (source === "note") {
-        const parent = get<NoteCommentRow>("SELECT * FROM note_comments WHERE id = ? AND note = ?", id, targetId);
-        if (!parent || parent.author !== "you") throw new ActionError(`No user note comment ${id} on note ${targetId}. Copy source, target_id, and id from the same list_recent_updates item.`, 404);
+      const targetTable = source === "task" ? "tasks" : source === "project" ? "projects" : "notes";
+      if (!get(`SELECT 1 FROM ${targetTable} WHERE ${source === "task" ? "id" : "slug"} = ?`, targetId)) throw new ActionError(`No ${source} '${targetId}'.`, 404);
+      const owner = source === "task"
+        ? get<{ owner: string | null }>("SELECT COALESCE(t.specialist, p.lead) AS owner FROM tasks t JOIN projects p ON p.slug = t.project WHERE t.id = ?", targetId)?.owner
+        : source === "project" ? get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", targetId)?.lead
+        : get<NoteRow>("SELECT * FROM notes WHERE slug = ?", targetId)?.kept_by;
+      if (author !== (owner ?? chiefSlug()) && author !== chiefSlug()) throw new ActionError("The page owner or chief must follow up on this comment. Reassign the work first if its owner changed.");
+      if (source !== "task") {
+        const table = source === "project" ? "project_comments" : "note_comments";
+        const parent = get<{ author: string }>(`SELECT author FROM ${table} WHERE id = ? AND ${source} = ?`, id, targetId);
+        if (!parent || parent.author !== "you") throw new ActionError(`No user ${source} comment ${id} on ${targetId}. Copy source, target_id, and id from the same list_recent_updates item.`, 404);
         return tx(() => {
-          const r = run("INSERT INTO note_comments (note, author, body, reply_to) VALUES (?, ?, ?, ?)", parent.note, author, body, id);
-          run("UPDATE note_comments SET unread_by_agent = 0 WHERE id = ?", id);
-          return get<NoteCommentRow>("SELECT * FROM note_comments WHERE id = ?", Number(r.lastInsertRowid));
+          const r = run(`INSERT INTO ${table} (${source}, author, body, reply_to) VALUES (?, ?, ?, ?)`, targetId, author, body, id);
+          run(`UPDATE ${table} SET unread_by_agent = 0 WHERE id = ?`, id);
+          return get(`SELECT * FROM ${table} WHERE id = ?`, Number(r.lastInsertRowid));
         });
       }
       const parent = get<UpdateRow>("SELECT * FROM task_updates WHERE id = ? AND task = ?", id, targetId);
@@ -806,18 +917,21 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   mark_comments_read: {
     section: "Comments",
-    description: "Marks handled user comments on one task or note read. Copy source, target_id, and ids from list_recent_updates; never mix pages in one call.",
-    params: { source: "string · task or note · required", target_id: "string · page id · required", ids: "integer[] · comment ids on that page · required" },
+    description: "Marks handled user comments on one task, project, or note read after a reply. Copy source, target_id, and ids from list_recent_updates; never mix pages in one call.",
+    params: { source: "string · task, project, or note · required", target_id: "string · page id · required", ids: "integer[] · comment ids on that page · required" },
     run(input) {
-      const source = oneOf(input, "source", ["task", "note"], { required: true });
+      const source = oneOf(input, "source", ["task", "note", "project"], { required: true });
       const targetId = requiredString(input, "target_id", "the page id from list_recent_updates");
       const ids = [...new Set(intArray(input, "ids", { required: true }) ?? [])];
       if (!ids.length) throw new ActionError("ids is required: comment ids from one list_recent_updates page.");
-      const table = source === "task" ? "task_updates" : "note_comments";
-      const pageColumn = source === "task" ? "task" : "note";
+      const table = source === "task" ? "task_updates" : source === "project" ? "project_comments" : "note_comments";
+      const pageColumn = source;
       for (const id of ids) {
         if (!get(`SELECT id FROM ${table} WHERE id = ? AND ${pageColumn} = ? AND author = 'you'`, id, targetId)) {
           throw new ActionError(`No user ${source} comment ${id} on ${targetId}. Copy source, target_id, and ids from the same list_recent_updates page.`, 404);
+        }
+        if (!get(`SELECT id FROM ${table} WHERE reply_to = ? AND ${pageColumn} = ? AND author != 'you'`, id, targetId)) {
+          throw new ActionError("Reply on the original page before marking a user comment handled.");
         }
       }
       return { marked: run(`UPDATE ${table} SET unread_by_agent = 0 WHERE ${pageColumn} = ? AND id IN (${ids.map(() => "?").join(", ")})`, targetId, ...ids).changes };
@@ -1175,15 +1289,16 @@ export const ACTIONS: Record<string, ActionDef> = {
     read: true,
     run() {
       const columns: Record<Column, number> = { todo: 0, in_progress: 0, waiting_on_you: 0, done: 0 };
-      for (const r of all<{ column_name: Column; n: number }>("SELECT column_name, COUNT(*) AS n FROM tasks GROUP BY column_name")) {
+      for (const r of all<{ column_name: Column; n: number }>("SELECT t.column_name, COUNT(*) AS n FROM tasks t JOIN projects p ON p.slug = t.project WHERE p.archived_at IS NULL GROUP BY t.column_name")) {
         if (r.column_name in columns) columns[r.column_name] = r.n;
       }
       const waiting = all(
         `SELECT t.id, t.title, t.project, p.name AS project_name, t.specialist, t.question, t.question_kind, t.updated_at AS since
-         FROM tasks t JOIN projects p ON p.slug = t.project WHERE t.column_name = 'waiting_on_you' ORDER BY t.updated_at`,
+         FROM tasks t JOIN projects p ON p.slug = t.project WHERE p.archived_at IS NULL AND t.column_name = 'waiting_on_you' ORDER BY t.updated_at`,
       );
       const taskUnread = get<{ n: number }>("SELECT COUNT(*) AS n FROM task_updates WHERE author = 'you' AND unread_by_agent = 1")?.n ?? 0;
       const noteUnread = get<{ n: number }>("SELECT COUNT(*) AS n FROM note_comments WHERE author = 'you' AND unread_by_agent = 1")?.n ?? 0;
+      const projectUnread = get<{ n: number }>("SELECT COUNT(*) AS n FROM project_comments WHERE author = 'you' AND unread_by_agent = 1")?.n ?? 0;
       const bills = all(
         `SELECT label, value, json_extract(note_json, '$.due') AS due, json_extract(note_json, '$.task') AS task
          FROM metrics WHERE report = 'bills' AND json_extract(note_json, '$.how') = 'waiting_on_you' ORDER BY due`,
@@ -1193,7 +1308,8 @@ export const ACTIONS: Record<string, ActionDef> = {
         now: nowIso(),
         columns,
         waiting_on_you: waiting,
-        unread_comments: taskUnread + noteUnread,
+        unread_comments: taskUnread + noteUnread + projectUnread,
+        unread_project_comments: projectUnread,
         unread_task_comments: taskUnread,
         unread_note_comments: noteUnread,
         followups_this_week: followups(7).map((c) => ({ slug: c.slug, name: c.name, company: c.company, next_step: c.next_step, next_due: c.next_due, next_waiting_on_you: c.next_waiting_on_you })),
@@ -1205,15 +1321,44 @@ export const ACTIONS: Record<string, ActionDef> = {
   set_setting: {
     section: "Office",
     description: "Sets one office setting.",
-    params: { key: "string · office_name, user_name, hat_version, or last_agent_visit · required", value: "string · the value (an ISO timestamp for last_agent_visit) · required" },
+    params: { key: "string · office_name, user_name, hat_version, last_agent_visit, comment_check_minutes, or office_chat_url · required", value: "string · setting value; only set comment_check_minutes after verifying the recurring job; null clears comment_check_minutes or office_chat_url · required" },
     run(input) {
       const key = oneOf(input, "key", SETTING_KEYS, { required: true }) as string;
-      const value = key === "last_agent_visit" ? (isoDate(input, "value", { required: true }) as string) : requiredString(input, "value", "the setting's value");
+      const value = (key === "comment_check_minutes" || key === "office_chat_url") && input.value === null ? null
+        : key === "last_agent_visit" ? (isoDate(input, "value", { required: true }) as string) : requiredString(input, "value", "the setting's value");
+      if (key === "comment_check_minutes" && value !== null && (!/^\d+$/.test(value) || Number(value) < 1 || Number(value) > 1440)) throw new ActionError("comment_check_minutes must be a whole number from 1 to 1440.");
+      if (key === "office_chat_url" && value !== null) openableUrl(input, "value");
       setSetting(key, value);
       return { key, value };
     },
   },
 };
+
+function updateUrl(source: string, id: string): string {
+  const routes: Record<string, string> = { task: "/tasks/", project: "/projects/", note: "/notes/", member: "/team", contact: "/customers", report: "/reports", office: "/projects" };
+  const base = routes[source] ?? "/projects";
+  return ["task", "project", "note"].includes(source) ? base + encodeURIComponent(id) : base;
+}
+function recordOfficeUpdate(source: string, id: string, action: string, actor: string, changes: Input, commentId: number | null = null, fallbackTitle?: string): void {
+  const table = ({task:"tasks", project:"projects", note:"notes", member:"members", contact:"contacts", report:"reports"} as Record<string, string>)[source];
+  const row = table ? get<Record<string, unknown>>(`SELECT * FROM ${table} WHERE ${source === "task" ? "id" : "slug"} = ?`, id) : undefined;
+  const lead = source === "task" && row ? get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", row.project)?.lead : null;
+  const owner = row?.specialist ?? row?.lead ?? row?.kept_by ?? row?.owner ?? lead ?? chiefSlug();
+  run("INSERT INTO office_updates (source, target_id, target_title, owner, actor, action, changes_json, comment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", source, id, String(row?.title ?? row?.name ?? fallbackTitle ?? id), owner, actor, action, JSON.stringify(changes), commentId);
+}
+function recordActionUpdate(name: string, section: string, input: Input, result: unknown, actor: string): void {
+  const data = isObject(result) ? result : {};
+  const source = ({Team:"member", Projects:"project", Tasks:"task", Customers:"contact", Reports:"report", Notes:"note"} as Record<string, string>)[section] ?? (name === "reply_to_comment" ? String(input.source) : "office");
+  const id = name === "reply_to_comment" ? input.target_id
+    : name === "create_task" ? data.id
+    : name.startsWith("upsert_") ? data.slug
+    : source === "task" ? (input.id ?? input.task ?? data.task ?? data.id)
+    : input.slug ?? input[source] ?? data.slug ?? data.removed ?? input.key ?? "office";
+  // Screenshot bytes live in private storage; event only needs its typed comment reference.
+  const changes = { ...input };
+  if ("screenshot" in changes) changes.screenshot = !!changes.screenshot;
+  recordOfficeUpdate(source, String(id), name, actor, changes, name === "reply_to_comment" ? Number(input.comment_id) : null, String(data.title ?? data.name ?? id));
+}
 
 // ------------------------------------------------------------- entry points
 
@@ -1227,6 +1372,7 @@ export function runAction(name: string, input: unknown): unknown {
   return tx(() => {
     const data = def.run(inp);
     if (!(name === "set_setting" && inp.key === "last_agent_visit")) setSetting("last_agent_visit", nowIso());
+    if (name !== "mark_comments_read" && !(name === "set_setting" && inp.key === "last_agent_visit")) recordActionUpdate(name, def.section, inp, data, "agent");
     return data;
   });
 }
@@ -1258,24 +1404,41 @@ export function catalog() {
 }
 
 /**
- * The user may comment on a task or note page (POST /api/comments).
+ * The user may comment on a project, task, or note page (POST /api/comments).
  * Stored with author 'you' and unread_by_agent = 1 for list_recent_updates.
- * The money buttons post body "yes" or "not yet" as a reply to the question's update id.
+ * Answers are typed comments linked to the specific question through reply_to.
  */
-export function postComment(raw: unknown): { id: number; kind: "comment" | "reply" } {
+export function postComment(raw: unknown): { id: number; kind: "comment" | "reply"; follow_up: string } {
+  return tx(() => {
+    const result = saveComment(raw);
+    const input = asInput(raw);
+    const source = input.task ? "task" : input.note ? "note" : "project";
+    recordOfficeUpdate(source, String(input[source]), "post_comment", "you", { body: input.body, reply_to: input.reply_to ?? null, files: source === "task" ? json(get<UpdateRow>("SELECT files_json FROM task_updates WHERE id = ?", result.id)?.files_json, []) : [] }, result.id);
+    return { ...result, follow_up: followUpMessage() };
+  });
+}
+
+export function followUpMessage(): string {
+  const chief = get<MemberRow>("SELECT * FROM members WHERE is_chief = 1")?.name ?? "your Muse";
+  const minutes = get<{value: string}>("SELECT value FROM settings WHERE key = 'comment_check_minutes'")?.value;
+  return minutes ? `${chief} checks Office updates every ${minutes} ${minutes === "1" ? "minute" : "minutes"} and will follow up with the owner. Replies appear here; work may take longer.`
+    : `${chief} has this update waiting for review. Regular checks are not set up yet; tell ${chief} in chat to enable them or continue now.`;
+}
+
+function saveComment(raw: unknown): { id: number; kind: "comment" | "reply" } {
   const input = asInput(raw);
-  const noteSlug = optionalString(input, "note");
-  if (noteSlug) {
-    if (present(input, "task")) throw new ActionError("Comment on one task or one note, not both.");
-    if (!get("SELECT 1 FROM notes WHERE slug = ?", noteSlug)) throw new ActionError(`No note '${noteSlug}'.`, 404);
-    const body = optionalString(input, "body");
-    if (!body) throw new ActionError("Write something first: the comment is empty.");
+  if (["task", "note", "project"].filter((key) => present(input, key)).length !== 1) throw new ActionError("Comment on exactly one task, project, or note.");
+  const page = present(input, "project") ? "project" : present(input, "note") ? "note" : null;
+  if (page) {
+    const slug = requiredString(input, page, "the page id");
+    const pages = page === "project" ? "projects" : "notes";
+    const table = page === "project" ? "project_comments" : "note_comments";
+    if (!get(`SELECT 1 FROM ${pages} WHERE slug = ?`, slug)) throw new ActionError(`No ${page} '${slug}'.`, 404);
+    const body = requiredString(input, "body", "your comment");
     const replyTo = int(input, "reply_to", { min: 1 }) ?? null;
-    if (replyTo !== null && !get("SELECT 1 FROM note_comments WHERE id = ? AND note = ?", replyTo, noteSlug)) {
-      throw new ActionError(`reply_to must be a comment on note '${noteSlug}'.`);
-    }
+    if (replyTo !== null && !get(`SELECT 1 FROM ${table} WHERE id = ? AND ${page} = ?`, replyTo, slug)) throw new ActionError(`reply_to must be a comment on ${page} '${slug}'.`);
     return tx(() => {
-      const r = run("INSERT INTO note_comments (note, author, body, reply_to, unread_by_agent) VALUES (?, 'you', ?, ?, 1)", noteSlug, body, replyTo);
+      const r = run(`INSERT INTO ${table} (${page}, author, body, reply_to, unread_by_agent) VALUES (?, 'you', ?, ?, 1)`, slug, body, replyTo);
       return { id: Number(r.lastInsertRowid), kind: replyTo === null ? "comment" : "reply" };
     });
   }
@@ -1292,16 +1455,15 @@ export function postComment(raw: unknown): { id: number; kind: "comment" | "repl
   // as something the agent might read as approval.
   const task = get<TaskRow>("SELECT column_name, question_kind FROM tasks WHERE id = ?", taskId) as TaskRow;
   if (replyTo === null && task.column_name === "waiting_on_you" && task.question_kind === "money" && /^(yes|no|not yet)[.!]?$/i.test(body.trim())) {
-    const current = currentQuestionId(taskId);
-    throw new ActionError(
-      `This task is waiting on a money question. Answer it with the Yes / Not yet buttons on the task's page` +
-        (current ? ` (reply_to: ${current})` : "") + `, so the answer is tied to that question.`,
-    );
+    throw new ActionError("Reply to the specific question using its Reply link, so Muse knows which payment you mean.");
   }
+  const files = normalizeFiles(array(input, "files") ?? []);
   const kind = replyTo === null ? "comment" : "reply";
   return tx(() => {
     const now = nowIso();
-    const u = addUpdate(taskId, "you", kind, body, [], replyTo, 1, now);
+    const screenshot = optionalString(input, "screenshot");
+    if (screenshot) files.push(saveScreenshot(taskId, screenshot));
+    const u = addUpdate(taskId, "you", kind, body, files, replyTo, 1, now);
     touchTask(taskId, now);
     return { id: u.id, kind };
   });

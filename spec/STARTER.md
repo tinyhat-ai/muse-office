@@ -4,7 +4,16 @@ Build this with Office actions after the person approves the promotion. When run
 
 ## Projects and Notes
 
-Create the four standard projects and General with their processes. Finish two setup tasks, **Set up the specialist team** and **Build the Office app**, with closing reports that say what actually happened. Put these next tasks in To do, assigned by role:
+Projects group related tasks. Website, Marketing, Customers, Money, and General
+are sample umbrellas, which Muse can add to, rename, archive, or restore when the person asks in chat.
+Use General for the Office setup tasks; a landing-page launch belongs as a task
+in Website. Keep the initial board small: two actual setup completions, one
+proposed task per other project, and one priority question. Never populate a
+speculative backlog. Finish **Set up the specialist team** and **Build the Office
+app** only after inspecting their results, with a verified closing report
+and loaded portraits. Leave unfinished work open. Give each task a useful
+plain-language description and short update. No formal checklist or percentage
+is needed; board lanes show where work stands.
 
 | Project | First task | What its page explains |
 | --- | --- | --- |
@@ -17,7 +26,7 @@ Put **Choose one priority for this week** in Waiting on you, with one direct que
 
 Create three tagged notes in plain words:
 
-1. **How your Office works** (pin it; tags `office`, `start here`): the chief takes requests in chat, routes substantial work to specialists, and records task progress and decisions here. The person comments on task and note pages and asks the chief to change other pages. Include a small Markdown table of the team roles and a fenced `mermaid` flowchart showing request → routing → specialist → Office result. Use a top-to-bottom flow so its labels remain readable in the note's width. Confirm both render on the note page.
+1. **How your Office works** (pin it; tags `office`, `start here`): explain first that Tinyhat gives the starting instructions and Muse builds this first version for the person. They can ask Muse to change the layout, pages, team, or communication style. Voice summaries are a personal choice. The chief takes requests in chat, routes substantial work to specialists, and records task progress and decisions here. The person comments on project, task, and note pages. State the verified comment-check schedule, who follows up, and that replies appear on the same page. Explain that a correction comment is reviewed by its owner, who updates the task and replies here. Comments do not directly change status. The person asks the chief to change other pages. Include a small Markdown table of the team roles and a fenced `mermaid` flowchart showing request → routing → specialist → Office result. Use a top-to-bottom flow so its labels remain readable in the note's width. Confirm both render on the note page.
 2. **Your first week** (tags `office`, `first week`): list the first tasks above and the one priority question. Mark each dependency as unanswered until the person answers.
 3. **Where your information comes from** (tags `sources`, `reports`, `customers`): explain that Customers grows from real people the person names or communication channels they choose to share; business Reports grow from verified work sources. Access requires the person's choice, and outgoing communication waits for their approval.
 

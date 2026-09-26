@@ -28,12 +28,6 @@
 .tk-req summary { cursor: pointer; font-weight: 650; }
 .tk-req div { margin-top: 8px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-chip); padding: 10px 12px; color: #3d3c38; font-size: var(--t-sec); white-space: pre-wrap; }
 
-/* Done when: a hollow circle, or a green check once met */
-.tk-chk { list-style: none; padding-left: 0; margin-top: 8px; }
-.tk-chk li { display: flex; gap: 10px; padding: 5px 0 5px 4px; font-size: var(--t-body); }
-.tk-chk li::before { content: "○"; color: #b3b1a9; width: 14px; flex: 0 0 auto; }
-.tk-chk li.ok::before { content: "✓"; color: var(--done); font-weight: 800; }
-
 /* Plan: the current step is bold with "· now"; done steps are grey with a check */
 .tk-plan { margin-top: 8px; padding-left: 26px; font-size: var(--t-body); }
 .tk-plan li { padding: 4px 0; }
@@ -127,3 +121,14 @@ a.tk-fl:hover { border-color: #c9c8c1; }
   .tk-form .row { justify-content: flex-end; }
   .tk-form .row .tk-onlyhere, .tk-form .row .hint { flex: 1 0 100%; }
 }
+
+.tk-result { margin-top: 24px; padding: 20px 0; border-bottom: 1px solid var(--line); }
+.tk-result h2 { font-size: 22px; }
+.tk-result h3 { margin-top: 18px; font-size: 16px; }
+.tk-result p { margin: 8px 0 16px; }
+.tk-result .tk-reply { display: block; margin-top: 18px; }
+.tk-cm-h, .tk-r { color: #1c1c19; }
+.tk-form textarea { color: #1c1c19; }
+.tk-ev .t { color: #65665e; }
+
+.tk-form textarea { border-color: #83847b; }

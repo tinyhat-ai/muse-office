@@ -6,21 +6,24 @@
 .pj-lede { display: flex; align-items: center; gap: 8px; }
 
 /* ---------------- board: project tiles ---------------- */
-.pj-tiles { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+.pj-tiles { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px -8px 0; padding: 8px; scroll-padding-inline: 8px; }
 .pj-tile {
-  position: relative; width: 118px; height: 118px; display: flex; flex-direction: column; justify-content: space-between;
-  padding: 14px 14px 12px; border-radius: var(--r-card); background: var(--c); color: var(--ink);
+  position: relative; width: 132px; min-height: 148px; display: flex; flex-direction: column; flex: 0 0 auto; scroll-margin-top: 72px;
+  border-radius: var(--r-card); background: var(--c); color: var(--ink);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.05); transition: transform 0.12s;
 }
 .pj-tile:hover { transform: translateY(-1px); }
 .pj-tile.all { background: var(--card); border: 1px solid var(--line); }
 /* the chosen project wears an ink ring; its fill stays its own colour */
-.pj-tile.on, .pj-tile:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.pj-tile.on, .pj-tile:has(.pj-tile-filter:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+.pj-tile-filter { display: flex; flex: 1; flex-direction: column; justify-content: space-between; gap: 16px; min-height: 104px; padding: 14px 14px 12px; border-radius: inherit; }
+.pj-tile-filter:focus-visible { outline: none; }
+.pj-tile-open { display: flex; align-items: center; justify-content: space-between; gap: 4px; min-height: 44px; padding: 8px 14px; border-top: 1px solid rgba(0, 0, 0, 0.12); border-radius: 0 0 var(--r-card) var(--r-card); font-size: var(--t-badge); font-weight: 650; }
+.pj-tile-open:hover { background: rgba(255, 255, 255, 0.3); text-decoration: underline; }
+.pj-tile-open:focus-visible { outline: 2px solid var(--ink); outline-offset: -4px; }
 .pj-tile-nm { font-size: var(--t-sec); font-weight: 750; line-height: 1.25; }
 .pj-tile-n { font-size: var(--t-cap); font-weight: 600; color: var(--soft); }
 .pj-info { min-height: 28px; margin-top: 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: var(--t-sec); color: var(--soft); }
-.pj-info a { color: var(--ink); font-weight: 650; padding: 4px 10px; border: 1px solid #c9c7bf; border-radius: var(--r-pill); }
-.pj-info a:hover { border-color: var(--ink); }
 
 /* ---------------- board: lanes ---------------- */
 /* four lanes on a 16px gutter; each lane knows the paper behind it (--lane-bg) so a note's folded corner shows the right background */
@@ -143,13 +146,13 @@
   .pp-body { grid-template-columns: minmax(0, 1fr); grid-template-areas: "side" "flow" "md"; }
 }
 @media (max-width: 720px) {
-  /* tiles scroll sideways; the row fades out so a clipped tile reads as "more"; 4px of room keeps the ink ring inside the scroll box */
+  /* Leave room for the 4px ring and hover; no fade mask over the end tile. */
   .pj-tiles {
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 4px 24px 6px 4px; margin: 24px -4px 0;
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: thin;
   }
-  .pj-tiles::-webkit-scrollbar { display: none; }
-  .pj-tile { width: 88px; height: 88px; flex: 0 0 auto; padding: 10px 10px 8px; }
+  .pj-tile { min-height: 132px; }
+  .pj-tile-filter { min-height: 88px; padding: 10px; }
+  .pj-tile-open { padding-inline: 10px; }
   .pj-tile-nm { font-size: var(--t-cap); }
   /* lanes stack, Waiting on you first; one column of notes per lane */
   .pj-board { display: flex; flex-direction: column; align-items: stretch; gap: 16px; }
@@ -169,3 +172,14 @@
   .pp-step:not(:last-child)::after { top: 48px; bottom: -14px; height: auto; left: 23px; right: auto; width: 2px; }
   .card.pp-md { padding: 20px 16px; }
 }
+
+/* Project context uses the same paper, type and spacing as task pages. */
+.pj-lede { display: flex; align-items: center; gap: 8px; }
+.pp-comments { margin-top: 24px; padding: 24px; }
+.pp-comment { padding: 16px 0; border-bottom: 1px solid var(--line); }
+.pp-comment time { margin-left: 10px; font-size: var(--t-cap); color: var(--soft); }
+.pp-comment.reply { margin-left: 20px; }
+.pp-context { padding: 24px; margin-top: 24px; }
+.pp-context h2 { margin-bottom: 12px; }
+.pp-context ul { padding-left: 20px; }
+.pp-comments .tk-form { margin-top: 20px; }

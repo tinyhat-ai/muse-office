@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS members (
 
 -- ------------------------------------------------------------ Projects
 CREATE TABLE IF NOT EXISTS projects (
-  slug             TEXT PRIMARY KEY,            -- 'website', 'marketing', 'customers', 'money', 'general'
+  slug             TEXT PRIMARY KEY,            -- related-work collection: 'website', 'personal', 'school'
   name             TEXT NOT NULL,
   description      TEXT,                        -- one line
   color            TEXT NOT NULL,               -- pastel fill, e.g. '#f2e4a9'
@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS projects (
   kind             TEXT,                        -- how it runs: 'Build', 'Publish', 'Follow up', 'Money', 'General'
   process_markdown TEXT,                        -- the process, written out (rendered on the project page)
   done_when        TEXT,                        -- one line
+  archived_at      TEXT,                        -- removed from the active board; restore keeps every task
   sort_order       INTEGER NOT NULL DEFAULT 0,
   created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
@@ -68,19 +69,22 @@ CREATE TABLE IF NOT EXISTS tasks (
   column_name      TEXT NOT NULL DEFAULT 'todo', -- 'todo' | 'in_progress' | 'waiting_on_you' | 'done'
   step             INTEGER,                     -- index of the process step the task is on
   question         TEXT,                        -- set while waiting on the user: the one question
-  question_kind    TEXT,                        -- 'money' (yes / not-yet buttons) | 'approve' | 'answer'
+  question_kind    TEXT,                        -- 'money' | 'approve' | 'answer'; replies stay comments
   note             TEXT,                        -- one line shown on the card
   job_definition   TEXT,                        -- what this is, in plain words
   original_request TEXT,                        -- the user's own words
   due              TEXT,                        -- ISO date, optional
   created_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
   updated_at       TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now')),
+  result_summary   TEXT,                        -- verified result, shown on completion
+  verification     TEXT,                        -- what was checked and observed
+  result_url       TEXT,                        -- openable result, when applicable
   done_at          TEXT
 );
 CREATE INDEX IF NOT EXISTS tasks_project ON tasks(project);
 CREATE INDEX IF NOT EXISTS tasks_column ON tasks(column_name);
 
-CREATE TABLE IF NOT EXISTS task_checks (                -- "Done when"
+CREATE TABLE IF NOT EXISTS task_checks (                -- optional legacy completion notes
   id       INTEGER PRIMARY KEY AUTOINCREMENT,
   task     TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
   position INTEGER NOT NULL,
@@ -88,7 +92,7 @@ CREATE TABLE IF NOT EXISTS task_checks (                -- "Done when"
   met      INTEGER NOT NULL DEFAULT 0
 );
 
-CREATE TABLE IF NOT EXISTS task_plan (                  -- "Plan"
+CREATE TABLE IF NOT EXISTS task_plan (                  -- optional legacy plan notes
   id       INTEGER PRIMARY KEY AUTOINCREMENT,
   task     TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
   position INTEGER NOT NULL,
@@ -210,4 +214,37 @@ CREATE INDEX IF NOT EXISTS note_comments_unread ON note_comments(unread_by_agent
 CREATE TABLE IF NOT EXISTS settings (
   key   TEXT PRIMARY KEY,                       -- 'office_name', 'user_name', 'last_agent_visit', 'hat_version'
   value TEXT
+);
+-- Project direction is routed to its lead through the same typed comment feed.
+CREATE TABLE IF NOT EXISTS project_comments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project TEXT NOT NULL REFERENCES projects(slug) ON DELETE CASCADE,
+  author TEXT NOT NULL,
+  body TEXT NOT NULL,
+  reply_to INTEGER REFERENCES project_comments(id) ON DELETE SET NULL,
+  unread_by_agent INTEGER NOT NULL DEFAULT 0,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))
+);
+CREATE INDEX IF NOT EXISTS project_comments_page ON project_comments(project, id);
+CREATE TABLE IF NOT EXISTS screenshots (
+  id TEXT PRIMARY KEY,
+  task TEXT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+  mime TEXT NOT NULL,
+  data BLOB NOT NULL
+);
+
+-- Durable Office-wide activity, written atomically with every supported mutation.
+-- IDs are monotonic even after deletion; checkpoints never depend on timestamps.
+-- No foreign keys: history survives removal of its target.
+CREATE TABLE IF NOT EXISTS office_updates (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  source TEXT NOT NULL,
+  target_id TEXT NOT NULL,
+  target_title TEXT NOT NULL,
+  owner TEXT,
+  actor TEXT NOT NULL,
+  action TEXT NOT NULL,
+  changes_json TEXT NOT NULL DEFAULT '{}',
+  comment_id INTEGER,
+  created_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
 );

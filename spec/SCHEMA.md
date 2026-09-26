@@ -8,7 +8,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 
 | Page | Reads from |
 | --- | --- |
-| Projects (the board) | `projects`, `tasks`, `members` |
+| Tasks (the board) | `projects`, `tasks`, `members` |
 | A project's page | `projects`, `process_steps`, `project_rules`, `tasks` |
 | A task's page | `tasks`, `task_checks`, `task_plan`, `task_files`, `task_updates`, `members` |
 | Team | `members`, `tasks` (for "working on" and "latest") |
@@ -19,12 +19,12 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 ## Tables, one line each
 
 - **members** — the chief of staff and each specialist: name, role, hat, one-line job, three "does" bullets, one "never", skills, the last rule learned. `is_chief = 1` marks the Muse itself.
-- **projects** — a project: name, colour (a pastel fill and a darker shade), who leads it, how it runs (`kind`), the process written out (`process_markdown`), and what "done" means.
-- **process_steps** — the steps of a project, in order: name, who does it (`who` is a member slug, `you`, or `any`), a one-line note, and whether the user's OK is part of it.
-- **project_rules** — rules the project learned from the user, each dated, with `origin = you` (the user said it) or `ok` (the agent suggested it, the user agreed).
+- **projects** — a group of related tasks: name, colour, lead, and plain-language rules (`process_markdown`). Optional `kind` and `done_when` fields remain for older Offices.
+- **process_steps** — optional legacy storage; preserved on upgrades, not required for a new Office or rendered as a workflow diagram.
+- **project_rules** — existing learned rules, rendered as simple text. New rules can be kept in `process_markdown`.
 - **tasks** — a task: which project, title, which specialist, which column (`todo`, `in_progress`, `waiting_on_you`, `done`), which process step it is on, the one question when it waits on the user, a one-line note for the card, the job definition, the user's original words, an optional due date.
-- **task_checks** — the task's "Done when" checklist.
-- **task_plan** — the task's plan, one row per step, each `done`, `now`, or `later`.
+- **task_checks** — optional legacy storage; never a required completion gate or a visible checklist dashboard.
+- **task_plan** — optional legacy plan rows, rendered as plain text. New plans can be written in `job_definition`.
 - **task_files** — the files the task produced, with a URL the user can open.
 - **task_updates** — the conversation on the task's page: events, updates, questions, the user's comments, and replies. `unread_by_agent = 1` on anything the user wrote until the Muse reads it.
 - **contacts** — the people who matter: name, company, stage (`lead`, `talking`, `proposal`, `customer`, `past`), source, next step and its date, notes, value.
@@ -41,9 +41,10 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 - Columns are exactly `todo`, `in_progress`, `waiting_on_you`, `done`. The pages show them as "To do", "In progress", "Waiting on you", "Done".
 - Moving a task to `waiting_on_you` requires a `question`. Moving it anywhere else clears the question.
 - A task belongs to exactly one project. A task update belongs to one task; a note comment belongs to one note.
+- A project's non-null `archived_at` pauses its open tasks without changing their saved status or deleting history. Task actions return `project_archived_at`; active summaries exclude archived projects. Restoring clears the timestamp.
 - Stages are exactly `lead`, `talking`, `proposal`, `customer`, `past`. Changing a stage adds a `stage_changes` row.
 - Times are ISO 8601 in UTC. The pages render them as "2 hours ago" or "Sep 24".
-- The agent writes only through the actions in `spec/ACTIONS.md`. The user may comment on a task or note page. The app stores user comments in `task_updates` or `note_comments` with `author = 'you'` and `unread_by_agent = 1`; `list_recent_updates` pages through both kinds.
+- The agent writes only through the actions in `spec/ACTIONS.md`. The user writes only comments on a task, project, or note page; the chief manages all other changes. The app stores user comments in `task_updates`, `project_comments`, or `note_comments` with `author = 'you'` and `unread_by_agent = 1`; `list_recent_updates` pages through all three kinds.
 
 ## How the reports use `metrics`
 
@@ -68,3 +69,51 @@ For the first visit, put four published examples in an **Around the world** sect
 ## People outside the funnel
 
 `contacts.in_funnel` is 1 for everyone in the funnel and 0 for someone kept on the page without being sold to: the person themselves, the maker of the hat, a partner. Such a contact shows the pill "Contact" instead of a stage, gets no `stage_changes` row, and is counted nowhere: not in the funnel blocks, not in the new-customers report. `set_stage` (or `upsert_contact` with a stage, or `in_funnel: true`, which enters them as a lead when no stage is named) moves them into the funnel, and that entry is their first recorded change. Moving someone with sales history outside the funnel removes that history: the flag says it was never sales, and the funnel and the reports only ever count people with `in_funnel = 1`. There is no email column; an email goes in `notes`.
+
+## Project comments, completion evidence, and screenshots
+
+`project_comments` has the same author/body/reply/unread fields as note comments,
+with a `project` foreign key. Its owner is the project lead (chief if unset).
+Treat comment identifiers as `(source, target_id, id)` across all three tables.
+`tasks.result_summary`, `verification`, and `result_url` hold the current verified
+completion. Reopening clears them and `done_at`, and resets checks; the completion
+update remains in task history. The reference app adds these nullable columns
+when opening an existing database, without replacing personal data.
+`screenshots` stores task-scoped, size-limited raster image bytes under random ids.
+Keep equivalent artifact-platform storage private to the same Office user.
+
+## Projects, tasks, and progress
+
+A project groups related tasks (Website, Personal, School). A task is a concrete
+piece of work, such as launching a landing page. Status lists contain task cards.
+The Tasks tab keeps `/projects` as its route for existing links. Sample project
+names are changed by Muse when the user asks; no fixed taxonomy is required.
+
+`projects.archived_at` is nullable: an ISO timestamp hides the project and its
+tasks from the active board. Restore clears it. Every task, note, file, conversation,
+and process remains intact. `list_projects` includes archived rows for management;
+filter `archived_at == null` for active selectors. New tasks require an active project.
+
+Progress is the task's `column_name` and short `note`, with updates in its
+conversation. Do not calculate or display completion percentages. Project
+rules live in `process_markdown` as plain text. No milestone or completion
+entity is needed. Existing `task_checks`, `task_plan`, `process_steps`,
+`project_rules`, and `done_when` fields remain supported for compatibility;
+preserve them on upgrades, but do not require them or generate a checklist UI.
+New native Offices can keep plan/rules in their existing text fields.
+
+## Unified Office updates
+
+`office_updates` records every supported successful mutation atomically with the
+change, including project creation/rename/archive/restore, task/status/owner/
+description/result/file changes, team/avatar, contacts/touches, reports/metrics,
+notes, comments, replies, and settings. It stores monotonic `id`, typed `source`
+and `target_id`, `target_title`, `owner`, `actor` (`you` or `agent`), `action`,
+`changes_json`, optional `comment_id`, and `created_at`. No foreign key removes
+history when a target is deleted. Screenshot bytes stay in private storage;
+its comment reference identifies the attachment. Changes use action fields;
+read the target for its current state. Direct SQL edits bypass this contract.
+
+The feed starts when installed; old unread comments remain in their original
+queue. Read calls, `mark_comments_read`, and `last_agent_visit` stamps create no
+feed events. Polling must not generate more polling work.

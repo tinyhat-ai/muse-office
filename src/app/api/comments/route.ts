@@ -3,9 +3,10 @@ import { postComment, describeError } from "@/lib/actions";
 
 export const dynamic = "force-dynamic";
 
-// The UI's only write: {task, body, reply_to?} or {note, body, reply_to?}.
+// The UI's write: exactly one of task, note, or project plus body.
+// Tasks also accept a screenshot as context. Posting never changes task status.
 // User comments are unread until the chief handles them through list_recent_updates.
-// A task's money buttons bind "yes" / "not yet" to the question update id.
+// Replies bind answers to the specific question; the chief decides what happens next.
 export async function POST(req: Request) {
   let input: unknown;
   try {

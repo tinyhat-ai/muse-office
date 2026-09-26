@@ -45,14 +45,9 @@ export function Sticky({ task, specialist }: { task: StickyTask; specialist?: Me
         <span className="pj-note-n">{task.note}</span>
       ) : null}
       <span className="pj-note-f">
-        {done ? (
-          <span className="pj-note-dn">Done</span>
-        ) : (
-          <>
-            <Avatar member={specialist} size="xs" />
-            <span className="pj-note-who">{specialist?.name ?? "No one yet"}</span>
-          </>
-        )}
+        <Avatar member={specialist} size="sm" />
+        <span className="pj-note-who">{specialist?.name ?? "No one yet"}</span>
+        {done && <span className="pj-note-dn">Done</span>}
         <span className="pj-note-ago">{stickyTime(task)}</span>
       </span>
     </Link>
