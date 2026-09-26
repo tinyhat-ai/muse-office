@@ -52,6 +52,13 @@ export function seedStarter(db: Database.Database) {
       ["work-channels", "customers", "Map where customer conversations arrive", "sales", "todo", 0, null, null, "Only channels you choose to share", "Ask which work email or messaging channels the user wants the team to read. Record only people found there or named by the user."],
       ["money-sources", "money", "Find where invoices and receipts live", "bookkeeper", "todo", 0, null, null, "No account access assumed", "Ask which records may be read and what period to start with. Never pay or send anything from this task."],
     ];
+    const starterChecks: Record<string, string[]> = {
+      "first-priority": ["Your chosen priority is recorded"],
+      "site-links": ["Current site link or lack of a site is recorded", "Available brand material is linked or confirmed missing"],
+      "communication-plan": ["Audience and offer are confirmed with you", "First-week draft is saved for review"],
+      "work-channels": ["You choose which channels the team may read", "Sources and access boundaries are recorded"],
+      "money-sources": ["You choose the records that may be read", "The review period is agreed"],
+    };
     for (const [id, projectSlug, title, specialist, column, position, question, questionKind, note, definition] of tasks) {
       task.run(id, projectSlug, title, specialist, column, position, question, questionKind, note, definition, now, now, column === "done" ? now : null);
       if (column === "done") {
@@ -61,6 +68,7 @@ export function seedStarter(db: Database.Database) {
         db.prepare("INSERT INTO task_checks (task, position, text, met) VALUES (?, 0, ?, 1)").run(id, id === "team-ready" ? "Starter roster and responsibilities recorded" : "Office reference pages and actions included");
         update.run(id, "chief", "update", `${summary}\n\n${verification}`, now);
       }
+      for (const [position, text] of (starterChecks[id] ?? []).entries()) db.prepare("INSERT INTO task_checks (task, position, text, met) VALUES (?, ?, ?, 0)").run(id, position, text);
       if (question) update.run(id, "chief", "question", question, now);
     }
 

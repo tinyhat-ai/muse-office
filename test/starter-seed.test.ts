@@ -16,6 +16,7 @@ test("first visit contains real setup, source-backed charts, and no invented cus
     assert.equal(count("members"), 6);
     assert.equal(count("projects"), 5);
     assert.equal(count("tasks"), 7);
+    assert.equal((db.prepare("SELECT COUNT(*) n FROM tasks t WHERE NOT EXISTS (SELECT 1 FROM task_checks c WHERE c.task = t.id)").get() as {n:number}).n, 0);
     assert.equal(count("notes"), 3);
     assert.equal(count("reports"), 12);
     assert.equal(count("metrics"), 10);

@@ -11,7 +11,10 @@ in Website. Keep the initial board small: two actual setup completions, one
 proposed task per other project, and one priority question. Never populate a
 speculative backlog. Finish **Set up the specialist team** and **Build the Office
 app** only after inspecting their results, with all criteria met, a verified
-closing report, and loaded portraits. Leave unfinished work open.
+closing report, and loaded portraits. Leave unfinished work open. Give each
+proposed task a short, meaningful Done when checklist with unmet checks: for
+example site link recorded and brand material linked. The board shows verified
+checks, never a guessed percentage.
 
 | Project | First task | What its page explains |
 | --- | --- | --- |
