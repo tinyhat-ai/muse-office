@@ -101,3 +101,10 @@ The tester also asked Muse to inspect the previously missed screenshot. Muse
 then described its actual phone layout, dark comment text on white, and the
 lighter helper text below the textarea. This corrected the earlier omission;
 it is a qualitative image inspection, not a measured contrast audit.
+
+After both temporary checkers were removed, Muse cleared the test Office's
+verified schedule setting and rebuilt its save feedback. The tester posted a
+harmless acknowledgement through the native task UI and independently observed:
+“Comment saved. Regular checks aren’t set up. Ask Noche in chat to continue.”
+The footer agreed. `muse-save-confirmation.jpg` records this disabled-schedule
+state; it does not imply that the user's personal Office polling was disabled.
