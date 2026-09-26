@@ -19,6 +19,7 @@ interface MoneyButtonsProps {
 export function MoneyButtons({ task, questionId, yesLabel }: MoneyButtonsProps) {
   const router = useRouter();
   const [sending, setSending] = useState<"yes" | "not yet" | null>(null);
+  const [saved, setSaved] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [refreshing, startTransition] = useTransition();
   const busy = sending !== null || refreshing;
@@ -27,12 +28,14 @@ export function MoneyButtons({ task, questionId, yesLabel }: MoneyButtonsProps) 
     if (busy) return;
     setSending(body);
     setError(null);
+    setSaved("");
     const res = await postComment({ task, body, reply_to: questionId });
     setSending(null);
     if (!res.ok) {
       setError(res.error || "That did not save. Try again.");
       return;
     }
+    setSaved(`Saved. ${res.data?.follow_up ?? "Awaiting the owner’s reply here."}`);
     startTransition(() => router.refresh());
   }
 
@@ -44,6 +47,7 @@ export function MoneyButtons({ task, questionId, yesLabel }: MoneyButtonsProps) 
       <button type="button" className="btn quiet" disabled={busy} onClick={() => void answer("not yet")}>
         {sending === "not yet" ? "Sending…" : "Not yet"}
       </button>
+      {saved && <p className="comment-state" role="status">{saved}</p>}
       {error ? (
         <span className="tk-form-err" role="alert">
           {error}
