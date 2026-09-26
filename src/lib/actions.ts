@@ -720,7 +720,7 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   get_task: {
     section: "Tasks",
-    description: "Everything on the task's page: the card, done when, plan, files, and the conversation.",
+    description: "The task’s details, optional legacy plan/check records, result, files, and conversation.",
     params: { id: "string · task id · required" },
     read: true,
     run(input) {
@@ -1406,7 +1406,7 @@ export function catalog() {
 /**
  * The user may comment on a project, task, or note page (POST /api/comments).
  * Stored with author 'you' and unread_by_agent = 1 for list_recent_updates.
- * The money buttons post body "yes" or "not yet" as a reply to the question's update id.
+ * Answers are typed comments linked to the specific question through reply_to.
  */
 export function postComment(raw: unknown): { id: number; kind: "comment" | "reply"; follow_up: string } {
   return tx(() => {
@@ -1455,11 +1455,7 @@ function saveComment(raw: unknown): { id: number; kind: "comment" | "reply" } {
   // as something the agent might read as approval.
   const task = get<TaskRow>("SELECT column_name, question_kind FROM tasks WHERE id = ?", taskId) as TaskRow;
   if (replyTo === null && task.column_name === "waiting_on_you" && task.question_kind === "money" && /^(yes|no|not yet)[.!]?$/i.test(body.trim())) {
-    const current = currentQuestionId(taskId);
-    throw new ActionError(
-      `This task is waiting on a money question. Reply to the specific question on the task's page` +
-        (current ? ` (reply_to: ${current})` : "") + `, so the answer is tied to that question.`,
-    );
+    throw new ActionError("Reply to the specific question using its Reply link, so Muse knows which payment you mean.");
   }
   const files = normalizeFiles(array(input, "files") ?? []);
   const kind = replyTo === null ? "comment" : "reply";

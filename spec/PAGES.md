@@ -1,6 +1,6 @@
 # The pages
 
-Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. Muse builds this first version for the user and can change it with them. Say so in a short, visible line. Users can view, filter, search, and comment. Muse manages every other change through conversation. For those records a quiet line says: "To change this, tell <your Muse's name> in chat."
+Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. During setup, Muse explains in chat that it builds this first version for the user and can change it with them. Users can view, filter, search, and comment. Muse manages every other change through conversation. For those records a quiet line says: "To change this, tell <your Muse's name> in chat."
 
 Every page opens with the same header: a small kicker line, a large title, one line of lede. Then the content. Nothing is hidden behind tabs inside a page.
 
