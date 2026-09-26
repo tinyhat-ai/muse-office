@@ -8,7 +8,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 
 | Page | Reads from |
 | --- | --- |
-| Projects (the board) | `projects`, `tasks`, `members` |
+| Tasks (the board) | `projects`, `tasks`, `members` |
 | A project's page | `projects`, `process_steps`, `project_rules`, `tasks` |
 | A task's page | `tasks`, `task_checks`, `task_plan`, `task_files`, `task_updates`, `members` |
 | Team | `members`, `tasks` (for "working on" and "latest") |
@@ -80,3 +80,45 @@ update remains in task history. The reference app adds these nullable columns
 when opening an existing database, without replacing personal data.
 `screenshots` stores task-scoped, size-limited raster image bytes under random ids.
 Keep equivalent artifact-platform storage private to the same Office user.
+
+## Projects, tasks, and progress
+
+A project groups related tasks (Website, Personal, School). A task is a concrete
+piece of work, such as launching a landing page. Status lists contain task cards.
+The Tasks tab keeps `/projects` as its route for existing links. Sample project
+names are editable; no fixed project taxonomy is required.
+
+`projects.archived_at` is nullable: an ISO timestamp hides the project and its
+tasks from the active board. Restore clears it. Every task, note, file, conversation,
+and process remains intact. `list_projects` includes archived rows for management;
+filter `archived_at == null` for active selectors. New tasks require an active project.
+
+Progress is derived, never independently writable:
+
+| Record | Durable source | Read contract |
+| --- | --- | --- |
+| Task | `task_checks.text`, `position`, `met`; `tasks.column_name` | `progress: {basis: "done_when", met, total, percent}`; percent is rounded `100 * met / total`, or null with no criteria. |
+| Project | All tasks referencing `tasks.project` | `progress: {done, total, percent, waiting, column, question, nextDue}`; percent is rounded `100 * done / total`, or 0 when empty. |
+
+SQL views `task_progress` and `project_progress` expose the same counts/percentages
+(the project view calls status `column_name`). UI and action responses use the
+same calculation. Search and owner filters never change progress denominators.
+Task progress measures verified criteria, not time spent. 100% criteria does not
+bypass result verification or unread-feedback checks. Project 100% means its
+current tasks are complete; an ongoing project can receive more work later.
+
+## Unified Office updates
+
+`office_updates` records every supported successful mutation atomically with the
+change, including project creation/rename/archive/restore, task/status/owner/
+checklist/result/file changes, team/avatar, contacts/touches, reports/metrics,
+notes, comments, replies, and settings. It stores monotonic `id`, typed `source`
+and `target_id`, `target_title`, `owner`, `actor` (`you` or `agent`), `action`,
+`changes_json`, optional `comment_id`, and `created_at`. No foreign key removes
+history when a target is deleted. Screenshot bytes stay in private storage;
+its comment reference identifies the attachment. Changes use action fields;
+read the target for its current state. Direct SQL edits bypass this contract.
+
+The feed starts when installed; old unread comments remain in their original
+queue. Read calls, `mark_comments_read`, and `last_agent_visit` stamps create no
+feed events. Polling must not generate more polling work.

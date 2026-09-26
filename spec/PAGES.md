@@ -1,22 +1,32 @@
 # The pages
 
-Five pages in one top bar: **Projects · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. Muse builds this first version for the user and can change it with them. Say so in a short, visible line. The user mostly looks; Muse changes the work records. Wherever a control would normally be, one quiet line says: "To change this, tell <your Muse's name> in chat."
+Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. Muse builds this first version for the user and can change it with them. Say so in a short, visible line. Users can search, filter, manage projects, and comment. Muse updates the remaining work records. For those records a quiet line says: "To change this, tell <your Muse's name> in chat."
 
 Every page opens with the same header: a small kicker line, a large title, one line of lede. Then the content. Nothing is hidden behind tabs inside a page.
 
-## Projects (`/projects`)
+## Tasks (`/projects`, retained for existing links)
 
-Start with a calm board of **projects**, one card per shared goal with a finish line. Several projects can concern the same area: “Launch the landing page” and “Redesign the homepage” each have their own tasks. Four lanes: To do,
-In progress, Waiting on you, Done. Cards have a neutral surface, a restrained
-project-color accent, name, short description, owner, and completed-task count
-with a progress bar. Show the question driving Waiting on you directly on the
-card. Open a card for tasks; do not mix every task into the overview.
+Use familiar board, status-list, and task-card meanings. Projects group related
+tasks: Website, Personal, School. “Launch a landing page” is a task in Website.
+Projects are user choices; the starter names are examples, not a fixed taxonomy.
 
-Derive project status from its tasks: any waiting task → Waiting on you;
-nonempty and all done → Done; any started or completed task → In progress;
-otherwise To do. Empty projects are not Done. Progress is completed tasks / all
-tasks, clearly labeled, not invented effort estimates. Use two lanes on smaller
-screens and a single column on phones with Waiting on you first.
+Show **All projects** and one selector per active project, then task search and
+owner filtering, matching counts, and Clear filters. Filters combine. Four status
+lists: To do, In progress, Waiting on you, Done. Each card is a task and opens its
+task page. Show project colour/name, task title, owner portrait/name (including
+Done), verified-check progress, due/updated date, and the question when waiting.
+Keep all completed tasks discoverable. Selected project context links to its
+separate detail page and shows completed tasks / all project tasks; filtering
+does not alter that denominator. Empty projects have zero tasks, not a completion.
+
+**Manage projects** lets the user add, rename, describe, archive, and restore
+projects. Archiving hides a project and its tasks from the active board and
+preserves notes, comments, files, process, and history. Explain this before the
+control. List archived projects here with Restore. Every save enters the unified
+updates feed so Muse learns what changed. Never turn status lists into projects.
+
+Use four lists on desktop, two on smaller screens, and one column on phones
+with Waiting on you first. No squeezed cards or clipped controls.
 
 ## A project's page (`/projects/<slug>`)
 
@@ -38,10 +48,10 @@ view, when the person asks. Keep the records and user choices intact.
 
 Like an issue page, top to bottom:
 
-1. Breadcrumb "‹ Projects / Money". The project name with its colour bar. The title, large. A status line: the column (orange dot for Waiting on you), "[avatar] Penny is on it", "Waiting 3 hours" or "Updated 2 hours ago", and "Due Thursday" when set.
+1. Breadcrumb "‹ Tasks / Money". The project name with its colour bar. The title, large. A status line: the column (orange dot for Waiting on you), "[avatar] Penny is on it", "Waiting 3 hours" or "Updated 2 hours ago", and "Due Thursday" when set.
 2. **When the task waits on the user**, the unanswered question is pinned right here, in a peach card: "[avatar] Penny asked you · 3 hours ago", the question, and either two buttons for a `money` question ("Yes, pay $1,240 on Sep 28" / "Not yet") or a "Reply to Penny" button, plus one line saying what a yes does. It disappears once answered.
 3. **What this is**: the job definition. A collapsed "Original request" with the user's own words.
-4. **Done when**: a checklist; met items show a green check.
+4. **Done when**: a checklist; met items show a green check. Show verified count and percent from `task_progress`; no criteria means “Completion checks not set”, never a made-up percentage.
 5. **Plan**: a numbered list; the current step is bold with "· now"; done steps are grey.
 6. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Update cards with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files as chips. A question card is peach. The user's comments have a blue-grey header and show replies indented under them. Each card has a "Reply" link that opens a small box.
 7. **The comment box**: "[you] Add a comment for <Muse> and Penny…" with a "Comment" button and a small line "Your comment stays with this task." Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Note pages have their own comment box.

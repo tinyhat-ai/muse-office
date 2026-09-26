@@ -3,7 +3,7 @@
   "kind_reason": "The Office keeps the person's tasks, customers, numbers, and notes, so it needs its own database and its own actions. It is private to one person and must never have a public link. A static page cannot do any of that.",
   "name": "Office",
   "slug": "office",
-  "verbatim_request": "Build my private Office from this repository as a useful first version I can change with Muse. Start with Projects, Team, Customers, Reports, and Notes. Projects shows project cards by status; opening one shows its tasks and results. I can steer through project, task, and note comments, attach a screenshot to a task, and request changes to reopen completed work. Explain that Muse built this app from Tinyhat’s starting instructions and can change its layout, pages, team, and behavior when I ask. Keep my existing preferences. Use spec/PAGES.md and spec/DESIGN.md as a starting design, and implement the durable data and action contracts from db/schema.sql and spec/ACTIONS.md on your platform. Notes render Markdown tables and Mermaid diagrams. Completion must show a verified result, not just a plan. Do not hard-code a voice preference or pretend comment saves wake an agent.",
+  "verbatim_request": "Build my private Office from this repository as a useful first version I can change with Muse. Start with Tasks, Team, Customers, Reports, and Notes. Tasks shows task cards in status lists, with project filters, task search, and owner filtering. Projects group related tasks: Website, Personal, or School; a landing-page launch is a task in Website. Users can add, rename, archive, and restore projects themselves. Preserve existing avatars, records, and useful controls. Opening a card opens its task; project context is separate. I can steer through project, task, and note comments, attach a screenshot to a task, and request changes to reopen completed work. Explain that Muse built this app from Tinyhat’s starting instructions and can change its layout, pages, team, and behavior when I ask. Keep my existing preferences. Use spec/PAGES.md and spec/DESIGN.md as a starting design, and implement the durable data and action contracts from db/schema.sql and spec/ACTIONS.md on your platform. Notes render Markdown tables and Mermaid diagrams. Completion must show a verified result, not just a plan. Do not hard-code a voice preference or pretend comment saves wake an agent.",
   "source": {
     "repo": "https://github.com/tinyhat-ai/muse-office",
     "branch": "channels/lts",
@@ -14,7 +14,8 @@
     "starter": "spec/STARTER.md",
     "actions": "spec/ACTIONS.md",
     "actions_catalog": "GET /api/actions on the running app lists every action with its arguments",
-    "note": "You (the Muse) read these files; the app itself needs no web access and makes no external calls. When your builder fetches the repository, the platform asks the person to confirm access to github.com for this artifact; that confirmation is expected and the person should allow it. A declined confirmation stops the build; ask them to try again."
+    "note": "You (the Muse) read these files; the app itself needs no web access and makes no external calls. When your builder fetches the repository, the platform asks the person to confirm access to github.com for this artifact; that confirmation is expected and the person should allow it. A declined confirmation stops the build; ask them to try again.",
+    "revision_rule": "Resolve source.branch once to a commit SHA and use that commit for every file and the builder checkout. If the user explicitly selected a preview commit, use it for every file instead. Never mix main, a preview, and LTS."
   },
   "capabilities": {
     "public_web_read": false,
@@ -28,7 +29,7 @@
   "builder_notes": [
     "The reference app is a starting point. Adapt it to this user; preserve existing records and preferences. Explain that the user can ask Muse to change any part of their Office.",
     "Implement the action contract with the same names and arguments initially. If customization changes contracts, update the local skills that call them too. Discover the actual platform action schema; never guess tools.",
-    "Project status is derived from tasks: waiting if any task needs the user; done only when nonempty and all done; otherwise in progress if any work has started or finished; otherwise to do. Open a project for its task list, results, and conversation.",
+    "Project status is derived from tasks: waiting if any task needs the user; done only when nonempty and all done; otherwise in progress if any work has started or finished; otherwise to do. The Tasks board shows tasks, filtered by project; project context is available separately.",
     "Use POST /api/comments or equivalent native actions for task, project, and note comments. Keep author you and unread_by_agent true until a same-page owner/chief reply. task comments accept request_changes (reopens Done) and a screenshot. Preserve reply_to binding for money approvals.",
     "Provide list_recent_updates with stable newest-first cursor pagination across task, project, and note comments, including owner, files, source, target_id, and id. Copy those typed identifiers unchanged for replies. Handle comments on closed tasks too.",
     "Follow hat/skills/adapt-your-office/SKILL.md for personal communication preferences and the comment-check schedule. Only show comment_check_minutes after verifying the job; only link office_chat_url after verifying the chosen chat. Do not invent a wake webhook.",
@@ -45,7 +46,7 @@
   ],
   "fallbacks": [
     "An Office already exists: inspect its data and personal preferences first, then refine it in place. Preserve its customizations. Do not replace its whole layout unless the user asks.",
-    "A boards or tasks app already exists: ask the person, then turn it into Office and carry its cards over as tasks (one project per lane) before anything else.",
+    "A boards or tasks app already exists: ask the person, then turn it into Office and preserve its projects and carry its cards over as tasks (status lists are not projects) before anything else.",
     "The repository cannot be fetched: ask the person to paste db/schema.sql, spec/PAGES.md, spec/DESIGN.md, spec/STARTER.md, and spec/ACTIONS.md, then build from those.",
     "The platform has no full-stack app kind: stop and tell the person; a static page is not an Office."
   ],
@@ -53,5 +54,11 @@
     "use": "src/app/icon.svg from the repository: a small Office building with two windows and an orange doorway on warm off-white #f3f3ef",
     "never": "the chief's top hat as the app icon, a briefcase, a suitcase, or an unrelated stock icon",
     "fallback": "if the platform cannot take an SVG, render the same Office building as a small PNG"
+  },
+  "update_delivery": {
+    "action": "list_office_updates",
+    "coverage": "Every supported mutation across projects, tasks, team, notes, customers, reports, comments and files",
+    "default_check_minutes": 1,
+    "rules": "One recurring job. Verify a real scheduled run. Save checkpoint only after all cursor pages succeed; retry unread comments through list_recent_updates. Explain actual interval and follow-up after saves. Respect supported minimum and user preferences. Never claim immediate wake without a verified trigger."
   }
 }

@@ -5,7 +5,7 @@ name. `channels/latest` follows the newest published release, while
 `channels/lts` is the stable promotion channel. The Muse landing page copies
 `hat/PROMPT.md` from LTS, so work merged to `main` does not change the
 message people send their Muse until the stable channel is promoted. The
-hat's build-file links use that same LTS channel. Promote the complete tested
+hat resolves that same LTS channel once to a commit and uses it for every build file. Promote the complete tested
 release before shipping website copy that describes its new behavior.
 When testing unreleased changes, explicitly give Muse the candidate commit
 and have it read every build file from that commit instead of the LTS links.

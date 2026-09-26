@@ -43,14 +43,31 @@ are starting choices the user can change.
   and blockers on the task page first, with a link in the chosen chat. The
   main chat remains a place the user can always talk to you. Preserve a user's
   choice to receive updates there instead.
-- **Comment timing:** inspect the platform's current documentation for a real
+- **Update timing:** inspect the platform's current documentation for a real
   comment trigger. Use one only if supported and verified. Otherwise explain
-  that comments wait for a scheduled check; propose a five-minute interval
+  that Office changes wait for a scheduled check; propose a one-minute interval
   at setup, let the user change it, and respect the platform's minimum and
   costs. Do not silently replace an existing schedule. Confirm the actual job
   and delivery before recording `comment_check_minutes` in Office settings.
   Do not claim a saved comment has already started an agent. For urgent work,
   the user can send you the task link in chat.
+
+Use one recurring job to review `list_office_updates` across the whole app,
+not only comments. It includes user project edits and every supported mutation
+of tasks, checklists, files, team, customers, reports, and notes. Start at the
+saved checkpoint, process all cursor pages in order, and persist the returned
+checkpoint only after handling the full batch. Retry from the previous checkpoint
+on failure; use event ids to avoid duplicate work. Do not overlap runs, poll in a
+busy loop, or turn your own replies into new tasks. Reads, receipt acknowledgements,
+and heartbeat stamps do not create new feed events. Review existing unread
+comments on upgrades too: the activity feed starts when it is installed.
+
+Verify one real scheduled run after a UI change. Set `comment_check_minutes` to
+its observed supported interval, not an aspiration; clear it if the job is paused
+or removed. Display that schedule by the comment box and after each save, naming
+the chief and explaining that the owner will continue the work. A check interval
+is not a promised reply deadline. If the platform minimum is longer than one
+minute, say so and offer its actual minimum or a verified immediate trigger.
 
 The task owner follows up on task comments, the project lead on project
 direction, and the note keeper on note comments. The chief is the fallback.
@@ -79,3 +96,11 @@ app and records; do not reset or rebuild it blindly. Inspect the actual
 rendered result, at a narrow phone width too. Confirm readable text/background
 pairs, including comments, inputs, focus, and selected cards. Show what changed,
 how to check it, and remind them they can keep adjusting it.
+
+Preserve the fundamentals while adapting layouts: the Tasks tab, project filters,
+search, owner portraits, task details, completion checks, results, files, comments,
+and project management. Reuse existing avatar assets; initials are a temporary
+fallback only when the image is unavailable. Verify actual image loading, not
+just a stored URL. Read the schema and actions before showing progress: tasks
+show verified criteria / all criteria, projects show completed tasks / all tasks.
+Filtering must not change these denominators. Never invent progress estimates.

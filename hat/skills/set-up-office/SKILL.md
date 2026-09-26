@@ -19,14 +19,14 @@ Cover the following in plain words:
 - Your office: ~/workspace/office/ on your computer, with a starter team
   of five specialists (from team/): a Designer, a Developer, a Marketer,
   Sales, and a Bookkeeper. Give each one a name in your own style.
-  If you already keep lanes or boards folders (for example
-  ~/workspace/boards/), say you will turn them into projects.
-- Projects are goals with a finish line, each holding its related tasks.
-  Propose a small Office setup project and only useful first goals from
-  spec/STARTER.md. Website or Marketing is an area, not a permanent project:
-  “Launch the landing page” and “Redesign the homepage” can be separate projects.
-  Keep existing user projects; split broad categories only with their agreement.
-- One private app, Office, with five pages: Projects, Team, Customers, Reports,
+  Preserve existing boards and their project/task mapping when migrating.
+- Projects group related tasks, like Website, Personal, or School. A landing-page
+  launch is a task within Website. Start with a few useful example projects,
+  which the person can rename, add, archive, and restore themselves. The Tasks
+  tab shows task cards in status lists, with project filters, search, and owner
+  filtering. Opening a card opens the task; keep project details separately.
+
+- One private app, Office, with five pages: Tasks, Team, Customers, Reports,
   and Notes. Each task and each project also gets its own page.
   It saves what you add, so it is private to them and has no public link.
   If they already have a boards or tasks app, say you will turn it into
@@ -55,11 +55,10 @@ Create:
   what it must never do) and one line per specialist (role, folder).
 - ~/workspace/office/team/<name>/AGENT.md — from the matching team/
   template, plus skills/ (the starter skills it names) and memory.md.
-- ~/workspace/office/projects/<slug>/PROJECT.md — goal, lead, status.
+- ~/workspace/office/projects/<slug>/PROJECT.md — purpose, lead, and current work summary.
 - ~/workspace/office/projects/<slug>/process.md — from the closest
   processes/ template, adapted to this project — plus memory.md.
-If you already have lane folders (AGENT.md, skills/, memory.md per lane),
-move each lane into projects/ and keep its memory.md. Ask first.
+When migrating existing boards, preserve their projects, tasks, and memory. Status lists are not projects; do not turn To do or Done into a project.
 
 Do not open chats for the projects ahead of work; a project chat, if your
 platform needs one to keep a specialist from seeing the main chat, is
@@ -88,13 +87,20 @@ the user's browser cannot reach your computer. The Office app is the view.
 - If an app with slug "office" exists, or a boards/tasks app exists, follow
   the fallbacks in office.json. Never delete an app without asking.
 - Run the checks in HAT.md ("Check that the Office is right") before you go on.
-- Create one scheduled task of yours at the interval agreed in the plan that calls
-  `list_recent_updates` with `unread_only=true`, follows `next_cursor` on
-  every page, assigns each comment to its task owner, project lead, or note keeper, and
-  verifies the reply and follow-up before marking it read. Without it,
-  comments wait until the user next talks to you. Verify the scheduled job and
-  its delivery, then set `comment_check_minutes` to its real interval. Use a
-  documented immediate trigger only when available. See `adapt-your-office`.
+- Create one scheduled job to check **every minute** by default, using a verified
+  immediate trigger if supported instead. Respect an existing user preference;
+  if one minute is unsupported, explain the real minimum and agree the fallback.
+  Call `list_office_updates` from the saved checkpoint, follow every cursor page,
+  route each change to its owner, and save the checkpoint only after successful
+  handling. Include project edits, tasks, status, checklists, files, team, notes,
+  customers, and reports. Also drain `list_recent_updates` with `unread_only=true`
+  for comment retries; read attachments and reply on the same page before marking
+  read. Keep one job and prevent overlapping runs. Verify a real scheduled run
+  after a test UI change before recording `comment_check_minutes`. A cron entry
+  alone is not verification. After a save the UI names the chief, explains this
+  actual schedule, and says the chief will follow up; it never claims instant wake.
+  See `adapt-your-office` for setup, checkpoints, and failure handling.
+
 - After the build, load the office through its actions exactly as
   `spec/STARTER.md` describes. That file names the first tasks, three notes,
   two real orientation contacts outside the sales funnel, and four sourced

@@ -4,14 +4,21 @@ Build this with Office actions after the person approves the promotion. When run
 
 ## Projects and Notes
 
-Each project is a shared goal with a finish line. Two website goals can be separate projects. Use **Get your Office ready** for setup, and propose only the other goals that fit the person. Keep the initial board small: the two actual setup completions, one proposed task per other area, and one priority question. Do not expand it into a backlog of speculative work. Finish two setup tasks, **Set up the specialist team** and **Build the Office app**, only after inspecting the result, with all Done when checks met and `move_task` completion fields recording what happened, how it was checked, and where to see it. Keep incomplete avatar or folder work open within the setup task. Put these next tasks in To do, assigned by role:
+Projects group related tasks. Website, Marketing, Customers, Money, and General
+are sample umbrellas, which the person can add to, rename, archive, or restore.
+Use General for the Office setup tasks; a landing-page launch belongs as a task
+in Website. Keep the initial board small: two actual setup completions, one
+proposed task per other project, and one priority question. Never populate a
+speculative backlog. Finish **Set up the specialist team** and **Build the Office
+app** only after inspecting their results, with all criteria met, a verified
+closing report, and loaded portraits. Leave unfinished work open.
 
 | Project | First task | What its page explains |
 | --- | --- | --- |
-| Collect your website brief | Gather the current site and brand links | The designer reviews what exists before suggesting changes. Ask for the site link when it is missing. |
-| Plan your first week of outreach | Draft a first-week communication plan | The marketer asks what the person sells and who they want to reach before drafting. Nothing is published yet. |
-| Set up customer follow-ups | Map where customer conversations arrive | Sales asks which email or messaging channels may be read. It records only real people it finds or the person names. |
-| Prepare your first money review | Find where invoices and receipts live | The bookkeeper asks which records may be read and what period to start with. It never pays or sends anything. |
+| Website | Gather the current site and brand links | The designer reviews what exists before suggesting changes. Ask for the site link when it is missing. |
+| Marketing | Draft a first-week communication plan | The marketer asks what the person sells and who they want to reach before drafting. Nothing is published yet. |
+| Customers | Map where customer conversations arrive | Sales asks which email or messaging channels may be read. It records only real people it finds or the person names. |
+| Money | Find where invoices and receipts live | The bookkeeper asks which records may be read and what period to start with. It never pays or sends anything. |
 
 Put **Choose one priority for this week** in Waiting on you, with one direct question. This is the first decision the chief needs; it gives the board a real reason to use that lane. Do not invent a reply.
 

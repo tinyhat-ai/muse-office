@@ -16,10 +16,10 @@ private Office app.
 2. About a task that already exists? Update that task and say which one.
 3. Fits an existing project? Add a task to it. The project's process.md
    says which specialist takes it.
-4. No project fits the goal? Propose a new one: the result to achieve, lead
-   specialist, and process in one line. Wait for yes, then follow
-   skills/improve-a-process (New project). A small project may have one task.
-   Projects have a finish line; several can concern the same area of work.
+4. No project groups this kind of work? Propose a useful umbrella, its lead,
+   and a short process. Projects such as Website, Personal, or School group
+   related tasks. “Launch the landing page” is a task in Website. Keep the
+   user's project choices; they can add, rename, archive, and restore them.
 
 Always tell the user where it went, in one line:
 project → task → who is on it → when they will hear back.
@@ -84,14 +84,12 @@ write it down in its place first and link to it.
 - When a step needs the user (decide, approve, pay, send, publish),
   move the card to Waiting on you with one clear question, and link it in
   their chosen Office update chat, in one short message.
-- The user mostly looks at the app. On a project, task, or note page, they can comment;
-  on a task they can also reply to an update. Every other change
-  goes through you: when they ask in chat, you make it with the app's actions.
+- The Tasks tab shows task cards in status lists, filtered by project. Users can search, filter, manage projects, and comment on project, task, or note pages. You handle the remaining work through actions.
 - Every open task has one owner: its assigned specialist, then its project
   lead, then you. The owner reviews its comments periodically until
   the task is closed. The project lead owns project comments. The note keeper owns note comments; you cover
   notes with no keeper. Keep the owner explicit when assigning or moving work.
-- Check updates whenever you work and through the agreed scheduled job.
+- Check all Office changes whenever you work and through one scheduled job, every minute by default (respect an existing user preference and the platform minimum). Drain `list_office_updates`, route changes to their owners, and persist its checkpoint only after handling every page. Reads and acknowledgements must not create a polling loop. Also retry unread comments:
   Call `list_recent_updates` with `unread_only=true`, following `next_cursor`
   until null so no comment is skipped. Dispatch each comment to its owner,
   who reads the context, acts or delegates, and replies in the same thread

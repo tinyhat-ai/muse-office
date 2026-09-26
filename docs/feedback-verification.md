@@ -4,9 +4,11 @@ This change improves the starting instructions and reference Office. Each Muse b
 
 ## Reference app
 
-- `npm test`: 24 tests pass, including completion guards, correction requests, page-specific comment routing and pagination, owner replies, screenshot validation/rollback, project progress, and comment line breaks.
+- `npm test`: 26 tests pass, including completion guards, correction requests, page-specific comment routing and pagination, owner replies, screenshot validation/rollback, project progress, and comment line breaks.
 - `npm run build`: production build passes.
-- Browser: project overview opens its task list; completed tasks show result, verification, and result link.
+- Browser: Tasks shows task cards; project/owner/search filters combine and clear. Project progress still counts all its tasks when filters narrow the board. Cards open their task; completed tasks show result, verification, and result link.
+- User project management: created School, renamed it, archived it with a task, and restored it. The task returned intact. The unified feed records these edits with actor `you`.
+- The Office-wide feed covers all supported mutation actions, with fixed-batch ascending pagination and a checkpoint. Tests cover simultaneous writes, writes arriving during pagination, failed mutations, and poll calls not generating new events. SQL progress views agree with action results.
 - At 375px: project and task pages fit the viewport; the comment field is #1c1c19 on white. A task screenshot was uploaded through the file picker and retrieved with the expected image MIME type, private/no-store, and nosniff.
 - A correction comment reopened a completed task, cleared its current completion fields, reset its checks, and kept the previous result in its history. A plain acknowledgement does not reopen work.
 - Project, task, and note comments were submitted through the browser, fetched through the typed updates action, answered by the relevant owner action, and displayed on the original page.
@@ -22,7 +24,7 @@ A documentation probe in Muse found scheduled checks and delivery to a chosen si
 ## Native Muse integration
 
 Muse built a separate private **Office Feedback Test** from candidate `a89b20d`
-and the starting instructions. It created two separate web goals, each with a
+and the earlier starting instructions. The initial test created two separate web goals, each with a
 task, plus a setup project and an orientation note. This was a deliberately
 small integration fixture, not the full starter Office. The existing personal
 Office and its scheduled job were kept outside the test.
@@ -32,7 +34,9 @@ completed setup task, requested changes, and uploaded a real screenshot. The
 task reopened and its completion checks reset. Muse found the comments during
 its active verification, changed the rendered Projects introduction, and
 posted replies attributed to the task owner on that same task. Both the tester's
-screenshot and the builder's review capture remained attached.
+screenshot and the builder's review capture remained attached. This proves the
+attachment was saved; it does not prove the owner read the screenshot, because
+the reply did not address its contrast request.
 
 The first generated build then exposed a defect: it allowed Done while its
 criteria still appeared unchecked. The tester asked Muse to fix that contract.
@@ -52,3 +56,22 @@ comment wake-up, a scheduled-run test, or successful audio generation.
 
 The `muse-*.jpg` captures show the test artifact inside Muse. They contain only
 the integration fixture and its test conversation, not personal work records.
+
+## Restored task board and user-owned projects
+
+The initial project-card interpretation above was superseded by the product
+owner's clarification. Tasks are cards in status lists; projects group related
+work. The reference and hat now use Tasks, with project/owner/search filters,
+project management, preserved portraits, and defined task/project progress.
+
+Native desktop inspection confirmed that Muse rebuilt the test Office with a
+Tasks tab, task cards, Website project filtering (two of three tasks), separate
+project context, and loaded Noche, Paleta, and Forja portraits. Their images were
+reused from the existing Office through the avatar actions. The two web tasks
+now belong to Website, and their existing conversations and files remain.
+`muse-tasks-board.jpg`, `muse-project-filter.jpg`, and `muse-team-portraits.jpg`
+show this corrected version.
+
+Reference captures: `tasks-board.jpg`, `task-filters.jpg`, `manage-projects.jpg`,
+and `tasks-mobile.jpg`. The phone board is 375px wide with document width 375px;
+all ten visible agent portrait images loaded.

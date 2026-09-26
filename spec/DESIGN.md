@@ -51,12 +51,12 @@ Spare pastels for new projects: `#efd3d3` / `#b86e6e`, `#d3e0e6` / `#5f8497`, `#
 
 ## The board
 
-Use neutral project cards, one per project, in four status lanes. A small
-project-colored top edge gives orientation without filling the whole view with
-pastels. Show name, purpose, owner, real completed-task progress, and the current
-question if waiting on the user. Tasks appear when opening a project, with
-results and completion checks one click further in. No white speech bubbles
-inside colored cards. See `spec/PAGES.md` for the status rules.
+Use task cards in four status lists with project selectors above. Projects are
+umbrellas for related tasks. Keep a readable paper surface, project accent, task
+title, owner portrait/name, real verified-check progress, and the current question.
+Open a card for task details. Keep project context accessible separately. No white
+speech bubbles inside coloured cards. Keep project filters and agent portraits
+when changing the layout. See `spec/PAGES.md` for controls and progress rules.
 
 Keep cards full lane width. Use four lanes on a wide desktop, two below 900px,
 and one column below 560px with Waiting on you first. Text must wrap; never

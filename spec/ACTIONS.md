@@ -120,3 +120,38 @@ comments that have no same-page agent reply.
 scheduled job and selected chat. They describe the real setup; setting them does
 not create a job or a chat. Clear the relevant setting with `value: null` if
 the job or chat is removed, so the page does not advertise an inactive check. Follow `hat/skills/adapt-your-office/SKILL.md`.
+
+## Project management and the Office-wide feed
+
+- `archive_project {slug, archived: boolean}` archives or restores a project,
+  preserving its tasks, notes, conversations, and files. Users have this control
+  in Manage projects; the chief may also call it at their request.
+- `list_projects` includes `archived_at` and `progress`; show unarchived rows as
+  task-board filters. `upsert_project` creates or edits these user-defined groups.
+- All task-returning actions include `progress: {basis: "done_when", met, total,
+  percent}`. No criteria means null percent. `update_task.done_when` changes the
+  source checks. Completion and reopen guards remain in force. Project progress
+  uses all its tasks, never a filtered subset. See `spec/SCHEMA.md`.
+- `list_office_updates {after?: number, limit?: 1..100, cursor?: string}` returns
+  changes from **all** supported app writes in ascending id order. Start with
+  `after: 0` or the saved checkpoint. Follow `next_cursor` without `after` until
+  it is null, then persist the returned `checkpoint` only after handling the
+  batch. Pages use a fixed upper bound; changes made during pagination appear
+  in the next poll. Same-time writes cannot be skipped. Invalid/ahead-of-Office
+  checkpoints fail clearly (a reset Office needs a new checkpoint).
+- Each event includes `id` (feed id), `source`, `target_id`, `target_title`,
+  `owner`, `actor`, `action`, `changes`, `comment_id`, `created_at`, and `url`.
+  For comments, reply with `comment_id`, not the feed `id`. Reply source and
+  target must match. For a deleted target the link can be unavailable; history
+  still identifies the change. Other changes require reviewing the target or
+  routing work; they are not comments and cannot be marked as comments.
+
+Use one recurring check every minute by default, or a verified immediate trigger.
+Respect user preferences and the platform's supported minimum; explain a fallback
+before adopting it. Retry failures from the last committed checkpoint and also
+drain unread comments, so partial failures do not lose feedback. Deduplicate by
+feed id. Do not re-dispatch the chief's own replies as new user requests. Prevent
+overlapping job runs. Verify a real run and record only its actual interval in
+`comment_check_minutes`. Clear that setting when the job stops. Saving a comment
+returns `follow_up`, naming the chief and the real checking interval; project
+saves show the same message. This is a check cadence, not a reply-time promise.
