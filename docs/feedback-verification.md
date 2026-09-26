@@ -87,8 +87,13 @@ All projects remains filter-only. The redundant selected-project link is removed
 On the reference app, Website filtering showed only its task. Tab moved from
 that filter to its project link; Enter opened Website's rules/comments. At
 375px, the page scroll width equalled its viewport width; all footer targets
-measured 44px. Keyboard navigation scrolled to the last project with 8px of
-space to the right, above, and below it. Opening that project reached its page.
+measured 44px. The initial check covered only the last tile at 375px; review
+found that intermediate tiles and a 320px viewport could still clip on focus.
+Each link now explicitly reveals its whole tile on focus. A natural Tab walk
+through all 13 filter/footer links at both 320px and 375px kept every tile at
+least 8px inside the scrolling row. The last tile's focus ring is shown in
+`screenshots/feedback/tile-focus-mobile.jpg`. Accessible link names include
+their visible text, and Enter on the last footer opened the project page.
 Desktop and phone screenshots were refreshed after the change.
 
 Muse independently built the same two-target layout in the private test Office.

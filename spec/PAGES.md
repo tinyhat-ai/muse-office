@@ -23,7 +23,10 @@ speech bubbles. Keep all completed tasks discoverable. Each project tile has
 two distinct targets: its name/count filters tasks; a separate **Open project →**
 footer opens its context page directly. All projects is filter-only. Leave at
 least 8px padding around the selector row so selected/focus borders are visible,
-including at either end of phone scrolling. To add, rename, or archive a project, the person
+including at either end of phone scrolling. When either link receives focus,
+bring its whole tile into view. Accessible names must include the visible label:
+retain name/count for the filter and use "Open project: <name>" for the footer.
+To add, rename, or archive a project, the person
 asks Muse in chat; Muse uses the actions and preserves its work and history.
 
 Use four lists on desktop, two on smaller screens, and one column on phones
