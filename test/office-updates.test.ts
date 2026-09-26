@@ -96,6 +96,13 @@ test("project names in any language do not collide or silently rename an unrelat
   assert.throws(() => act("upsert_project", {name:"Школа", create_only:true}), /already exists/);
   assert.equal(act("upsert_project", {name:"学校", description:"School"}).slug, b.slug);
   assert.throws(() => act("upsert_project", {name:"x".repeat(121)}), /120 characters/);
+  const longA = act("upsert_project", {name:"a".repeat(60) + " one", create_only:true});
+  const longB = act("upsert_project", {name:"a".repeat(60) + " two", create_only:true});
+  assert.notEqual(longA.slug, longB.slug);
+  assert.ok(longB.slug.length <= 60);
+  act("upsert_project", {slug:longB.slug, name:"Renamed second project"});
+  assert.equal(act("get_project", {slug:longA.slug}).name, "a".repeat(60) + " one");
+  assert.equal(act("get_project", {slug:longB.slug}).name, "Renamed second project");
 });
 
 test("feed links and owners use normalized persisted ids", () => {

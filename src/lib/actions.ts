@@ -409,7 +409,10 @@ export const ACTIONS: Record<string, ActionDef> = {
         else if (existing) {
           const base = slug;
           let n = 2;
-          while (get("SELECT slug FROM projects WHERE slug = ?", slug)) slug = `${base}-${n++}`;
+          while (get("SELECT slug FROM projects WHERE slug = ?", slug)) {
+            const suffix = `-${n++}`;
+            slug = `${base.slice(0, 60 - suffix.length).replace(/-+$/, "")}${suffix}`;
+          }
           existing = undefined;
         }
       }
