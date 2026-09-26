@@ -8,7 +8,7 @@
 /* ---------------- board: project tiles ---------------- */
 .pj-tiles { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px -8px 0; padding: 8px; scroll-padding-inline: 8px; }
 .pj-tile {
-  position: relative; width: 132px; min-height: 148px; display: flex; flex-direction: column; flex: 0 0 auto;
+  position: relative; width: 132px; min-height: 148px; display: flex; flex-direction: column; flex: 0 0 auto; scroll-margin-top: 72px;
   border-radius: var(--r-card); background: var(--c); color: var(--ink);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.05); transition: transform 0.12s;
 }

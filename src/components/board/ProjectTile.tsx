@@ -11,6 +11,9 @@ import "@/app/projects/projects.css";
 export function ProjectTile({ href, projectHref, name, count, color, chosen }: { href: string; projectHref?: string; name: string; count: number; color?: string; chosen: boolean }) {
   const fill = color ? ({ "--c": color } as CSSProperties) : undefined;
   function revealTile(event: FocusEvent<HTMLAnchorElement>) {
+    // Pointer focus happens before click/tap completes; moving its target here
+    // would lose that click. Only keyboard focus needs automatic scrolling.
+    if (!event.currentTarget.matches(":focus-visible")) return;
     // Native focus scrolling can leave a partially visible tile clipped. Reveal
     // the whole tile; the row's scroll-padding also reserves room for its ring.
     event.currentTarget.parentElement?.scrollIntoView({ block: "nearest", inline: "nearest" });

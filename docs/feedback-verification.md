@@ -96,6 +96,16 @@ least 8px inside the scrolling row. The last tile's focus ring is shown in
 their visible text, and Enter on the last footer opened the project page.
 Desktop and phone screenshots were refreshed after the change.
 
+The focus scrolling is limited to `:focus-visible` (keyboard focus). Review
+caught that scrolling on pointer-down could move a link before pointer-up,
+losing the first click. With the guard, single pointer clicks opened project
+pages at desktop and 375px widths with the tile row partly above the viewport,
+and from 4px inside the horizontally clipped row edge. Pointer focus did not
+change scroll position. A 320px Tab walk still kept all 13 targets visible with
+8px clearance; tiles also reserve 72px scroll margin below the sticky header.
+The in-app browser could not dispatch touch events, so these author checks
+are pointer checks at phone width, not physical-touch evidence.
+
 Muse independently built the same two-target layout in the private test Office.
 Opening Website from All projects reached its context/rules/comments; selecting
 Website separately filtered out the setup task. The native board screenshot
