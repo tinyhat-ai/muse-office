@@ -63,7 +63,14 @@ rules with comments. Selecting Website showed only its two tasks. The existing
 scheduled owner reply remained visible. A new UI comment on the completed setup
 task left it Done and showed the truthful inactive-schedule message. Direct
 project controls, percentages, checklist panels, and comment-triggered reopening
-were absent from the inspected generated pages. Its
+were absent from the inspected generated pages. A final pass removed derived
+project status labels: project selectors show only the name and task count.
+Muse posted the final contextual acknowledgement on its original task. When
+asked to update the old completion description, it reopened and reverified the
+task through agent actions; the comment itself had left the status unchanged.
+Muse also added the missing set_process action, used it to replace escaped
+line breaks in the project rules, and reported the corresponding feed event.
+The corrected plain rules were independently seen on the project page. Its
 three original tasks, conversations, files, checked result, and real portraits
 remain. Disposable archive/name-test projects are archived. These backend and
 scheduler statements are Muse's action receipts; screenshots and visible UI
