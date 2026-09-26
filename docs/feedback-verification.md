@@ -77,6 +77,32 @@ scheduler statements are Muse's action receipts; screenshots and visible UI
 checks are separate evidence. No successful audio generation or instant wake-up
 is claimed.
 
+## Project navigation and contributor contract
+
+The project selector now reserves 8px on every side for selection/focus rings
+and has no fading edge mask. Each project has two sibling links: the name/count
+filters tasks, and a 44px **Open project** footer opens its page directly.
+All projects remains filter-only. The redundant selected-project link is removed.
+
+On the reference app, Website filtering showed only its task. Tab moved from
+that filter to its project link; Enter opened Website's rules/comments. At
+375px, the page scroll width equalled its viewport width; all footer targets
+measured 44px. Keyboard navigation scrolled to the last project with 8px of
+space to the right, above, and below it. Opening that project reached its page.
+Desktop and phone screenshots were refreshed after the change.
+
+Muse independently built the same two-target layout in the private test Office.
+Opening Website from All projects reached its context/rules/comments; selecting
+Website separately filtered out the setup task. The native board screenshot
+shows the padded row and separate page links. Phone geometry measurements above
+are from the reference app, not a claim about the native generated app.
+
+The contributor skill in `.agents/skills/office-product-model/` is now routed
+from `AGENTS.md` and the developer guide, with a Claude skill adapter. Its
+frontmatter passed the skill validator. The contextual-feedback reference
+records formatted text, screenshots, and voice as requirements and explicitly
+lists today's media support gaps; it does not claim an audio composer exists.
+
 ## Scope of proof
 
 The local reference app and a Muse-generated private app are separate

@@ -4,6 +4,10 @@ Muse Office is an open source reference app for the Chief of Staff hat. The
 [README](../README.md) explains what it does for a person using Muse. This page
 covers the app, its actions, and its files.
 
+Before contributing, read the [Office product skill](../.agents/skills/office-product-model/SKILL.md).
+It keeps changes aligned with chat as the main interface, Office as the work
+visualization, and contextual comments as the input exception.
+
 ## Run the reference app
 
 ```bash
@@ -21,7 +25,7 @@ next start seeds the starter again. Use `OFFICE_SEED=demo npm run dev` for the
 fictional consultant showcase shown in some screenshots, or
 `OFFICE_SEED=none npm run dev` for an empty database.
 
-Most pages are for reading. A person can comment on tasks and notes, and reply
+Most pages are for reading. A person can comment on tasks, projects, and notes, and reply
 to a task update. Muse changes the other records through Office actions.
 
 ## What the starter shows
