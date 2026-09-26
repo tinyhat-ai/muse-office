@@ -72,6 +72,11 @@ that upload, and there is no audio recorder or complete formatted-comment
 composer. Those are requirements for subsequent comment work, not claims about
 today's UI. Keep this paragraph current when implementing them.
 
+Action attachment references currently contain `{name, url}` without a media
+type. Screenshot types are stored privately and served in response headers.
+Add explicit media metadata to the action contract when extending attachments,
+so the agent can identify and retrieve images and audio without guessing.
+
 Read `src/components/task/CommentForm.tsx`, `src/app/api/comments/route.ts`, and
 the comment/feed actions in `src/lib/actions.ts` before extending these paths.
 Use the runtime [adapt-your-office skill](../../../../hat/skills/adapt-your-office/SKILL.md)

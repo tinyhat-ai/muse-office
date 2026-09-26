@@ -43,6 +43,9 @@ ambiguous request with a screenshot/example; apply understood feedback within
 these boundaries. Personal preferences such as voice summaries belong to that
 user's Office, not every user's hat. Explicit requests to change the product
 model should be recognized as such, not slipped into a layout fix.
+If the maintainer has not clearly authorized that change, resolve the conflict
+with them first. When authorized, update this skill, affected `spec/` contracts,
+and the relevant `hat/skills/` instructions in the same PR.
 
 ## Keep the presentation simple and useful
 
