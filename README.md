@@ -9,6 +9,8 @@ part of that agent's own skills and memory, so each one gets better at its job.
 Follow the team's progress and decisions in one private Office. Nothing is sent,
 bought, published, or deleted without your OK.
 
+![Muse wearing a chief of staff hat with five specialist teammates](docs/images/chief-of-staff-team.png)
+
 ### Give Muse the hat
 
 1. [Open the message to send Muse →](https://github.com/tinyhat-ai/muse-office/blob/channels/lts/hat/PROMPT.md)
