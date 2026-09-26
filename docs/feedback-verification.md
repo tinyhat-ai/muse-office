@@ -4,10 +4,11 @@ This change improves the starting instructions and reference Office. Each Muse b
 
 ## Reference app
 
-- `npm test`: 26 tests pass, including completion guards, correction requests, page-specific comment routing and pagination, owner replies, screenshot validation/rollback, project progress, and comment line breaks.
+- `npm test`: 30 tests pass, including completion guards, correction requests, page-specific comment routing and pagination, owner replies, screenshot validation/rollback, project progress, and comment line breaks.
 - `npm run build`: production build passes.
 - Browser: Tasks shows task cards; project/owner/search filters combine and clear. Project progress still counts all its tasks when filters narrow the board. Cards open their task; completed tasks show result, verification, and result link.
 - User project management: created School, renamed it, archived it with a task, and restored it. The task returned intact. The unified feed records these edits with actor `you`.
+- Review follow-up: archiving a waiting task removes it from active `summary`, default `list_tasks`, and Team work. Direct history reads retain `project_archived_at`. Browser detail pages show Archived / Paused and keep the conversation; restoration returns the task. `archived-project.jpg` captures this. Three names without Latin letters created distinct projects through `/api/projects`; the disposable projects were archived afterward. Regression cases also cover normalized event links/owners and SQL/JavaScript rounding at 23 of 40 checks.
 - The Office-wide feed covers all supported mutation actions, with fixed-batch ascending pagination and a checkpoint. Tests cover simultaneous writes, writes arriving during pagination, failed mutations, and poll calls not generating new events. SQL progress views agree with action results.
 - At 375px: project and task pages fit the viewport; the comment field is #1c1c19 on white. A task screenshot was uploaded through the file picker and retrieved with the expected image MIME type, private/no-store, and nosniff.
 - A correction comment reopened a completed task, cleared its current completion fields, reset its checks, and kept the previous result in its history. A plain acknowledgement does not reopen work.
