@@ -130,9 +130,11 @@ Also drain `list_recent_updates` with `unread_only=true` so failed comment work
 is retried. Post the owner's reply on the same page before marking a comment
 handled; a draft alone is not follow-up. These private Office replies are part
 of this job. External sends still need my approval. Keep
-`(source, target_id, id)` together; ids can overlap. After a save, tell me by name
-that you will review it on the verified schedule and continue with the owner.
-Never claim that saving wakes you or that a reply is guaranteed at the next tick.
+`(source, target_id, id)` together; ids can overlap. Keep the existing UI minimal:
+add nothing visible by default, including extra explanations or line breaks.
+After a comment save, show only “Saved.” once in the existing action row.
+Discuss scheduling in setup chat, not in comment forms or page footers. Never
+claim that saving wakes you or that a reply is guaranteed at the next tick.
 
 Handle comments on closed tasks too. When I ask for a correction, reopen the
 task through your actions before starting work. Before Done, inspect the real
