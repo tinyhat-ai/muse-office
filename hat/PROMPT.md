@@ -128,7 +128,9 @@ Use `list_office_updates` for all changes, including project edits, task status,
 checklists, files, team, notes, customers, and reports. Process every cursor page,
 route work to its owner, and save the returned checkpoint only after handling it.
 Also drain `list_recent_updates` with `unread_only=true` so failed comment work
-is retried. Reply on the same page before marking a comment handled. Keep
+is retried. Post the owner's reply on the same page before marking a comment
+handled; a draft alone is not follow-up. These private Office replies are part
+of this job. External sends still need my approval. Keep
 `(source, target_id, id)` together; ids can overlap. After a save, tell me by name
 that you will review it on the verified schedule and continue with the owner.
 Never claim that saving wakes you or that a reply is guaranteed at the next tick.
