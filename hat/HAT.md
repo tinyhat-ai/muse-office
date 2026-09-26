@@ -186,7 +186,7 @@ static page, and never a server on your own computer, which the person's
 browser cannot reach.
 
 - **If you can build from the repository** (fetch or clone
-  `https://github.com/tinyhat-ai/muse-office` and run its `src/` app on your
+  `https://github.com/tinyhat-ai/muse-office` at the resolved commit and run its `src/` app on your
   app platform), use it as the starting implementation. Set `OFFICE_SEED=none`
   before its first database open. The app's generic starter is for browsing
   the reference app; you will load this person's records through actions in

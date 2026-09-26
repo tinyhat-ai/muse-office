@@ -11,6 +11,15 @@ When testing unreleased changes, explicitly give Muse the candidate commit
 and have it read every build file from that commit instead of the LTS links.
 Keep the public copy button on LTS until promotion is complete.
 
+**Transition from v0.1.1:** its live copied message still opens the repository
+on `main`. Between merging this change and promoting it, that older message can
+reach the new HAT.md, which refers to older LTS files lacking the new skill and
+actions. Release and promote this change to LTS immediately after merging;
+coordinate these as one rollout. The message text stays unchanged until
+promotion, but its current repository link means its build behavior can change
+earlier. Once this release is on LTS, the explicit channel and commit rules
+remove that mixed-version path for newly copied messages.
+
 Both channel branches are protected and restricted to the maintainer. Agents
 can prepare reviewable promotion PRs but cannot move those branches themselves.
 
@@ -78,3 +87,7 @@ archive projects reversibly. Project progress is completed tasks / all tasks,
 and task progress is verified Done-when checks / all checks. An older task with
 no criteria has unknown progress until criteria are defined. Preserve existing
 portraits, files, comments, and task-to-project links during the upgrade.
+If a future release changes a SQL view definition, explicitly drop and recreate
+that view during migration; `CREATE VIEW IF NOT EXISTS` alone preserves the old
+definition. If an Office database is reset or replaced, discard its old feed
+checkpoint and review the new history from zero.
