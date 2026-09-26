@@ -1,6 +1,6 @@
 {
   "name": "muse-office",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "The Office: the private board where a Muse chief of staff shows its user what its team is doing. Reference app plus the hat that teaches a Muse to build it.",
   "license": "MIT",
