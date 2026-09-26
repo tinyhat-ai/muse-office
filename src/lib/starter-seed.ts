@@ -23,15 +23,15 @@ export function seedStarter(db: Database.Database) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     const step = db.prepare(`INSERT INTO process_steps (project, position, name, who, note, needs_you) VALUES (?, ?, ?, ?, ?, ?)`);
     const projects: Array<[string, string, string, string, string, string, string, number]> = [
-      ["website", "Website", "Your site and any tools the team builds for you.", "#f2e4a9", "#b89a3a", "developer", "Build", 0],
-      ["marketing", "Marketing", "A plan for reaching the people who matter to your work.", "#d5eaea", "#2f8a8a", "marketer", "Publish", 1],
-      ["customers", "Customers", "Real people, conversations, and follow-ups as you share them.", "#d8e7d3", "#5b8a5a", "sales", "Follow up", 2],
-      ["money", "Money", "Receipts, invoices, bills, and reports from verified records.", "#e3dcf0", "#7e6aa6", "bookkeeper", "Money", 3],
-      ["general", "General", "Your Office setup, priorities, and work that spans the team.", "#e9e7df", "#9a978c", "chief", "General", 4],
+      ["website", "Collect your website brief", "Gather the site and brand material the team needs before proposing changes.", "#f2e4a9", "#b89a3a", "developer", "Build", 0],
+      ["marketing", "Plan your first week of outreach", "Agree on your audience, offer, and first communication plan.", "#d5eaea", "#2f8a8a", "marketer", "Publish", 1],
+      ["customers", "Set up customer follow-ups", "Choose where the team should find real conversations and next steps.", "#d8e7d3", "#5b8a5a", "sales", "Follow up", 2],
+      ["money", "Prepare your first money review", "Choose the records and time period for a useful first money report.", "#e3dcf0", "#7e6aa6", "bookkeeper", "Money", 3],
+      ["general", "Get your Office ready", "Set up your workspace and choose the team's first priority.", "#e9e7df", "#9a978c", "chief", "General", 4],
     ];
     for (const [slug, name, description, color, dark, lead, kind, order] of projects) {
       project.run(slug, name, description, color, dark, lead, kind,
-        `## How ${name} work moves\n\n1. **Understand:** record your goal and the real source.\n2. **Work:** ${lead === "chief" ? "Muse coordinates the team" : `the ${name.toLowerCase()} specialist works`} and keeps the task updated.\n3. **Review:** you approve anything that leaves your Office.\n4. **Close:** record the result and what the team learned.`,
+        `## How work moves\n\n1. **Understand:** record your goal and the real source.\n2. **Work:** the project lead coordinates the specialists and keeps the task updated.\n3. **Review:** you approve anything that leaves your Office.\n4. **Close:** record the result and what the team learned.`,
         "The result and any decision are recorded in a task or note.", order);
       step.run(slug, 0, "Understand", lead, "Record the goal and source.", 0);
       step.run(slug, 1, "Work", lead, "Keep progress on the task page.", 0);
@@ -54,7 +54,13 @@ export function seedStarter(db: Database.Database) {
     ];
     for (const [id, projectSlug, title, specialist, column, position, question, questionKind, note, definition] of tasks) {
       task.run(id, projectSlug, title, specialist, column, position, question, questionKind, note, definition, now, now, column === "done" ? now : null);
-      if (column === "done") update.run(id, "chief", "update", `${note}. This is the starter Office; Muse will record the real setup details as it works with you.`, now);
+      if (column === "done") {
+        const summary = id === "team-ready" ? "The starter roster and responsibilities are available on Team. Ask Muse to adapt them to your work." : "Projects, Team, Customers, Reports, and Notes are ready to explore.";
+        const verification = id === "team-ready" ? "Six member records were created: the example chief and five specialist roles. This reference roster does not create agents in your Muse." : "The reference app includes the five pages and their data actions. Muse builds and checks your own Office during setup.";
+        db.prepare("UPDATE tasks SET result_summary = ?, verification = ?, result_url = ? WHERE id = ?").run(summary, verification, id === "team-ready" ? "/team" : "/projects", id);
+        db.prepare("INSERT INTO task_checks (task, position, text, met) VALUES (?, 0, ?, 1)").run(id, id === "team-ready" ? "Starter roster and responsibilities recorded" : "Office reference pages and actions included");
+        update.run(id, "chief", "update", `${summary}\n\n${verification}`, now);
+      }
       if (question) update.run(id, "chief", "question", question, now);
     }
 
@@ -96,7 +102,7 @@ export function seedStarter(db: Database.Database) {
       (slug, project, title, lede, markdown, kept_by, tags_json, pinned, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, 'chief', ?, ?, ?, ?)`);
     note.run("how-your-office-works", "general", "How your Office works", "Where requests go, who works on them, and how you see progress.",
-      `## The short version\n\n**Talk to Muse in chat.** Muse turns substantial requests into tasks and briefs the right specialist. Projects shows progress and decisions. You can comment on a task or note; ask Muse to change other pages.\n\n## Who does what\n\n| Specialist | Work |\n| --- | --- |\n| Muse | Coordinates, checks, and reports back |\n| Vera | Design |\n| Theo | Websites and tools |\n| June | Marketing |\n| Sam | Customer follow-ups |\n| Otto | Money records and reports |\n\n## How a request moves\n\n~~~mermaid\nflowchart TB\n  A[You ask Muse] --> B[Muse records the task]\n  B --> C[Specialist works]\n  C --> D[Muse checks and reports]\n  D --> E[Office keeps the result]\n~~~\n\n## Your approval\n\nThe team asks before sending, buying, publishing, or deleting anything.`,
+      `## The short version\n\n**Talk to Muse in chat.** Tinyhat gives Muse the starting instructions; Muse builds your own Office from them. This is a first version you can shape together. Ask Muse to change the layout, add a page, change the team, or adjust how often it updates you. Voice summaries are a personal choice. Muse turns substantial requests into tasks and briefs the right specialist. Projects shows the bigger picture; open a project for its tasks and results. You can comment on a project, task, or note to give the owner direction. Replies appear on the same page after Muse checks for comments. Ask Muse what schedule is active; for help now, send the page link in chat. Request changes on a completed task to reopen it. Ask Muse to change anything else.\n\n## Who does what\n\n| Specialist | Work |\n| --- | --- |\n| Muse | Coordinates, checks, and reports back |\n| Vera | Design |\n| Theo | Websites and tools |\n| June | Marketing |\n| Sam | Customer follow-ups |\n| Otto | Money records and reports |\n\n## How a request moves\n\n~~~mermaid\nflowchart TB\n  A[You ask Muse] --> B[Muse records the task]\n  B --> C[Specialist works]\n  C --> D[Muse checks and reports]\n  D --> E[Office keeps the result]\n~~~\n\n## Your approval\n\nThe team asks before sending, buying, publishing, or deleting anything.`,
       JSON.stringify(["office", "start here", "workflow"]), 1, now, now);
     note.run("your-first-week", "general", "Your first week", "The first useful questions and tasks, with no assumptions about your accounts.",
       `## One priority\n\nThe first decision is on the **Choose one priority for this week** task. Muse will use your answer to focus the team.\n\n## First steps\n\n- **Website:** Share any current site or brand links.\n- **Marketing:** Tell June what you offer and whom you want to reach.\n- **Customers:** Tell Sam which work conversations you want included.\n- **Money:** Tell Otto where invoices and receipts live, if you want money reports.\n\nNothing has been sent or connected yet.`,

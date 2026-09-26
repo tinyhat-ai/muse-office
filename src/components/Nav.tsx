@@ -19,6 +19,7 @@ export async function Nav() {
     "SELECT MAX(t) AS t FROM (SELECT MAX(updated_at) t FROM tasks UNION SELECT MAX(updated_at) FROM contacts UNION SELECT MAX(updated_at) FROM notes UNION SELECT MAX(updated_at) FROM reports)",
   );
   return (
+    <>
     <header className="nav">
       <Link href="/projects" className="brand">
         <Image src="/icon.svg" width={28} height={28} alt="" />
@@ -33,5 +34,7 @@ export async function Nav() {
       </nav>
       <span className="upd">{last?.t ? `Updated ${ago(last.t)}` : ""}</span>
     </header>
+    <p className="office-yours">Your Office, your way. Ask Muse to change the layout, pages, or how the team works.</p>
+    </>
   );
 }

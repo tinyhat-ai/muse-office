@@ -127,3 +127,14 @@ a.tk-fl:hover { border-color: #c9c8c1; }
   .tk-form .row { justify-content: flex-end; }
   .tk-form .row .tk-onlyhere, .tk-form .row .hint { flex: 1 0 100%; }
 }
+
+.tk-result { margin-top: 24px; padding: 24px; border-left: 3px solid #2d5a45; }
+.tk-result h2 { font-size: 22px; }
+.tk-result h3 { margin-top: 18px; font-size: 16px; }
+.tk-result p { margin: 8px 0 16px; }
+.tk-result .tk-reply { display: block; margin-top: 18px; }
+.tk-cm-h, .tk-r { color: #1c1c19; }
+.tk-form textarea { color: #1c1c19; }
+.tk-ev .t { color: #65665e; }
+
+.tk-form textarea { border-color: #83847b; }

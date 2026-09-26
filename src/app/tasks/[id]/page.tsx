@@ -18,6 +18,8 @@ import { ago, dueWord, span, stamp } from "@/lib/time";
 import { Avatar, You } from "@/components/Avatar";
 import { CommentForm, ReplyToggle } from "@/components/task/CommentForm";
 import { FocusCommentButton, MoneyButtons } from "@/components/task/MoneyButtons";
+import { CommentFollowUp } from "@/components/CommentFollowUp";
+import { RefreshUpdates } from "@/components/RefreshUpdates";
 import "../tasks.css";
 
 // A task's page, like an issue: the description on top, then the
@@ -90,7 +92,7 @@ export default async function TaskPage({ params }: Props) {
   const members = new Map(memberList.map((m) => [m.slug, m]));
   const chief = memberList.find((m) => m.is_chief) ?? memberList[0];
   const specialist = task.specialist ? members.get(task.specialist) : undefined;
-  const worker = specialist ?? chief; // the chief does the one-offs itself
+  const worker = specialist ?? members.get(project?.lead ?? "") ?? chief; // the chief does the one-offs itself
   const checks = all<CheckRow>("SELECT * FROM task_checks WHERE task = ? ORDER BY position, id", id);
   const plan = all<PlanRow>("SELECT * FROM task_plan WHERE task = ? ORDER BY position, id", id);
   const taskFiles = all<FileRow>("SELECT * FROM task_files WHERE task = ? ORDER BY added_at, id", id);
@@ -165,7 +167,8 @@ export default async function TaskPage({ params }: Props) {
           <b>{nameOf(r.author)}</b>
           <When iso={r.created_at} />
           <br />
-          <span className="body">{r.body}</span>
+          <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(r.body) }} />
+          {r.author === "you" && <span className="comment-state">{r.unread_by_agent ? `Awaiting ${workerName}’s reply` : updates.some((reply) => reply.reply_to === r.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
         </div>
       </div>
     );
@@ -188,7 +191,8 @@ export default async function TaskPage({ params }: Props) {
             <When iso={u.created_at} />
           </div>
           <div className="tk-cm-b">
-            <div className="body">{u.body}</div>
+            <div className="md" dangerouslySetInnerHTML={{ __html: renderMarkdown(u.body) }} />
+            {mine && <span className="comment-state">{u.unread_by_agent ? `Awaiting ${workerName}’s reply` : updates.some((reply) => reply.reply_to === u.id && reply.author !== "you") ? "Replied" : "Seen"}</span>}
             {attachedHere.length ? (
               <div className="tk-chips">
                 {attachedHere.map((f) => (
@@ -218,11 +222,12 @@ export default async function TaskPage({ params }: Props) {
 
   return (
     <main className="wrap tk">
+      <RefreshUpdates />
       {/* 1. where this task lives, its title, and where it stands */}
       <nav className="crumb tk-crumb" aria-label="Breadcrumb">
         <Link href="/projects">‹ Projects</Link>
         <span>/</span>
-        <Link href={`/projects?project=${encodeURIComponent(projectSlug)}`}>{projectName}</Link>
+        <Link href={`/projects/${encodeURIComponent(projectSlug)}`}>{projectName}</Link>
       </nav>
       <div className="tk-proj">
         <span className="stripe" style={{ background: barColor }} aria-hidden="true" />
@@ -242,6 +247,14 @@ export default async function TaskPage({ params }: Props) {
         </span>
         {task.due && !isDone ? <span>Due {dueWord(task.due)}</span> : null}
       </div>
+
+      {isDone && <section className="card tk-result" aria-label="Completed result">
+        <h2>What changed</h2>
+        <p>{task.result_summary ?? "This older task has no verified completion summary. Ask Muse to check the result, or request changes below."}</p>
+        {task.verification && <><h3>What was checked</h3><p>{task.verification}</p></>}
+        {task.result_url && <a className="btn" href={task.result_url} target="_blank" rel="noopener noreferrer">Open result ↗</a>}
+        <a className="tk-reply" href="#new-comment">Something needs fixing? Request changes below.</a>
+      </section>}
 
       {/* 2. the unanswered question, pinned while the task waits on the user */}
       {waiting && questionText ? (
@@ -338,6 +351,7 @@ export default async function TaskPage({ params }: Props) {
           {updateCount} {updateCount === 1 ? "update" : "updates"}
         </span>
       </h2>
+      <CommentFollowUp owner={workerName} />
       {top.length ? (
         <div className="tk-conv">
           {top.map((u) =>
@@ -364,7 +378,7 @@ export default async function TaskPage({ params }: Props) {
       <div className="tk-composer">
         <You size="md" />
         <div className="cbox">
-          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Your comment stays with this task." />
+          <CommentForm task={task.id} canRequestChanges={isDone} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Give direction, answer a question, or ask for a correction." />
         </div>
       </div>
 
