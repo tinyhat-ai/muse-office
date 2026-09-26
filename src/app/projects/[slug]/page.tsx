@@ -38,7 +38,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   const rules = all<RuleRow>("SELECT * FROM project_rules WHERE project = ? ORDER BY learned_at DESC", slug);
   return <main className="wrap pp-wrap">
     <RefreshUpdates />
-    <nav className="crumb"><Link href="/projects">‹ Projects</Link><span>/</span><span>{project.name}</span></nav>
+    <nav className="crumb"><Link href="/projects">‹ Tasks</Link><span>/</span><span>{project.name}</span></nav>
     <header className="pp-head">
       <div><h1 className="title">{project.name}</h1><p className="lede">{project.description}</p>
         <div className="pp-meta"><Avatar member={lead} size="sm" /><span>Led by {lead?.name ?? "Muse"}</span><span className={`pill ${PILL[progress.column]}`}>{COLUMN_LABEL[progress.column]}</span></div>

@@ -1,52 +1,131 @@
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { OfficeActivity } from "@/components/OfficeActivity";
+import { ProjectManager } from "@/components/board/ProjectManager";
 import type { CSSProperties } from "react";
-import { all, COLUMNS, COLUMN_LABEL, type MemberRow, type ProjectRow, type TaskRow } from "@/lib/db";
-import { projectProgress } from "@/lib/project-progress";
+import { all, COLUMNS, COLUMN_LABEL, type Column, type MemberRow, type ProjectRow, type TaskRow, type CheckRow } from "@/lib/db";
 import { Avatar } from "@/components/Avatar";
 import { RefreshUpdates } from "@/components/RefreshUpdates";
+import { taskProgress, projectProgress } from "@/lib/project-progress";
+import { ProjectTile } from "@/components/board/ProjectTile";
+import { Sticky } from "@/components/board/Sticky";
 import "./projects.css";
 
-const LANE = {
-  todo: { color: "#94958d", sub: "Ready to start" },
-  in_progress: { color: "#466474", sub: "The team is working" },
-  waiting_on_you: { color: "#a54619", sub: "A decision needs you" },
-  done: { color: "#2d5a45", sub: "Results ready to see" },
+// A task joined with its project's name and colours, which is all a sticky note needs.
+type BoardTask = TaskRow & { project_name: string; color: string; color_dark: string };
+
+// Lane rules and subtitles from spec/DESIGN.md §Board; the titles come from COLUMN_LABEL.
+const LANE: Record<Column, { sub: string; color: string }> = {
+  todo: { sub: "Not started yet", color: "#c9c8c1" },
+  in_progress: { sub: "Working or in review", color: "#3d5a6c" },
+  waiting_on_you: { sub: "Needs your answer", color: "#b3541e" },
+  done: { sub: "Completed work", color: "#2d5a45" },
 };
 
-export default async function Projects({ searchParams }: { searchParams: Promise<{ project?: string }> }) {
-  const { project } = await searchParams;
-  if (project) redirect(`/projects/${encodeURIComponent(project)}`);
+const cmp = (a: string, b: string) => (a < b ? -1 : a > b ? 1 : 0);
+const finishedAt = (t: TaskRow) => Date.parse(t.done_at ?? t.updated_at);
+// Open lanes: due soonest first, then whatever has sat untouched the longest.
+const openOrder = (a: TaskRow, b: TaskRow) => cmp(a.due ?? "9999", b.due ?? "9999") || cmp(a.updated_at, b.updated_at);
+
+export default async function ProjectsPage({ searchParams }: { searchParams: Promise<{ project?: string; owner?: string; q?: string }> }) {
+  const { project: wanted, owner = "", q = "" } = await searchParams;
+  const allProjects = all<ProjectRow>("SELECT * FROM projects ORDER BY sort_order, name");
+  const projects = allProjects.filter((project) => !project.archived_at);
   const members = all<MemberRow>("SELECT * FROM members ORDER BY sort_order");
-  const chief = members.find((member) => member.is_chief);
-  const tasks = all<TaskRow>("SELECT * FROM tasks ORDER BY updated_at DESC");
-  const projects = all<ProjectRow>("SELECT * FROM projects ORDER BY sort_order, name").map((item) => ({ ...item, progress: projectProgress(tasks.filter((task) => task.project === item.slug)) }));
-  return <main className="wrap pj-wrap">
-    <RefreshUpdates />
-    <header className="page-head">
-      <div className="kick">The bigger picture</div>
-      <h1 className="title">Projects</h1>
-      <p className="lede">See where each project stands. Open one for its tasks, results, and decisions.</p>
-    </header>
-    <div className="pj-board">
-      {COLUMNS.map((column) => {
-        const cards = projects.filter((item) => item.progress.column === column);
-        return <section key={column} className={`pj-lane ${column === "waiting_on_you" ? "wait" : ""}`} style={{ "--lc": LANE[column].color } as CSSProperties} aria-labelledby={`lane-${column}`}>
-          <div className="pj-lane-h"><div><h2 id={`lane-${column}`} className="pj-lane-t">{COLUMN_LABEL[column]}</h2><p className="pj-lane-sb">{LANE[column].sub}</p></div><span className="pj-lane-ct">{cards.length}</span></div>
-          <div className="pj-notes">{cards.map((item) => {
-            const owner = members.find((member) => member.slug === item.lead) ?? chief;
-            return <Link key={item.slug} href={`/projects/${item.slug}`} className="pj-project-card" style={{ "--project-accent": item.color_dark } as CSSProperties}>
-              <h3>{item.name}</h3><p className="pj-project-desc">{item.description}</p>
-              {item.progress.question && <p className="pj-project-question">{item.progress.question}</p>}
-              <div className="pj-progress-label"><span>{item.progress.done} of {item.progress.total} {item.progress.total === 1 ? "task" : "tasks"} done</span><b>{item.progress.percent}%</b></div>
-              <progress value={item.progress.done} max={item.progress.total || 1} aria-label={`${item.name} task completion`} />
-              <div className="pj-project-owner"><Avatar member={owner} size="sm" /><span>{owner?.name ?? "Your Muse"}</span><span aria-hidden="true">↗</span></div>
-            </Link>;
-          })}</div>
-          {!cards.length && <p className="dashed pj-none">{column === "waiting_on_you" ? "Nothing needs your answer" : "No projects here"}</p>}
-        </section>;
-      })}
-    </div>
-    <p className="tell pj-tell">{chief?.name ?? "Muse"} organizes the work. You steer through comments and decisions inside each project.</p>
-  </main>;
+  const tasks = all<BoardTask>("SELECT t.*, p.name AS project_name, p.color, p.color_dark FROM tasks t JOIN projects p ON p.slug = t.project WHERE p.archived_at IS NULL");
+  const member = new Map(members.map((m) => [m.slug, m]));
+  const chief = members.find((m) => m.is_chief === 1);
+  const chiefName = chief?.name ?? "your chief of staff";
+  const chosen = projects.find((p) => p.slug === wanted); // an unknown slug just shows everything
+  const lead = chosen?.lead ? member.get(chosen.lead) : undefined;
+
+  // Keep every task discoverable; filters never change progress denominators.
+  const doneAll = tasks.filter((t) => t.column_name === "done").sort((a, b) => finishedAt(b) - finishedAt(a));
+  const checks = all<CheckRow>("SELECT * FROM task_checks");
+  const onBoard = [...tasks.filter((t) => t.column_name !== "done").sort(openOrder), ...doneAll];
+  const matchesOtherFilters = (t: BoardTask) => (!owner || (t.specialist ?? projects.find((p) => p.slug === t.project)?.lead ?? chief?.slug) === owner)
+    && `${t.title} ${t.note ?? ""} ${t.job_definition ?? ""} ${t.project_name}`.toLowerCase().includes(q.trim().toLowerCase());
+  const visible = onBoard.filter((t) => (!chosen || t.project === chosen.slug) && matchesOtherFilters(t));
+  const counts = new Map<string, number>();
+  for (const t of onBoard.filter(matchesOtherFilters)) counts.set(t.project, (counts.get(t.project) ?? 0) + 1);
+  const filterHref = (slug?: string) => {
+    const params = new URLSearchParams();
+    if (slug) params.set("project", slug);
+    if (owner) params.set("owner", owner);
+    if (q) params.set("q", q);
+    return `/projects${params.size ? `?${params}` : ""}`;
+  };
+  const progress = chosen ? projectProgress(tasks.filter((t) => t.project === chosen.slug)) : null;
+
+  return (
+    <main className="wrap">
+      <RefreshUpdates />
+      <header className="head">
+        <div className="kick">What the team is doing</div>
+        <h1 className="title">Tasks</h1>
+        <p className="lede pj-lede">
+          {chief ? <Avatar member={chief} size="sm" /> : null}
+          <span>Managed by {chiefName}</span>
+        </p>
+      </header>
+
+      <div className="pj-tools"><ProjectManager projects={allProjects} /><OfficeActivity /></div>
+      <nav className="pj-tiles" aria-label="Show one project">
+        <ProjectTile href={filterHref()} name="All projects" count={onBoard.filter(matchesOtherFilters).length} chosen={!chosen} />
+        {projects.map((p) => (
+          <ProjectTile key={p.slug} href={filterHref(p.slug)} name={p.name} count={counts.get(p.slug) ?? 0} color={p.color} chosen={chosen?.slug === p.slug} />
+        ))}
+      </nav>
+      <form key={`${chosen?.slug ?? ""}:${owner}:${q}`} className="pj-filters" action="/projects" aria-label="Filter tasks">
+        {chosen && <input type="hidden" name="project" value={chosen.slug} />}
+        <label>Search tasks<input type="search" name="q" defaultValue={q} placeholder="Find a task…" /></label>
+        <label>Owner<select aria-label="Owner" name="owner" defaultValue={owner}><option value="">Everyone</option>{members.map((m) => <option key={m.slug} value={m.slug}>{m.name}</option>)}</select></label>
+        <button type="submit">Apply filters</button>
+        {(chosen || owner || q) && <Link href="/projects">Clear filters</Link>}
+        <span className="pj-filter-count" role="status">{visible.length} {visible.length === 1 ? "task" : "tasks"}</span>
+      </form>
+      <div className="pj-info">
+        {chosen ? (
+          <>
+            <span>
+              {chosen.name}
+              {lead ? ` · led by ${lead.name}` : ""}
+            </span>
+            {progress && <span>{progress.done} of {progress.total} tasks complete · {progress.percent}%</span>}
+            <Link href={`/projects/${chosen.slug}`}>Open the {chosen.name} page →</Link>
+          </>
+        ) : null}
+      </div>
+
+      <div className="pj-board">
+        {COLUMNS.map((col) => {
+          const cards = visible.filter((t) => t.column_name === col);
+          const waiting = col === "waiting_on_you";
+          const cls = ["pj-lane", `pj-lane-${col}`, waiting ? "wait" : "", col === "done" ? "done" : ""].filter(Boolean).join(" ");
+          return (
+            <section key={col} className={cls} style={{ "--lc": LANE[col].color } as CSSProperties} aria-labelledby={`lane-${col}`}>
+              <div className="pj-lane-h">
+                <div>
+                  <h2 className="pj-lane-t" id={`lane-${col}`}>
+                    {COLUMN_LABEL[col]}
+                  </h2>
+                  <div className="pj-lane-sb">{LANE[col].sub}</div>
+                </div>
+                <span className="pj-lane-ct">{cards.length}</span>
+              </div>
+              {cards.length ? (
+                <div className="pj-notes">
+                  {cards.map((t) => (
+                    <Sticky key={t.id} task={{ ...t, progress: taskProgress(checks.filter((c) => c.task === t.id)) }} specialist={member.get(t.specialist ?? projects.find((p) => p.slug === t.project)?.lead ?? "") ?? chief} />
+                  ))}
+                </div>
+              ) : (
+                <div className="dashed pj-none">{waiting ? "Nothing needs your answer right now" : "No tasks"}</div>
+              )}
+            </section>
+          );
+        })}
+      </div>
+      <p className="tell pj-tell">To add or move a task, tell {chiefName} in chat.</p>
+    </main>
+  );
 }

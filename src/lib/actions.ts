@@ -5,7 +5,7 @@ import {
 } from "./db";
 import { shortDate } from "./time";
 import { saveScreenshot } from "./screenshots";
-import { projectProgress } from "./project-progress";
+import { projectProgress, taskProgress } from "./project-progress";
 import {
   ActionError, notFound, listOf, present, isObject, asInput, requiredString, optionalString, oneOf, isoDate,
   int, num, bool, array, stringArray, intArray, object, openableUrl, within, type Input,
@@ -141,7 +141,7 @@ function memberOut(m: MemberRow) {
 const stepOut = (s: StepRow) => ({ ...s, needs_you: !!s.needs_you });
 function taskOut(t: TaskRow) {
   const { column_name, ...rest } = t;
-  return { ...rest, column: column_name };
+  return { ...rest, column: column_name, progress: taskProgress(all<CheckRow>("SELECT met FROM task_checks WHERE task = ?", t.id)) };
 }
 const checkOut = (c: CheckRow) => ({ id: c.id, text: c.text, met: !!c.met });
 const planOut = (p: PlanRow) => ({ id: p.id, text: p.text, state: p.state });
@@ -389,6 +389,7 @@ export const ACTIONS: Record<string, ActionDef> = {
     params: {
       slug: "string · kebab-case id, e.g. website · optional, made from the name when missing",
       name: "string · the project's name · required for a new project",
+      create_only: "boolean · refuse to overwrite an existing project · optional",
       description: "string · one line · optional",
       color: "string · pastel fill, e.g. #f2e4a9 · optional",
       color_dark: "string · darker shade for bars and chart series, e.g. #b89a3a · optional",
@@ -399,6 +400,7 @@ export const ACTIONS: Record<string, ActionDef> = {
     run(input) {
       const slug = slugFrom(input, "name", "website");
       const existing = get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", slug);
+      if (existing && bool(input, "create_only")) throw new ActionError("A project with this name already exists. Edit it or choose another name.");
       const patch: Patch = {};
       if (present(input, "name")) patch.name = requiredString(input, "name", "the project's name");
       if (present(input, "description")) patch.description = optionalString(input, "description");
@@ -416,6 +418,18 @@ export const ACTIONS: Record<string, ActionDef> = {
         insertRow("projects", { slug, color: fill, color_dark: dark, ...patch, sort_order: nextSort("projects"), created_at: now, updated_at: now });
       }
       return mustProject(slug);
+    },
+  },
+  archive_project: {
+    section: "Projects",
+    description: "Archives or restores a project. Archiving hides its tasks from the active board but preserves every record and conversation. Only at the user's request.",
+    params: { slug: "string · project slug · required", archived: "boolean · true to archive, false to restore · required" },
+    run(input) {
+      const project = mustProject(requiredString(input, "slug"));
+      const archived = bool(input, "archived");
+      if (archived === undefined || archived === null) throw new ActionError("archived must be true or false.");
+      patchRow("projects", "slug", project.slug, { archived_at: archived ? nowIso() : null });
+      return mustProject(project.slug);
     },
   },
   set_process: {
@@ -518,6 +532,7 @@ export const ACTIONS: Record<string, ActionDef> = {
     },
     run(input) {
       const project = mustProject(requiredString(input, "project", "the project's slug"));
+      if (project.archived_at) throw new ActionError("Restore this archived project before adding a task.");
       const title = requiredString(input, "title", "the card's title");
       if (optionalString(input, "column") === "waiting_on_you") {
         throw new ActionError("column cannot be waiting_on_you when creating a task: create it, then call move_task with a question. Valid here: todo, in_progress.");
@@ -720,6 +735,35 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
 
   // ------------------------------------------------------------ Comments
+  list_office_updates: {
+    section: "Office",
+    description: "All supported Office changes, oldest first by durable id: tasks, projects, team, customers, reports, notes, comments, files and settings. Save checkpoint only after processing every page. Read calls never generate events.",
+    params: { after: "integer · last fully handled checkpoint, default 0", limit: "integer · 1 to 100, default 50", cursor: "string · next_cursor from the prior page; omit after while paging" },
+    read: true,
+    run(input) {
+      const limit = int(input, "limit", { min: 1, max: 100 }) ?? 50;
+      let after = int(input, "after", { min: 0 }) ?? 0;
+      let through = get<{ id: number }>("SELECT COALESCE(MAX(id), 0) id FROM office_updates")!.id;
+      const cursor = optionalString(input, "cursor");
+      if (cursor) {
+        if (present(input, "after")) throw new ActionError("Use cursor or after, not both.");
+        try {
+          const value = JSON.parse(Buffer.from(cursor, "base64url").toString("utf8"));
+          if (!Number.isSafeInteger(value.after) || !Number.isSafeInteger(value.through) || value.after < 0 || value.after > value.through || value.through > through) throw new Error();
+          after = value.after; through = value.through;
+        } catch { throw new ActionError("cursor must come from list_office_updates."); }
+      }
+      if (after > through) throw new ActionError("Checkpoint is ahead of this Office; verify the Office and reset the checkpoint after reviewing its history.");
+      const rows = all<{id: number; source: string; target_id: string; target_title: string; owner: string | null; actor: string; action: string; changes_json: string; comment_id: number | null; created_at: string}>("SELECT * FROM office_updates WHERE id > ? AND id <= ? ORDER BY id LIMIT ?", after, through, limit + 1);
+      const page = rows.slice(0, limit);
+      const more = rows.length > limit;
+      return {
+        updates: page.map(({ changes_json, ...row }) => ({ ...row, changes: json(changes_json, {}), url: updateUrl(row.source, row.target_id) })),
+        next_cursor: more ? Buffer.from(JSON.stringify({ after: page.at(-1)!.id, through })).toString("base64url") : null,
+        checkpoint: more ? null : through,
+      };
+    },
+  },
   list_recent_updates: {
     section: "Comments",
     description: "Newest task updates, project comments, and note comments, including every user comment. Cursor pagination stays stable as new updates arrive. Use unread_only for the scheduled comment check and follow next_cursor until null.",
@@ -1276,10 +1320,34 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
 };
 
+function updateUrl(source: string, id: string): string {
+  const routes: Record<string, string> = { task: "/tasks/", project: "/projects/", note: "/notes/", member: "/team", contact: "/customers", report: "/reports", office: "/projects" };
+  const base = routes[source] ?? "/projects";
+  return ["task", "project", "note"].includes(source) ? base + encodeURIComponent(id) : base;
+}
+function recordOfficeUpdate(source: string, id: string, action: string, actor: string, changes: Input, commentId: number | null = null, fallbackTitle?: string): void {
+  const table = ({task:"tasks", project:"projects", note:"notes", member:"members", contact:"contacts", report:"reports"} as Record<string, string>)[source];
+  const row = table ? get<Record<string, unknown>>(`SELECT * FROM ${table} WHERE ${source === "task" ? "id" : "slug"} = ?`, id) : undefined;
+  const lead = source === "task" && row ? get<ProjectRow>("SELECT * FROM projects WHERE slug = ?", row.project)?.lead : null;
+  const owner = row?.specialist ?? row?.lead ?? row?.kept_by ?? row?.owner ?? lead ?? chiefSlug();
+  run("INSERT INTO office_updates (source, target_id, target_title, owner, actor, action, changes_json, comment_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", source, id, String(row?.title ?? row?.name ?? fallbackTitle ?? id), owner, actor, action, JSON.stringify(changes), commentId);
+}
+function recordActionUpdate(name: string, section: string, input: Input, result: unknown, actor: string): void {
+  const data = isObject(result) ? result : {};
+  const source = ({Team:"member", Projects:"project", Tasks:"task", Customers:"contact", Reports:"report", Notes:"note"} as Record<string, string>)[section] ?? (name === "reply_to_comment" ? String(input.source) : "office");
+  const id = name === "reply_to_comment" ? input.target_id
+    : source === "task" ? (input.id ?? input.task ?? data.task ?? data.id)
+    : input.slug ?? input[source] ?? data.slug ?? data.removed ?? input.key ?? "office";
+  // Screenshot bytes live in private storage; event only needs its typed comment reference.
+  const changes = { ...input };
+  if ("screenshot" in changes) changes.screenshot = !!changes.screenshot;
+  recordOfficeUpdate(source, String(id), name, actor, changes, name === "reply_to_comment" ? Number(input.comment_id) : null, String(data.title ?? data.name ?? id));
+}
+
 // ------------------------------------------------------------- entry points
 
 /** Runs one action. Throws ActionError (with an HTTP status) for anything the agent can fix. */
-export function runAction(name: string, input: unknown): unknown {
+export function runAction(name: string, input: unknown, actor: "agent" | "you" = "agent"): unknown {
   const def = ACTIONS[name];
   if (!def) throw new ActionError(`Unknown action ${name}. Known actions: ${Object.keys(ACTIONS).join(", ")}`, 404);
   const inp = asInput(input);
@@ -1287,7 +1355,8 @@ export function runAction(name: string, input: unknown): unknown {
   // One transaction per write: the change and the "the agent was here" stamp land together or not at all.
   return tx(() => {
     const data = def.run(inp);
-    if (!(name === "set_setting" && inp.key === "last_agent_visit")) setSetting("last_agent_visit", nowIso());
+    if (actor === "agent" && !(name === "set_setting" && inp.key === "last_agent_visit")) setSetting("last_agent_visit", nowIso());
+    if (name !== "mark_comments_read" && !(name === "set_setting" && inp.key === "last_agent_visit")) recordActionUpdate(name, def.section, inp, data, actor);
     return data;
   });
 }
@@ -1323,7 +1392,24 @@ export function catalog() {
  * Stored with author 'you' and unread_by_agent = 1 for list_recent_updates.
  * The money buttons post body "yes" or "not yet" as a reply to the question's update id.
  */
-export function postComment(raw: unknown): { id: number; kind: "comment" | "reply" } {
+export function postComment(raw: unknown): { id: number; kind: "comment" | "reply"; follow_up: string } {
+  return tx(() => {
+    const result = saveComment(raw);
+    const input = asInput(raw);
+    const source = input.task ? "task" : input.note ? "note" : "project";
+    recordOfficeUpdate(source, String(input[source]), "post_comment", "you", { body: input.body, reply_to: input.reply_to ?? null, request_changes: input.request_changes ?? false, files: source === "task" ? json(get<UpdateRow>("SELECT files_json FROM task_updates WHERE id = ?", result.id)?.files_json, []) : [] }, result.id);
+    return { ...result, follow_up: followUpMessage() };
+  });
+}
+
+export function followUpMessage(): string {
+  const chief = get<MemberRow>("SELECT * FROM members WHERE is_chief = 1")?.name ?? "your Muse";
+  const minutes = get<{value: string}>("SELECT value FROM settings WHERE key = 'comment_check_minutes'")?.value;
+  return minutes ? `${chief} checks Office updates every ${minutes} ${minutes === "1" ? "minute" : "minutes"} and will follow up with the owner. Replies appear here; work may take longer.`
+    : `${chief} has this update waiting for review. Regular checks are not set up yet; tell ${chief} in chat to enable them or continue now.`;
+}
+
+function saveComment(raw: unknown): { id: number; kind: "comment" | "reply" } {
   const input = asInput(raw);
   if (["task", "note", "project"].filter((key) => present(input, key)).length !== 1) throw new ActionError("Comment on exactly one task, project, or note.");
   const page = present(input, "project") ? "project" : present(input, "note") ? "note" : null;

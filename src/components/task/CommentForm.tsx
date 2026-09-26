@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 // update. Both post to /api/comments, which stores a task_updates row with
 // author 'you' and unread_by_agent = 1, then the page re-reads itself.
 
-export type ApiResult = { ok: true; data?: unknown } | { ok: false; error?: string };
+export type ApiResult = { ok: true; data?: { follow_up?: string } } | { ok: false; error?: string };
 
 export async function postComment(payload: { task?: string; note?: string; project?: string; body: string; reply_to?: number | null; request_changes?: boolean; screenshot?: string }): Promise<ApiResult> {
   // reply_to is left out of the JSON when there is nothing to reply to, so
@@ -81,7 +81,7 @@ export function CommentForm({ task, note, project, canRequestChanges, replyTo, p
     setBody("");
     setScreenshot(undefined);
     if (fileRef.current) fileRef.current.value = "";
-    setSaved(`Saved${requestChanges ? "; task reopened" : ""}. Awaiting the owner’s reply here.`);
+    setSaved(`Saved${requestChanges ? "; task reopened" : ""}. ${res.data?.follow_up ?? "Awaiting the owner’s reply here."}`);
     setRequestChanges(false);
     startTransition(() => router.refresh());
     onDone?.();
@@ -164,7 +164,7 @@ export function ReplyToggle({ task, replyTo, label, placeholder, hint }: ReplyTo
       </button>
       {open ? (
         <div className="tk-rbox">
-          <CommentForm task={task} replyTo={replyTo} placeholder={placeholder} buttonLabel="Reply" compact hint={hint} autoFocus onDone={() => setOpen(false)} />
+          <CommentForm task={task} replyTo={replyTo} placeholder={placeholder} buttonLabel="Reply" compact hint={hint} autoFocus  />
         </div>
       ) : null}
     </>

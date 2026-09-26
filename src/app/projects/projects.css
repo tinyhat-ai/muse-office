@@ -170,7 +170,17 @@
   .card.pp-md { padding: 20px 16px; }
 }
 
-/* A calm overview: one card per project, with tasks one level deeper. */
+/* Task board controls and project detail. */
+.pj-filters { display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap; margin: 20px 0 12px; }
+.pj-filters label { display: grid; gap: 5px; font-size: 13px; font-weight: 650; }
+.pj-filters input, .pj-filters select { background: #fff; color: #1c1c19; border: 1px solid #87877e; border-radius: 8px; min-height: 42px; padding: 8px 12px; font: inherit; }
+.pj-filters button { background: #1c1c19; color: #fff; border: 0; border-radius: 8px; min-height: 42px; padding: 8px 16px; font: inherit; cursor: pointer; }
+.pj-filters a { padding: 10px 0; text-decoration: underline; }
+.pj-filter-count { padding: 10px 0; color: var(--soft); margin-left: auto; }
+.pj-task-progress { font-size: 12px; margin-top: 10px; color: var(--ink); }
+.pj-note { height: auto; min-height: 230px; }
+.pj-note-f { gap: 6px; }
+@media(max-width: 560px) { .pj-filters label { flex: 1 1 140px; min-width: 0; } .pj-filters input, .pj-filters select { width: 100%; min-width: 0; } .pj-tile { height: auto; min-height: 96px; gap: 12px; } }
 .pj-board { margin-top: 28px; }
 .pj-project-card { display: block; padding: 20px; border: 1px solid var(--line); border-top: 3px solid var(--project-accent); border-radius: 12px; background: #fff; color: #1c1c19; box-shadow: var(--shadow-card); overflow-wrap: anywhere; }
 .pj-project-card:hover { border-color: #87877e; }
@@ -206,3 +216,21 @@ progress::-webkit-progress-value { background: #2d5a45; }
 .pp-comment .md { margin: 10px 0; }
 @media(max-width: 900px) { .pj-board { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media(max-width: 560px) { .pp-summary { grid-template-columns: 1fr; gap: 20px; } .pp-task-title { flex-direction: column; gap: 8px; } .pp-comments, .pp-process, .pp-summary { padding: 18px; } }
+
+.pj-manager { margin: 18px 0; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; background: #fff; }
+.pj-manager summary { cursor: pointer; font-weight: 650; }
+.pj-manager p { max-width: 760px; color: #50534d; margin: 12px 0; }
+.pj-manage-list { list-style: none; padding: 0; margin: 12px 0; }
+.pj-manage-list li { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 0; border-top: 1px solid var(--line); }
+.pj-manage-list span { flex: 1; min-width: 120px; }
+.pj-manage-list button { background: #fff; color: #262a25; border: 1px solid #b8bcb4; border-radius: 6px; padding: 7px 10px; cursor: pointer; }
+
+.office-activity { padding-left: 18px; }
+.office-activity li { padding: 5px 0; }
+.office-activity span { color: #60645d; font-size: 12px; }
+
+.pj-tools { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 8px; margin-top: 14px; }
+.pj-tools .pj-manager { margin: 0; padding: 8px 12px; }
+.pj-tools .pj-manager[open] { flex-basis: 100%; }
+.pj-tiles { margin-top: 18px; }
+.pj-tile { height: 100px; }

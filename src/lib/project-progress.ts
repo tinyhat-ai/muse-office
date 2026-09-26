@@ -1,4 +1,11 @@
-import type { Column, TaskRow } from "./db";
+import type { Column, TaskRow, CheckRow } from "./db";
+
+export interface TaskProgress { basis: "done_when"; met: number; total: number; percent: number | null }
+/** Verified criteria, not an estimate of time spent or permission to close. */
+export function taskProgress(checks: Pick<CheckRow, "met">[]): TaskProgress {
+  const met = checks.filter((check) => !!check.met).length;
+  return { basis: "done_when", met, total: checks.length, percent: checks.length ? Math.round(met / checks.length * 100) : null };
+}
 
 /** A project's state is derived from its tasks; an empty project is never Done. */
 export function projectProgress(tasks: Pick<TaskRow, "column_name" | "question" | "due">[]) {

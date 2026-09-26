@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { renderMarkdown } from "@/lib/markdown";
+import { taskProgress } from "@/lib/project-progress";
 import {
   all,
   get,
@@ -94,6 +95,7 @@ export default async function TaskPage({ params }: Props) {
   const specialist = task.specialist ? members.get(task.specialist) : undefined;
   const worker = specialist ?? members.get(project?.lead ?? "") ?? chief; // the chief does the one-offs itself
   const checks = all<CheckRow>("SELECT * FROM task_checks WHERE task = ? ORDER BY position, id", id);
+  const progress = taskProgress(checks);
   const plan = all<PlanRow>("SELECT * FROM task_plan WHERE task = ? ORDER BY position, id", id);
   const taskFiles = all<FileRow>("SELECT * FROM task_files WHERE task = ? ORDER BY added_at, id", id);
   const updates = all<UpdateRow>("SELECT * FROM task_updates WHERE task = ? ORDER BY created_at, id", id);
@@ -228,7 +230,7 @@ export default async function TaskPage({ params }: Props) {
       <RefreshUpdates />
       {/* 1. where this task lives, its title, and where it stands */}
       <nav className="crumb tk-crumb" aria-label="Breadcrumb">
-        <Link href="/projects">‹ Projects</Link>
+        <Link href="/projects">‹ Tasks</Link>
         <span>/</span>
         <Link href={`/projects/${encodeURIComponent(projectSlug)}`}>{projectName}</Link>
       </nav>
@@ -313,6 +315,8 @@ export default async function TaskPage({ params }: Props) {
       {/* 4. done when */}
       <div className="tk-sec" />
       <h3 className="tk-h3">Done when</h3>
+      <p className="tk-check-progress">{progress.percent === null ? "Completion checks not set" : `${progress.met} of ${progress.total} checks verified · ${progress.percent}%`}</p>
+      {progress.total > 0 && <progress className="tk-check-bar" value={progress.met} max={progress.total} aria-label="Verified completion criteria" />}
       {checks.length ? (
         <ul className="tk-chk">
           {checks.map((c) => (
