@@ -1,6 +1,6 @@
 # Actions: how the Muse changes the Office
 
-The user normally tells Muse, and Muse changes the Office through these actions. On task and note pages the user can comment; on tasks they can also reply. Muse checks the ordered, paginated `list_recent_updates` feed on a schedule.
+The user normally tells Muse, and Muse changes the Office through these actions. Users can manage projects and comment on task, project, and note pages. Muse checks the ordered, paginated `list_office_updates` feed on a schedule and drains `list_recent_updates` for unread comment retries.
 
 In the reference app each action is an HTTP call: `POST /api/actions/<name>` with a JSON body, returning `{ "ok": true, "data": ... }` or `{ "ok": false, "error": "..." }`. `GET /api/actions` lists every action with its arguments. When the Muse builds the Office as an artifact, it publishes these same names as the artifact's actions, with the same arguments.
 
@@ -25,7 +25,7 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `upsert_project` | `slug`, `name`, `description?`, `color?`, `color_dark?`, `lead?`, `kind?`, `done_when?` | Adds or updates a project tile and its page header. Colours default to the next free pastel. |
+| `upsert_project` | `slug?`, `name`, `create_only?`, `description?`, `color?`, `color_dark?`, `lead?`, `kind?`, `done_when?` | Adds or updates a project. Names may use any language, up to 120 characters. Pass `create_only: true` when adding. If different names produce the same generated slug, the new project gets a free numbered slug. Use its returned slug for future edits. Colours default to the next free pastel. |
 | `set_process` | `project`, `steps: [{name, who, note?, needs_you?}]`, `markdown` | Replaces the project's steps (the diagram) and the process text (rendered as markdown on the project's page). |
 | `add_rule` | `project`, `text`, `origin?: "you" or "ok"` | Adds a dated line under "Rules learned". |
 | `list_projects` | — | Every project with its open and waiting counts. |
@@ -40,7 +40,7 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 | `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to the conversation on the task's page. `author` is a member slug. Files also appear under "Files from this task". Posting the task's current question again as a `question` note returns the row `move_task` already posted instead of adding a second one. The last `update` before a task moves to `done` is its closing report: what was done, the result, the files, what was learned. |
 | `attach_file` | `id`, `name`, `url` | Adds a file to "Files from this task". The URL must open for the user (a file artifact link, or a file stored in the app), never a path on the Muse's computer. |
 | `get_task` | `id` | Everything on the task's page. |
-| `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, due, updated_at. |
+| `list_tasks` | `project?`, `column?`, `specialist?`, `include_archived?` | Active-project cards by default, with title, column, specialist, step, question, note, due, updated_at, and `project_archived_at`. Set `include_archived: true` to inspect paused work/history. `get_task` also returns `project_archived_at`. |
 
 ## Comments and updates
 
@@ -150,8 +150,17 @@ Use one recurring check every minute by default, or a verified immediate trigger
 Respect user preferences and the platform's supported minimum; explain a fallback
 before adopting it. Retry failures from the last committed checkpoint and also
 drain unread comments, so partial failures do not lose feedback. Deduplicate by
-feed id. Do not re-dispatch the chief's own replies as new user requests. Prevent
+feed id. Review `actor: "agent"` events for progress, but do not respond with
+another write or dispatch solely because an agent wrote an update. Only new user
+direction, an actual blocker, or a planned next step warrants more work. Prevent
 overlapping job runs. Verify a real run and record only its actual interval in
 `comment_check_minutes`. Clear that setting when the job stops. Saving a comment
 returns `follow_up`, naming the chief and the real checking interval; project
 saves show the same message. This is a check cadence, not a reply-time promise.
+
+Archiving pauses the project's open work. `summary` and default `list_tasks`
+exclude it; direct task/project reads preserve its history and archive state.
+Do not dispatch paused tasks or ask their old questions until the user restores
+the project. A new comment on archived work still deserves a reply, but does not
+implicitly restore it. Save feed checkpoints separately for each Office; discard
+the checkpoint and start from zero when its database is reset or replaced.

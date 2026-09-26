@@ -21,6 +21,11 @@ private Office app.
    related tasks. “Launch the landing page” is a task in Website. Keep the
    user's project choices; they can add, rename, archive, and restore them.
 
+When adding a project, pass `create_only: true` and use its returned slug for
+later edits. Archived projects pause their open tasks. Do not dispatch them or
+ask their old questions until restored. If the user comments on archived work,
+reply there and clarify whether they want to restore it before resuming.
+
 Always tell the user where it went, in one line:
 project → task → who is on it → when they will hear back.
 

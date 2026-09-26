@@ -58,7 +58,11 @@ of tasks, checklists, files, team, customers, reports, and notes. Start at the
 saved checkpoint, process all cursor pages in order, and persist the returned
 checkpoint only after handling the full batch. Retry from the previous checkpoint
 on failure; use event ids to avoid duplicate work. Do not overlap runs, poll in a
-busy loop, or turn your own replies into new tasks. Reads, receipt acknowledgements,
+busy loop, or turn agent updates into new tasks. Review `actor: "agent"` events
+for progress without automatically answering or dispatching another write. Only
+new user direction, an actual blocker, or a planned next step warrants more work.
+Keep checkpoints scoped to one Office; discard them after its database is reset
+or replaced and review from zero. Reads, receipt acknowledgements,
 and heartbeat stamps do not create new feed events. Review existing unread
 comments on upgrades too: the activity feed starts when it is installed.
 
