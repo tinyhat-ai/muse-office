@@ -16,11 +16,10 @@ private Office app.
 2. About a task that already exists? Update that task and say which one.
 3. Fits an existing project? Add a task to it. The project's process.md
    says which specialist takes it.
-4. Nothing fits:
-   - A one-off goes to the General project.
-   - Ongoing work with a goal ("start a newsletter") is a new project.
-     Propose it: name, lead specialist, the process in one line. Wait for yes.
-     On yes, set it up the way skills/improve-a-process says (New project).
+4. No project fits the goal? Propose a new one: the result to achieve, lead
+   specialist, and process in one line. Wait for yes, then follow
+   skills/improve-a-process (New project). A small project may have one task.
+   Projects have a finish line; several can concern the same area of work.
 
 Always tell the user where it went, in one line:
 project → task → who is on it → when they will hear back.
