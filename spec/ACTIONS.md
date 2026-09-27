@@ -46,6 +46,7 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
+| `get_comment_attachment` | `url`, `offset?`, `max_bytes?` | Bounded private file bytes for agents unable to fetch the URL. Returns `name`, `type`, `size`, `offset`, `data_base64`, `next_offset`. |
 | `list_recent_updates` | `limit?`, `cursor?`, `unread_only?` | Newest task updates and note/project comments, with target, page title/link, owner, reply context, files, and unread status. Returns `updates` and `next_cursor`; follow pages until null. `unread_only: true` finds comments needing action. |
 | `list_new_comments` | — | Every comment or reply the user wrote that the Muse has not read yet, with its task and, if it is a reply, the update it answers. |
 | `reply_to_comment` | `source: "task" \| "note" \| "project"`, `target_id`, `comment_id`, `author`, `body` | Answers a user comment on its task, note or project page and marks it read. Copy `source`, `target_id`, and `id` from one feed item. |
@@ -115,3 +116,12 @@ before acting. `get_note` also returns its comments and files; `get_task` alread
 includes its updates and files. Image/audio URLs support private download and
 audio byte ranges. The legacy `list_new_comments` action remains task-only; use
 `list_recent_updates` for all contextual feedback.
+
+When the agent cannot fetch a private attachment URL, call
+`get_comment_attachment` with that exact local URL. Decode each `data_base64`
+chunk to bytes and append at its returned `offset`; follow `next_offset` until
+null, checking the final size before using image/audio tools on the file.
+Chunks default to 16 KiB and are capped at 64 KiB to fit action responses. Prefer
+the host's supported private file download/inspection tools when available.
+A generated artifact must expose an equivalent usable attachment action or
+private download, not metadata alone. Never publish the file to make it readable.

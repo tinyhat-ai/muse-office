@@ -33,6 +33,11 @@ is reading; it is not a second chat app or a way to edit project data.
   page title/link, owner, reply context, and openable file references including
   media type. Paginate deterministically. Identical numeric ids on different
   page types must never route to the wrong page.
+- Verify the scheduled agent can retrieve the bytes, not just list filenames.
+  Use supported private download/inspection tools; when only actions are
+  available, expose `get_comment_attachment` with bounded chunks as specified
+  in `spec/ACTIONS.md`. Reassemble the file in the agent's private workspace
+  and open it with its image/audio tools. Do not publish uploads for access.
 - Read/listen to attachments before acting; their filenames are not their
   contents. If you cannot access or understand one, ask for that missing context
   on the same page rather than claiming you handled it. Reply there as the owner.

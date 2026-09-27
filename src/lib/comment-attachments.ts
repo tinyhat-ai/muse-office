@@ -18,6 +18,7 @@ export function saveComment(input: unknown, uploads: Upload[] = []) {
     if (!f.data.byteLength || f.data.byteLength > MAX_FILE_BYTES) throw new ActionError("Each file must be between 1 byte and 10 MB.", 413);
     let type = f.type.split(";")[0].toLowerCase();
     if (type === "audio/x-m4a") type = "audio/mp4";
+    if (type === "audio/x-wav") type = "audio/wav";
     if (type === "audio/mp3") type = "audio/mpeg";
     if (!type && /\.(txt|md)$/i.test(f.name)) type = "text/plain";
     if (!/^(image\/(png|jpeg|webp|gif)|audio\/(webm|ogg|wav|x-wav|mpeg|mp4|aac)|application\/pdf|text\/(plain|markdown))$/.test(type)) {

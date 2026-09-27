@@ -103,3 +103,23 @@ test("private audio supports browser range requests without exposing active file
   assert.match(response.headers.get("content-security-policy")!, /sandbox/);
   assert.equal(attachmentResponse(new Request("http://office.test/file", { headers: { range: "bytes=99-100" } }), file).status, 416);
 });
+
+
+test("the owner can reconstruct an attachment using only bounded actions", () => {
+  const data = Buffer.from(Array.from({length: 70001}, (_, i) => i % 256));
+  saveComment({ note: "guide", body: "Read the actual voice bytes" }, [{ name: "voice.wav", type: "audio/x-wav", data }]);
+  const note = runAction("get_note", { slug: "guide" }) as { comments: Array<{ files: Array<{url: string; type: string}> }> };
+  const file = note.comments.at(-1)!.files[0];
+  assert.equal(file.type, "audio/wav");
+  const chunks: Buffer[] = []; let offset: number | null = 0;
+  do {
+    const part = runAction("get_comment_attachment", { url: file.url, offset }) as {data_base64: string; next_offset: number | null; size: number; offset: number};
+    const bytes = Buffer.from(part.data_base64, "base64");
+    assert.ok(bytes.length <= 16384); assert.equal(part.offset, offset); assert.equal(part.size, data.length);
+    chunks.push(bytes); offset = part.next_offset;
+  } while (offset !== null);
+  assert.deepEqual(Buffer.concat(chunks), data);
+  for (const args of [{max_bytes:65537}, {offset:-1}, {offset:data.length+1}]) assert.equal(callAction("get_comment_attachment", {url:file.url,...args}).status, 400);
+  assert.equal(callAction("get_comment_attachment", {url:"https://elsewhere.example/private.wav"}).status,400);
+  assert.equal(callAction("get_comment_attachment", {url:"/api/attachments/00000000-0000-0000-0000-000000000000"}).status,404);
+});
