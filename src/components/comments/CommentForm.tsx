@@ -133,7 +133,7 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
       <span>{f.name}</span><button type="button" aria-label={`Remove ${f.name}`} disabled={busy} onClick={() => setFiles((all) => all.filter((_, n) => n !== i))}>×</button>
     </li>)}</ul>}
     <div className="oc-actions">
-      <input ref={picker} type="file" hidden multiple accept="image/png,image/jpeg,image/webp,image/gif,audio/*,application/pdf,text/plain,text/markdown,.md,.txt,.m4a" onChange={(e) => { addFiles(Array.from(e.target.files || [])); e.target.value = ""; }} />
+      <input ref={picker} type="file" hidden multiple accept="image/png,image/jpeg,image/webp,image/gif,audio/webm,audio/ogg,audio/wav,audio/x-wav,audio/mpeg,audio/mp4,audio/aac,application/pdf,text/plain,text/markdown,.md,.txt,.m4a" onChange={(e) => { addFiles(Array.from(e.target.files || [])); e.target.value = ""; }} />
       <button type="button" className="oc-icon" aria-label="Attach files" title="Attach files" disabled={busy || recording} onClick={() => picker.current?.click()}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="m8 12 6-6a3 3 0 0 1 4 4l-8 8a5 5 0 0 1-7-7l9-9M6 14l8-8" /></svg>
       </button>

@@ -79,7 +79,7 @@ the user's browser cannot reach your computer. The Office app is the view.
 - Run the checks in HAT.md ("Check that the Office is right") before you go on.
 - Create a scheduled task of yours (every 30 minutes) that calls
   `list_recent_updates` with `unread_only=true`, follows `next_cursor` on
-  every page, assigns each comment to its task owner or note keeper, and
+  every page, assigns each comment to its task owner, note keeper or project lead, and
   verifies the reply and follow-up before marking it read. Without it,
   comments wait until the user next talks to you.
 - After the build, load the office through its actions exactly as

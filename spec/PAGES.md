@@ -1,6 +1,6 @@
 # The pages
 
-Five pages in one top bar: **Projects · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. The user looks; the Muse changes things. Wherever a control would normally be, one quiet line says: "To change this, tell <your Muse's name> in chat."
+Five pages in one top bar: **Projects · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. The user looks; the Muse changes things. Keep the existing reference layout and avoid adding standing helper text. Contextual comments are the only input exception.
 
 Every page opens with the same header: a small kicker line, a large title, one line of lede. Then the content. Nothing is hidden behind tabs inside a page.
 
@@ -22,7 +22,8 @@ Tapping a card opens the task's page.
 2. A colour bar, the project name, its one-line description, and three small pills: "[avatar] Led by Patch", "Runs like: build", "2 open" (plus "1 waiting on you" in orange when true).
 3. **How it runs**: the steps as a horizontal row of round nodes, each with the doer's avatar (or a "you" ring for the user's steps), the step name, and the doer's name. A small badge on a node counts the open tasks at that step. Steps that need the user's OK carry a small orange "your OK" tag. On a phone the row becomes a vertical list.
 4. The **process text**, rendered from markdown: "How Website runs", "Done when", "Rules learned" (each rule dated, with "from you" or "<Muse> suggested · you OK'd"), then one line: "Written and kept current by <Muse>. It changes when you correct something."
-5. A side list **Right now**: the open tasks with their column pill. Tapping one opens the task.
+5. A shared comment thread and input below the process text, using the same component and attachment/keyboard behavior as task and note pages. Replies at any depth stay visible under the original comment.
+6. A side list **Right now**: the open tasks with their column pill. Tapping one opens the task.
 
 ## A task's page (`/tasks/<id>`)
 

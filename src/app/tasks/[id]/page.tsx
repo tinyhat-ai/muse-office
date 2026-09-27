@@ -151,8 +151,10 @@ export default async function TaskPage({ params }: Props) {
   const seen = new Set<string>();
   const attached = updates.flatMap((u) => json<Array<Partial<FileChip>>>(u.files_json, []));
   for (const f of [...taskFiles, ...attached]) {
-    if (!f || typeof f.name !== "string" || !f.name || seen.has(f.name)) continue;
-    seen.add(f.name);
+    if (!f || typeof f.name !== "string" || !f.name) continue;
+    const key = JSON.stringify([f.name, f.url ?? null]);
+    if (seen.has(key)) continue;
+    seen.add(key);
     files.push({ name: f.name, url: typeof f.url === "string" && f.url ? f.url : null });
   }
 
@@ -253,7 +255,7 @@ export default async function TaskPage({ params }: Props) {
               <div className="tk-answered">
                 <You size="sm" />
                 <div>
-                  <span className="body">You answered: {answer.body}</span> <span className="tm">· {ago(answer.created_at)}</span>
+                  <span className="body">You answered: {answer.body || json<Array<{ name: string }>>(answer.files_json, []).map((file) => file.name).join(", ")}</span> <span className="tm">· {ago(answer.created_at)}</span>
                   <span className="next">{chiefName} will pick it up</span>
                 </div>
               </div>

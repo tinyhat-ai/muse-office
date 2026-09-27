@@ -78,6 +78,11 @@ test("multipart preserves content and rejects cross-origin writes and oversized 
   await assert.rejects(readCommentRequest(new Request("http://office.test/api/comments", { method: "POST", body: "{}", headers: { origin: "http://elsewhere.test" } })), /this Office/);
   await assert.rejects(readCommentRequest(new Request("http://office.test/api/comments", { method: "POST", body: new Uint8Array(21 * 1024 * 1024) })), /under 20 MB/);
   await assert.rejects(readCommentRequest(new Request("http://office.test/api/comments", { method: "POST", body: "broken", headers: { "content-type": "multipart/form-data" } })), /could not be read/);
+  for (const [host, protocol] of [["127.0.0.1:3148", "http"], ["192.168.1.10:3148", "http"], ["office.example", "https"]]) {
+    const headers = { host, "x-forwarded-proto": protocol, origin: `${protocol}://${host}` };
+    assert.deepEqual((await readCommentRequest(new Request("http://localhost:3148/api/comments", { method: "POST", body: '{"note":"guide","body":"test"}', headers }))).input, { note: "guide", body: "test" });
+    await assert.rejects(readCommentRequest(new Request("http://localhost:3148/api/comments", { method: "POST", body: "{}", headers: { ...headers, origin: "https://elsewhere.example" } })), /this Office/);
+  }
 });
 
 test("removing a note also removes its private uploads", () => {

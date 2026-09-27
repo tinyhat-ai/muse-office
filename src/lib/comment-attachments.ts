@@ -38,7 +38,15 @@ export function saveComment(input: unknown, uploads: Upload[] = []) {
 /** Bound the entire request before decoding multipart, even without Content-Length. */
 export async function readCommentRequest(req: Request): Promise<{ input: unknown; uploads: Upload[] }> {
   const origin = req.headers.get("origin");
-  if (origin && origin !== new URL(req.url).origin) throw new ActionError("Send the comment from this Office.", 403);
+  if (origin) {
+    // Next can reconstruct req.url with its internal localhost hostname. The
+    // browser's Host header retains the Office address (also behind a proxy).
+    const protocol = req.headers.get("x-forwarded-proto")?.split(",")[0].trim() || new URL(req.url).protocol.slice(0, -1);
+    const host = req.headers.get("host") || new URL(req.url).host;
+    let sameOrigin = false;
+    try { sameOrigin = ["http", "https"].includes(protocol) && new URL(origin).origin === new URL(`${protocol}://${host}`).origin; } catch { /* Reject malformed origins. */ }
+    if (!sameOrigin) throw new ActionError("Send the comment from this Office.", 403);
+  }
   const cap = MAX_COMMENT_BYTES + 256 * 1024;
   const reader = req.body?.getReader();
   if (!reader) throw new ActionError("The comment is empty.");

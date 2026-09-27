@@ -9,7 +9,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 | Page | Reads from |
 | --- | --- |
 | Projects (the board) | `projects`, `tasks`, `members` |
-| A project's page | `projects`, `process_steps`, `project_rules`, `tasks` |
+| A project's page | `projects`, `process_steps`, `project_rules`, `tasks`, `project_comments` |
 | A task's page | `tasks`, `task_checks`, `task_plan`, `task_files`, `task_updates`, `members` |
 | Team | `members`, `tasks` (for "working on" and "latest") |
 | Customers | `contacts`, `touches`, `stage_changes` |
@@ -40,7 +40,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 
 - Columns are exactly `todo`, `in_progress`, `waiting_on_you`, `done`. The pages show them as "To do", "In progress", "Waiting on you", "Done".
 - Moving a task to `waiting_on_you` requires a `question`. Moving it anywhere else clears the question.
-- A task belongs to exactly one project. A task update belongs to one task; a note comment belongs to one note.
+- A task belongs to exactly one project. A task update belongs to one task; a note comment belongs to one note; a project comment belongs to one project.
 - Stages are exactly `lead`, `talking`, `proposal`, `customer`, `past`. Changing a stage adds a `stage_changes` row.
 - Times are ISO 8601 in UTC. The pages render them as "2 hours ago" or "Sep 24".
 - The agent writes only through the actions in `spec/ACTIONS.md`. The user may comment on a task, note or project page. The app stores user comments in `task_updates`, `note_comments`, or `project_comments` with `author = 'you'` and `unread_by_agent = 1`; `list_recent_updates` pages through all three kinds.
