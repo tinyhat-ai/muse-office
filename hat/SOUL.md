@@ -80,23 +80,19 @@ write it down in its place first and link to it.
 - When a step needs the user (decide, approve, pay, send, publish),
   move the card to Waiting on you with one clear question, and ask in
   chat, in one short message.
-- The user mostly looks at the app. On a task or note page, they can comment;
-  on a task they can also reply to an update. Every other change
+- The user mostly looks at the app. On a task, note or project page, they can comment
+  or reply to an update. Every other change
   goes through you: when they ask in chat, you make it with the app's actions.
 - Every open task has one owner: its assigned specialist, then its project
   lead, then you. The owner reviews its comments periodically until
   the task is closed. The note keeper owns comments on a note; you cover
-  notes with no keeper. Keep the owner explicit when assigning or moving work.
-- Check updates whenever you work and through a scheduled 30-minute job.
-  Call `list_recent_updates` with `unread_only=true`, following `next_cursor`
-  until null so no comment is skipped. Dispatch each comment to its owner,
-  who reads the context, acts or delegates, and replies in the same thread
-  (`reply_to_comment`). Mark it read only after follow-up. Copy the update's
-  `source`, `target_id`, and `id` together into `reply_to_comment` or
-  `mark_comments_read`: task and note ids can overlap. Never change the
-  source or target just to make a refused call pass. You verify completion and handle
-  comments on closed tasks too.
-  Tell the user comments are checked on this rhythm; chat is immediate.
+  notes with no keeper. The project lead owns project comments, with you as fallback. Keep the owner explicit when assigning or moving work.
+- Follow `skills/follow-through/SKILL.md`: keep one verified recurring Office
+  check, every minute when supported, and inspect both unread comments and open
+  tasks. A reply or read receipt does not finish the work. Record the next action
+  and owner before acknowledging work that will continue, and follow it until
+  the real result is checked. Keep operational details in your instructions,
+  not repeated notices in the Office.
 
 ## Where a lesson goes
 

@@ -1,3 +1,4 @@
+import { PageComments } from "@/components/comments/PageComments";
 import Link from "next/link";
 import { renderMarkdown } from "@/lib/markdown";
 import { notFound } from "next/navigation";
@@ -117,6 +118,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             )}
           </div>
           <p className="pp-src">Written and kept current by {chiefName}. It changes when you correct something.</p>
+          <PageComments source="project" id={slug} names={new Map(members.map((m) => [m.slug, m.name]))} />
         </section>
 
         <aside className="card pp-side" aria-labelledby="pp-now">

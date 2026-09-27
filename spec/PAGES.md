@@ -1,6 +1,6 @@
 # The pages
 
-Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. The user looks; the Muse changes things. Wherever a control would normally be, one quiet line says: "To change this, tell <your Muse's name> in chat."
+Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. The user looks; the Muse changes things. Keep the existing reference layout and avoid adding standing helper text. Contextual comments are the only input exception.
 
 Every page opens with the same header: a small kicker line, a large title, one line of lede. Then the content. Nothing is hidden behind tabs inside a page.
 
@@ -22,7 +22,8 @@ Tapping a card opens the task's page.
 2. A colour bar, the project name, its one-line description, and three small pills: "[avatar] Led by Patch", "Runs like: build", "2 open" (plus "1 waiting on you" in orange when true).
 3. **How it runs**: the steps as a horizontal row of round nodes, each with the doer's avatar (or a "you" ring for the user's steps), the step name, and the doer's name. A small badge on a node counts the open tasks at that step. Steps that need the user's OK carry a small orange "your OK" tag. On a phone the row becomes a vertical list.
 4. The **process text**, rendered from markdown: "How Website runs", "Done when", "Rules learned" (each rule dated, with "from you" or "<Muse> suggested · you OK'd"), then one line: "Written and kept current by <Muse>. It changes when you correct something."
-5. A side list **Right now**: the open tasks with their column pill. Tapping one opens the task.
+5. A shared comment thread and input below the process text, using the same component and attachment/keyboard behavior as task and note pages. Replies at any depth stay visible under the original comment.
+6. A side list **Right now**: the open tasks with their column pill. Tapping one opens the task.
 
 ## A task's page (`/tasks/<id>`)
 
@@ -33,8 +34,8 @@ Like an issue page, top to bottom:
 3. **What this is**: the job definition. A collapsed "Original request" with the user's own words.
 4. **Done when**: a checklist; met items show a green check.
 5. **Plan**: a numbered list; the current step is bold with "· now"; done steps are grey.
-6. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Update cards with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files as chips. A question card is peach. The user's comments have a blue-grey header and show replies indented under them. Each card has a "Reply" link that opens a small box.
-7. **The comment box**: "[you] Add a comment for <Muse> and Penny…" with a "Comment" button and a small line "Your comment stays with this task." Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Note pages have their own comment box.
+6. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Update cards with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files (images as previews, audio with playback, other files as links). A question card is peach. The user's comments have a blue-grey header and show replies indented under them. Each card has a "Reply" link that opens a small box.
+7. **The comment box**: "[you] Add a comment for <Muse> and Penny…" with a "Comment" button and compact attachment/voice controls. Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Task, note and project pages reuse the same comment component. Enter inserts a line; Shift+Enter sends, with Ctrl/Cmd+Enter retained. See `hat/skills/contextual-comments/SKILL.md` for input, host capability, and verification rules.
 8. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 

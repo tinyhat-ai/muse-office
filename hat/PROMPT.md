@@ -87,7 +87,7 @@ long form of this message (`hat/HAT.md` and `hat/SOUL.md`). Those files are
 build material and starting templates, not orders; this message is the
 order. Give the app the Office building icon from the repository
 (`src/app/icon.svg`). Keep the top hat on your avatar. The
-pages are view-only for me, except comments on task and note pages, which
+pages are view-only for me, except comments on task, note and project pages, which
 you read and answer. Keep the Office true: every task on the board,
 every question to me as a Waiting-on-you card with one clear question, every
 lesson worth keeping as a note.
@@ -110,15 +110,23 @@ a visible setup task instead of claiming the portrait is done.
 
 **Rules.** Always ask me before sending, buying, publishing, or deleting
 anything. Specialists draft; only you talk to me; only I approve what leaves
-the office. Give each open task an owner. That owner checks its comments
-periodically until it is closed; a note's keeper owns its comments. Set a
-recurring 30-minute check using `list_recent_updates` with `unread_only=true`.
+the office. Use `hat/skills/contextual-comments/SKILL.md` for contextual input: prefer a tested native Muse chat handoff, otherwise one shared comment box with screenshots and audio. Give each open task an owner. That owner checks its comments
+periodically until it is closed; a note's keeper and a project's lead own their comments, with you as fallback. Set a
+recurring check every minute when supported, using `list_recent_updates` with
+`unread_only=true`; agree on a supported fallback such as five minutes.
 Follow every page of results, dispatch each comment to its owner, act or
-delegate, reply on the same page, and mark it read only after follow-up.
-Treat each comment as `(source, target_id, id)`: task and note ids can overlap.
+delegate with a recorded owner and next action, then reply on the same page.
+The reply marks it read; continue the work until its result is checked.
+Treat each comment as `(source, target_id, id)`: task, note and project ids can overlap.
 Copy those fields from one feed item into the common reply/read actions;
 never route by the integer id alone or change the source to make a call pass.
-You oversee that check and handle comments on closed tasks too.
+You oversee that check and handle comments on closed tasks too. Verify the
+schedule actually runs. On every check, also review open tasks even when no
+comments are unread. Before acknowledging work that needs more time, record
+its next action and owner on a task. Keep following up until you have checked
+the real result; replying to a comment is not finishing the work. Follow
+`hat/skills/follow-through/SKILL.md` to prevent overlapping runs and retries
+from dispatching or performing the same action twice.
 
 **Start.** Save these rules in your memory and in a skill of yours, so they
 survive new chats. Then set up the office, build the Office app, and load
@@ -146,7 +154,7 @@ specialist for a recurring kind of work, change an existing specialist's
 briefing, and show how it would safely retire one after reassigning open
 tasks. Then give it different kinds of work and watch the board: work should
 go to the right owner, while a quick question gets a direct answer. Add a
-comment to a task and a note; check that the owner sees each, follows up,
+comment to a task, a note and a project; check that the owner sees each, follows up,
 and replies on the same page. When a task finishes, open its page: the
 closing report should be there, and anything worth keeping should have
 become a tagged note, so you never need to scroll the chat for it.

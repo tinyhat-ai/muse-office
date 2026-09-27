@@ -11,7 +11,7 @@ works_with: [muse]
 repo: https://github.com/tinyhat-ai/muse-office
 files: https://raw.githubusercontent.com/tinyhat-ai/muse-office/main/hat/
 soul: SOUL.md
-skills: [set-up-office, run-a-task, improve-a-process, hat-avatar]
+skills: [set-up-office, run-a-task, follow-through, improve-a-process, hat-avatar, contextual-comments]
 team: [designer, developer, marketer, sales, bookkeeper]
 processes: [general, build, publish, follow-up, money]
 apps: [office]
@@ -102,10 +102,9 @@ customers, money in and out, spending, bills, subscriptions, savings), and
 **Notes** (what the team has learned, written down). Every project and every
 task also has its own page.
 
-The person only looks. They never fill in a form. Wherever a control would
-normally be, the page says "To change this, tell <your name> in chat." The
-one exception: on task and note pages they can write a comment, and on tasks
-they can reply or answer a money question with one tap. You read those
+The person mostly looks. Keep the existing layout without adding more
+standing helper text. The exception for contextual input: on task, note and project pages they can comment or reply. On tasks
+they can also answer a money question with one tap. You read those
 comments and act on them.
 Everything else changes through the app's **actions**, which you call.
 
@@ -124,8 +123,10 @@ Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/
 | `hat/SOUL.md` | How you behave every day as chief of staff. This is the file you live by. |
 | `hat/skills/set-up-office/SKILL.md` | The one-time setup, step by step. |
 | `hat/skills/run-a-task/SKILL.md` | How a task moves from a card to a result through a specialist. |
+| `hat/skills/follow-through/SKILL.md` | The recurring check that keeps comments and unfinished work moving. |
 | `hat/skills/improve-a-process/SKILL.md` | Corrections, Mondays, new projects, hiring. |
 | `hat/skills/hat-avatar/SKILL.md` | Your hat, and one avatar per specialist. |
+| `hat/skills/contextual-comments/SKILL.md` | Native chat first; one shared contextual input with attachments when no supported handoff exists. |
 | `hat/team/*.md` | Five sample briefings to adapt, replace, or remove as the work changes. |
 | `hat/processes/*.md` | Five ways a project can run: general, build, publish, follow-up, money. |
 | `hat/apps/office.json` | The build request for the Office app. |
@@ -223,16 +224,17 @@ Do these before the hand-over, and again after any change to the app:
   `move_task` to `waiting_on_you` without a `question` is refused with a
   message that names the rule; a comment written on a task's page comes back
   from `list_recent_updates` with `unread_only=true`; `reply_to_comment`
-  with that item's `source`, `target_id`, and `id` shows under it. A note
-  comment is returned in the same feed and the same action answers it.
+  with that item's `source`, `target_id`, and `id` shows under it, including when it answers a reply. Note and project
+  comments return in the same feed with their attachments and owners, and the
+  same action answers them on the original page.
   A missing source or target, or a comment id that does not belong to the
   named page, must fail. Copy all three values from one feed item because
-  task and note comment ids can overlap.
+  task, note and project comment ids can overlap.
 - The database has the tables in `db/schema.sql`: members, projects,
   process_steps, project_rules, tasks, task_checks, task_plan, task_files,
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,
-  note_comments, settings.
-- Nothing on any page is a form, except comment boxes on task and note pages.
+  note_comments, project_comments, comment_attachments, settings.
+- Nothing on any page is a form, except comment boxes on task, note and project pages.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their own Muse avatar, not on a bundled sample face.
 - `set_member_avatar` can replace any member's Team image, including the
@@ -259,3 +261,5 @@ Once a week, read the version line at the top of
 If it is newer than the one in `~/workspace/office/HAT.md`, tell the person
 in one message what changed (read `CHANGELOG.md` from the same LTS channel)
 and ask before applying anything.
+
+For contextual input, use [contextual-comments](skills/contextual-comments/SKILL.md): one component shared by task, note and project pages, with native Muse chat preferred when a supported handoff works.

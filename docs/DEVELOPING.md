@@ -21,8 +21,7 @@ next start seeds the starter again. Use `OFFICE_SEED=demo npm run dev` for the
 fictional consultant showcase shown in some screenshots, or
 `OFFICE_SEED=none npm run dev` for an empty database.
 
-Most pages are for reading. A person can comment on tasks and notes, and reply
-to a task update. Muse changes the other records through Office actions.
+Most pages are for reading. A person can comment and reply on tasks, notes and projects. Muse changes the other records through Office actions.
 
 ## What the starter shows
 
