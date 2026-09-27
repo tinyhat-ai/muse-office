@@ -68,7 +68,9 @@ This is agent coordination state, not another Office page or user-facing entity.
    follow up when a checkpoint is due or stalled, and keep blockers and next
    actions on the task. Ask one clear question when the user is needed.
 5. Verify the actual changed page, file or other requested output before Done;
-   the worker's reply alone is insufficient. Save the result and useful links
+   the worker's reply alone is insufficient. A blocked attempt stays open: a
+   report explaining why work could not be done is not the requested result.
+   Do not close it unless the user explicitly cancels that work. Save the result and useful links
    on the task and reply with the final result on the original task, note or
    project thread. Follow `run-a-task` for closing work and recording what the
    specialist learned. Preserve approval requirements throughout.
