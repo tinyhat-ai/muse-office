@@ -1,6 +1,6 @@
 # Actions: how the Muse changes the Office
 
-The user normally tells Muse, and Muse changes the Office through these actions. On task and note pages the user can comment; on tasks they can also reply. Muse checks the ordered, paginated `list_recent_updates` feed on a schedule.
+The user normally tells Muse, and Muse changes the Office through these actions. On task, note and project pages the user can comment and reply. Muse checks the ordered, paginated `list_recent_updates` feed on a schedule.
 
 In the reference app each action is an HTTP call: `POST /api/actions/<name>` with a JSON body, returning `{ "ok": true, "data": ... }` or `{ "ok": false, "error": "..." }`. `GET /api/actions` lists every action with its arguments. When the Muse builds the Office as an artifact, it publishes these same names as the artifact's actions, with the same arguments.
 
@@ -46,14 +46,14 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `list_recent_updates` | `limit?`, `cursor?`, `unread_only?` | Newest task updates and note comments, with target, owner, reply context, and unread status. Returns `updates` and `next_cursor`; follow pages until null. `unread_only: true` finds comments needing action. |
+| `list_recent_updates` | `limit?`, `cursor?`, `unread_only?` | Newest task updates and note/project comments, with target, page title/link, owner, reply context, files, and unread status. Returns `updates` and `next_cursor`; follow pages until null. `unread_only: true` finds comments needing action. |
 | `list_new_comments` | — | Every comment or reply the user wrote that the Muse has not read yet, with its task and, if it is a reply, the update it answers. |
-| `reply_to_comment` | `source: "task" \| "note"`, `target_id`, `comment_id`, `author`, `body` | Answers a user comment on its task or note page and marks it read. Copy `source`, `target_id`, and `id` from one feed item. |
-| `mark_comments_read` | `source: "task" \| "note"`, `target_id`, `ids: number[]` | Marks handled comments on one task or note read. Every id must belong to that page. |
+| `reply_to_comment` | `source: "task" \| "note" \| "project"`, `target_id`, `comment_id`, `author`, `body` | Answers a user comment on its task, note or project page and marks it read. Copy `source`, `target_id`, and `id` from one feed item. |
+| `mark_comments_read` | `source: "task" \| "note" \| "project"`, `target_id`, `ids: number[]` | Marks handled comments on one task, note or project read. Every id must belong to that page. |
 
 Each open task has an owner (`specialist`, then project lead, then chief). Its owner checks comments until it is closed. A note's `kept_by` member owns its comments, or the chief when unset. The chief's scheduled 30-minute job pages through unread updates, delegates to the owner, and verifies follow-up. Comments on completed tasks still appear and need triage.
 
-Treat an update's identity as `(source, target_id, id)`, never the integer id alone. The same reply and read actions handle both kinds of page; they choose the table from `source` and verify that the id belongs to `target_id`. Copy all three fields from the same `list_recent_updates` item. Do not infer `source` from an action name or retry with a different value to bypass a page mismatch. Replace any old scheduled job that calls `list_new_comments` with `list_recent_updates`; the old list contains task comments only.
+Treat an update's identity as `(source, target_id, id)`, never the integer id alone. The same reply and read actions handle all three kinds of page; they choose the table from `source` and verify that the id belongs to `target_id`. Copy all three fields from the same `list_recent_updates` item. Do not infer `source` from an action name or retry with a different value to bypass a page mismatch. Replace any old scheduled job that calls `list_new_comments` with `list_recent_updates`; the old list contains task comments only.
 
 When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted). `list_recent_updates` returns that id and `replying_to_body`; the old `list_new_comments` action returns a `replying_to` object. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
 
@@ -99,3 +99,19 @@ Notes are where anything worth finding later goes: a decision, a how-to, a price
 ## Errors
 
 Every action answers `{ "ok": false, "error": "…" }` with HTTP 400 for a bad argument, 404 for a row that does not exist (or an unknown action), and 500 for anything else. Every action checks its arguments and refuses clearly: an unknown project, a task that does not exist, a column that is not one of the four, a stage that is not one of the five, a move to `waiting_on_you` without a question. The error text says what was wrong and what the valid values are, so the Muse can correct itself without asking the user.
+
+## Comment attachments
+
+`POST /api/comments` accepts existing JSON text comments or multipart fields
+`task`, `note`, or `project` (exactly one), `body`, optional `reply_to`, and up to
+five `files`. A comment may contain files without text. The reference app limits
+each file to 10 MB and the combined files to 20 MB. It accepts raster images,
+audio, PDF, and text; body Markdown is sanitized for display. Binary data and
+comment records save in one transaction in the private Office database.
+
+`list_recent_updates` includes `files: [{name, url, type, size}]` alongside each
+comment. Resolve relative URLs against this Office's own origin. Read the files
+before acting. `get_note` also returns its comments and files; `get_task` already
+includes its updates and files. Image/audio URLs support private download and
+audio byte ranges. The legacy `list_new_comments` action remains task-only; use
+`list_recent_updates` for all contextual feedback.

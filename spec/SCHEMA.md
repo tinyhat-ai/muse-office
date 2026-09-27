@@ -43,7 +43,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 - A task belongs to exactly one project. A task update belongs to one task; a note comment belongs to one note.
 - Stages are exactly `lead`, `talking`, `proposal`, `customer`, `past`. Changing a stage adds a `stage_changes` row.
 - Times are ISO 8601 in UTC. The pages render them as "2 hours ago" or "Sep 24".
-- The agent writes only through the actions in `spec/ACTIONS.md`. The user may comment on a task or note page. The app stores user comments in `task_updates` or `note_comments` with `author = 'you'` and `unread_by_agent = 1`; `list_recent_updates` pages through both kinds.
+- The agent writes only through the actions in `spec/ACTIONS.md`. The user may comment on a task, note or project page. The app stores user comments in `task_updates`, `note_comments`, or `project_comments` with `author = 'you'` and `unread_by_agent = 1`; `list_recent_updates` pages through all three kinds.
 
 ## How the reports use `metrics`
 
@@ -68,3 +68,13 @@ For the first visit, put four published examples in an **Around the world** sect
 ## People outside the funnel
 
 `contacts.in_funnel` is 1 for everyone in the funnel and 0 for someone kept on the page without being sold to: the person themselves, the maker of the hat, a partner. Such a contact shows the pill "Contact" instead of a stage, gets no `stage_changes` row, and is counted nowhere: not in the funnel blocks, not in the new-customers report. `set_stage` (or `upsert_contact` with a stage, or `in_funnel: true`, which enters them as a lead when no stage is named) moves them into the funnel, and that entry is their first recorded change. Moving someone with sales history outside the funnel removes that history: the flag says it was never sales, and the funnel and the reports only ever count people with `in_funnel = 1`. There is no email column; an email goes in `notes`.
+
+## Contextual files
+
+Task updates and note/project comments carry `files_json` references with name,
+private URL, media type and byte size. `comment_attachments` stores the uploaded
+bytes in the same database transaction as the comment. Existing note comments
+receive an empty files array during migration. `project_comments` mirrors the
+note comment shape with a project foreign key, reply parent and unread flag.
+Typed `(source, target_id, id)` references keep numeric ids on different pages
+distinct throughout pagination, owner replies and marking comments handled.

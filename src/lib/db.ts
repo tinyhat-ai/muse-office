@@ -27,6 +27,8 @@ function open(): Db {
   // does not add them). Keep this list short and append-only.
   const noteCols = (db.prepare("PRAGMA table_info(notes)").all() as Array<{ name: string }>).map((c) => c.name);
   if (!noteCols.includes("tags_json")) db.exec("ALTER TABLE notes ADD COLUMN tags_json TEXT NOT NULL DEFAULT '[]'");
+  const commentCols = (db.prepare("PRAGMA table_info(note_comments)").all() as Array<{ name: string }>).map((c) => c.name);
+  if (!commentCols.includes("files_json")) db.exec("ALTER TABLE note_comments ADD COLUMN files_json TEXT NOT NULL DEFAULT '[]'");
   const contactCols = (db.prepare("PRAGMA table_info(contacts)").all() as Array<{ name: string }>).map((c) => c.name);
   if (!contactCols.includes("in_funnel")) db.exec("ALTER TABLE contacts ADD COLUMN in_funnel INTEGER NOT NULL DEFAULT 1");
   const reportCols = (db.prepare("PRAGMA table_info(reports)").all() as Array<{ name: string }>).map((c) => c.name);
@@ -135,6 +137,6 @@ export interface NoteRow {
   linked_tasks_json: string; tags_json: string; pinned: number; created_at: string; updated_at: string;
 }
 export interface NoteCommentRow {
-  id: number; note: string; author: string; body: string; reply_to: number | null;
+  id: number; note: string; author: string; body: string; files_json: string; reply_to: number | null;
   unread_by_agent: number; created_at: string;
 }

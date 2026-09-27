@@ -259,3 +259,5 @@ Once a week, read the version line at the top of
 If it is newer than the one in `~/workspace/office/HAT.md`, tell the person
 in one message what changed (read `CHANGELOG.md` from the same LTS channel)
 and ask before applying anything.
+
+For contextual input, use [contextual-comments](skills/contextual-comments/SKILL.md): one component shared by task, note and project pages, with native Muse chat preferred when a supported handoff works.

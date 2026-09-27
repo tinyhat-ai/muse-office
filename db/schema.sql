@@ -199,6 +199,7 @@ CREATE TABLE IF NOT EXISTS note_comments (
   note            TEXT NOT NULL REFERENCES notes(slug) ON DELETE CASCADE,
   author          TEXT NOT NULL,                -- member slug, or 'you'
   body            TEXT NOT NULL,
+  files_json      TEXT NOT NULL DEFAULT '[]',
   reply_to        INTEGER REFERENCES note_comments(id),
   unread_by_agent INTEGER NOT NULL DEFAULT 0,
   created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
@@ -211,3 +212,24 @@ CREATE TABLE IF NOT EXISTS settings (
   key   TEXT PRIMARY KEY,                       -- 'office_name', 'user_name', 'last_agent_visit', 'hat_version'
   value TEXT
 );
+
+-- Binary comment uploads are private and committed atomically with their comment.
+CREATE TABLE IF NOT EXISTS comment_attachments (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  media_type TEXT NOT NULL,
+  data BLOB NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS project_comments (
+  id              INTEGER PRIMARY KEY AUTOINCREMENT,
+  project         TEXT NOT NULL REFERENCES projects(slug) ON DELETE CASCADE,
+  author          TEXT NOT NULL,                -- member slug, or 'you'
+  body            TEXT NOT NULL,
+  files_json      TEXT NOT NULL DEFAULT '[]',
+  reply_to        INTEGER REFERENCES project_comments(id),
+  unread_by_agent INTEGER NOT NULL DEFAULT 0,
+  created_at      TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ','now'))
+);
+CREATE INDEX IF NOT EXISTS project_comments_note ON project_comments(project, id);
+CREATE INDEX IF NOT EXISTS project_comments_unread ON project_comments(unread_by_agent, id);

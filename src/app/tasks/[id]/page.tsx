@@ -1,3 +1,4 @@
+import { CommentBody } from "@/components/comments/CommentBody";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { renderMarkdown } from "@/lib/markdown";
@@ -165,7 +166,7 @@ export default async function TaskPage({ params }: Props) {
           <b>{nameOf(r.author)}</b>
           <When iso={r.created_at} />
           <br />
-          <span className="body">{r.body}</span>
+          <CommentBody body={r.body} files={json(r.files_json, [])} />
         </div>
       </div>
     );
@@ -175,7 +176,6 @@ export default async function TaskPage({ params }: Props) {
     const mine = u.author === "you";
     const pinnedAbove = u.id === pinnedId;
     const cls = ["tk-cm", u.kind === "question" ? "q" : "", pinnedAbove ? "pinned-above" : "", mine ? "mine" : ""].filter(Boolean).join(" ");
-    const attachedHere = json<Array<Partial<FileChip>>>(u.files_json, []).filter((f): f is FileChip => typeof f?.name === "string" && !!f.name);
     const own = replies.get(u.id) ?? [];
     const who = nameOf(u.author);
     return (
@@ -188,14 +188,7 @@ export default async function TaskPage({ params }: Props) {
             <When iso={u.created_at} />
           </div>
           <div className="tk-cm-b">
-            <div className="body">{u.body}</div>
-            {attachedHere.length ? (
-              <div className="tk-chips">
-                {attachedHere.map((f) => (
-                  <Chip key={f.name} file={{ name: f.name, url: f.url ?? null }} />
-                ))}
-              </div>
-            ) : null}
+            <CommentBody body={u.body} files={json(u.files_json, [])} />
           </div>
           {own.length ? <div className="tk-replies">{own.map(renderReply)}</div> : null}
           {pinnedAbove ? (
