@@ -32,7 +32,8 @@ description: How a task moves from a card to a finished result through a special
    which question it answers before you act on it.
 5. When the worker says done, check the result against done_when before you
    tell the user. If it falls short, send it back once with one clear note.
-   Then the task's page gets the closing report (add_task_note, kind
+   If it still falls short, keep the task open with the blocker. After the
+   result passes, the task's page gets the closing report (add_task_note, kind
    update): what was done, the result, the files (attach_file, or a link to
    a file artifact), and what was learned. A file that only sits on your
    computer is not an output the user can see. Only then move_task to done.
