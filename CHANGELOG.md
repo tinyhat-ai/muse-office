@@ -3,6 +3,36 @@
 All notable changes to this repository are listed here. The version is the
 one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
+## 0.2.0 — 2026-09-27
+
+- Office opens directly on the Tasks board. Project squares filter the work;
+  their small links open details without adding another navigation layer.
+- New Offices start with three familiar groups: Work, Personal, and Office.
+  Ask Muse to change them as your needs change. Existing projects are preserved.
+- On phones, selecting a teammate expands the details inside that same card.
+  Comment text stays readable when the device uses dark mode.
+- One comment box works across tasks, notes, and projects, with formatted text,
+  screenshots and audio files. Recording is available only where the host
+  permits it. Native Muse chat remains the main way to ask for work.
+- Muse checks new feedback and unfinished tasks regularly, records the owner
+  and next action, and verifies the requested result before marking work done.
+- The hat makes clear that Muse builds and adapts your Office. The starting
+  design stays simple; bug fixes and larger product decisions stay separate.
+
+### Updating an existing Office
+
+Preserve existing records and customizations. Add `project_comments` and
+`comment_attachments`, plus attachment references on note comments. Extend
+`list_recent_updates`, `reply_to_comment`, and `mark_comments_read` to handle
+project context. Add bounded `get_comment_attachment` access so the owner can
+read private image and audio bytes; follow `spec/ACTIONS.md` and `db/schema.sql`.
+Use the shared comment component on all three page types. Update the chief's
+recurring job to the `follow-through` skill: every minute when supported, or an
+agreed supported interval such as five minutes. Check unfinished owned work
+even after comments are acknowledged. Verify actual media understanding before
+promising voice follow-up; the current Mac artifact host rejected microphone
+recording and native chat handoff, while uploaded audio was verified.
+
 ## 0.1.1 — 2026-09-25
 
 - The repository's first page now explains how Muse organizes work with a team
