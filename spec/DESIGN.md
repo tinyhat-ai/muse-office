@@ -2,6 +2,8 @@
 
 The Office should feel like one calm, everyday app: a paper-coloured page, sticky notes for tasks, soft cards for everything else, and exactly one loud colour, which means "waiting on you".
 
+Keep this light palette in Muse and when the device uses dark mode (`color-scheme: light`). Set form text and background together: ink text on white, with opaque secondary-colour placeholders. Verify typed and saved comments remain readable in both device modes; this is a contrast fix, not a palette or layout change.
+
 ## Tokens
 
 ```css
