@@ -43,7 +43,7 @@ Like an issue page, top to bottom:
 1. Header: kicker "Who does the work", title "Team", lede "<Muse> runs <current count> specialists for you. Ask <Muse> to hire, retrain, pause, or retire one."
 2. The **chief of staff's card** on top, wide: the Muse's avatar (large), name, "Chief of staff", one line: "<Muse> talks with you, runs the team, and handles the everyday one-offs itself.", and "Wearing the Chief of Staff hat from Tinyhat".
 3. A grid of **specialist cards**, two across: avatar, name, role; the one-line job; a status pill worked out from the tasks (green "Working on …", grey "Next: …", peach "Waiting on you: …", or "Free right now"); the two latest finished tasks with their time. Tapping a card opens its detail.
-4. The **detail panel** (right on desktop, under the tapped card on a phone): avatar, name, "Bookkeeper · wears a navy bowler"; "How Penny works" (three bullets); "Never" (one); "Skills" (chips); "Last rule learned" (a highlighted line); and "To change how Penny works, or to pause Penny, tell <Muse> in chat."
+4. The **detail panel** (right on desktop; inside the selected card on narrow screens, using the card's existing avatar and name): avatar, name, "Bookkeeper · wears a navy bowler"; "How Penny works" (three bullets); "Never" (one); "Skills" (chips); "Last rule learned" (a highlighted line); and "To change how Penny works, or to pause Penny, tell <Muse> in chat."
 5. One quiet dashed card in the last grid slot names the current team's coverage, then invites the person to ask <Muse> in chat for another specialist or a change.
 
 No statistics strip, no project chips, no counts.
