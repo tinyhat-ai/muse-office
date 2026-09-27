@@ -681,6 +681,26 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
 
   // ------------------------------------------------------------ Comments
+  get_comment_attachment: {
+    section: "Comments",
+    description: "Reads a private comment attachment in bounded base64 chunks when the agent cannot download its URL. Decode chunks as bytes and join them before opening the file.",
+    params: { url: "string · exact local attachment URL from a comment · required", offset: "integer · byte offset, default 0 · optional", max_bytes: "integer · 1 to 65536, default 16384 · optional" },
+    read: true,
+    run(input) {
+      const url = requiredString(input, "url", "the attachment URL from the comment");
+      const id = /^\/api\/attachments\/([a-f0-9-]{36})$/.exec(url)?.[1];
+      if (!id) throw new ActionError("url must be a local attachment URL from this Office's comment.");
+      const offset = int(input, "offset") ?? 0;
+      const maxBytes = int(input, "max_bytes") ?? 16384;
+      if (offset < 0 || maxBytes < 1 || maxBytes > 65536) throw new ActionError("offset must be nonnegative and max_bytes must be 1 to 65536.");
+      const file = get<{ name: string; media_type: string; size: number; data: Buffer }>(
+        "SELECT name, media_type, length(data) AS size, substr(data, ?, ?) AS data FROM comment_attachments WHERE id = ?", offset + 1, maxBytes, id);
+      if (!file) throw new ActionError("This comment attachment no longer exists.", 404);
+      if (offset > file.size) throw new ActionError("offset is past the end of this attachment.");
+      const next = offset + file.data.length;
+      return { name: file.name, type: file.media_type, size: file.size, offset, data_base64: file.data.toString("base64"), next_offset: next < file.size ? next : null };
+    },
+  },
   list_recent_updates: {
     section: "Comments",
     description: "Newest task updates, note comments and project comments, including every user comment. Cursor pagination stays stable as new updates arrive. Use unread_only for the scheduled comment check and follow next_cursor until null.",

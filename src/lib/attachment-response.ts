@@ -1,7 +1,7 @@
 export function attachmentResponse(req: Request, file: { name: string; media_type: string; data: Uint8Array }): Response {
   const size = file.data.byteLength;
   const headers: Record<string, string> = {
-    "Content-Type": file.media_type,
+    "Content-Type": file.media_type === "audio/x-wav" ? "audio/wav" : file.media_type,
     "Content-Disposition": `${/^(image|audio)\//.test(file.media_type) ? "inline" : "attachment"}; filename*=UTF-8''${encodeURIComponent(file.name).replace(/'/g, "%27")}`,
     "X-Content-Type-Options": "nosniff", "Content-Security-Policy": "default-src 'none'; sandbox",
     "Cache-Control": "private, no-store", "Accept-Ranges": "bytes",
