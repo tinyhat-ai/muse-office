@@ -17,7 +17,7 @@ private Office app.
 3. Fits an existing project? Add a task to it. The project's process.md
    says which specialist takes it.
 4. Nothing fits:
-   - A one-off goes to the General project.
+   - For a one-off, ask which existing project it belongs in.
    - Ongoing work with a goal ("start a newsletter") is a new project.
      Propose it: name, lead specialist, the process in one line. Wait for yes.
      On yes, set it up the way skills/improve-a-process says (New project).

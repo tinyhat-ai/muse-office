@@ -31,7 +31,7 @@ sales funnel; the funnel stays at zero until real people are added. Reports
 opens with four charts from linked public sources. Notes renders Markdown,
 tables, and Mermaid diagrams.
 
-- [Starter Tasks board](screenshots/starter-projects.jpg)
+- [Starter Tasks board](screenshots/starter-groups.png)
 - [Starter Team](screenshots/starter-team.jpg)
 - [Starter Customers](screenshots/starter-customers.jpg)
 - [Starter Reports](screenshots/starter-reports.jpg)
@@ -48,7 +48,7 @@ current starter layout.
 curl -s localhost:3007/api/actions | jq .
 curl -s -X POST localhost:3007/api/actions/create_task \
   -H 'content-type: application/json' \
-  -d '{"project":"website","title":"Pick brand colors","specialist":"designer"}'
+  -d '{"project":"work","title":"Pick brand colors","specialist":"designer"}'
 ```
 
 Every action is `POST /api/actions/<name>` with a JSON body. It responds with
