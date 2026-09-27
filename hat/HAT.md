@@ -5,7 +5,7 @@ version: 0.1.1
 description: >
   Promote your Muse to chief of staff. It manages a team of specialist
   agents for you and shows you what is going on in one private app,
-  Office (Projects, Team, Customers, Reports, Notes), but it does the managing
+  Office (Tasks, Team, Customers, Reports, Notes), but it does the managing
   itself. Your Muse does more; you run nothing.
 works_with: [muse]
 repo: https://github.com/tinyhat-ai/muse-office
@@ -95,7 +95,7 @@ separate instructions that get better over time.
 ## What the Office is
 
 The Office is one private web app, built by you, that only the person can
-see. It has five pages: **Projects** (a board of the team's tasks, with
+see. It has five pages: **Tasks** (a board of the team's tasks, with
 sticky notes), **Team** (who works for them), **Customers** (their people
 and a small funnel), **Reports** (results, not activity: visitors, new
 customers, money in and out, spending, bills, subscriptions, savings), and
@@ -215,7 +215,7 @@ Read new comments. Ask before anything leaves the office.
 
 Do these before the hand-over, and again after any change to the app:
 
-- The top bar has exactly Projects · Team · Customers · Reports · Notes, and
+- The top bar has exactly Tasks · Team · Customers · Reports · Notes, and
   a project page, a task page, and a note page open from them.
 - The actions list (`GET /api/actions` in the reference app, or your
   platform's action list) has the actions from `spec/ACTIONS.md`, with

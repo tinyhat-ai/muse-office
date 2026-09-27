@@ -1,4 +1,3 @@
-import Link from "next/link";
 import type { CSSProperties } from "react";
 import { all, COLUMNS, COLUMN_LABEL, type Column, type MemberRow, type ProjectRow, type TaskRow } from "@/lib/db";
 import { Avatar } from "@/components/Avatar";
@@ -50,7 +49,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
     <main className="wrap">
       <header className="head">
         <div className="kick">What the team is doing</div>
-        <h1 className="title">Projects</h1>
+        <h1 className="title">Tasks</h1>
         <p className="lede pj-lede">
           {chief ? <Avatar member={chief} size="xs" /> : null}
           <span>Managed by {chiefName}</span>
@@ -60,7 +59,7 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       <nav className="pj-tiles" aria-label="Show one project">
         <ProjectTile href="/projects" name="All projects" count={onBoard.length} chosen={!chosen} />
         {projects.map((p) => (
-          <ProjectTile key={p.slug} href={`/projects?project=${encodeURIComponent(p.slug)}`} name={p.name} count={counts.get(p.slug) ?? 0} color={p.color} chosen={chosen?.slug === p.slug} />
+          <ProjectTile key={p.slug} href={`/projects?project=${encodeURIComponent(p.slug)}`} projectHref={`/projects/${encodeURIComponent(p.slug)}`} name={p.name} count={counts.get(p.slug) ?? 0} color={p.color} chosen={chosen?.slug === p.slug} />
         ))}
       </nav>
       <div className="pj-info">
@@ -70,7 +69,6 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
               {chosen.name}
               {lead ? ` · led by ${lead.name}` : ""}
             </span>
-            <Link href={`/projects/${chosen.slug}`}>Open the {chosen.name} page →</Link>
           </>
         ) : null}
       </div>

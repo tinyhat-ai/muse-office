@@ -21,7 +21,7 @@ Tell the user, in plain words and one message:
 - Projects: the four most solo businesses need, Website, Marketing,
   Customers, and Money, plus General for one-offs. Drop any the user does
   not need, and add any they name.
-- One private app, Office, with five pages: Projects, Team, Customers, Reports,
+- One private app, Office, with five pages: Tasks, Team, Customers, Reports,
   and Notes. Each task and each project also gets its own page.
   It saves what you add, so it is private to them and has no public link.
   If they already have a boards or tasks app, say you will turn it into

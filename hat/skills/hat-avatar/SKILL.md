@@ -52,5 +52,5 @@ and a board card. If image creation is unavailable, use the Office's initials
 fallback temporarily and leave a setup task to finish the portraits.
 
 Keep portraits round and head-cropped: 20px on project cards and in lists,
-56px on Team specialist cards, 80px in the Team detail panel, and 96px on the
+56px on Team specialist cards, 80px in the desktop Team detail panel, and 96px on the
 chief's Team card. People (contacts) get initials on a coloured circle.

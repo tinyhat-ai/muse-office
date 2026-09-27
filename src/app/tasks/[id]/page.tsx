@@ -215,7 +215,7 @@ export default async function TaskPage({ params }: Props) {
     <main className="wrap tk">
       {/* 1. where this task lives, its title, and where it stands */}
       <nav className="crumb tk-crumb" aria-label="Breadcrumb">
-        <Link href="/projects">‹ Projects</Link>
+        <Link href="/projects">‹ Tasks</Link>
         <span>/</span>
         <Link href={`/projects?project=${encodeURIComponent(projectSlug)}`}>{projectName}</Link>
       </nav>

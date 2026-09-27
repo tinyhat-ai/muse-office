@@ -287,7 +287,7 @@ export function seed(db: Database.Database) {
     const notes: Array<[string, string, string, string, string, string, string[], number, number, string[]]> = [
       ["how-your-office-works", "general", "How your office works", "A one-page guide to your office, written by your chief of staff.", `## The short version
 - You talk to your chief of staff in chat. It decides where each request goes.
-- The team works on tasks. You see them on **Projects**.
+- The team works on tasks. You see them on **Tasks**.
 - When something needs you, it moves to **Waiting on you**, and you are asked in chat.
 - You can comment on any task's page. Everything else, you ask in chat.
 

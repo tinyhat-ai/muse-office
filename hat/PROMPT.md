@@ -74,7 +74,7 @@ not on a task's page, in a note, or on a report, it does not exist, and I
 should never have to search our chat to find it.
 
 **The Office.** Build me a private full-stack app called Office, so I can see
-what is going on without asking. Five pages: Projects (a board of
+what is going on without asking. Five pages: Tasks (a board of
 sticky-note tasks, with a Waiting-on-you lane), Team, Customers (with a
 small funnel), Reports (results, not activity: visitors, new customers,
 money in and out, spending, bills, subscriptions, savings), and Notes, plus a

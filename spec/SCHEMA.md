@@ -8,7 +8,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 
 | Page | Reads from |
 | --- | --- |
-| Projects (the board) | `projects`, `tasks`, `members` |
+| Tasks (the board) | `projects`, `tasks`, `members` |
 | A project's page | `projects`, `process_steps`, `project_rules`, `tasks`, `project_comments` |
 | A task's page | `tasks`, `task_checks`, `task_plan`, `task_files`, `task_updates`, `members` |
 | Team | `members`, `tasks` (for "working on" and "latest") |

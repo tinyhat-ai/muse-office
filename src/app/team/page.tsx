@@ -1,8 +1,8 @@
-import { Fragment } from "react";
 import Link from "next/link";
 import { all, json, type MemberRow, type ProjectRow, type TaskRow } from "@/lib/db";
 import { ago } from "@/lib/time";
 import { Avatar } from "@/components/Avatar";
+import { TeamCard } from "@/components/TeamCard";
 import "./team.css";
 
 // Small counts read as words ("runs five specialists"); bigger ones stay digits.
@@ -38,13 +38,13 @@ function latestDone(mine: TaskRow[]): TaskRow[] {
 }
 
 // The panel renders twice: once as the sticky right column (desktop), once
-// inline after the selected card (narrow screens). CSS shows one at a time.
+// inside the selected card (narrow screens). CSS shows one at a time.
 function MateDetail({ m, chiefName, variant }: { m: MemberRow; chiefName: string; variant: "side" | "inline" }) {
   const does = json<string[]>(m.does_json, []);
   const skills = json<string[]>(m.skills_json, []);
   return (
-    <aside className={`card tm-detail tm-detail-${variant}`} aria-label={`How ${m.name} works`}>
-      <div className="tm-hd">
+    <aside className={`${variant === "side" ? "card " : ""}tm-detail tm-detail-${variant}`} aria-label={`How ${m.name} works`}>
+      {variant === "side" && <div className="tm-hd">
         <Avatar member={m} size="lg" />
         <div>
           <h2 className="tm-dnm">{m.name}</h2>
@@ -53,7 +53,7 @@ function MateDetail({ m, chiefName, variant }: { m: MemberRow; chiefName: string
             {m.hat ? ` · wears ${article(m.hat)} ${m.hat}` : ""}
           </div>
         </div>
-      </div>
+      </div>}
       <h3>How {m.name} works</h3>
       {does.length ? (
         <ul>
@@ -148,18 +148,18 @@ export default async function TeamPage({ searchParams }: { searchParams: Search 
               const done = latestDone(mine);
               const on = m.slug === selected?.slug;
               return (
-                <Fragment key={m.slug}>
+                <TeamCard key={m.slug} selected={on} reveal={m.slug === who}>
                   <Link
                     href={`/team?who=${encodeURIComponent(m.slug)}`}
                     scroll={false}
-                    className={"tm-mate" + (on ? " tm-on" : "")}
+                    className="tm-select"
                     aria-current={on ? "true" : undefined}
                   >
                     <div className="tm-top">
                       <Avatar member={m} size="md" />
                       <div>
                         <h2 className="tm-nm">{m.name}</h2>
-                        <div className="tm-rl">{m.role}</div>
+                        <div className="tm-rl">{m.role}{on && m.hat && <span className="tm-inline-hat">{` · wears ${article(m.hat)} ${m.hat}`}</span>}</div>
                       </div>
                     </div>
                     <p className="tm-job">{m.job}</p>
@@ -186,7 +186,7 @@ export default async function TeamPage({ searchParams }: { searchParams: Search 
                     )}
                   </Link>
                   {on && <MateDetail m={m} chiefName={chiefName} variant="inline" />}
-                </Fragment>
+                </TeamCard>
               );
             })}
 

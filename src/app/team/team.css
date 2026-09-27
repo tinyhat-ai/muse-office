@@ -15,13 +15,15 @@
 .tm-wear b { color: var(--ink); }
 
 /* ---- specialist cards ---- */
-/* Dense packing lets the inline detail take a full row on narrow screens without leaving a hole beside the tapped card. */
-.tm-mates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: row dense; gap: 16px; margin-top: 16px; }
+.tm-mates { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
 .tm-mate {
-  display: flex; flex-direction: column; gap: 8px; min-width: 0;
-  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 16px;
+  display: flex; flex-direction: column; min-width: 0;
+  background: var(--card); border: 1px solid var(--line); border-radius: var(--r-card); padding: 0;
   box-shadow: var(--shadow-card); transition: transform 0.12s, border-color 0.12s;
 }
+.tm-inline-hat { display: none; }
+.tm-select { padding: 16px; flex: 1; display: flex; flex-direction: column; gap: 8px; border-radius: inherit; }
+.tm-select:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .tm-mate:hover { border-color: #cfcdc6; transform: translateY(-1px); }
 .tm-mate.tm-on { outline: 2px solid var(--ink); outline-offset: 1px; }
 .tm-top { display: flex; gap: 14px; align-items: center; }
@@ -68,11 +70,10 @@
 @media (max-width: 980px) {
   .tm-grid { grid-template-columns: 1fr; }
   .tm-detail-side { display: none; }
-  /* The panel hangs off the tapped card's row, so the tap visibly does something. */
-  .tm-detail-inline {
-    display: block; position: static; grid-column: 1 / -1;
-    border-color: var(--ink); border-radius: 0 0 var(--r-card) var(--r-card); margin-top: -4px;
-  }
+  .tm-mates { align-items: start; }
+  .tm-mate { scroll-margin-top: 72px; }
+  .tm-detail-inline { display: block; position: static; padding: 0 16px 16px; }
+  .tm-inline-hat { display: inline; }
 }
 @media (max-width: 560px) {
   .tm-chief { flex-direction: column; align-items: flex-start; gap: 12px; }

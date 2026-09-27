@@ -2,6 +2,8 @@
 
 The Office should feel like one calm, everyday app: a paper-coloured page, sticky notes for tasks, soft cards for everything else, and exactly one loud colour, which means "waiting on you".
 
+Keep this light palette in Muse and when the device uses dark mode (`color-scheme: light`). Set form text and background together: ink text on white, with opaque secondary-colour placeholders. Verify typed and saved comments remain readable in both device modes; this is a contrast fix, not a palette or layout change.
+
 ## Tokens
 
 ```css
@@ -62,7 +64,7 @@ Cards are **sticky notes**, laid out **one per lane** with a 12px vertical gap. 
 - Inside: the project name (12px/650, soft) with a 3.5px × 13px bar in the project's dark shade; the title (15px/750, ink, two lines at most); up to three lines of summary or a waiting question directly on the pastel paper with a small orange dot, without a bubble; and a footer pushed to the bottom: the specialist's 20px round avatar and name on the left, the time on the right. A done card's footer reads "✓ Done" in green with a small green check circle, then the time.
 - On a phone: one column of notes per lane, lanes stacked, Waiting on you first.
 
-Project tiles above the board: 118px squares (88px on a phone), the pastel fill, no border, no stripe; name top-left (14px/750), count bottom-left (13px/600 soft); the chosen tile gets a 2px ink outline; "All projects" is white with a hairline border.
+Project tiles above the board: 118px squares (88px on a phone), the pastel fill, no border, no stripe; name top-left (14px/750), count bottom-left (13px/600 soft); the chosen tile gets a 2px ink outline; "All projects" is white with a hairline border. Preserve these sizes when adding project navigation: use a small link icon in the lower-right corner with a 24px target. Only the chosen project shows muted "Details" to its left, with its count moved up just enough to leave room. Clamp project names to three lines on desktop and two on phones so counts stay above the Details link; keep the full name accessible. Let the name use the right padding so familiar names such as Customers stay on one line. Reveal the selected tile within the horizontal row without moving the page. No divided footer or extra tile height. Keep 8px padding around the scrolling row so outlines are not clipped.
 
 ## Cards and pills
 
@@ -70,7 +72,7 @@ Cards: white, `--r-card`, `--shadow-card`, 20px padding. Small chips: `--r-chip`
 
 ## Avatars
 
-Always round, always the head crop: 20px on project cards and in lists, 32px for compact task and process rows, and 40px for larger task and project portraits. On the Team page, use 56px on specialist cards, 80px in the selected specialist's detail panel, and 96px for the chief. People (contacts) get initials on a coloured circle instead.
+Always round, always the head crop: 20px on project cards and in lists, 32px for compact task and process rows, and 40px for larger task and project portraits. On the Team page, use 56px on specialist cards, 80px in the selected specialist's desktop detail panel, and 96px for the chief. People (contacts) get initials on a coloured circle instead.
 
 Use the Muse's actual current avatar as the chief's Team portrait and add only a small top hat, preserving its recognizable face. The sample chief image in this standalone repository must not replace the Muse's own avatar. Specialists each get a different face and mascot suited to their specialty, rendered in the chief avatar's overall illustration style and crop. A hat or color change on the chief's face is not a specialist identity. Compare the faces side by side at card size; they should be recognizable without reading the name. `hat/skills/hat-avatar/SKILL.md` owns the creation steps.
 
