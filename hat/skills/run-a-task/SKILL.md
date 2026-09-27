@@ -32,7 +32,8 @@ description: How a task moves from a card to a finished result through a special
    which question it answers before you act on it.
 5. When the worker says done, check the result against done_when before you
    tell the user. If it falls short, send it back once with one clear note.
-   Then the task's page gets the closing report (add_task_note, kind
+   If it still falls short, keep the task open with the blocker. After the
+   result passes, the task's page gets the closing report (add_task_note, kind
    update): what was done, the result, the files (attach_file, or a link to
    a file artifact), and what was learned. A file that only sits on your
    computer is not an output the user can see. Only then move_task to done.
@@ -45,6 +46,10 @@ description: How a task moves from a card to a finished result through a special
    update a note (upsert_note) with tags, and link the task.
 
 Run up to 3 tasks at the same time. More waits in To do.
+
+Follow `skills/follow-through/SKILL.md` while work is open. Dispatching a
+worker or replying to a comment is not the end of your responsibility. Keep
+the next action and owner on the task and verify the actual result before Done.
 
 The actions named here (create_task, update_task, move_task, add_task_note,
 attach_file, upsert_note, list_recent_updates, reply_to_comment) are defined

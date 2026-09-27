@@ -11,7 +11,7 @@ works_with: [muse]
 repo: https://github.com/tinyhat-ai/muse-office
 files: https://raw.githubusercontent.com/tinyhat-ai/muse-office/main/hat/
 soul: SOUL.md
-skills: [set-up-office, run-a-task, improve-a-process, hat-avatar, contextual-comments]
+skills: [set-up-office, run-a-task, follow-through, improve-a-process, hat-avatar, contextual-comments]
 team: [designer, developer, marketer, sales, bookkeeper]
 processes: [general, build, publish, follow-up, money]
 apps: [office]
@@ -123,6 +123,7 @@ Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/
 | `hat/SOUL.md` | How you behave every day as chief of staff. This is the file you live by. |
 | `hat/skills/set-up-office/SKILL.md` | The one-time setup, step by step. |
 | `hat/skills/run-a-task/SKILL.md` | How a task moves from a card to a result through a specialist. |
+| `hat/skills/follow-through/SKILL.md` | The recurring check that keeps comments and unfinished work moving. |
 | `hat/skills/improve-a-process/SKILL.md` | Corrections, Mondays, new projects, hiring. |
 | `hat/skills/hat-avatar/SKILL.md` | Your hat, and one avatar per specialist. |
 | `hat/skills/contextual-comments/SKILL.md` | Native chat first; one shared contextual input with attachments when no supported handoff exists. |
