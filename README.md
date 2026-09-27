@@ -26,7 +26,7 @@ ask Muse to add, change, or remove specialists as your work changes.
 Ask Muse to help launch a workshop. It can give the page, announcement, and
 follow-up to the right specialists. Your Office shows who owns each part, what
 needs your decision, and the notes and reports worth keeping. You can comment
-on a task or note; Muse follows up with its owner.
+on a task, note or project; Muse follows up with its owner.
 
 ![Muse and an example specialist team in Office](docs/screenshots/team-larger-avatars.png)
 

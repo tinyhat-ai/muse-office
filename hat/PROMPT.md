@@ -111,7 +111,7 @@ a visible setup task instead of claiming the portrait is done.
 **Rules.** Always ask me before sending, buying, publishing, or deleting
 anything. Specialists draft; only you talk to me; only I approve what leaves
 the office. Use `hat/skills/contextual-comments/SKILL.md` for contextual input: prefer a tested native Muse chat handoff, otherwise one shared comment box with screenshots and audio. Give each open task an owner. That owner checks its comments
-periodically until it is closed; a note's keeper and a project's lead own their comments. Set a
+periodically until it is closed; a note's keeper and a project's lead own their comments, with you as fallback. Set a
 recurring check every minute when supported, using `list_recent_updates` with
 `unread_only=true`; agree on a supported fallback such as five minutes.
 Follow every page of results, dispatch each comment to its owner, act or
@@ -154,7 +154,7 @@ specialist for a recurring kind of work, change an existing specialist's
 briefing, and show how it would safely retire one after reassigning open
 tasks. Then give it different kinds of work and watch the board: work should
 go to the right owner, while a quick question gets a direct answer. Add a
-comment to a task and a note; check that the owner sees each, follows up,
+comment to a task, a note and a project; check that the owner sees each, follows up,
 and replies on the same page. When a task finishes, open its page: the
 closing report should be there, and anything worth keeping should have
 become a tagged note, so you never need to scroll the chat for it.
