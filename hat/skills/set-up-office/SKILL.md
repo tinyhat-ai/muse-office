@@ -76,7 +76,6 @@ the user's browser cannot reach your computer. The Office app is the view.
 - Present the build to the user as the plan you already agreed.
 - If an app with slug "office" exists, or a boards/tasks app exists, follow
   the fallbacks in office.json. Never delete an app without asking.
-- Run the checks in HAT.md ("Check that the Office is right") before you go on.
 - After the build, load the office through its actions exactly as
   `spec/STARTER.md` describes. That file names the first tasks, three notes,
   two real orientation contacts outside the sales funnel, and four sourced
@@ -87,6 +86,8 @@ the user's browser cannot reach your computer. The Office app is the view.
   a page look busy. The repository's `OFFICE_SEED=demo` data is a fictional
   showcase, not for this person's Office.
 
+- After loading the starter, run the checks in HAT.md ("Check that the Office is right").
+  Label synthetic comments as tests on the setup task; do not impersonate user approvals.
 - Follow `skills/follow-through/SKILL.md` to create or update one recurring
   Office check, every minute when supported. Verify the real enabled schedule
   and an actual run. It reviews unread comments and all unfinished tasks, even

@@ -25,21 +25,24 @@ comment is read and the worker is dispatched.
 
 ## Prevent repeated work
 
-Use the scheduler's documented no-overlap mode if available. Otherwise use an
-atomic lock with an owner and bounded lease in your own workspace. Every entry
-path, including immediate triggers, must share this guard. A competing run exits
+Use the scheduler's documented no-overlap mode only when every entry path
+invokes that same job. Otherwise every entry path, including chat and immediate
+triggers, must share an atomic workspace lock with an owner and bounded lease. A competing run exits
 without dispatching work. Renew the lease during a long run; if ownership is
 lost, stop dispatching or performing side effects. After a crash or expired
 lease, reconcile existing workers and results before taking over.
 
 Keep a durable checkpoint keyed by `(source, target_id, id)` with its task,
-owner, next action, worker identity and action state. Persist it before starting
+owner, next action and its due time, worker identity and action state. For work
+without a comment, key the checkpoint by task id. Persist it before starting
 a worker or performing a side effect. On retry, resume that checkpoint instead
 of starting again. For sending, payment or other external actions, keep the
 approval scope and operation identity, use the provider's idempotency key when
 supported, and save the actual receipt. If an attempt's outcome is unknown,
 reconcile it with the provider before retrying; ask for help rather than risk
-repeating it. A comment, a reply or an expired lock never grants new approval.
+repeating it. The user's answer to an exact approval question approves that one
+operation only. Retrying, re-reading that reply, another comment or an expired
+lock never grants approval for a second operation.
 This is agent coordination state, not another Office page or user-facing entity.
 
 ## On every run
@@ -52,7 +55,9 @@ This is agent coordination state, not another Office page or user-facing entity.
 2. Route the work to its task owner, note keeper or project lead, with yourself
    as fallback. For continuing work, first record its owner in
    `update_task.specialist` and its next action in the task's `plan` with one
-   `now` step. Save the coordination checkpoint. Reuse the existing task and
+   `now` step. Read `get_task` first and preserve its other plan steps and their
+   states: `update_task.plan` replaces the whole list. Save the coordination
+   checkpoint. Reuse the existing task and
    active worker. A substantial note correction gets a linked task: read
    `get_note` first and preserve existing `linked_tasks` when calling
    `upsert_note`, which replaces that list. Reopen a finished task when needed.
@@ -63,9 +68,9 @@ This is agent coordination state, not another Office page or user-facing entity.
    finishes the task. Start or resume the recorded work under the guard above.
 4. Call `list_tasks` without a column filter and review non-Done tasks, **even
    when no comments are unread**. Read `get_task` for their plan and outputs.
-   Check the real worker state and next checkpoint; do not launch a new worker
+   Check the real worker state and the checkpoint's next-action due time; do not launch a new worker
    or repeat an unchanged question on every tick. Continue authorized work,
-   follow up when a checkpoint is due or stalled, and keep blockers and next
+   follow up when that action is due or stalled, and keep blockers and next
    actions on the task. Ask one clear question when the user is needed.
 5. Verify the actual changed page, file or other requested output before Done;
    the worker's reply alone is insufficient. A blocked attempt stays open: a
@@ -77,10 +82,11 @@ This is agent coordination state, not another Office page or user-facing entity.
 
 ## Verify during setup or a follow-through repair
 
-After starter data exists, use the real Office setup task or an isolated test
-Office. Clearly label synthetic comments as tests; never invent a user approval
-or business request. Test instructions must wait for the test feedback before
-advancing its task. Let an actual scheduled run pick up a contextual request
+After starter data exists, use an isolated test Office, or reopen the Office
+setup task while verifying setup and close it only after verification. Clearly
+label synthetic comments as tests; never invent a user approval
+or business request. Do not advance the test task until a scheduled run has
+handled the test comment. Let an actual scheduled run pick up a contextual request
 for a small observable change. Verify its owner, page and attachments, an owned
 next action and same-page reply. On a later scheduled run, verify unfinished
 work continues after its comment is read, the requested result exists and the
