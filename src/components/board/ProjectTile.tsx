@@ -1,5 +1,7 @@
+"use client";
+
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import type { CSSProperties, FocusEvent } from "react";
 import "@/app/projects/projects.css";
 
 /**
@@ -7,14 +9,26 @@ import "@/app/projects/projects.css";
  * task count bottom-left. Without a colour it is the white "All projects" tile.
  * The chosen tile wears an ink outline.
  */
-export function ProjectTile({ href, name, count, color, chosen }: { href: string; name: string; count: number; color?: string; chosen: boolean }) {
+export function ProjectTile({ href, projectHref, name, count, color, chosen }: { href: string; projectHref?: string; name: string; count: number; color?: string; chosen: boolean }) {
   const fill = color ? ({ "--c": color } as CSSProperties) : undefined;
+  function revealTile(event: FocusEvent<HTMLAnchorElement>) {
+    if (event.currentTarget.matches(":focus-visible")) {
+      event.currentTarget.parentElement?.scrollIntoView({ block: "nearest", inline: "nearest" });
+    }
+  }
   return (
-    <Link href={href} className={"pj-tile" + (color ? "" : " all") + (chosen ? " on" : "")} style={fill} aria-current={chosen ? "true" : undefined}>
-      <span className="pj-tile-nm">{name}</span>
-      <span className="pj-tile-n">
-        {count} {count === 1 ? "task" : "tasks"}
-      </span>
-    </Link>
+    <div className={"pj-tile" + (color ? "" : " all") + (chosen ? " on" : "") + (projectHref ? " has-details" : "")} style={fill}>
+      <Link href={href} className="pj-tile-filter" aria-current={chosen ? "true" : undefined} onFocus={revealTile}>
+        <span className="pj-tile-nm">{name}</span>
+        <span className="pj-tile-n">{count} {count === 1 ? "task" : "tasks"}</span>
+      </Link>
+      {projectHref && <Link href={projectHref} className="pj-tile-details" aria-label={`Details: ${name}`} onFocus={revealTile}>
+        {chosen && <span>Details</span>}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+        </svg>
+      </Link>}
+    </div>
   );
 }

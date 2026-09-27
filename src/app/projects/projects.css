@@ -6,21 +6,25 @@
 .pj-lede { display: flex; align-items: center; gap: 8px; }
 
 /* ---------------- board: project tiles ---------------- */
-.pj-tiles { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 24px; }
+.pj-tiles { display: flex; gap: 16px; flex-wrap: wrap; margin: 16px -8px 0; padding: 8px; scroll-padding-inline: 8px; }
 .pj-tile {
   position: relative; width: 118px; height: 118px; display: flex; flex-direction: column; justify-content: space-between;
-  padding: 14px 14px 12px; border-radius: var(--r-card); background: var(--c); color: var(--ink);
+  border-radius: var(--r-card); background: var(--c); color: var(--ink);
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 16px rgba(0, 0, 0, 0.05); transition: transform 0.12s;
 }
 .pj-tile:hover { transform: translateY(-1px); }
 .pj-tile.all { background: var(--card); border: 1px solid var(--line); }
 /* the chosen project wears an ink ring; its fill stays its own colour */
-.pj-tile.on, .pj-tile:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.pj-tile.on, .pj-tile:has(.pj-tile-filter:focus-visible) { outline: 2px solid var(--ink); outline-offset: 2px; }
+.pj-tile-filter { display: flex; flex: 1; min-height: 0; flex-direction: column; justify-content: space-between; padding: 14px 14px 12px; border-radius: inherit; }
+.pj-tile-filter:focus-visible { outline: none; }
+.pj-tile.has-details.on .pj-tile-filter { padding-bottom: 36px; }
+.pj-tile-details { position: absolute; right: 6px; bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 4px; min-width: 24px; min-height: 24px; padding: 3px; border-radius: 4px; font-size: var(--t-badge); color: var(--soft); }
+.pj-tile-details:hover { color: var(--ink); }
+.pj-tile-details:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
 .pj-tile-nm { font-size: var(--t-sec); font-weight: 750; line-height: 1.25; }
 .pj-tile-n { font-size: var(--t-cap); font-weight: 600; color: var(--soft); }
 .pj-info { min-height: 28px; margin-top: 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: var(--t-sec); color: var(--soft); }
-.pj-info a { color: var(--ink); font-weight: 650; padding: 4px 10px; border: 1px solid #c9c7bf; border-radius: var(--r-pill); }
-.pj-info a:hover { border-color: var(--ink); }
 
 /* ---------------- board: lanes ---------------- */
 /* four lanes on a 16px gutter; each lane knows the paper behind it (--lane-bg) so a note's folded corner shows the right background */
@@ -143,13 +147,15 @@
   .pp-body { grid-template-columns: minmax(0, 1fr); grid-template-areas: "side" "flow" "md"; }
 }
 @media (max-width: 720px) {
-  /* tiles scroll sideways; the row fades out so a clipped tile reads as "more"; 4px of room keeps the ink ring inside the scroll box */
+  /* Preserve the small squares and leave room for the selected/focus ring. */
   .pj-tiles {
-    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; padding: 4px 24px 6px 4px; margin: 24px -4px 0;
-    -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 32px), transparent);
+    flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
   }
   .pj-tiles::-webkit-scrollbar { display: none; }
-  .pj-tile { width: 88px; height: 88px; flex: 0 0 auto; padding: 10px 10px 8px; }
+  .pj-tile { width: 88px; height: 88px; flex: 0 0 auto; }
+  .pj-tile-filter { padding: 10px 10px 8px; }
+  .pj-tile.has-details.on .pj-tile-filter { padding-bottom: 26px; }
+  .pj-tile-details { right: 4px; bottom: 2px; }
   .pj-tile-nm { font-size: var(--t-cap); }
   /* lanes stack, Waiting on you first; one column of notes per lane */
   .pj-board { display: flex; flex-direction: column; align-items: stretch; gap: 16px; }

@@ -1,14 +1,14 @@
 # The pages
 
-Five pages in one top bar: **Projects · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. The user looks; the Muse changes things. Wherever a control would normally be, one quiet line says: "To change this, tell <your Muse's name> in chat."
+Five pages in one top bar: **Tasks · Team · Customers · Reports · Notes**, with "Updated x ago" on the right. Plus a page for each project, each task, and each note. The user looks; the Muse changes things. Wherever a control would normally be, one quiet line says: "To change this, tell <your Muse's name> in chat."
 
 Every page opens with the same header: a small kicker line, a large title, one line of lede. Then the content. Nothing is hidden behind tabs inside a page.
 
-## Projects (`/projects`)
+## Tasks (`/projects`)
 
 The board. It opens straight on the tasks.
 
-1. A row of **project tiles**: "All projects" (white) then one tile per project, a plain rounded tile filled with the project's colour, the name at the top left, the task count at the bottom left. Tapping a tile filters the board; the chosen tile gets a thin ink outline. When a project is chosen, a line under the tiles reads "Website · led by Patch" with a link "Open the Website page →".
+1. A row of **project tiles**: "All projects" (white) then one tile per project, a plain rounded tile filled with the project's colour, the name at the top left, the task count at the bottom left. Tapping a tile filters the board; the chosen tile gets a thin ink outline. Each project tile has a small link icon opening its existing project page; only the chosen tile shows a muted "Details" label to the left of the icon. "All projects" only filters. Keep the original square sizes and leave padding for the outline. When a project is chosen, the existing line under the tiles reads "Website · led by Patch".
 2. **Four lanes**: To do, In progress, Waiting on you, Done. Each lane has a coloured top rule (grey, blue-grey, orange, green), a title, a one-line subtitle ("Not started yet", "Working or in review", "Needs your answer", "Finished this week"), and a round count badge. The Waiting lane's title and badge are orange, with a faint peach wash behind the lane.
 3. **Cards are sticky notes**, one readable card across each lane, in the project's colour. See `spec/DESIGN.md` for the exact look. A card shows: the project name with a small colour bar; the title in bold; one short note (a waiting question appears directly on the paper with a small orange dot, without a bubble); at the bottom the specialist's small round avatar and name on the left and the time on the right ("2 hours ago", "due Thursday", "waiting 3 hours"). A done card shows "✓ Done · 2 days ago" instead of the specialist.
 4. An empty lane shows a dashed box: "No tasks", or "Nothing needs your answer right now" for the Waiting lane.
@@ -18,7 +18,7 @@ Tapping a card opens the task's page.
 
 ## A project's page (`/projects/<slug>`)
 
-1. Breadcrumb "Projects / Website".
+1. Breadcrumb "Tasks / Website".
 2. A colour bar, the project name, its one-line description, and three small pills: "[avatar] Led by Patch", "Runs like: build", "2 open" (plus "1 waiting on you" in orange when true).
 3. **How it runs**: the steps as a horizontal row of round nodes, each with the doer's avatar (or a "you" ring for the user's steps), the step name, and the doer's name. A small badge on a node counts the open tasks at that step. Steps that need the user's OK carry a small orange "your OK" tag. On a phone the row becomes a vertical list.
 4. The **process text**, rendered from markdown: "How Website runs", "Done when", "Rules learned" (each rule dated, with "from you" or "<Muse> suggested · you OK'd"), then one line: "Written and kept current by <Muse>. It changes when you correct something."
@@ -28,7 +28,7 @@ Tapping a card opens the task's page.
 
 Like an issue page, top to bottom:
 
-1. Breadcrumb "‹ Projects / Money". The project name with its colour bar. The title, large. A status line: the column (orange dot for Waiting on you), "[avatar] Penny is on it", "Waiting 3 hours" or "Updated 2 hours ago", and "Due Thursday" when set.
+1. Breadcrumb "‹ Tasks / Money". The project name with its colour bar. The title, large. A status line: the column (orange dot for Waiting on you), "[avatar] Penny is on it", "Waiting 3 hours" or "Updated 2 hours ago", and "Due Thursday" when set.
 2. **When the task waits on the user**, the unanswered question is pinned right here, in a peach card: "[avatar] Penny asked you · 3 hours ago", the question, and either two buttons for a `money` question ("Yes, pay $1,240 on Sep 28" / "Not yet") or a "Reply to Penny" button, plus one line saying what a yes does. It disappears once answered.
 3. **What this is**: the job definition. A collapsed "Original request" with the user's own words.
 4. **Done when**: a checklist; met items show a green check.

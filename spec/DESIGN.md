@@ -62,7 +62,7 @@ Cards are **sticky notes**, laid out **one per lane** with a 12px vertical gap. 
 - Inside: the project name (12px/650, soft) with a 3.5px × 13px bar in the project's dark shade; the title (15px/750, ink, two lines at most); up to three lines of summary or a waiting question directly on the pastel paper with a small orange dot, without a bubble; and a footer pushed to the bottom: the specialist's 20px round avatar and name on the left, the time on the right. A done card's footer reads "✓ Done" in green with a small green check circle, then the time.
 - On a phone: one column of notes per lane, lanes stacked, Waiting on you first.
 
-Project tiles above the board: 118px squares (88px on a phone), the pastel fill, no border, no stripe; name top-left (14px/750), count bottom-left (13px/600 soft); the chosen tile gets a 2px ink outline; "All projects" is white with a hairline border.
+Project tiles above the board: 118px squares (88px on a phone), the pastel fill, no border, no stripe; name top-left (14px/750), count bottom-left (13px/600 soft); the chosen tile gets a 2px ink outline; "All projects" is white with a hairline border. Preserve these sizes when adding project navigation: use a small link icon in the lower-right corner with a 24px target. Only the chosen project shows muted "Details" to its left, with its count moved up just enough to leave room. No divided footer or extra tile height. Keep 8px padding around the scrolling row so outlines are not clipped.
 
 ## Cards and pills
 
