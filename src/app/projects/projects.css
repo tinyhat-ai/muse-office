@@ -22,7 +22,7 @@
 .pj-tile-details { position: absolute; right: 6px; bottom: 6px; display: flex; align-items: center; justify-content: center; gap: 4px; min-width: 24px; min-height: 24px; padding: 3px; border-radius: 4px; font-size: var(--t-badge); color: #55544f; }
 .pj-tile-details:hover { color: var(--ink); }
 .pj-tile-details:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
-.pj-tile-nm { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; hyphens: auto; margin-right: -12px; flex-shrink: 0; font-size: var(--t-sec); font-weight: 750; line-height: 1.25; }
+.pj-tile-nm { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; overflow-wrap: anywhere; margin-right: -12px; flex-shrink: 0; font-size: var(--t-sec); font-weight: 750; line-height: 1.25; }
 .pj-tile-n { font-size: var(--t-cap); font-weight: 600; color: var(--soft); }
 .pj-info { min-height: 28px; margin-top: 4px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: var(--t-sec); color: var(--soft); }
 
@@ -156,7 +156,7 @@
   .pj-tile-filter { padding: 10px 10px 8px; }
   .pj-tile.has-details.on .pj-tile-filter { padding-bottom: 26px; }
   .pj-tile-details { right: 4px; bottom: 2px; }
-  .pj-tile-nm { -webkit-line-clamp: 2; margin-right: -8px; font-size: var(--t-cap); }
+  .pj-tile-nm { -webkit-line-clamp: 2; margin-right: -10px; font-size: var(--t-cap); }
   /* lanes stack, Waiting on you first; one column of notes per lane */
   .pj-board { display: flex; flex-direction: column; align-items: stretch; gap: 16px; }
   .pj-lane.wait { order: -1; }
