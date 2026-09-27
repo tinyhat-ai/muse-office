@@ -5,10 +5,12 @@ one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
 ## 0.2.0 — 2026-09-27
 
-- Office opens directly on the Tasks board. Project squares filter the work;
+- The board's tab is now called Tasks. Project squares filter the work;
   their small links open details without adding another navigation layer.
 - New Offices start with three familiar groups: Work, Personal, and Office.
   Ask Muse to change them as your needs change. Existing projects are preserved.
+  When a request fits no project, Muse now asks where it belongs instead of
+  filing it under General.
 - On phones, selecting a teammate expands the details inside that same card.
   Comment text stays readable when the device uses dark mode.
 - One comment box works across tasks, notes, and projects, with formatted text,
@@ -16,8 +18,8 @@ one in `VERSION` and in the `version:` line of `hat/HAT.md`.
   permits it. Native Muse chat remains the main way to ask for work.
 - Muse checks new feedback and unfinished tasks regularly, records the owner
   and next action, and verifies the requested result before marking work done.
-- The hat makes clear that Muse builds and adapts your Office. The starting
-  design stays simple; bug fixes and larger product decisions stay separate.
+- Muse keeps your Office's existing layout and does not add more help text or
+  notices to its pages.
 
 ### Updating an existing Office
 
