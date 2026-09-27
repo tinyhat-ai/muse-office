@@ -103,8 +103,8 @@ customers, money in and out, spending, bills, subscriptions, savings), and
 task also has its own page.
 
 The person mostly looks. Keep the existing layout without adding more
-standing helper text. The exception for contextual input: on task, note and project pages they can write a comment, and on tasks
-they can reply or answer a money question with one tap. You read those
+standing helper text. The exception for contextual input: on task, note and project pages they can comment or reply. On tasks
+they can also answer a money question with one tap. You read those
 comments and act on them.
 Everything else changes through the app's **actions**, which you call.
 

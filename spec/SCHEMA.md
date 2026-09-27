@@ -34,6 +34,8 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 - **metrics** — every number on the Reports page: `report`, `series`, `label`, `value`, plus a JSON note for chart-specific fields.
 - **notes** — the Notes page: title, lede, markdown, who keeps it, which tasks it came from, and `pinned = 1` for "Start here".
 - **note_comments** — user comments and owner replies on a note, with `reply_to` and `unread_by_agent` so the chief can follow them up.
+- **project_comments** — comments and replies on a project, with its lead as owner, reply parent, unread state and attachment references.
+- **comment_attachments** — private file bytes, name and media type, stored atomically with the comment.
 - **settings** — a few key/value pairs: the office name, the user's name, the hat version, when the Muse last checked in.
 
 ## Rules the Muse must keep

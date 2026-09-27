@@ -370,7 +370,7 @@ export default async function TaskPage({ params }: Props) {
         {files.length ? (
           <div className="tk-files">
             {files.map((f) => (
-              <Chip key={f.name} file={f} />
+              <Chip key={JSON.stringify([f.name, f.url])} file={f} />
             ))}
           </div>
         ) : (

@@ -37,7 +37,13 @@ is reading; it is not a second chat app or a way to edit project data.
   Use supported private download/inspection tools; when only actions are
   available, expose `get_comment_attachment` with bounded chunks as specified
   in `spec/ACTIONS.md`. Reassemble the file in the agent's private workspace
-  and open it with its image/audio tools. Do not publish uploads for access.
+  and open it with its image/audio tools. Validate the complete byte count before
+  opening it. Do not publish uploads for access.
+- Before promising voice follow-up, verify the scheduled worker can transcribe a
+  short spoken file. Playback alone is insufficient. Prefer native audio tools;
+  if unavailable, use a private local transcription tool within the agreed setup.
+  Keep the original file and transcript together. Never silently send audio to
+  another service or guess a transcript; keep the work open if understanding is blocked.
 - Read/listen to attachments before acting; their filenames are not their
   contents. If you cannot access or understand one, ask for that missing context
   on the same page rather than claiming you handled it. Reply there as the owner.

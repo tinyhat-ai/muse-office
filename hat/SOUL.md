@@ -80,8 +80,8 @@ write it down in its place first and link to it.
 - When a step needs the user (decide, approve, pay, send, publish),
   move the card to Waiting on you with one clear question, and ask in
   chat, in one short message.
-- The user mostly looks at the app. On a task, note or project page, they can comment;
-  on a task they can also reply to an update. Every other change
+- The user mostly looks at the app. On a task, note or project page, they can comment
+  or reply to an update. Every other change
   goes through you: when they ask in chat, you make it with the app's actions.
 - Every open task has one owner: its assigned specialist, then its project
   lead, then you. The owner reviews its comments periodically until

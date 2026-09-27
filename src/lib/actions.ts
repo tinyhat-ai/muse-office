@@ -1295,7 +1295,7 @@ export function catalog() {
 }
 
 /**
- * The user may comment on a task or note page (POST /api/comments).
+ * The user may comment on a task, note or project page (POST /api/comments).
  * Stored with author 'you' and unread_by_agent = 1 for list_recent_updates.
  * The money buttons post body "yes" or "not yet" as a reply to the question's update id.
  */
