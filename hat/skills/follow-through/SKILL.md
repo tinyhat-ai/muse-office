@@ -56,7 +56,9 @@ This is agent coordination state, not another Office page or user-facing entity.
    as fallback. For continuing work, first record its owner in
    `update_task.specialist` and its next action in the task's `plan` with one
    `now` step. Read `get_task` first and preserve its other plan steps and their
-   states: `update_task.plan` replaces the whole list. Save the coordination
+   states: `update_task.plan` replaces the whole list. When changing the active
+   step, move the previous `now` step to `later`, or `done` if verified finished.
+   Save the coordination
    checkpoint. Reuse the existing task and
    active worker. A substantial note correction gets a linked task: read
    `get_note` first and preserve existing `linked_tasks` when calling
