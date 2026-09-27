@@ -10,12 +10,13 @@ test("first visit contains real setup, source-backed charts, and no invented cus
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "office-starter-"));
   const db = new Database(path.join(dir, "office.db"));
   try {
+    db.pragma("foreign_keys = ON");
     db.exec(fs.readFileSync(path.join(process.cwd(), "db", "schema.sql"), "utf8"));
     seedStarter(db);
     const count = (table: string) => (db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).get() as { n: number }).n;
     assert.equal(count("members"), 6);
-    assert.equal(count("projects"), 5);
-    assert.equal(count("tasks"), 7);
+    assert.equal(count("projects"), 3);
+    assert.equal(count("tasks"), 4);
     assert.equal(count("notes"), 3);
     assert.equal(count("reports"), 12);
     assert.equal(count("metrics"), 10);

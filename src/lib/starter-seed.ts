@@ -23,11 +23,9 @@ export function seedStarter(db: Database.Database) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     const step = db.prepare(`INSERT INTO process_steps (project, position, name, who, note, needs_you) VALUES (?, ?, ?, ?, ?, ?)`);
     const projects: Array<[string, string, string, string, string, string, string, number]> = [
-      ["website", "Website", "Your site and any tools the team builds for you.", "#f2e4a9", "#b89a3a", "developer", "Build", 0],
-      ["marketing", "Marketing", "A plan for reaching the people who matter to your work.", "#d5eaea", "#2f8a8a", "marketer", "Publish", 1],
-      ["customers", "Customers", "Real people, conversations, and follow-ups as you share them.", "#d8e7d3", "#5b8a5a", "sales", "Follow up", 2],
-      ["money", "Money", "Receipts, invoices, bills, and reports from verified records.", "#e3dcf0", "#7e6aa6", "bookkeeper", "Money", 3],
-      ["general", "General", "Your Office setup, priorities, and work that spans the team.", "#e9e7df", "#9a978c", "chief", "General", 4],
+      ["work", "Work", "Tasks related to your work, whatever you do.", "#f2e4a9", "#b89a3a", "chief", "General", 0],
+      ["personal", "Personal", "Everyday plans and personal tasks you choose to share.", "#d8e7d3", "#5b8a5a", "chief", "General", 1],
+      ["office", "Office", "Setting up and improving your Office and team.", "#e9e7df", "#9a978c", "chief", "General", 2],
     ];
     for (const [slug, name, description, color, dark, lead, kind, order] of projects) {
       project.run(slug, name, description, color, dark, lead, kind,
@@ -44,13 +42,10 @@ export function seedStarter(db: Database.Database) {
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`);
     const update = db.prepare(`INSERT INTO task_updates (task, author, kind, body, created_at) VALUES (?, ?, ?, ?, ?)`);
     const tasks: Array<[string, string, string, string, string, number, string | null, string | null, string, string]> = [
-      ["team-ready", "general", "Set up the specialist team", "chief", "done", 3, null, null, "Five specialist roles prepared", "The Office roster and each role's responsibilities are documented. Muse checks that every specialist has its own workspace and face."],
-      ["office-ready", "general", "Build the Office workspace", "developer", "done", 3, null, null, "Tasks, Team, Customers, Reports, Notes", "The five Office pages and their data actions are available. This starter workspace shows how each page is used."],
-      ["first-priority", "general", "Choose one priority for this week", "chief", "waiting_on_you", 2, "What is the one work priority you want the team to start with this week?", "answer", "The team can start with one clear goal", "Ask for the user's actual priority before assigning real work. Record the answer here and turn it into a plan."],
-      ["site-links", "website", "Gather your current site and brand links", "designer", "todo", 0, null, null, "Ask for what already exists", "Review any existing site and brand material before suggesting changes. Ask the user for links when they are missing."],
-      ["communication-plan", "marketing", "Draft a first-week communication plan", "marketer", "todo", 0, null, null, "Start from your audience and offer", "Ask what the user offers and whom they want to reach. Draft a short plan; do not publish it."],
-      ["work-channels", "customers", "Map where customer conversations arrive", "sales", "todo", 0, null, null, "Only channels you choose to share", "Ask which work email or messaging channels the user wants the team to read. Record only people found there or named by the user."],
-      ["money-sources", "money", "Find where invoices and receipts live", "bookkeeper", "todo", 0, null, null, "No account access assumed", "Ask which records may be read and what period to start with. Never pay or send anything from this task."],
+      ["team-ready", "office", "Set up the specialist team", "chief", "done", 3, null, null, "Five specialist roles prepared", "The Office roster and each role's responsibilities are documented. Muse checks that every specialist has its own workspace and face."],
+      ["office-ready", "office", "Build the Office workspace", "developer", "done", 3, null, null, "A board, team, customers, reports, and notes", "The five Office pages and their data actions are available. This starter workspace shows how each page is used."],
+      ["first-priority", "work", "Choose one priority for this week", "chief", "waiting_on_you", 2, "What is the one work priority you want the team to start with this week?", "answer", "The team can start with one clear goal", "Ask for the user's actual priority before assigning real work. Record the answer here and turn it into a plan."],
+      ["personal-first", "personal", "Choose a personal task to hand over", "chief", "todo", 0, null, null, "Start with something you want help with", "Ask which personal task the user wants help with. Do not assume access to their calendar, messages, or private records."],
     ];
     for (const [id, projectSlug, title, specialist, column, position, question, questionKind, note, definition] of tasks) {
       task.run(id, projectSlug, title, specialist, column, position, question, questionKind, note, definition, now, now, column === "done" ? now : null);
@@ -95,13 +90,13 @@ export function seedStarter(db: Database.Database) {
     const note = db.prepare(`INSERT INTO notes
       (slug, project, title, lede, markdown, kept_by, tags_json, pinned, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, 'chief', ?, ?, ?, ?)`);
-    note.run("how-your-office-works", "general", "How your Office works", "Where requests go, who works on them, and how you see progress.",
-      `## The short version\n\n**Talk to Muse in chat.** Muse turns substantial requests into tasks and briefs the right specialist. Tasks shows progress and decisions. You can comment on a task or note; ask Muse to change other pages.\n\n## Who does what\n\n| Specialist | Work |\n| --- | --- |\n| Muse | Coordinates, checks, and reports back |\n| Vera | Design |\n| Theo | Websites and tools |\n| June | Marketing |\n| Sam | Customer follow-ups |\n| Otto | Money records and reports |\n\n## How a request moves\n\n~~~mermaid\nflowchart TB\n  A[You ask Muse] --> B[Muse records the task]\n  B --> C[Specialist works]\n  C --> D[Muse checks and reports]\n  D --> E[Office keeps the result]\n~~~\n\n## Your approval\n\nThe team asks before sending, buying, publishing, or deleting anything.`,
+    note.run("how-your-office-works", "office", "How your Office works", "Where requests go, who works on them, and how you see progress.",
+      `## The short version\n\n**Talk to Muse in chat.** Muse turns substantial requests into tasks and briefs the right specialist. The board shows progress and decisions. You can comment on a task or note; ask Muse to change other pages.\n\n## Who does what\n\n| Specialist | Work |\n| --- | --- |\n| Muse | Coordinates, checks, and reports back |\n| Vera | Design |\n| Theo | Websites and tools |\n| June | Marketing |\n| Sam | Customer follow-ups |\n| Otto | Money records and reports |\n\n## How a request moves\n\n~~~mermaid\nflowchart TB\n  A[You ask Muse] --> B[Muse records the task]\n  B --> C[Specialist works]\n  C --> D[Muse checks and reports]\n  D --> E[Office keeps the result]\n~~~\n\n## Your approval\n\nThe team asks before sending, buying, publishing, or deleting anything.`,
       JSON.stringify(["office", "start here", "workflow"]), 1, now, now);
-    note.run("your-first-week", "general", "Your first week", "The first useful questions and tasks, with no assumptions about your accounts.",
-      `## One priority\n\nThe first decision is on the **Choose one priority for this week** task. Muse will use your answer to focus the team.\n\n## First steps\n\n- **Website:** Share any current site or brand links.\n- **Marketing:** Tell June what you offer and whom you want to reach.\n- **Customers:** Tell Sam which work conversations you want included.\n- **Money:** Tell Otto where invoices and receipts live, if you want money reports.\n\nNothing has been sent or connected yet.`,
+    note.run("your-first-week", "office", "Your first week", "The first useful questions and tasks, with no assumptions about your accounts.",
+      `## One priority\n\nThe first decision is on the **Choose one priority for this week** task. Muse will use your answer to focus the team.\n\n## First steps\n\n- **Work:** Pick one priority for the team.\n- **Personal:** Choose an everyday task you want help with.\n- **Office:** See the setup work already recorded.\n\nThese are starting groups. Ask Muse to rename them or create a project that fits your life.\n\nNothing has been sent or connected yet.`,
       JSON.stringify(["office", "first week"]), 0, now, now);
-    note.run("where-information-comes-from", "general", "Where your information comes from", "How Customers and Reports become useful as your team learns your work.",
+    note.run("where-information-comes-from", "office", "Where your information comes from", "How Customers and Reports become useful as your team learns your work.",
       `## Customers\n\nSam adds **real people** you name or who appear in work channels you choose to share. The customer funnel starts at zero. A contact's timeline records the source, conversation, and next step.\n\n## Reports\n\nThe **Around the world** charts use published sources linked under each chart. **Your business** and **Your money** gain numbers only after the team checks your records. Ask Muse for a report about any result that matters to you.\n\n## Your control\n\nYou choose what information the team can use. Outgoing communication and spending wait for your approval.`,
       JSON.stringify(["sources", "reports", "customers"]), 0, now, now);
     db.prepare("INSERT INTO settings (key, value) VALUES ('office_name', 'Office')").run();
