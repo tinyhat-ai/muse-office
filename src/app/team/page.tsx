@@ -159,7 +159,7 @@ export default async function TeamPage({ searchParams }: { searchParams: Search 
                       <Avatar member={m} size="md" />
                       <div>
                         <h2 className="tm-nm">{m.name}</h2>
-                        <div className="tm-rl">{m.role}</div>
+                        <div className="tm-rl">{m.role}{on && m.hat && <span className="tm-inline-hat">{` · wears ${article(m.hat)} ${m.hat}`}</span>}</div>
                       </div>
                     </div>
                     <p className="tm-job">{m.job}</p>

@@ -7,7 +7,7 @@ export function TeamCard({ selected, reveal, children }: { selected: boolean; re
 
   useEffect(() => {
     // Collapsing the previous card can move the newly selected one above the
-    // viewport. Keep its portrait and details together in view on small screens.
+    // viewport. The breakpoint matches team.css. Keep its portrait and details together in view on small screens.
     if (reveal && window.matchMedia("(max-width: 980px)").matches) {
       card.current?.scrollIntoView({ block: "start" });
     }
