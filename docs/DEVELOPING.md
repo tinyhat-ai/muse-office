@@ -26,13 +26,13 @@ to a task update. Muse changes the other records through Office actions.
 
 ## What the starter shows
 
-Projects opens with setup work and a real question for the person. Team members
+Tasks opens with setup work and a real question for the person. Team members
 have illustrated faces. Customers contains orientation contacts outside the
 sales funnel; the funnel stays at zero until real people are added. Reports
 opens with four charts from linked public sources. Notes renders Markdown,
 tables, and Mermaid diagrams.
 
-- [Starter Projects board](screenshots/starter-projects.jpg)
+- [Starter Tasks board](screenshots/starter-projects.jpg)
 - [Starter Team](screenshots/starter-team.jpg)
 - [Starter Customers](screenshots/starter-customers.jpg)
 - [Starter Reports](screenshots/starter-reports.jpg)

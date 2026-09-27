@@ -59,7 +59,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <main className="wrap pp-wrap">
       <nav className="crumb" aria-label="Breadcrumb">
-        <Link href="/projects">Projects</Link>
+        <Link href="/projects">Tasks</Link>
         <span aria-hidden="true">/</span>
         <span>{project.name}</span>
       </nav>

@@ -5,7 +5,7 @@ import { get } from "@/lib/db";
 import { ago } from "@/lib/time";
 
 const TABS = [
-  ["/projects", "Projects"],
+  ["/projects", "Tasks"],
   ["/team", "Team"],
   ["/customers", "Customers"],
   ["/reports", "Reports"],
@@ -26,7 +26,7 @@ export async function Nav() {
       </Link>
       <nav className="tabs">
         {TABS.map(([href, label]) => (
-          <Link key={href} href={href} className={"tab" + (current.startsWith(href) ? " on" : "")}>
+          <Link key={href} href={href} className={"tab" + ((current.startsWith(href) || (href === "/projects" && current.startsWith("/tasks/"))) ? " on" : "")}>
             {label}
           </Link>
         ))}
