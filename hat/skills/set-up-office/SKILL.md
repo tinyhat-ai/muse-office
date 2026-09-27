@@ -18,9 +18,8 @@ Tell the user, in plain words and one message:
   Sales, and a Bookkeeper. Give each one a name in your own style.
   If you already keep lanes or boards folders (for example
   ~/workspace/boards/), say you will turn them into projects.
-- Projects: the four most solo businesses need, Website, Marketing,
-  Customers, and Money, plus General for one-offs. Drop any the user does
-  not need, and add any they name.
+- Projects: start with Work, Personal, and Office. Adapt these groups to
+  what the user needs; keep any existing projects and add ones they name.
 - One private app, Office, with five pages: Tasks, Team, Customers, Reports,
   and Notes. Each task and each project also gets its own page.
   It saves what you add, so it is private to them and has no public link.
