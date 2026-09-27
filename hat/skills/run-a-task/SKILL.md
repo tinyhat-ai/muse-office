@@ -46,6 +46,10 @@ description: How a task moves from a card to a finished result through a special
 
 Run up to 3 tasks at the same time. More waits in To do.
 
+Follow `skills/follow-through/SKILL.md` while work is open. Dispatching a
+worker or replying to a comment is not the end of your responsibility. Keep
+the next action and owner on the task and verify the actual result before Done.
+
 The actions named here (create_task, update_task, move_task, add_task_note,
 attach_file, upsert_note, list_recent_updates, reply_to_comment) are defined
 with their arguments in spec/ACTIONS.md of the repository. An action that
