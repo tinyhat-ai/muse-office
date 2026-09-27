@@ -41,8 +41,9 @@ is reading; it is not a second chat app or a way to edit project data.
   opening it. Do not publish uploads for access.
 - Before promising voice follow-up, verify the scheduled worker can transcribe a
   short spoken file. Playback alone is insufficient. Prefer native audio tools;
-  if unavailable, use a private local transcription tool within the agreed setup.
-  Keep the original file and transcript together. Never silently send audio to
+  if unavailable, use a private local transcription tool within the setup the
+  person approved. Keep the original file and transcript together in the private
+  Office workspace. Never silently send audio to
   another service or guess a transcript; keep the work open if understanding is blocked.
 - Read/listen to attachments before acting; their filenames are not their
   contents. If you cannot access or understand one, ask for that missing context
