@@ -4,16 +4,18 @@ Build this with Office actions after the person approves the promotion. When run
 
 ## Projects and Notes
 
-Create the four standard projects and General with their processes. Finish two setup tasks, **Set up the specialist team** and **Build the Office app**, with closing reports that say what actually happened. Put these next tasks in To do, assigned by role:
+Start with three familiar groups: **Work**, **Personal**, and **Office**. They are replaceable starting choices; Muse can rename, add, or remove projects through chat to suit the person. A project groups related tasks; keep all tasks visible together on the board with project filters. Apply this starter only to a new, empty Office; never regroup or replace an existing user's work automatically.
 
-| Project | First task | What its page explains |
+Keep the initial board to four useful tasks:
+
+| Project | Task | Initial state |
 | --- | --- | --- |
-| Website | Gather the current site and brand links | The designer reviews what exists before suggesting changes. Ask for the site link when it is missing. |
-| Marketing | Draft a first-week communication plan | The marketer asks what the person sells and who they want to reach before drafting. Nothing is published yet. |
-| Customers | Map where customer conversations arrive | Sales asks which email or messaging channels may be read. It records only real people it finds or the person names. |
-| Money | Find where invoices and receipts live | The bookkeeper asks which records may be read and what period to start with. It never pays or sends anything. |
+| Office | Set up the specialist team | Done after setup is actually checked, with a closing report |
+| Office | Build the Office workspace | Done after the app is checked, with a closing report |
+| Work | Choose one priority for this week | Waiting on you: ask which work priority the team should start with |
+| Personal | Choose a personal task to hand over | To do: ask what the person wants help with; assume no access to private records |
 
-Put **Choose one priority for this week** in Waiting on you, with one direct question. This is the first decision the chief needs; it gives the board a real reason to use that lane. Do not invent a reply.
+Do not invent answers or work for each sample specialist. Start new tasks as the person shares actual priorities.
 
 Create three tagged notes in plain words:
 
