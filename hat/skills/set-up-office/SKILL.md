@@ -94,6 +94,10 @@ the user's browser cannot reach your computer. The Office app is the view.
 
 - After loading the starter, run the checks in HAT.md ("Check that the Office is right").
   Label synthetic comments as tests on the setup task; do not impersonate user approvals.
+- Check Notes using a newly action-created test note as well as the starter:
+  follow `spec/PAGES.md` to open, reopen, and edit its heading/table/Mermaid
+  body. A source readback alone does not pass. Keep it clearly labeled as a
+  setup check rather than invented user work.
 - Follow `skills/follow-through/SKILL.md` to create or update one recurring
   Office check, every minute when supported. Verify the real enabled schedule
   and an actual run. It reviews unread comments and all unfinished tasks, even
