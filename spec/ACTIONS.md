@@ -19,6 +19,16 @@ The chief's portrait comes from that Muse's own avatar, with its recognizable fa
 
 Both avatar actions accept an HTTPS image URL or an Office asset path beginning with `/`. They reject local paths such as `/Users/...`, `file://...`, `~/...`, and relative paths that a visitor cannot open. To clear a portrait, pass an empty `avatar_url` to `upsert_member`; `set_member_avatar` requires a nonempty URL.
 
+For a generated Office, import portraits into durable private app assets;
+do not persist an expiring platform preview URL. A compact copy of the approved
+image may be used to meet upload limits. Every Team, detail, task and board
+renderer reads `members.avatar_url` and uses the platform's private asset
+reader when needed; sample portraits keyed by slug must not override it.
+An action success only proves the field was written. Re-read the member and
+reopen the actual pages to verify a decoded image with the approved face before
+calling the portrait installed or closing its setup task. Keep existing member
+identity, role, skills and task ownership intact during an avatar change.
+
 The Team page works out each specialist's status ("working on", "next", "waiting on you") and their latest finished work from `tasks`; there is no action for those.
 
 ## Projects
