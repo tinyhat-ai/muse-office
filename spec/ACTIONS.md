@@ -11,13 +11,24 @@ Names are `snake_case`. Slugs are short, lowercase, `kebab-case`. Dates are ISO 
 | Action | Arguments | What it does |
 | --- | --- | --- |
 | `upsert_member` | `slug`, `name`, `role`, `hat?`, `job`, `avatar_url?`, `color?`, `does?: string[]`, `never?`, `skills?: string[]`, `is_chief?` | Adds or updates one card on the Team page. |
-| `set_member_avatar` | `slug`, `avatar_url` | Changes any existing member's portrait, including the chief. Use the chief's actual Muse avatar image or Office asset URL, not the bundled sample. |
+| `set_member_avatar` | `slug`, `avatar_url` | Changes any existing member's portrait, including the chief, and returns the stored member row, including `avatar_url`. Use the chief's actual Muse avatar image or Office asset URL, not the bundled sample. |
 | `set_member_rule` | `slug`, `rule` | Sets the "last rule learned" shown in the specialist's detail. |
 | `remove_member` | `slug` | Removes a specialist. Refused while they have open tasks, and refused for the chief. Their finished work stays; it is unlinked from them. Never called without the user's yes. |
 
 The chief's portrait comes from that Muse's own avatar, with its recognizable face preserved under the small hat. Use `set_member_avatar` to put that image on the Team card; the bundled sample image is only for this repository's standalone preview. For a new specialist, `avatar_url` holds a real, specialty-relevant face or mascot image in the same illustration style and crop as the chief. `hat` is only a wearable accessory; writing an animal name there does not create its image. Verify the image loads on Team, in the desktop detail panel, and on a task card before reporting setup complete. If an image cannot yet be made or the chief's image cannot be accessed, leave an avatar task open and say which portrait still uses initials.
 
 Both avatar actions accept an HTTPS image URL or an Office asset path beginning with `/`. They reject local paths such as `/Users/...`, `file://...`, `~/...`, and relative paths that a visitor cannot open. To clear a portrait, pass an empty `avatar_url` to `upsert_member`; `set_member_avatar` requires a nonempty URL.
+
+For a generated Office, import portraits into durable private app assets;
+do not persist an expiring platform preview URL. A compact copy of the approved
+image may be used to meet upload limits. Every avatar
+renderer reads `members.avatar_url` and uses the platform's private asset
+reader when needed; sample portraits keyed by slug must not override it.
+An action success only proves the field was written. Check that the returned
+stored member's `avatar_url` equals the imported durable asset path or URL, then
+reopen the actual pages to verify a decoded image with the approved face before
+calling the portrait installed or closing its setup task. Keep existing member
+identity, role, skills and task ownership intact during an avatar change.
 
 The Team page works out each specialist's status ("working on", "next", "waiting on you") and their latest finished work from `tasks`; there is no action for those.
 

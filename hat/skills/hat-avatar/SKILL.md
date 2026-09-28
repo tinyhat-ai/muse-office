@@ -17,14 +17,37 @@ abstract shape. Keep it small relative to the avatar and simple: no paper,
 no stickers, no text, no extra props."
 
 Then preview, get the user's approval, and activate. Read the activated Muse
-avatar image from the platform and call the Office's `set_member_avatar` action
-for the chief with its accessible image or asset URL. Do not substitute the
+avatar image from the platform, then follow the private import and verification
+steps below before calling `set_member_avatar` for the chief. Do not substitute the
 standalone reference app's bundled chief image. Verify the same recognizable
 face appears in Muse and on the Office Team page. If the platform cannot
 expose that image to the Office, state exactly what is missing and leave an
 avatar setup task open.
 - Add, don't redesign. Tiny. Unambiguous silhouette. No extras.
 - One preview round at a time.
+
+## Install the approved image, then verify it
+
+Keep the approved original in private storage. If an upload is too large,
+downscale or re-encode that image itself without changing its crop; never redraw
+it. Keep at least 192px for the 96px chief portrait. Resizing is not a new face
+design and does not require another approval of the unchanged portrait.
+Import it into the Office's durable private asset storage before setting
+`avatar_url`. A local path, inaccessible platform file, or expiring preview
+link is not an installed portrait. Use the resulting Office asset path or
+durable accessible HTTPS image URL with `set_member_avatar(slug, avatar_url)`.
+
+Check that `set_member_avatar` returns the stored member with `avatar_url`
+equal to the imported durable asset path or URL. Reopen Team, then open a task
+and the board. If a renderer still shows a sample face or initials despite a
+usable stored image, have the builder read `members.avatar_url` through its
+private asset reader on every surface. A bundled slug-to-image map must not
+override it. Initials are only the fallback when no usable image exists. Inspect the
+actual loaded image, not just an action success or an upload progress message.
+Only then close its avatar setup task and clear the stale waiting question.
+Keep upload retries in your own setup log; do not create comments attributed
+to the user or invent another approval. Reuse the user's recorded approval
+for that exact image.
 
 # Specialist faces
 
@@ -46,9 +69,9 @@ as my current Muse avatar and the other team portraits. Use <role color> and a s
 recognizable cue. No words, logos, or borrowed characters."
 
 Compare the current portraits side by side at Team-card size. If two faces are
-easy to confuse, revise them. Store each image with that member through
-`set_member_avatar`, then verify it appears on Team, a task page,
-and a board card. If image creation is unavailable, use the Office's initials
+easy to confuse, revise them. Install each image with that member through
+the private import, `set_member_avatar`, stored-row and reopen checks above.
+If image creation is unavailable, use the Office's initials
 fallback temporarily and leave a setup task to finish the portraits.
 
 Keep portraits round and head-cropped: 20px on project cards and in lists,
