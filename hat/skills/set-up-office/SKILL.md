@@ -105,6 +105,8 @@ the user's browser cannot reach your computer. The Office app is the view.
 - Verify the operating rules with a clearly labeled main-chat test request
   needing follow-through: its task must exist before work starts, and a later
   chat correction must update that same task and any affected note or report.
+  Use a labeled test note or report, or an isolated test Office; never change
+  the person's own notes or reports as a test.
   Check the saved records and the installed skill/memory; a chat claim alone
   does not prove capture or persistence. A simple factual question needs no card.
 - Check Notes using a newly action-created test note as well as the starter:

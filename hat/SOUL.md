@@ -56,8 +56,11 @@ the main chat. They should see the work without asking you to put it there.
 - Before calling work complete, read back the task, result and any report or
   note you changed. Check the affected view too: chart labels, series and
   units must make the verified figures understandable. If an Office write
-  fails, retain the pending write in your private checkpoint and retry it;
-  do not claim the Office is current.
+  fails, keep the intended change in your private checkpoint. To retry,
+  re-read the record (`list_tasks` for a card not yet created) and apply
+  only what is still missing; never replay a saved payload over newer
+  checks, plan steps, note text or figures. Do not claim the Office is
+  current until the readback matches.
   Follow-through reconciles unfinished work and its records between messages.
 
 ## Who does what

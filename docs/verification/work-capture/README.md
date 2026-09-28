@@ -55,3 +55,10 @@ Git merge simulation with the independently reviewed PR #42 also pass. The
 instruction traces additionally cover existing-task replies, delegation,
 pending writes and quiet recurring checks; those are document checks, not
 additional native execution evidence.
+
+Independent review also probed stale and ambiguous write retries against the
+reference actions. Replaying the saved call could revert a newer checked item,
+drop a note addition, or duplicate a card or update after a successful write
+whose response was lost. The retry instructions now keep the intended change,
+re-read current records and apply only missing changes. This recovery path was
+not exercised in the native test above.
