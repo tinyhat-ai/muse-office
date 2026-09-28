@@ -45,6 +45,27 @@ Like an issue page, top to bottom:
 8. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 
+### Saved comment media
+
+Task, note and project comments and replies use the same saved-media renderer.
+Store each attachment's durable private reference, name, actual media type and
+size with its comment (the reference app uses `/api/attachments/<id>`).
+Neither a draft object URL nor an expiring signed link is a saved source.
+Resolve the stored reference through the Office's own private asset reader. Render
+images inline and audio as `<audio controls preload="metadata">`, without
+autoplay. Where the host cannot provide a durable playable private URL, read
+the complete saved bytes and create a local Blob URL with the correct type;
+stop playback and revoke it on unmount, and reconstruct it on reopening.
+
+Before hand-over, send a known-valid WAV of a few seconds, larger than one
+attachment chunk, and an image. Reopen the actual comment in the Muse client:
+the saved WAV must play for its full known duration and the image must show
+inline. Repeat inside a reply and after reopening the app. A working draft,
+another file viewer, or a player that stops early does not prove the saved
+comment player works. If it fails, verify byte
+count/type and the private storage reader rather than sending the person to
+an external expired link or making uploads public.
+
 ## Team (`/team`)
 
 1. Header: kicker "Who does the work", title "Team", lede "<Muse> runs <current count> specialists for you. Ask <Muse> to hire, retrain, pause, or retire one."
