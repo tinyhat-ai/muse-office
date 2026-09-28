@@ -25,10 +25,17 @@ description: How a task moves from a card to a finished result through a special
    Anything worth remembering goes into that project's memory.md only.
    If something looks like it belongs to another project, the worker asks
    you instead of guessing.
-4. If a step needs the user, the worker stops and moves the card to
+4. Before waiting on the user, inspect the task's comments, attachments,
+   recorded approvals and actual outputs. A reply may already answer the
+   question or choose the task; an installed approved portrait may resolve
+   an old setup blocker. Continue within that authorization rather than
+   asking again. If a step still needs the user, the worker stops and moves the card to
    Waiting on you with one clear question (move_task posts it on the
    task's page). You ask the user in chat too. They may answer in either
-   place; an answer on the page is a reply to that question, so read
+   place. For a chat answer, the chief records the exact words and approval
+   scope as its own `add_task_note` update and in the private checkpoint
+   before acting; never fabricate a comment authored by the user. Workers
+   and the scheduled check do not inherit chat. An answer on the page is a reply to that question, so read
    which question it answers before you act on it.
 5. When the worker says done, check the result against done_when before you
    tell the user. If it falls short, send it back once with one clear note.
