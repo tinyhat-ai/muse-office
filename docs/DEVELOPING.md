@@ -36,6 +36,8 @@ tables, and Mermaid diagrams.
 - [Starter Customers](screenshots/starter-customers.jpg)
 - [Starter Reports](screenshots/starter-reports.jpg)
 - [Starter Note with Markdown and Mermaid](screenshots/starter-note-mermaid.jpg)
+- [Compact comment input and flat task updates](screenshots/minimal-comment-input.jpg)
+- [Audio draft with Play/Pause before Send](screenshots/minimal-comment-draft.jpg)
 - [More Office screenshots](screenshots/)
 
 Earlier examples from an Office built by Muse are available in the

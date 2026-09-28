@@ -19,9 +19,24 @@ is reading; it is not a second chat app or a way to edit project data.
   audio attachments, and user-triggered voice recording where supported. Enter
   adds a line; Shift+Enter sends. Keep existing Ctrl/Cmd+Enter compatibility and
   do not submit during IME composition.
-- Use compact attachment and microphone controls, not another toolbar, chat
-  history, help paragraph, or scheduler banner. Show an error only when an action
-  fails. Preserve the draft and attachments on a failed save.
+- Keep the input in one compact field with familiar paperclip, microphone and
+  upward-arrow send icons inside its bottom edge. Use a stop-square icon while
+  recording. Give these three controls an accessible name, hover title, keyboard focus and
+  44px touch target. One attachment picker accepts photos, audio and other files.
+  Keep the recording icon neutral. Change its Record/Stop accessible name with
+  its action and leave `aria-pressed` unset.
+  Do not replace icons with Image/Audio/Record text buttons or add an input
+  heading, shortcut hint, privacy caption, help paragraph or scheduler banner.
+  Show recording state or an error only when the action needs it. Preserve the
+  draft and attachments on a failed save.
+- Give every audio draft a compact native player with Play/Pause before Send,
+  including recordings after they stop and attached audio files. Preview its
+  local File with a browser object URL; do not upload it to listen or autoplay.
+  Stop playback and release the URL on removal, successful save, or unmount.
+  Preserve the preview on a failed save. Add no extra heading or helper text.
+- Keep task and note detail pages flat, like a document. Description, updates, comments and
+  files share the page gutter; do not stack padded white cards around them.
+  Preserve the board, portraits, page colors, data and follow-through behavior.
 - Request microphone access only after a deliberate click. Stop its tracks after
   recording, cancellation, or navigation. Keep recording bounded and never send
   automatically. If the host blocks recording, accept an audio file; do not claim
