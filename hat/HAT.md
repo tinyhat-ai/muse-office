@@ -226,14 +226,15 @@ Do these before the hand-over, and again after any change to the app:
 - The top bar has exactly Tasks · Team · Customers · Reports · Notes, and
   a project page, a task page, and a note page open from them.
 - On a labeled test task at 320px and 390px, use a long description, a brief
-  current `note`, mixed met/unmet `done_when` items and several updates/replies.
+  human-readable `overview`, mixed met/unmet `done_when` items and several updates/replies.
   The description starts collapsed; its Show more reveals the whole text.
   The current summary and user question are visible before history. Empty
-  checklists/plans/files add no placeholder sections. Only three recently
-  active threads and two replies per thread show initially; Show more exposes
-  every older update and a direct update link reveals its original context.
-  A new reply to an old thread makes that thread recent. Headings, bold text,
-  tables, quotes and code in comments render properly. Change the summary and
+  checklists/plans/files add no placeholder sections. Updates shows only its
+  label and count, closed by default; expanding reveals all updates and replies.
+  A direct link to an older update/reply opens its original context. Headings,
+  bold text, tables, quotes and code in comments render properly. Check a useful
+  diagram and a self-contained interactive HTML overview on the phone; keep
+  the latter isolated from Office APIs and controls. Change the overview and
   one checklist state through `update_task`, reopen the page, and verify both
   changed while the original description and other states remain intact.
 - On a labeled test task and its reply, choose an image, then a known-valid

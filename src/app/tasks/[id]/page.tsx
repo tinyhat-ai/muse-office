@@ -1,8 +1,9 @@
 import { CommentBody } from "@/components/comments/CommentBody";
 import { ExpandableContent } from "@/components/comments/ExpandableContent";
 import { TaskHistory } from "@/components/task/TaskHistory";
+import { TaskVisual } from "@/components/task/TaskVisual";
+import { RenderedNote } from "@/components/notes/RenderedNote";
 import { commentThreads } from "@/lib/comment-threads";
-import { recentTaskThreadIds } from "@/lib/task-history";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { renderMarkdown } from "@/lib/markdown";
@@ -25,8 +26,7 @@ import { CommentForm, ReplyToggle } from "@/components/task/CommentForm";
 import { FocusCommentButton, MoneyButtons } from "@/components/task/MoneyButtons";
 import "../tasks.css";
 
-// A task's page, like an issue: the description on top, then the
-// conversation. It is the one page where the user writes.
+// A current, human-readable snapshot first; the detailed work log stays closed.
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -128,8 +128,6 @@ export default async function TaskPage({ params }: Props) {
   const askerName = questionRow ? nameOf(questionRow.author) : workerName;
   const answer = questionRow ? [...updates].reverse().find((u) => u.author === "you" && u.reply_to === questionRow.id) : undefined;
   const pinnedId = questionRow && !answer ? questionRow.id : null;
-  const previewIds = recentTaskThreadIds(threads.filter(({ root }) => root.id !== pinnedId));
-  const hasConversation = threads.some(({ root, replies: children }) => root.kind !== "event" && (root.id !== pinnedId || children.length > 0));
   const currentSummary = task.note || plan.find((item) => item.state === "now")?.text;
 
   // Files: the task's own files first, then anything attached to an update, once each.
@@ -152,7 +150,7 @@ export default async function TaskPage({ params }: Props) {
           <b>{nameOf(r.author)}</b>
           <When iso={r.created_at} />
           <br />
-          <CommentBody body={r.body} files={json(r.files_json, [])} collapse />
+          <CommentBody body={r.body} files={json(r.files_json, [])} />
         </div>
       </div>
     );
@@ -174,15 +172,10 @@ export default async function TaskPage({ params }: Props) {
             <When iso={u.created_at} />
           </div>
           <div className="tk-cm-b">
-            <CommentBody body={u.body} files={json(u.files_json, [])} collapse />
+            <CommentBody body={u.body} files={json(u.files_json, [])} />
           </div>
           {own.length ? (
-            <TaskHistory
-              className="tk-replies"
-              label="Replies"
-              previewIds={own.slice(-2).map((r) => r.id)}
-              items={own.map((r) => ({ id: r.id, anchors: [r.id], content: renderReply(r) }))}
-            />
+            <div className="tk-replies">{own.map(renderReply)}</div>
           ) : null}
           {pinnedAbove ? (
             <div className="tk-cm-note">Waiting on you · answer above ↑</div>
@@ -234,7 +227,8 @@ export default async function TaskPage({ params }: Props) {
           </span>
           {task.due && !isDone ? <span>Due {dueWord(task.due)}</span> : null}
         </div>
-        {currentSummary ? <p className="tk-summary">{currentSummary}</p> : null}
+        {task.overview ? <RenderedNote html={renderMarkdown(task.overview)} className="md oc-markdown tk-summary" />
+          : currentSummary ? <p className="tk-summary">{currentSummary}</p> : null}
 
         {/* 2. the unanswered question, pinned while the task waits on the user */}
         {waiting && questionText ? (
@@ -285,6 +279,7 @@ export default async function TaskPage({ params }: Props) {
             </ul>
           </>
         ) : null}
+        {task.overview_html ? <TaskVisual html={task.overview_html} /> : null}
       </section>
 
       {task.original_request ? <details className="tk-req">
@@ -309,19 +304,9 @@ export default async function TaskPage({ params }: Props) {
         </ol>
       </details> : null}
 
-      {/* 6. the conversation */}
-      {hasConversation ? <>
-        <div className="tk-sec" />
-        <h2 className="tk-h2">
-          Conversation
-          <span className="sub">
-            {updateCount} {updateCount === 1 ? "update" : "updates"}
-          </span>
-        </h2>
-        <TaskHistory key={task.id} className="tk-conv" label="Task conversation" previewIds={previewIds} items={top.map((u) => ({
-          id: u.id,
-          anchors: [u.id, ...(replies.get(u.id) ?? []).map((r) => r.id)],
-          content: u.kind === "event" ? (
+      {/* 6. optional details, closed until the person asks to see them */}
+      {updateCount > 0 ? <TaskHistory key={task.id} count={updateCount}>
+        {top.map((u) => u.kind === "event" ? (
             <div className="tk-ev" key={u.id} id={`update-${u.id}`}>
               <span className="d" aria-hidden="true" />
               <div>
@@ -331,9 +316,8 @@ export default async function TaskPage({ params }: Props) {
                 </span>
               </div>
             </div>
-          ) : renderCard(u),
-        }))} />
-      </> : null}
+          ) : renderCard(u))}
+      </TaskHistory> : null}
 
       {/* 7. the comment box */}
       <div className="tk-composer">

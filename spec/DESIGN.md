@@ -97,10 +97,12 @@ and one hairline for replies. Keep the peach highlight for the pinned question.
 
 On task details, cap the initial description at 96px on phones and 160px on
 desktop, followed by a quiet "Show more" link when it overflows. Put the
-current status, brief summary, user question and optional completion checklist
-directly below it. Keep the original request, plan and older conversation
-details available on demand. Show three recent active threads and at most two
-replies per thread initially. Do not add a card around the overview, standing
+current status, human-readable snapshot, user question and optional completion
+checklist directly below it. The snapshot may include formatted prose, a diagram
+or a compact interactive visual, sized to the column without nested cards.
+Keep the original request and plan collapsed. All detailed history is hidden
+under a single **Updates** disclosure and count, closed by default. Do not add
+a card around the overview, standing
 instructions, percentages or empty sections. Keep this first view compact at
 320px and 390px; a long description or internal history must not push the
 current summary off the first screen.
@@ -108,8 +110,8 @@ current summary off the first screen.
 Comments use the same sanitized Markdown renderer as task descriptions, with
 compact document styles: clear headings, emphasis and lists, a hairline quote,
 readable tables and code. Wrap long words and constrain tables/media to the
-column on phones. Long prose can expand separately; never clip its attachment
-player or make the full history inaccessible to an update link.
+column on phones. Never clip an attachment player or make the full history
+inaccessible to an update link.
 
 The shared comment input is one compact, white, hairline-bordered field with
 its controls inside the bottom edge. Use familiar outline paperclip and

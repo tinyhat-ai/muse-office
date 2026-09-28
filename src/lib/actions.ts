@@ -494,7 +494,9 @@ export const ACTIONS: Record<string, ActionDef> = {
       done_when: "string[] · the Done when checklist; or [{text, met}] · optional",
       plan: "string[] · the steps, first one now, the rest later; or [{text, state}] · optional",
       due: "string · ISO date · optional",
-      note: "string · brief current summary, shown on the card and task overview · optional",
+      note: "string · brief plain-text card summary, also the task-page fallback · optional",
+      overview: "string · current user-facing snapshot in Markdown: what is done, what happens next and any decision needed; may include diagrams or SVG · optional",
+      overview_html: "string · optional self-contained HTML visual with inline styles/scripts; sandboxed without Office access, remote resources or API fetches; keep overview as the readable explanation · optional",
     },
     run(input) {
       const project = mustProject(requiredString(input, "project", "the project's slug"));
@@ -518,6 +520,8 @@ export const ACTIONS: Record<string, ActionDef> = {
         insertRow("tasks", {
           id, project: project.slug, title, specialist, column_name: column, step,
           note: optionalString(input, "note") ?? null,
+          overview: optionalString(input, "overview") ?? null,
+          overview_html: optionalString(input, "overview_html") ?? null,
           job_definition: optionalString(input, "job_definition") ?? null,
           original_request: optionalString(input, "original_request") ?? null,
           due: isoDate(input, "due") ?? null,
@@ -532,13 +536,15 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   update_task: {
     section: "Tasks",
-    description: "Changes the description parts of a task's page. Only the fields passed change; done_when and plan replace their lists.",
+    description: "Updates the task's current snapshot or description. Only the fields passed change; done_when and plan replace their lists.",
     params: {
       id: "string · task id · required",
       title: "string · optional",
       specialist: "string · member slug, or null to unassign · optional",
       step: "integer · process step index, from 0 · optional",
-      note: "string · brief current summary, shown on the card and task overview · optional",
+      note: "string · brief plain-text card summary, also the task-page fallback · optional",
+      overview: "string · current user-facing snapshot in Markdown, or null to clear · optional",
+      overview_html: "string · optional self-contained sandboxed HTML visual, or null to clear; no Office access, remote resources or API fetches · optional",
       job_definition: "string · optional",
       original_request: "string · optional",
       due: "string · ISO date, or null to clear · optional",
@@ -552,6 +558,8 @@ export const ACTIONS: Record<string, ActionDef> = {
       if (present(input, "specialist")) patch.specialist = memberField(input, "specialist");
       if (present(input, "step")) patch.step = stepField(input, t.project);
       if (present(input, "note")) patch.note = optionalString(input, "note");
+      if (present(input, "overview")) patch.overview = optionalString(input, "overview");
+      if (present(input, "overview_html")) patch.overview_html = optionalString(input, "overview_html");
       if (present(input, "job_definition")) patch.job_definition = optionalString(input, "job_definition");
       if (present(input, "original_request")) patch.original_request = optionalString(input, "original_request");
       if (present(input, "due")) patch.due = isoDate(input, "due");

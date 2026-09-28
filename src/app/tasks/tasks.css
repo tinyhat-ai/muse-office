@@ -13,6 +13,7 @@
 .tk-overview { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
 .tk-meta { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; font-size: var(--t-cap); color: var(--soft); }
 .tk-summary { margin-top: 8px; overflow-wrap: anywhere; }
+.tk-visual { display: block; width: 100%; border: 0; margin-top: 12px; }
 .tk-overview .tk-h3 { margin-top: 16px; }
 .tk-st { display: inline-flex; align-items: center; gap: 6px; font-weight: 750; }
 .tk-st::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
@@ -31,6 +32,10 @@
 .tk-empty { margin-top: 8px; font-size: var(--t-body); line-height: 1.6; color: var(--soft); }
 .tk-req { margin-top: 12px; font-size: var(--t-cap); color: var(--soft); }
 .tk-req summary { cursor: pointer; font-weight: 650; }
+.tk-updates { margin-top: 20px; border-top: 1px solid var(--line); }
+.tk-updates > summary { padding: 12px 0; min-height: 44px; cursor: pointer; font-size: var(--t-body); font-weight: 650; }
+.tk-updates > summary .sub { margin-left: 6px; font-size: var(--t-cap); font-weight: 500; color: var(--soft); }
+.tk-updates > summary:focus-visible, .tk-req > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 .tk-req div { margin-top: 8px; color: #3d3c38; font-size: var(--t-sec); white-space: pre-wrap; }
 
 /* Done when: a hollow circle, or a green check once met */

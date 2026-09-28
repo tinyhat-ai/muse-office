@@ -57,6 +57,11 @@ automatically change task status or grant blanket permission.
   Keep rules and plans as simple text; do not introduce new formal entities.
 - Keep recognizable agent faces, useful files/results, Markdown and Mermaid
   notes, visual reports, and truthful starter content.
+- A task opens on a current, human-readable snapshot, not the agents' work log.
+  The chief owns its clarity and freshness: what has happened, what remains,
+  and any decision needed. Useful visuals can support it. Keep detailed agent
+  updates collapsed under **Updates** with a count; expanding reveals the full
+  context. Preserve the original brief, read-only checks and contextual input.
 - A reply is not completion. Muse reviews contextual updates and open tasks,
   keeps the next action and owner recorded, and verifies the actual result
   before Done. Verify a real scheduled run before claiming automatic follow-up.

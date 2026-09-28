@@ -8,14 +8,22 @@ description: How a task moves from a card to a finished result through a special
 1. Create the task in Office (create_task) with: project, title, the
    specialist from process.md, step (which process step it is on),
    job_definition (what and why, in plain words), original_request (the
-   user's own words), note (a brief current summary), and, when useful,
+   user's own words), note (a brief card summary), overview (the current
+   snapshot for the person), and, when useful,
    done_when (a short checklist) and plan (the steps, one marked "now").
    The person opens this task to see what is happening and what remains,
    not to read the workers' whole conversation. At each meaningful change,
-   update_task: keep note current, tick verified done_when items, move
+   update_task: keep note and overview current, tick verified done_when items, move
    plan's "now", and change step. Read get_task first and preserve the
    original job definition and existing checks/states unless the user's goal
    changes; supplied checklist and plan arrays replace the saved lists.
+   You, the chief, own the overview's clarity. In a few plain-language sentences,
+   say what has happened, what comes next and whether the person is needed.
+   Leave internal coordination and detailed evidence in Updates, closed by
+   default. Use Markdown, a diagram or SVG when it helps explain the current
+   state; optional overview_html can supply a compact self-contained visual
+   in the app's sandbox. Keep a readable explanation in overview and verify
+   the visual on a phone. No jargon, repeated log entries or invented progress.
 2. Start a worker for that specialist. Brief it with exactly four things:
    - the task card
    - ~/workspace/office/team/<name>/AGENT.md and its skills/
@@ -48,8 +56,9 @@ description: How a task moves from a card to a finished result through a special
    If it still falls short, keep the task open with the blocker. After the
    result passes, the task's page gets the closing report (add_task_note, kind
    update): what was done, the result, the files (attach_file, or a link to
-   a file artifact), and what was learned. Update note to a brief verified
-   result as well, so the overview stays useful without opening history.
+   a file artifact), and what was learned. Update note and overview to the
+   brief verified result and keep any visual/checks consistent with it, so
+   the person can understand the outcome without opening Updates.
    A file that only sits on your
    computer is not an output the user can see. Only then move_task to done.
 6. The specialist writes what it learned about this kind of work for this
