@@ -12,9 +12,10 @@ one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
 ### Updating an existing Office
 
-Ask Muse to read [this release's comment instructions](https://raw.githubusercontent.com/tinyhat-ai/muse-office/v0.2.1/hat/skills/contextual-comments/SKILL.md),
-update the shared comment box on tasks, notes, and projects, and apply the
-task-detail layout refinements.
+Ask Muse to refresh its saved `contextual-comments` skill from
+[this release](https://raw.githubusercontent.com/tinyhat-ai/muse-office/v0.2.1/hat/skills/contextual-comments/SKILL.md).
+Then update the shared comment box on tasks, notes, and projects, and apply
+the task-detail layout refinements.
 Keep existing records, customizations, portraits, and the follow-through job.
 The database schema and agent actions are unchanged from 0.2.0. Recording still
 depends on the host's microphone support; uploaded audio can be previewed too.
