@@ -104,7 +104,7 @@ extra heading, keyboard-shortcut hint, privacy caption or help paragraph.
 Keep recording state, attached filenames and failed-action feedback local to
 the input. Preserve the existing keyboard and private-storage behavior.
 Show a short `Recording…` status beside Stop only while capture is active;
-the stop icon alone is insufficient. A level meter or elapsed timer may replace
+the stop icon alone is insufficient. A level meter or elapsed timer may accompany
 it, but do not add a resting hint or change the neutral icon treatment.
 An audio draft, whether recorded or attached, includes compact native Play/Pause
 controls before Send. Preview the local file without uploading or autoplaying;
