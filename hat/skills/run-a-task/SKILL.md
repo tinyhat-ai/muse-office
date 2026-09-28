@@ -9,8 +9,10 @@ Use this for work needing visibility from any chat, including work you do
 yourself. Follow `SOUL.md` ("Use Office for work from every chat"). Check
 `list_tasks` and reuse the matching task before creating another; a chat
 answer or change belongs on that task. Create its record before starting
-or dispatching work, then brief every worker to use it. Keep relevant
-reports and notes consistent with verified results before reporting back.
+or dispatching work, then brief every worker to use it. Update relevant
+reports with verified figures and save reusable decisions in linked, tagged
+notes. Read back these records and the result before moving the task to Done
+or reporting completion in chat.
 
 1. Create the task in Office (create_task) with: project, title, the
    specialist from process.md, step (which process step it is on),
@@ -50,10 +52,7 @@ reports and notes consistent with verified results before reporting back.
    result passes, the task's page gets the closing report (add_task_note, kind
    update): what was done, the result, the files (attach_file, or a link to
    a file artifact), and what was learned. A file that only sits on your
-   computer is not an output the user can see. Refresh relevant reports
-   with verified figures; add or update a linked, tagged note for a decision
-   or lesson worth keeping. Read back the changed records and result.
-   Only then move_task to done and report the result in chat.
+   computer is not an output the user can see. Only then move_task to done.
 6. The specialist writes what it learned about this kind of work for this
    user into its own AGENT.md, skills, or memory.md (one rule per line).
    Check that it did. If the lesson is a project matter, it goes into the
