@@ -217,6 +217,12 @@ Read new comments. Ask before anything leaves the office.
 
 Do these before the hand-over, and again after any change to the app:
 
+- Send a labeled test comment on the setup task with a known-valid WAV of a
+  few seconds and an image, plus a reply with the same. Reopen the Office in
+  the Muse client: each image shows inline, and each saved WAV plays for its
+  full known duration without an error ("Saved comment media" in
+  `spec/PAGES.md`). A filename link, a draft preview, or a player that stops
+  early fails.
 - The top bar has exactly Tasks · Team · Customers · Reports · Notes, and
   a project page, a task page, and a note page open from them.
 - The actions list (`GET /api/actions` in the reference app, or your
@@ -273,12 +279,6 @@ Do these before the hand-over, and again after any change to the app:
   inside the square without overlap (`spec/DESIGN.md`), and the icon opens
   that project's page. Use an isolated preview or test database for long-name
   and larger-count cases; do not change the person's data for a check.
-- Send a labeled test comment on the setup task with a known-valid WAV of a
-  few seconds and an image, plus a reply with the same. Reopen the Office in
-  the Muse client: each image shows inline, and each saved WAV plays for its
-  full known duration without an error ("Saved comment media" in
-  `spec/PAGES.md`). A filename link, a draft preview, or a player that stops
-  early fails.
 
 ## Updates
 
