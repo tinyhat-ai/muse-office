@@ -139,8 +139,8 @@ population, sport, music, and the ocean, using bars, a timeline, and a donut,
 clearly labeled as examples. Define the
 business reports but keep their cards hidden until you have verified
 figures to chart from sources I choose to share. Do not invent a customer
-or business result. Then send me the link. Show me your plan first and
-wait for my yes.
+or business result. Then send me the link. First write your plan in the chat
+message itself, before asking for approval, and wait for my yes.
 
 ---
 
