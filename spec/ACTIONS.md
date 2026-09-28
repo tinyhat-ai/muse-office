@@ -136,3 +136,33 @@ Chunks default to 16 KiB and are capped at 64 KiB to fit action responses. Prefe
 the host's supported private file download/inspection tools when available.
 A generated artifact must expose an equivalent usable attachment action or
 private download, not metadata alone. Never publish the file to make it readable.
+
+### Implement and verify private byte access
+
+The action must read the file from the app's saved private attachment storage,
+not return an upload receipt, metadata, or bytes from an expired preview link.
+Validate the exact attachment URL against this Office's own saved records;
+never fetch an arbitrary URL supplied to the action. Return this bounded shape:
+
+```json
+{"ok":true,"data":{"name":"sample.wav","type":"audio/wav","size":40000,"offset":0,"data_base64":"<base64 of this chunk only>","next_offset":16384}}
+```
+
+Start at offset zero. Decode each chunk separately and append its bytes, not
+its base64 text. Require the returned offset to equal the requested offset,
+consistent file size/type, and a positive chunk length until the end. A
+non-null `next_offset` must equal offset plus decoded length and advance
+without passing size. At null, the assembled byte count must equal size.
+Reject malformed/truncated data rather than treating it as inspected media.
+Keep default 16 KiB/max 64 KiB chunks and the existing file-size limits.
+
+Before hand-over, retrieve an uploaded image and a known short spoken file
+through the same actions or private download available to the scheduled worker. Compare their
+complete bytes or hash with the originals, inspect the image, and transcribe
+the audio using native tools or an approved private local tool. Playback or a
+filename is not transcription. Save the original and transcript privately;
+perform the spoken test edit on a clearly labeled test note, or in an isolated
+test Office, and re-read it; never change the person's own notes as a test.
+If no private inspection/transcription path works, leave that work open and report the
+specific blocker once; do not silently upload media elsewhere or ask the
+person to repeat a request you have not tried to decode.

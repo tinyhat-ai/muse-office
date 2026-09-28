@@ -238,6 +238,10 @@ Do these before the hand-over, and again after any change to the app:
   A missing source or target, or a comment id that does not belong to the
   named page, must fail. Copy all three values from one feed item because
   task, note and project comment ids can overlap.
+- The scheduled worker recovers a labeled test image and short spoken file
+  through `get_comment_attachment` or private download, with the same size and
+  hash as the originals ("Implement and verify private byte access" in
+  `spec/ACTIONS.md`). Metadata, a filename or playback alone fails.
 - The database has the tables in `db/schema.sql`: members, projects,
   process_steps, project_rules, tasks, task_checks, task_plan, task_files,
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,
