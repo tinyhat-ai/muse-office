@@ -63,11 +63,15 @@ When a user answers a `money` question with the "Yes, pay …" button, the app s
 Return actual saved records, not a summary of filenames or a task-only list.
 Every item includes `source`, `target_id`, `id`, `target_title`, `url`, `owner`,
 `author`, `kind`, `body`, `created_at`, `unread_by_agent`, `reply_to`,
-`replying_to_body`, and `files: [{name, url, type, size}]`. `url` is this
-Office's page path; use the task owner, note keeper, or project lead and
-fall back to the chief. Parent context must belong to this typed page;
-non-replies have null parent fields. When an excerpt is insufficient, use
-the page's read action to inspect the full parent and attached files.
+`replying_to_body`, and `files: [{name, url, type?, size?}]`. User uploads
+include their actual media type and byte size; an agent's output link may
+have only its name and URL. `url` is this Office's page path. `owner` is the
+task owner, note keeper, or project lead, falling back to the chief. Parent
+context must belong to this typed page; non-replies have null parent fields.
+When an excerpt is insufficient, read the full parent and its files with
+`get_task` or `get_note`. Projects have no read action: page
+`list_recent_updates` without `unread_only` to the item with the same `source`
+and `target_id` whose `id` equals `reply_to`.
 
 Use a deterministic newest-first total order with a typed-identity tie-breaker.
 The opaque cursor resumes after the last item, not after a numeric offset
@@ -80,7 +84,8 @@ During setup, post clearly labeled test comments on a task, note, and project,
 including replies and a media-only comment. Audit with `limit: 2` through
 `next_cursor: null`, checking all fields, newest-first order, and unique typed
 keys. Then test unread pagination while replying to the first page: the older
-unread test comments must still be returned. Include a task/note id collision
+unread test comments must still be returned. Reply only to test comments and
+leave any real comment unread. Include a task/note id collision
 where possible; a reply/read with a mismatched page must fail. Record the
 actual responses, not only that the action is declared in the catalog.
 
