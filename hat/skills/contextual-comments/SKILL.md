@@ -19,6 +19,13 @@ is reading; it is not a second chat app or a way to edit project data.
   audio attachments, and user-triggered voice recording where supported. Enter
   adds a line; Shift+Enter sends. Keep existing Ctrl/Cmd+Enter compatibility and
   do not submit during IME composition.
+  Every picker selection, paste, drop, and stopped recording appends to the
+  existing draft attachments; it never replaces the list. Give each draft
+  item its own stable id, including files with identical names. Remove by id,
+  not filename or a changing list index. Clear the picker value after reading
+  it so selecting the same file again works. Cancelling a picker changes
+  nothing. Reject a selection that exceeds the limits without discarding the
+  existing draft; a failed save also keeps its body, files, and previews.
 - Keep the input in one compact field with familiar paperclip, microphone and
   upward-arrow send icons inside its bottom edge. Use a stop-square icon while
   recording. Give these three controls an accessible name, hover title, keyboard focus and
@@ -70,3 +77,9 @@ Test a screenshot and audio comment in the actual Muse client, not only in a
 standalone browser. Verify saved content, agent access, same-page follow-up,
 keyboard behavior, mobile layout, and retry behavior. Do not impose spoken
 responses or another person's presentation preferences on everyone.
+
+Verify separate selections: add an image, close the picker, then add audio.
+Both must remain. Add two files with the same name, remove just one, and check
+the other survives. Check paste/drop/record append to that draft as supported,
+then simulate a failed save before retrying. The stored comment must retain
+all intended files once, with the draft cleared only after successful save.
