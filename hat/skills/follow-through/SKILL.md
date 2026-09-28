@@ -52,6 +52,11 @@ This is agent coordination state, not another Office page or user-facing entity.
    Read its page, the message it answers, and its attachments before acting.
    Missing or unreadable context is a blocker to resolve, not permission to
    infer a request or mark the work complete.
+   The cursor must remain valid when earlier comments become read. Collect
+   every unread page before replying or marking any read, so an offset cursor
+   cannot skip older comments. If the feed audit in `spec/ACTIONS.md` fails,
+   repair the feed with its stable cursor recipe and repeat the audit. Never
+   increment an offset through a shrinking unread list.
 2. Route the work to its task owner, note keeper or project lead, with yourself
    as fallback. For continuing work, first record its owner in
    `update_task.specialist` and its next action in the task's `plan` with one
