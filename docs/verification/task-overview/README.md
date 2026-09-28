@@ -56,7 +56,9 @@ newly generated Office running inside Muse.
 
 ## Muse verification
 
-The existing isolated Muse test artifact has a native loading failure.
-Its builder preview does not establish a native-client pass. The instructions
-and handover checklist now include these task-detail requirements; a fresh
-installation and native handover remain separate verification steps.
+The updated isolated Muse test card now renders in the actual Mac client.
+Its existing task shows the current snapshot, checklist and closed Updates,
+which opens to the saved history. One generated-app gap was observed: the
+comment box was inside Updates. The builder contract and handover check now
+explicitly keep it outside. The durable synthetic overview fixture and full
+native handover still need verification; the sandbox audit alone is not a pass.
