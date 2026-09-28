@@ -1,8 +1,8 @@
 # Compact task details — verification
 
-September 28, 2026. These screenshots show the reference app with isolated,
-synthetic records, using Codex's in-app browser. They are not evidence of a
-newly generated Office running inside Muse.
+September 28, 2026. Reference screenshots use isolated, synthetic records in
+Codex's in-app browser. The three `native-` screenshots show the separately
+generated Office Build Check app in the actual Muse Mac client.
 
 ## Checked
 
@@ -28,8 +28,9 @@ newly generated Office running inside Muse.
   separate probe confirmed its parent-page read and Office API fetch fail.
   Ordinary heading/paragraph margins are included in the frame height: the
   final line stays visible at both phone widths, including after expansion.
-  The task response also blocks frame navigation: script, link and meta-refresh
-  probes cannot load another document, while the intended visual still works.
+  The Office page policy also blocks frame navigation. Script, link and
+  meta-refresh probes are checked after opening the task from the board and
+  after a reload, while the intended visual still works.
 - The agent's `update_task` action changed the current snapshot and verified
   checklist item. Reopening showed both changes. The original description,
   original request, plan, other checklist states, full conversation, files and
@@ -58,9 +59,24 @@ newly generated Office running inside Muse.
 
 ## Muse verification
 
-The updated isolated Muse test card now renders in the actual Mac client.
-Its existing task shows the current snapshot, checklist and closed Updates,
-which opens to the saved history. One generated-app gap was observed: the
-comment box was inside Updates. The builder contract and handover check now
-explicitly keep it outside. The durable synthetic overview fixture and full
-native handover still need verification; the sandbox audit alone is not a pass.
+The isolated generated app was updated in place. The saved task **QA: workshop
+snapshot** shows its original brief, current overview, optional checklist and
+closed Updates. The original request and three plan steps remain available.
+Its HTML details control expands inside the actual client.
+
+The first generated version put the comment box inside Updates. After the
+contract correction, a comment sent with Updates closed raised the count from
+7 to 8 and cleared the composer. Opening Updates showed the saved comment;
+reopening after republishing kept it. Muse then changed the overview and the
+native-composer check through actions, and both changes were independently
+seen in the client. These are synthetic QA records, not user work.
+
+- [Native overview after the action update](native-overview.jpg)
+- [Closed Updates with the shared comment box](native-closed-updates.jpg)
+- [Saved comment after reopening](native-saved-comment.jpg)
+
+Native handover remains incomplete for scripted visuals. The published script
+probe never changed its timer text, and its link probe rendered as plain text.
+Neither proves blocked navigation. The builder contract now points to the
+isolated visual implementation and requires an active script/link before
+accepting those probes. This is an incremental test, not a fresh installation.

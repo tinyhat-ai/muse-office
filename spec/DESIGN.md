@@ -104,11 +104,13 @@ An HTML visual's height includes its content margins (for example, use a
 `flow-root` body), so ordinary headings and paragraphs stay fully visible.
 Resize the frame as its content changes, with scrolling for content beyond
 the bounded height; do not add a large empty frame around a small visual.
-The embedding task document also needs `Content-Security-Policy: frame-src 'none'`
-(a response header, or an early meta policy in a generated app shell). The
-visual's own policy cannot prevent its frame navigating to another page.
+Every Office page also needs `Content-Security-Policy: frame-src 'none'`
+(a response header on each page, or an early meta policy in a generated app
+shell). The visual's own policy cannot prevent its frame navigating to another
+page. In-app navigation keeps the first loaded page's policy.
 Verify that scripts, clicked links and meta refresh cannot replace the visual
-with an external document. Prefer static visuals; use scripts only for a useful
+with an external document, on a task opened from the board and after a reload.
+Prefer static visuals; use scripts only for a useful
 interaction and keep them bounded so the Office's comment and reply controls
 stay responsive.
 Keep the original request and plan collapsed. All detailed history is hidden

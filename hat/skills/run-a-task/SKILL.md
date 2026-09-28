@@ -26,6 +26,7 @@ description: How a task moves from a card to a finished result through a special
    the visual on a phone. No jargon, repeated log entries or invented progress.
    Prefer static visuals; add scripts only for useful interaction, with bounded
    work that leaves the Office's comment/reply controls responsive.
+   Put links in overview; a visual cannot open another document.
 2. Start a worker for that specialist. Brief it with exactly four things:
    - the task card
    - ~/workspace/office/team/<name>/AGENT.md and its skills/

@@ -53,7 +53,7 @@ test("new tasks expose both snapshot formats to the agent", () => {
 
 test("an HTML visual has document and embedding policies plus bounded resize messages", async () => {
   const headers = await nextConfig.headers?.();
-  assert.equal(headers?.find((entry) => entry.source === "/tasks/:id")?.headers.find((entry) => entry.key === "Content-Security-Policy")?.value, "frame-src 'none'");
+  assert.equal(headers?.find((entry) => entry.source === "/((?!api/).*)")?.headers.find((entry) => entry.key === "Content-Security-Policy")?.value, "frame-src 'none'");
   const html = taskVisualDocument('<script>fetch("/api/actions")</script>');
   assert.ok(html.indexOf("Content-Security-Policy") < html.indexOf('<script>fetch'));
   assert.match(html, /connect-src 'none'/);

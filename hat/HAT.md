@@ -242,7 +242,10 @@ Do these before the hand-over, and again after any change to the app:
   headings and paragraphs with ordinary margins, and verify the last line stays
   visible as the visual expands/collapses. Keep it isolated from Office APIs
   and controls: a script, clicked link or meta refresh must not navigate its
-  frame to an external page. The main comment/reply controls stay responsive
+  frame to another document, on a task opened from the board and after a
+  reload. First verify that a bounded inline script changes visible text and
+  that the test link is a real link. Mark stripped or inactive probes untested.
+  The main comment/reply controls stay responsive
   while the visual is running. Change the overview and
   one checklist state through `update_task`, reopen the page, and verify both
   changed while the original description and other states remain intact.
