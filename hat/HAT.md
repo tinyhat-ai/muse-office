@@ -240,6 +240,11 @@ Do these before the hand-over, and again after any change to the app:
   process_steps, project_rules, tasks, task_checks, task_plan, task_files,
   task_updates, contacts, touches, stage_changes, reports, metrics, notes,
   note_comments, project_comments, comment_attachments, settings.
+- The unread feed passes "Build and test the updates feed" in
+  `spec/ACTIONS.md`: with `limit: 2`, replying to the first page still returns
+  the older unread test comments, and every item has its owner, page title
+  and link. Reply only to labeled test comments; leave real comments unread.
+  One comment's round trip does not catch an unstable offset cursor.
 - Nothing on any page is a form, except comment boxes on task, note and project pages.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their own Muse avatar, not on a bundled sample face.
