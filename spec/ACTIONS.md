@@ -68,6 +68,32 @@ Treat an update's identity as `(source, target_id, id)`, never the integer id al
 
 When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted). `list_recent_updates` returns that id and `replying_to_body`; the old `list_new_comments` action returns a `replying_to` object. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
 
+### Build and test the updates feed
+
+Return actual saved records, not a summary of filenames or a task-only list.
+Every item includes `source`, `target_id`, `id`, `target_title`, `url`, `owner`,
+`author`, `kind`, `body`, `created_at`, `unread_by_agent`, `reply_to`,
+`replying_to_body`, and `files: [{name, url, type, size}]`. `url` is this
+Office's page path; use the task owner, note keeper, or project lead and
+fall back to the chief. Parent context must belong to this typed page;
+non-replies have null parent fields. When an excerpt is insufficient, use
+the page's read action to inspect the full parent and attached files.
+
+Use a deterministic newest-first total order with a typed-identity tie-breaker.
+The opaque cursor resumes after the last item, not after a numeric offset
+into a changing unread list. Marking a page's comments read must not skip
+later pages. Newer arrivals are handled by the next sweep. Reads never change
+unread state; only a handled reply/read action does that. The worker copies
+the typed identity verbatim for all replies and checkpoints.
+
+During setup, post clearly labeled test comments on a task, note, and project,
+including replies and a media-only comment. Audit with `limit: 2` through
+`next_cursor: null`, checking all fields, newest-first order, and unique typed
+keys. Then test unread pagination while replying to the first page: the older
+unread test comments must still be returned. Include a task/note id collision
+where possible; a reply/read with a mismatched page must fail. Record the
+actual responses, not only that the action is declared in the catalog.
+
 ## Customers
 
 | Action | Arguments | What it does |
