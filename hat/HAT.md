@@ -245,6 +245,10 @@ Do these before the hand-over, and again after any change to the app:
   that the user may change. Compare the member list and starter tasks with
   what was already there before adding rows;
   no setup task, first-priority question, or orientation contact appears twice.
+- In Team, select the first and last specialist at phone width and in a narrow
+  Muse panel. Details expand inside the selected card, with its existing face
+  and name, rather than after the roster. The desktop grid and side panel stay
+  as specified in `spec/PAGES.md`.
 - No page is empty on the first visit: the board has cards in To do, Waiting
   on you, and Done; Customers has at least the person and Tinyhat (`in_funnel:
   false`, shown as "Contact", counted nowhere); Reports visibly shows four
