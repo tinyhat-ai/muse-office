@@ -268,6 +268,11 @@ Do these before the hand-over, and again after any change to the app:
   fenced `mermaid` flowchart. Confirm they render as a heading, table, bold
   text, and diagram. If the raw punctuation appears, fix the renderer before
   hand-over. Use the same check on a narrow screen.
+- On Tasks at 390px and in a roughly 560px Muse panel, select each project:
+  its tile keeps the name, task count, muted Details and whole link icon
+  inside the square without overlap (`spec/DESIGN.md`), and the icon opens
+  that project's page. Use an isolated preview or test database for long-name
+  and larger-count cases; do not change the person's data for a check.
 
 ## Updates
 

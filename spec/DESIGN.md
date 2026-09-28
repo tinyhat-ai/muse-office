@@ -71,8 +71,10 @@ at 320px, 390px, and in a roughly 560px Muse panel. Reserve a separate bottom
 row for the selected Details link; its 24px icon target, label, and visible
 task count must not overlap the name or each other. Keep the link inset inside
 the square, never positioned beyond its right edge. Do not hide the count to
-make space. Use `1 task` for a single task. Check a two-line name and a larger
-count as well as the initial Work, Personal, and Office tiles.
+make space. Use `1 task` for a single task. Check the person's project tiles
+once the starter is loaded. Check a two-line name and a larger count in an
+isolated preview or test database; never add or rename the person's projects
+or tasks for a check. Match the reference's 13px project names on phones.
 
 The filter target and project link are sibling controls, never nested links
 or buttons. Clicking the tile filters; clicking its icon opens that project's
