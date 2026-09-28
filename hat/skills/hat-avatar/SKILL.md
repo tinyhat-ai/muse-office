@@ -26,6 +26,26 @@ avatar setup task open.
 - Add, don't redesign. Tiny. Unambiguous silhouette. No extras.
 - One preview round at a time.
 
+## Install the approved image, then verify it
+
+Keep the approved original in private storage. If an upload is too large, make
+a compact card-sized copy in the same style and crop; resizing is not a new
+face design and does not require another approval of the unchanged portrait.
+Import it into the Office's durable private asset storage before setting
+`avatar_url`. A local path, inaccessible platform file, or expiring preview
+link is not an installed portrait. Use the resulting Office asset path or
+durable accessible HTTPS image URL with `set_member_avatar(slug, avatar_url)`.
+
+Tell the builder to render the persisted `members.avatar_url` through its
+private asset reader on every surface. A bundled slug-to-image map must not
+override it. Initials are only the fallback when no usable image exists.
+Re-read the member, reopen Team, then open a task and the board. Inspect the
+actual loaded image, not just an action success or an upload progress message.
+Only then close its avatar setup task and clear the stale waiting question.
+Keep upload retries in your own setup log; do not create comments attributed
+to the user or invent another approval. Reuse the user's recorded approval
+for that exact image.
+
 # Specialist faces
 
 Create one original mascot for each current specialist. Use the chief's actual
