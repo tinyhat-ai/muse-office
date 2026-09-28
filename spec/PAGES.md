@@ -39,7 +39,7 @@ Like an issue page, top to bottom:
    All attachment entry paths append to the existing draft. Use stable item
    ids, not filenames, so same-name files can be removed independently. Clear
    the picker value after reading it to permit re-selection; preserve the
-   draft on cancellation, validation error, or failed save. Verify choosing
+   draft on picker cancellation, validation error, or failed save. Verify choosing
    an image and audio in two separate picker visits before accepting the build.
 8. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
