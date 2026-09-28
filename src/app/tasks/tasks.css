@@ -50,7 +50,7 @@
 .tk-pin .tk-rbox { flex: 1 0 100%; }
 .tk-pin .qhint { font-size: var(--t-cap); color: var(--soft); } /* the button is the only orange thing in the card */
 .tk-money { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.tk-answered { padding: 0 16px 12px; font-size: var(--t-sec); display: flex; align-items: flex-start; gap: 8px; }
+.tk-answered { padding: 0; font-size: var(--t-sec); display: flex; align-items: flex-start; gap: 8px; }
 .tk-answered .body { white-space: pre-wrap; overflow-wrap: anywhere; }
 .tk-answered .tm { color: var(--soft); font-size: var(--t-cap); }
 .tk-answered .next { display: block; color: var(--soft); font-size: var(--t-cap); margin-top: 2px; }
@@ -116,7 +116,6 @@ a.tk-fl:hover { border-color: #c9c8c1; }
   .wrap.tk { padding-top: 16px; }
   .wrap.tk h1.title { font-size: var(--t-big); }
   .tk-cm { gap: 8px; }
-  .tk-answered { padding-left: 0; padding-right: 0; }
   .tk-composer { gap: 8px; }
   .tk-form .row { justify-content: flex-end; }
   .tk-form .row .tk-onlyhere, .tk-form .row .hint { flex: 1 0 100%; }

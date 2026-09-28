@@ -21,8 +21,10 @@ is reading; it is not a second chat app or a way to edit project data.
   do not submit during IME composition.
 - Keep the input in one compact field with familiar paperclip, microphone and
   upward-arrow send icons inside its bottom edge. Use a stop-square icon while
-  recording. Give each icon an accessible name, hover title, keyboard focus and
+  recording. Give these three controls an accessible name, hover title, keyboard focus and
   44px touch target. One attachment picker accepts photos, audio and other files.
+  Keep the recording icon neutral. Change its Record/Stop accessible name with
+  its action and leave `aria-pressed` unset.
   Do not replace icons with Image/Audio/Record text buttons or add an input
   heading, shortcut hint, privacy caption, help paragraph or scheduler banner.
   Show recording state or an error only when the action needs it. Preserve the

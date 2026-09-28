@@ -83,8 +83,9 @@ The shared comment input is one compact, white, hairline-bordered field with
 its controls inside the bottom edge. Use familiar outline paperclip and
 microphone icons, a stop square while recording, and an upward-arrow send
 button. A single attachment picker accepts photos, audio and other files.
-Give icon buttons accessible names, hover titles, visible keyboard focus, and
-44px touch targets. The resting field needs only its short placeholder: no
+Give these three controls accessible names, hover titles, visible keyboard focus, and
+44px touch targets. Recording keeps the same neutral icon color. Use a changing
+Record/Stop accessible name and leave `aria-pressed` unset. The resting field needs only its short placeholder: no
 extra heading, keyboard-shortcut hint, privacy caption or help paragraph.
 Keep recording state, attached filenames and failed-action feedback local to
 the input. Preserve the existing keyboard and private-storage behavior.

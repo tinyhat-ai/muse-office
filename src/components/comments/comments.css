@@ -8,7 +8,6 @@
 .oc-icon { border: 0; background: transparent; color: var(--soft); display: inline-flex; align-items: center; justify-content: center; padding: 10px; min-width: 44px; min-height: 44px; border-radius: var(--r-chip); cursor: pointer; }
 .oc-icon:hover { background: var(--bg); color: var(--ink); }
 .oc-icon:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
-.oc-icon[aria-pressed="true"] { color: var(--needs); }
 .oc-send { margin-left: auto; border-radius: 50%; background: var(--ink); color: #fff; }
 .oc-send:hover { background: #35352f; color: #fff; }
 .oc-send:focus-visible { outline-offset: 2px; }

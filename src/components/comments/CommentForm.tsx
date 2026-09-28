@@ -137,7 +137,7 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
       <button type="button" className="oc-icon" aria-label="Attach files" title="Attach files" disabled={busy || recording} onClick={() => picker.current?.click()}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m21 11-8.5 8.5a6 6 0 0 1-8.5-8.5l9-9a4 4 0 0 1 5.7 5.7l-9 9a2 2 0 0 1-2.9-2.9l8.5-8.5" /></svg>
       </button>
-      {canRecord && <button type="button" className="oc-icon" aria-pressed={recording} aria-label={recording ? "Stop recording" : "Record voice message"} title={recording ? "Stop recording" : "Record voice message"} disabled={busy || openingMic} onClick={() => recording ? recorder.current?.stop() : void startRecording()}>
+      {canRecord && <button type="button" className="oc-icon" aria-label={recording ? "Stop recording" : "Record voice message"} title={recording ? "Stop recording" : "Record voice message"} disabled={busy || openingMic} onClick={() => recording ? recorder.current?.stop() : void startRecording()}>
         <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{recording ? <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" stroke="none" /> : <><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></>}</svg>
       </button>}
       {recording && <span role="status">Recording…</span>}
