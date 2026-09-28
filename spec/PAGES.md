@@ -53,18 +53,21 @@ Like an issue page, top to bottom:
 ### Saved comment media
 
 Task, note and project comments and replies use the same saved-media renderer.
-Store each attachment's private storage key, name, actual media type and size
-with its comment. Draft object URLs expire and must never be the saved source.
-Resolve the stored key through the Office's own private asset reader. Render
+Store each attachment's durable private reference, name, actual media type and
+size with its comment (the reference app uses `/api/attachments/<id>`).
+Neither a draft object URL nor an expiring signed link is a saved source.
+Resolve the stored reference through the Office's own private asset reader. Render
 images inline and audio as `<audio controls preload="metadata">`, without
 autoplay. Where the host cannot provide a durable playable private URL, read
 the complete saved bytes and create a local Blob URL with the correct type;
 stop playback and revoke it on unmount, and reconstruct it on reopening.
 
-Before hand-over, send a known-valid short WAV and an image, reopen the actual
-comment, and play the saved WAV to its natural end. Inspect the inline image.
-Repeat inside a reply and after reopening the app. A working draft or Library
-player does not prove the comment player works. If it errors, verify byte
+Before hand-over, send a known-valid WAV of a few seconds, larger than one
+attachment chunk, and an image. Reopen the actual comment in the Muse client:
+the saved WAV must play for its full known duration and the image must show
+inline. Repeat inside a reply and after reopening the app. A working draft,
+another file viewer, or a player that stops early does not prove the saved
+comment player works. If it fails, verify byte
 count/type and the private storage reader rather than sending the person to
 an external expired link or making uploads public.
 
