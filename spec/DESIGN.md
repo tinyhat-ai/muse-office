@@ -66,6 +66,20 @@ Cards are **sticky notes**, laid out **one per lane** with a 12px vertical gap. 
 
 Project tiles above the board: 118px squares (88px on a phone), the pastel fill, no border, no stripe; name top-left (14px/750), count bottom-left (13px/600 soft); the chosen tile gets a 2px ink outline; "All projects" is white with a hairline border. Preserve these sizes when adding project navigation: use a small link icon in the lower-right corner with a 24px target. Only the chosen project shows muted "Details" to its left, with its count moved up just enough to leave room. Clamp project names to three lines on desktop and two on phones so counts stay above the Details link; keep the full name accessible. Let the name use the right padding so familiar names such as Customers stay on one line. Reveal the selected tile within the horizontal row without moving the page. No divided footer or extra tile height. Keep 8px padding around the scrolling row so outlines are not clipped.
 
+Before accepting a generated board, test All projects and a selected project
+at 320px, 390px, and in a roughly 560px Muse panel. Reserve a separate bottom
+row for the selected Details link; its 24px icon target, label, and visible
+task count must not overlap the name or each other. Keep the link inset inside
+the square, never positioned beyond its right edge. Do not hide the count to
+make space. Use `1 task` for a single task. Check a two-line name and a larger
+count as well as the initial Work, Personal, and Office tiles.
+
+The filter target and project link are sibling controls, never nested links
+or buttons. Clicking the tile filters; clicking its icon opens that project's
+page without being intercepted by the filter. All projects has no Details
+link. Verify the selected outline and keyboard focus remain visible within
+the scrolling row's padding. Keep the board and tile sizes unchanged.
+
 ## Cards and pills
 
 Cards: white, `--r-card`, `--shadow-card`, 20px padding. Small chips: `--r-chip`. Pills: `--r-pill`. Status pills: green (`#e7f1ea` / `#2d6a43`) for working, grey (`#efeee9` / `#66655f`) for next, peach (`--needs-bg` / `--needs`) for waiting on you. The orange accent appears nowhere else: not on charts, not on buttons that are not about the user's OK.
