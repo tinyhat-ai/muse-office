@@ -26,6 +26,8 @@ newly generated Office running inside Muse.
 - A Markdown/Mermaid snapshot renders its accessible diagram. A self-contained
   HTML visual works at phone width and resizes when its detail expands. A
   separate probe confirmed its parent-page read and Office API fetch fail.
+  Ordinary heading/paragraph margins are included in the frame height: the
+  final line stays visible at both phone widths, including after expansion.
 - The agent's `update_task` action changed the current snapshot and verified
   checklist item. Reopening showed both changes. The original description,
   original request, plan, other checklist states, full conversation, files and
@@ -50,6 +52,7 @@ newly generated Office running inside Muse.
 - [Expanded Markdown comment](comment-markdown.jpg)
 - [Saved audio inside expanded Updates](mobile-comment-audio.jpg)
 - [Interactive visual snapshot](mobile-visual.jpg)
+- [HTML paragraph margins fit](mobile-visual-margins.jpg)
 
 ## Muse verification
 

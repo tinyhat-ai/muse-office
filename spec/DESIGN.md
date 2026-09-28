@@ -100,6 +100,10 @@ desktop, followed by a quiet "Show more" link when it overflows. Put the
 current status, human-readable snapshot, user question and optional completion
 checklist directly below it. The snapshot may include formatted prose, a diagram
 or a compact interactive visual, sized to the column without nested cards.
+An HTML visual's height includes its content margins (for example, use a
+`flow-root` body), so ordinary headings and paragraphs stay fully visible.
+Resize the frame as its content changes, with scrolling for content beyond
+the bounded height; do not add a large empty frame around a small visual.
 Keep the original request and plan collapsed. All detailed history is hidden
 under a single **Updates** disclosure and count, closed by default. Do not add
 a card around the overview, standing

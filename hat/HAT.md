@@ -236,8 +236,10 @@ Do these before the hand-over, and again after any change to the app:
   Count every entry, including events; an event-only task still exposes its history.
   A direct link to an older update/reply opens its original context. Headings,
   bold text, tables, quotes and code in comments render properly. Check a useful
-  diagram and a self-contained interactive HTML overview on the phone; keep
-  the latter isolated from Office APIs and controls. Change the overview and
+  diagram and a self-contained interactive HTML overview on the phone; include
+  headings and paragraphs with ordinary margins, and verify the last line stays
+  visible as the visual expands/collapses. Keep it isolated from Office APIs
+  and controls. Change the overview and
   one checklist state through `update_task`, reopen the page, and verify both
   changed while the original description and other states remain intact.
 - On a labeled test task and its reply, choose an image, then a known-valid
