@@ -1,7 +1,7 @@
 # Compact task details — verification
 
 September 28, 2026. Reference screenshots use isolated, synthetic records in
-Codex's in-app browser. The three `native-` screenshots show the separately
+Codex's in-app browser. The `native-` screenshots show the separately
 generated Office Build Check app in the actual Muse Mac client.
 
 ## Checked
@@ -71,12 +71,41 @@ reopening after republishing kept it. Muse then changed the overview and the
 native-composer check through actions, and both changes were independently
 seen in the client. These are synthetic QA records, not user work.
 
+After the task-specific checks were verified, Muse marked the preservation
+check met, wrote a closing update and moved only this synthetic task to Done.
+Its snapshot and card note were then shortened to the outcome, with audit
+details retained in history. Reopening shows three met checks, "Done by Test
+Developer", the original request and plan, and Updates closed with 10 entries
+(the original eight plus the closing update and move event).
+
+- [Native completed task with a brief outcome](native-completed-overview.jpg)
 - [Native overview after the action update](native-overview.jpg)
 - [Closed Updates with the shared comment box](native-closed-updates.jpg)
 - [Saved comment after reopening](native-saved-comment.jpg)
 
-Native handover remains incomplete for scripted visuals. The published script
-probe never changed its timer text, and its link probe rendered as plain text.
-Neither proves blocked navigation. The builder contract now points to the
-isolated visual implementation and requires an active script/link before
-accepting those probes. This is an incremental test, not a fresh installation.
+The first published script probe never changed its timer text, and its link
+probe rendered as plain text. Neither proved blocked navigation. The corrected
+contract points to the isolated visual implementation and requires active
+positive controls before accepting these tests. After the targeted renderer
+correction, a bounded script visibly updated its text and clicking the real
+probe link changed its result in the native client.
+
+Opening the three saved navigation probes from the board then kept the original
+document: the script's two-second marker updated, the clicked navigation link
+left its document in place, and the meta-refresh fixture remained after its
+four-second timer. These native probes target self-contained `data:` documents,
+with no external network or private data. The external-document and reload
+checks above were run separately against the reference app. No independent
+audit of the generated shell source or complete fresh-install pass is claimed.
+
+- [Native working script and link](native-visual-controls.jpg)
+- [Native script navigation result](native-visual-script.jpg)
+- [Native clicked-link navigation result](native-visual-link.jpg)
+- [Native meta-refresh result](native-visual-refresh.jpg)
+
+One generated-app gap remains visible in `native-saved-comment.jpg`: its
+generated diagram retains Mermaid syntax in the box labels. It is not a
+strict Mermaid-rendering pass. The reference app renders Mermaid in Notes and
+task overviews; Updates renders fenced diagram source as code. This run is an
+incremental task-view test, not a fresh installation or a complete native
+handover of all media and diagram behavior.

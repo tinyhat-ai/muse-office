@@ -58,9 +58,9 @@ for the person, separate from the original description and detailed worker log:
 what has happened, what comes next and any decision needed. It supports sanitized
 Markdown, Mermaid and SVG. `overview_html` optionally adds a self-contained HTML
 visual using inline styles/scripts in an iframe sandbox without same-origin
-access; block remote resources and API fetches with CSP. The embedding task
-document also enforces `frame-src 'none'` so the visual cannot navigate to an
-external document. Keep the plain-language
+access; block remote resources and API fetches with CSP. Every Office page
+also enforces `frame-src 'none'` so the visual cannot navigate to an external
+document. Keep the plain-language
 explanation in `overview`. The chief reviews both for clarity and freshness at
 meaningful milestones with `update_task`, together with verified `done_when`
 states when needed. Read `get_task` first to retain existing checks and their

@@ -21,7 +21,9 @@ description: How a task moves from a card to a finished result through a special
    say what has happened, what comes next and whether the person is needed.
    Leave internal coordination and detailed evidence in Updates, closed by
    default. Use Markdown, a diagram or SVG when it helps explain the current
-   state; optional overview_html can supply a compact self-contained visual
+   state. Distill verification into outcomes; keep audit logs, record IDs and
+   policy diagnostics in Updates rather than copying them into the overview.
+   Optional overview_html can supply a compact self-contained visual
    in the app's sandbox. Keep a readable explanation in overview and verify
    the visual on a phone. No jargon, repeated log entries or invented progress.
    Prefer static visuals; add scripts only for useful interaction, with bounded
