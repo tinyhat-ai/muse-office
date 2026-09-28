@@ -11,7 +11,7 @@ Names are `snake_case`. Slugs are short, lowercase, `kebab-case`. Dates are ISO 
 | Action | Arguments | What it does |
 | --- | --- | --- |
 | `upsert_member` | `slug`, `name`, `role`, `hat?`, `job`, `avatar_url?`, `color?`, `does?: string[]`, `never?`, `skills?: string[]`, `is_chief?` | Adds or updates one card on the Team page. |
-| `set_member_avatar` | `slug`, `avatar_url` | Changes any existing member's portrait, including the chief. Use the chief's actual Muse avatar image or Office asset URL, not the bundled sample. |
+| `set_member_avatar` | `slug`, `avatar_url` | Changes any existing member's portrait, including the chief, and returns the stored member row, including `avatar_url`. Use the chief's actual Muse avatar image or Office asset URL, not the bundled sample. |
 | `set_member_rule` | `slug`, `rule` | Sets the "last rule learned" shown in the specialist's detail. |
 | `remove_member` | `slug` | Removes a specialist. Refused while they have open tasks, and refused for the chief. Their finished work stays; it is unlinked from them. Never called without the user's yes. |
 
@@ -21,10 +21,11 @@ Both avatar actions accept an HTTPS image URL or an Office asset path beginning 
 
 For a generated Office, import portraits into durable private app assets;
 do not persist an expiring platform preview URL. A compact copy of the approved
-image may be used to meet upload limits. Every Team, detail, task and board
+image may be used to meet upload limits. Every avatar
 renderer reads `members.avatar_url` and uses the platform's private asset
 reader when needed; sample portraits keyed by slug must not override it.
-An action success only proves the field was written. Re-read the member and
+An action success only proves the field was written. Check that the returned
+stored member's `avatar_url` equals the imported durable asset path or URL, then
 reopen the actual pages to verify a decoded image with the approved face before
 calling the portrait installed or closing its setup task. Keep existing member
 identity, role, skills and task ownership intact during an avatar change.
