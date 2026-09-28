@@ -28,6 +28,23 @@ type Props = Target & {
   id?: string; autoFocus?: boolean; onDone?: () => void;
 };
 
+function DraftAudio({ file }: { file: File }) {
+  const player = useRef<HTMLAudioElement>(null);
+  const [url, setUrl] = useState<string>();
+  useEffect(() => {
+    const preview = URL.createObjectURL(file);
+    const audio = player.current;
+    setUrl(preview);
+    return () => {
+      audio?.pause();
+      audio?.removeAttribute("src");
+      audio?.load();
+      URL.revokeObjectURL(preview);
+    };
+  }, [file]);
+  return <audio ref={player} controls preload="metadata" src={url} aria-label={`Preview ${file.name}`} />;
+}
+
 export function CommentForm({ task, note, project, replyTo, placeholder, buttonLabel, compact, id, autoFocus, onDone }: Props) {
   const router = useRouter();
   const ref = useRef<HTMLTextAreaElement>(null);
@@ -129,8 +146,9 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
     <textarea ref={ref} id={id} name="body" value={body} onChange={(e) => setBody(e.target.value)} onKeyDown={onKey}
       onPaste={(event) => { const incoming = Array.from(event.clipboardData.files); if (incoming.length) { event.preventDefault(); addFiles(incoming); } }}
       placeholder={placeholder} aria-label={placeholder} rows={compact ? 1 : 2} disabled={busy} />
-    {files.length > 0 && <ul className="oc-files">{files.map((f, i) => <li key={`${i}-${f.name}`}>
+    {files.length > 0 && <ul className="oc-files">{files.map((f, i) => <li key={`${i}-${f.name}`} className={f.type.startsWith("audio/") ? "oc-audio" : undefined}>
       <span>{f.name}</span><button type="button" aria-label={`Remove ${f.name}`} disabled={busy} onClick={() => setFiles((all) => all.filter((_, n) => n !== i))}>×</button>
+      {f.type.startsWith("audio/") && <DraftAudio file={f} />}
     </li>)}</ul>}
     <div className="oc-actions">
       <input ref={picker} type="file" hidden multiple accept="image/png,image/jpeg,image/webp,image/gif,audio/webm,audio/ogg,audio/wav,audio/x-wav,audio/mpeg,audio/mp4,audio/aac,application/pdf,text/plain,text/markdown,.md,.txt,.m4a" onChange={(e) => { addFiles(Array.from(e.target.files || [])); e.target.value = ""; }} />

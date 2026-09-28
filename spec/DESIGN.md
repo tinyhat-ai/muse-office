@@ -89,6 +89,10 @@ Record/Stop accessible name and leave `aria-pressed` unset. The resting field ne
 extra heading, keyboard-shortcut hint, privacy caption or help paragraph.
 Keep recording state, attached filenames and failed-action feedback local to
 the input. Preserve the existing keyboard and private-storage behavior.
+An audio draft, whether recorded or attached, includes compact native Play/Pause
+controls before Send. Preview the local file without uploading or autoplaying;
+stop playback and release its object URL when removed, saved, or unmounted.
+Keep the preview with the draft if saving fails. Add no extra heading or caption.
 
 ## Avatars
 
