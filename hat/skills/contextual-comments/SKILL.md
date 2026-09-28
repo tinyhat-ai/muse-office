@@ -66,6 +66,17 @@ is reading; it is not a second chat app or a way to edit project data.
 - Save the body, files, author, time, page type/id and reply parent together. Use
   private storage with bounded file sizes; keep images viewable and audio playable.
   Existing text-only comments and replies must remain readable after upgrade.
+  Persist the private storage key and actual media type, not a draft object
+  URL or temporary preview URL. For saved comments, resolve that key through
+  the Office's private storage reader and render images inline and audio with
+  native controls, without autoplay. If the host has no directly playable
+  private URL, read the complete saved bytes, build a typed Blob, and use a
+  local object URL. Release it when removed or unmounted; fetch it again on
+  reopening. A filename link or a player that errors after Play is not success.
+  Test the saved player independently from the draft: send a known-valid short
+  audio file with a screenshot, reopen its comment/reply, and press Play. Check
+  natural completion without Error and the actual inline image; repeat after
+  reopening the app. Publishing media to make a broken URL play is not a repair.
 - `list_recent_updates` must include every comment with its typed identity,
   page title/link, owner, reply context, and openable file references including
   media type. Paginate deterministically. Identical numeric ids on different
