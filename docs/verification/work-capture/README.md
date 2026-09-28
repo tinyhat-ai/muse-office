@@ -1,4 +1,11 @@
-# Main-chat work stays visible in Office
+# Historical main-chat work check
+
+This check predates the routing clarification: simple chief-owned jobs stay
+in chat; specialist work, team coordination and ongoing follow-up needing
+visibility use Office. The simple workshop comparison below should not have
+created a task under the clarified rule. Its report/note corrections still
+show record consistency, but its task creation is not a routing pass.
+See the [routing check](routing.md) for the clarified agreement and native tests.
 
 Tested September 28, 2026 in an isolated, already generated native Muse Office.
 This tests the updated instructions in place; it is not a fresh installation or

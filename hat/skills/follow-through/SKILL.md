@@ -118,7 +118,7 @@ The checkpoint is agent coordination state, not another Office page or user-faci
    actions on the task. Ask one clear question when the user is needed.
 5. Reconcile the task's owner, board state, brief summary and changed result
    with the actual work, including work captured from the main chat. Follow
-   `SOUL.md` ("Use Office for work from every chat") to update relevant
+   `SOUL.md` ("Route work into Office when needed") to update relevant
    reports and notes through actions. Retry pending Office writes from the
    checkpoint before claiming those records are current: re-read each record
    and apply only what is still missing, so a retry cannot revert newer
