@@ -89,10 +89,22 @@ Record/Stop accessible name and leave `aria-pressed` unset. The resting field ne
 extra heading, keyboard-shortcut hint, privacy caption or help paragraph.
 Keep recording state, attached filenames and failed-action feedback local to
 the input. Preserve the existing keyboard and private-storage behavior.
+Show a short `Recording…` status beside Stop only while capture is active;
+the stop icon alone is insufficient. A level meter or elapsed timer may replace
+it, but do not add a resting hint or change the neutral icon treatment.
 An audio draft, whether recorded or attached, includes compact native Play/Pause
 controls before Send. Preview the local file without uploading or autoplaying;
 stop playback and release its object URL when removed, saved, or unmounted.
 Keep the preview with the draft if saving fails. Add no extra heading or caption.
+
+At phone widths, the draft player occupies a separate full-width row under
+the filename/remove row. Make every flex/grid ancestor shrinkable with
+`min-width: 0`; constrain the audio element to `width: 100%; max-width: 100%`.
+Ellipsize the visible filename without losing its accessible name. Apply the
+same constraints to sent audio and nested replies. Verify at 320px and 390px
+with a long filename: native controls and Send remain inside the page gutter,
+and the page does not scroll sideways. Do not hide overflow to conceal a player
+whose controls are clipped.
 
 ## Avatars
 
