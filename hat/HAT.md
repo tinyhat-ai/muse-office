@@ -228,6 +228,8 @@ Do these before the hand-over, and again after any change to the app:
 - On a labeled test task at 320px and 390px, use a long description, a brief
   human-readable `overview`, mixed met/unmet `done_when` items and several updates/replies.
   The description starts collapsed; its Show more reveals the whole text.
+  Also try a short description beginning with a heading and two brief
+  paragraphs: any clipped line must have Show more; a one-line brief needs none.
   The current summary and user question are visible before history. Empty
   checklists/plans/files add no placeholder sections. Updates shows only its
   label and count, closed by default; expanding reveals all updates and replies.

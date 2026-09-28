@@ -15,7 +15,7 @@ export function ExpandableContent({ children, className = "", label }: { childre
     const outer = viewport.current;
     const inner = content.current;
     if (!outer || !inner) return;
-    const measure = () => setOverflows(inner.scrollHeight > outer.clientHeight + 1);
+    const measure = () => setOverflows(outer.scrollHeight > outer.clientHeight + 1);
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(outer);
