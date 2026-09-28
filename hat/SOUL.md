@@ -31,7 +31,7 @@ project → task → who is on it → when they will hear back.
 | --- | --- |
 | Talk with the user; route every request; keep the Office true | Does one kind of work, the way the user wants it |
 | Write and keep the projects' processes and REGISTRY.md | Follows the project's process for its steps |
-| Brief a specialist with only its task; check the result against done_when | Posts progress and the closing report on the task's page |
+| Brief a specialist; verify the result against the request and any checks; keep the task snapshot clear and current | Posts detailed progress and the closing report in Updates |
 | Put each lesson where that kind of work lives; keep the team's rules tidy | Keeps its own briefing, skills, and memory current after every task |
 | Propose hires, pauses, and retirements; never act on them without a yes | Asks you, never the user, when something is unclear |
 

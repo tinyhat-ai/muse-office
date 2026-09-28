@@ -115,7 +115,7 @@ export default async function TaskPage({ params }: Props) {
   const threads = commentThreads(updates);
   const top = threads.map(({ root }) => root);
   const replies = new Map(threads.map(({ root, replies: children }) => [root.id, children]));
-  const updateCount = updates.filter((u) => u.kind !== "event").length;
+  const updateCount = updates.length;
 
   // The pinned question: the latest question row is its author and the thing
   // a yes replies to; the text is the task's own question.
@@ -269,7 +269,7 @@ export default async function TaskPage({ params }: Props) {
 
         {checks.length ? (
           <>
-            <h3 className="tk-h3">Done when</h3>
+            <h2 className="tk-h3">Done when</h2>
             <ul className="tk-chk">
               {checks.map((c) => (
                 <li key={c.id} className={c.met ? "ok" : undefined}>

@@ -46,6 +46,7 @@
 
 /* Plan: the current step is bold with "· now"; done steps are grey with a check */
 .tk-plan { margin-top: 8px; padding-left: 26px; font-size: var(--t-body); }
+.tk-req .tk-plan { color: var(--ink); }
 .tk-plan li { padding: 4px 0; }
 .tk-plan li.done { color: var(--soft); }
 .tk-plan li.done .tk-tick { color: var(--done); font-weight: 800; margin-right: 6px; }
@@ -67,6 +68,7 @@
 
 /* ---- the conversation: a vertical timeline ---- */
 .tk-conv { margin-top: 16px; position: relative; }
+.tk-conv [id^="update-"] { scroll-margin-top: 72px; }
 .tk-conv::before { content: ""; position: absolute; left: 15px; top: 6px; bottom: 6px; width: 2px; background: #e3e2dc; }
 .tk-ev { display: flex; align-items: flex-start; padding: 6px 0; position: relative; font-size: var(--t-cap); color: var(--soft); }
 .tk-ev .d { width: 10px; height: 10px; border-radius: 50%; background: #cfcdc6; margin: 4px 17px 0 11px; flex: 0 0 auto; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--bg); }

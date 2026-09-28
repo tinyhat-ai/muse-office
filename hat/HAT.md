@@ -233,6 +233,7 @@ Do these before the hand-over, and again after any change to the app:
   The current summary and user question are visible before history. Empty
   checklists/plans/files add no placeholder sections. Updates shows only its
   label and count, closed by default; expanding reveals all updates and replies.
+  Count every entry, including events; an event-only task still exposes its history.
   A direct link to an older update/reply opens its original context. Headings,
   bold text, tables, quotes and code in comments render properly. Check a useful
   diagram and a self-contained interactive HTML overview on the phone; keep
