@@ -24,6 +24,8 @@ description: How a task moves from a card to a finished result through a special
    state; optional overview_html can supply a compact self-contained visual
    in the app's sandbox. Keep a readable explanation in overview and verify
    the visual on a phone. No jargon, repeated log entries or invented progress.
+   Prefer static visuals; add scripts only for useful interaction, with bounded
+   work that leaves the Office's comment/reply controls responsive.
 2. Start a worker for that specialist. Brief it with exactly four things:
    - the task card
    - ~/workspace/office/team/<name>/AGENT.md and its skills/

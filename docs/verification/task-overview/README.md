@@ -28,6 +28,8 @@ newly generated Office running inside Muse.
   separate probe confirmed its parent-page read and Office API fetch fail.
   Ordinary heading/paragraph margins are included in the frame height: the
   final line stays visible at both phone widths, including after expansion.
+  The task response also blocks frame navigation: script, link and meta-refresh
+  probes cannot load another document, while the intended visual still works.
 - The agent's `update_task` action changed the current snapshot and verified
   checklist item. Reopening showed both changes. The original description,
   original request, plan, other checklist states, full conversation, files and

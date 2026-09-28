@@ -5,6 +5,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { taskVisualDocument, taskVisualHeight } from "../src/lib/task-visual";
+import nextConfig from "../next.config";
 
 // Start from the previous schema, with existing work, to exercise the upgrade.
 const dir = fs.mkdtempSync(path.join(os.tmpdir(), "office-overview-"));
@@ -42,9 +43,12 @@ test("new tasks expose both snapshot formats to the agent", () => {
   const created = runAction("create_task", { id: "new", project: "work", title: "Check sources", note: "Checking sources", overview: "The sources are being checked.", overview_html: "<p>Sources: 2 checked</p>" }) as Record<string, unknown>;
   assert.equal(created.overview, "The sources are being checked.");
   assert.equal(created.overview_html, "<p>Sources: 2 checked</p>");
+
 });
 
-test("an HTML visual gets a restrictive policy before its code and bounded resize messages", () => {
+test("an HTML visual has document and embedding policies plus bounded resize messages", async () => {
+  const headers = await nextConfig.headers?.();
+  assert.equal(headers?.find((entry) => entry.source === "/tasks/:id")?.headers.find((entry) => entry.key === "Content-Security-Policy")?.value, "frame-src 'none'");
   const html = taskVisualDocument('<script>fetch("/api/actions")</script>');
   assert.ok(html.indexOf("Content-Security-Policy") < html.indexOf('<script>fetch'));
   assert.match(html, /connect-src 'none'/);
