@@ -146,11 +146,12 @@ Reject malformed/truncated data rather than treating it as inspected media.
 Keep default 16 KiB/max 64 KiB chunks and the existing file-size limits.
 
 Before hand-over, retrieve an uploaded image and a known short spoken file
-through the same actions available to the scheduled worker. Compare their
+through the same actions or private download available to the scheduled worker. Compare their
 complete bytes or hash with the originals, inspect the image, and transcribe
 the audio using native tools or an approved private local tool. Playback or a
 filename is not transcription. Save the original and transcript privately;
-perform the spoken test edit on its actual note and re-read it. If no private
-inspection/transcription path works, leave that work open and report the
+perform the spoken test edit on a clearly labeled test note, or in an isolated
+test Office, and re-read it; never change the person's own notes as a test.
+If no private inspection/transcription path works, leave that work open and report the
 specific blocker once; do not silently upload media elsewhere or ask the
 person to repeat a request you have not tried to decode.

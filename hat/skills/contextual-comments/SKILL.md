@@ -65,9 +65,10 @@ is reading; it is not a second chat app or a way to edit project data.
   Office workspace. Never silently send audio to
   another service or guess a transcript; keep the work open if understanding is blocked.
   Verify this path with the scheduled worker's real tools before hand-over:
-  recover the spoken fixture, transcribe it privately, perform its requested
-  edit, and read the actual changed record. Keep the transcript and original
-  together. If additional setup permission is needed, report that exact
+  recover the short spoken file, transcribe it privately, perform its requested
+  edit on a clearly labeled test note or in an isolated test Office, and read
+  the actual changed record. Never change the person's own notes as a test.
+  If additional setup permission is needed, report that exact
   blocker; do not claim the media was understood or the request completed.
 - Read/listen to attachments before acting; their filenames are not their
   contents. If you cannot access or understand one, ask for that missing context
