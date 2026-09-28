@@ -7,13 +7,17 @@ newly generated Office running inside Muse.
 ## Checked
 
 - Desktop and 320px/390px phone layouts: the long description starts capped;
-  Show more/Show less preserves the complete text. The current, formatted
+  Show more/Show less preserves the complete text. A short heading with two
+  brief paragraphs also has Show more when clipped; a one-line brief has none.
+  The current, formatted
   snapshot comes before history; the optional checklist shows verified outcomes.
 - Waiting tasks keep the user question and contextual reply visible above
   history. Simple tasks omit empty descriptions, checklists, plans and files.
 - Updates shows only its label and count, closed by default. Opening reveals
   all threads and replies; keyboard activation works. Closing and reopening
-  preserves an unsent contextual reply. Reloading a direct link to an older
+  preserves an unsent contextual reply. Posting a separate comment also leaves
+  an open reply draft intact. Event-only tasks expose their history and count.
+  Reloading a direct link to an older
   update or nested reply opens Updates and reveals its original context.
 - Comment Markdown renders headings, bold, lists, quotes, tables and code.
   Full prose and saved media remain available inside expanded Updates. A saved
