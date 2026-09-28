@@ -55,7 +55,8 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
   const stream = useRef<MediaStream | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [body, setBody] = useState("");
-  const [files, setFiles] = useState<File[]>([]);
+  const nextDraftId = useRef(0);
+  const [files, setFiles] = useState<{ id: number; file: File }[]>([]);
   const [sending, setSending] = useState(false);
   const [recording, setRecording] = useState(false);
   const [openingMic, setOpeningMic] = useState(false);
@@ -84,9 +85,10 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
 
   function addFiles(incoming: File[]) {
     setError("");
+    const additions = incoming.map((file) => ({ id: ++nextDraftId.current, file }));
     setFiles((current) => {
-      const next = [...current, ...incoming];
-      if (next.length > 5 || next.some((f) => !f.size || f.size > 10 * 1024 * 1024) || next.reduce((sum, f) => sum + f.size, 0) > 20 * 1024 * 1024) {
+      const next = [...current, ...additions];
+      if (next.length > 5 || next.some(({ file: f }) => !f.size || f.size > 10 * 1024 * 1024) || next.reduce((sum, { file: f }) => sum + f.size, 0) > 20 * 1024 * 1024) {
         setError("Attach up to 5 files, 10 MB each and 20 MB in total.");
         return current;
       }
@@ -131,7 +133,7 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
     if (busy || lock.current || recording || openingMic || (!body.trim() && !files.length)) return;
     lock.current = true; setSending(true); setError("");
     const target: Target = task ? { task } : note ? { note } : { project: project! };
-    const res = await postComment({ ...target, body: body.trim(), reply_to: replyTo }, files);
+    const res = await postComment({ ...target, body: body.trim(), reply_to: replyTo }, files.map(({ file }) => file));
     lock.current = false; setSending(false);
     if (!res.ok) { setError(res.error || "That did not save. Try again."); return; }
     setBody(""); setFiles([]);
@@ -146,8 +148,8 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
     <textarea ref={ref} id={id} name="body" value={body} onChange={(e) => setBody(e.target.value)} onKeyDown={onKey}
       onPaste={(event) => { const incoming = Array.from(event.clipboardData.files); if (incoming.length) { event.preventDefault(); addFiles(incoming); } }}
       placeholder={placeholder} aria-label={placeholder} rows={compact ? 1 : 2} disabled={busy} />
-    {files.length > 0 && <ul className="oc-files">{files.map((f, i) => <li key={`${i}-${f.name}`} className={f.type.startsWith("audio/") ? "oc-audio" : undefined}>
-      <span>{f.name}</span><button type="button" aria-label={`Remove ${f.name}`} disabled={busy} onClick={() => setFiles((all) => all.filter((_, n) => n !== i))}>×</button>
+    {files.length > 0 && <ul className="oc-files">{files.map(({ id: itemId, file: f }) => <li key={itemId} className={f.type.startsWith("audio/") ? "oc-audio" : undefined}>
+      <span>{f.name}</span><button type="button" aria-label={`Remove ${f.name}`} disabled={busy} onClick={() => setFiles((all) => all.filter((entry) => entry.id !== itemId))}>×</button>
       {f.type.startsWith("audio/") && <DraftAudio file={f} />}
     </li>)}</ul>}
     <div className="oc-actions">
