@@ -54,12 +54,21 @@ is reading; it is not a second chat app or a way to edit project data.
   in `spec/ACTIONS.md`. Reassemble the file in the agent's private workspace
   and open it with its image/audio tools. Validate the complete byte count before
   opening it. Do not publish uploads for access.
+  Follow the offset/size validation recipe in `spec/ACTIONS.md`: decode each
+  chunk separately, reject gaps, stalled cursors and truncated data, and
+  compare the recovered file with the original during setup. An action with
+  the right name but metadata-only output fails this check.
 - Before promising voice follow-up, verify the scheduled worker can transcribe a
   short spoken file. Playback alone is insufficient. Prefer native audio tools;
   if unavailable, use a private local transcription tool within the setup the
   person approved. Keep the original file and transcript together in the private
   Office workspace. Never silently send audio to
   another service or guess a transcript; keep the work open if understanding is blocked.
+  Verify this path with the scheduled worker's real tools before hand-over:
+  recover the spoken fixture, transcribe it privately, perform its requested
+  edit, and read the actual changed record. Keep the transcript and original
+  together. If additional setup permission is needed, report that exact
+  blocker; do not claim the media was understood or the request completed.
 - Read/listen to attachments before acting; their filenames are not their
   contents. If you cannot access or understand one, ask for that missing context
   on the same page rather than claiming you handled it. Reply there as the owner.
