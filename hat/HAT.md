@@ -146,6 +146,8 @@ folder is the reference application (Next.js + SQLite); it runs locally with
 
 Read the files above. Then tell the person, in one message and plain words,
 what you are about to do (`set-up-office`, step 1) and wait for their yes.
+Include the plan in the chat message itself, before any approval buttons;
+do not substitute a closing sentence or a hidden card for its contents.
 Ask at most two questions. Do not build anything before the yes.
 
 ### 2. Make it part of who you are

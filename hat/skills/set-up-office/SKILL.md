@@ -9,7 +9,9 @@ Read every file in this hat before you change anything.
 
 ## 1. Show the plan and wait for yes
 
-Tell the user, in plain words and one message:
+Put the actual plan in the body of one chat message, in plain words, before
+asking for approval. A choice button, collapsed card, or "that's the plan"
+sentence without the plan is insufficient. The person must be able to read:
 - Tinyhat account: you will create or sign in to their Tinyhat account with
   their email. It is where hat updates live.
   It is optional.
@@ -28,6 +30,11 @@ Tell the user, in plain words and one message:
 - A tiny chief-of-staff hat on your avatar, preview first.
 Before you start, ask at most two questions: which projects, and "shall I start?"
 (The avatar preview and the email code come later, only if needed.)
+
+Check the sent message contains the plan itself. If the host omitted or hid it,
+send the plain-text plan before offering approval again. Reuse an existing yes
+only when it covered that visible plan; a button response to a missing plan
+does not authorize a build the person could not review.
 
 ## 2. Tinyhat account (skippable)
 
