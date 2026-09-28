@@ -253,6 +253,12 @@ Do these before the hand-over, and again after any change to the app:
   fenced `mermaid` flowchart. Confirm they render as a heading, table, bold
   text, and diagram. If the raw punctuation appears, fix the renderer before
   hand-over. Use the same check on a narrow screen.
+- Send a labeled test comment on the setup task with a known-valid WAV of a
+  few seconds and an image, plus a reply with the same. Reopen the Office in
+  the Muse client: each image shows inline, and each saved WAV plays for its
+  full known duration without an error ("Saved comment media" in
+  `spec/PAGES.md`). A filename link, a draft preview, or a player that stops
+  early fails.
 
 ## Updates
 
