@@ -54,7 +54,8 @@ the main chat. They should see the work without asking you to put it there.
   Read the existing note and update it rather than making duplicates; keep
   unrelated content, metadata and links intact.
 - Before calling work complete, read back the task, result and any report or
-  note you changed. If an Office write fails, retain the pending write in
+  note you changed. Check the affected view too: chart labels, series and
+  units must make the verified figures understandable. If an Office write fails, retain the pending write in
   your private checkpoint and retry it; do not claim the Office is current.
   Follow-through reconciles unfinished work and its records between messages.
 
