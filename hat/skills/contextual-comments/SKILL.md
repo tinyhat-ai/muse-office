@@ -19,6 +19,17 @@ is reading; it is not a second chat app or a way to edit project data.
   audio attachments, and user-triggered voice recording where supported. Enter
   adds a line; Shift+Enter sends. Keep existing Ctrl/Cmd+Enter compatibility and
   do not submit during IME composition.
+  Every picker selection, paste, drop, and stopped recording appends to the
+  existing draft attachments; it never replaces the list. Give each draft
+  item its own stable id, including files with identical names. Remove by id,
+  not filename or a changing list index. Clear the picker value after reading
+  it so selecting the same file again works. Cancelling a picker changes
+  nothing. Reject a selection that exceeds the limits without discarding the
+  existing draft; a failed save also keeps its body, files, and previews.
+  Verify separate picker visits for image then audio, independent removal of
+  two same-name files, and supported paste/drop/record appends. After a failed
+  save and retry, the stored comment retains all intended files once and the
+  draft clears only on success.
 - Keep the input in one compact field with familiar paperclip, microphone and
   upward-arrow send icons inside its bottom edge. Use a stop-square icon while
   recording. Give these three controls an accessible name, hover title, keyboard focus and

@@ -42,6 +42,11 @@ Like an issue page, top to bottom:
 5. **Plan**: a numbered list; the current step is bold with "· now"; done steps are grey.
 6. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Flat updates with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files (images as previews, audio with playback, other files as links). Keep the peach pinned question; ordinary updates have no enclosing card or colored header. Replies are indented under their original update. Each update has a "Reply" link that opens a compact input.
 7. **The comment box**: "[you] Add a comment for <Muse> and Penny…" in one compact field containing paperclip, microphone and upward-arrow send icons. Use the same component on task, note and project pages and replies, with accessible names and 44px touch targets. Audio drafts have compact local Play/Pause controls before Send, including recordings after they stop. No extra input heading, shortcut hint or privacy caption. Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Enter inserts a line; Shift+Enter sends, with Ctrl/Cmd+Enter retained. See `hat/skills/contextual-comments/SKILL.md` for input, host capability, and verification rules.
+   All attachment entry paths append to the existing draft. Use stable item
+   ids, not filenames, so same-name files can be removed independently. Clear
+   the picker value after reading it to permit re-selection; preserve the
+   draft on picker cancellation, validation error, or failed save. Verify choosing
+   an image and audio in two separate picker visits before accepting the build.
 8. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 
