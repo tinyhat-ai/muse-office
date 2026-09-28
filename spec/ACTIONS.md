@@ -100,6 +100,15 @@ Notes are where anything worth finding later goes: a decision, a how-to, a price
 | `list_notes` | `q?`, `project?`, `kept_by?`, `tag?` | Search (title, lede, body, tags) and filter, `tag` exact. |
 | `remove_note` | `slug` | Removes a note. Never called without the user's yes. |
 
+Send `upsert_note.markdown` as a string with real line breaks. JSON encoding
+escapes these on the wire; encode once and let the action's JSON parser decode
+once. Do not pre-escape the string into visible backslash-n sequences, or
+blindly replace literal backslash-n text in code examples. When editing,
+read `get_note` first, preserve the slug/title/keeper/project/tags/task links
+unless the request changes them, and update the same note. Verify the saved
+body and its rendered page; neither a reply nor a correct seed note proves
+the newly written heading, table, or Mermaid diagram renders.
+
 ## The whole office
 
 | Action | Arguments | What it does |

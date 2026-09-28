@@ -95,6 +95,19 @@ The find page: header (kicker "What the team has learned, written down for you")
 
 A note's page: breadcrumb "Notes / Website / Brand guide"; the project label; a large title; the lede; "Kept by Pastel · Updated 2 days ago · 1 min read"; the tags as `#tag` chips that filter the find page; the **rendered GitHub-flavored Markdown body** (headings, links, bold text, lists, tables, code, small inline SVG visuals, and fenced `mermaid` diagrams); "Came from these tasks" as sticky-note chips that open the tasks; a comment thread and box for questions and corrections; and "To change this note, tell <Muse> in chat." On the right, "On this page" (the headings) and "More in Website". A Markdown table must appear as an actual table; `**bold**` must appear bold; a Mermaid fence must draw a diagram. Invalid Mermaid source stays visible as code for correction. Never show the Markdown punctuation as ordinary prose.
 
+Use one Markdown/Mermaid renderer for all saved note bodies, including notes
+created or edited through `upsert_note` after setup. Do not pre-render only
+starter notes or display later notes as plain strings. Pass the stored
+`markdown` through GFM parsing, sanitization, and the strict Mermaid renderer;
+initialize diagrams again when the note body changes or a different note opens.
+
+Verify a newly created test note through actions, not just a starter note.
+Its body must have actual line breaks, a heading, bold text, a pipe table, and
+a fenced Mermaid flowchart. Open it in the actual Office, reopen it, then edit
+one diagram label through `upsert_note` and check the changed drawing. A raw
+`get_note` response or a comment saying it renders is not visual proof. Invalid
+diagram source stays readable; unsafe Markdown/diagram content remains blocked.
+
 ## Times
 
 Relative within a week ("just now", "20 min ago", "2 hours ago", "yesterday", "3 days ago"), then a date ("Sep 12"). Due dates read "due Thursday" or "Fri, Oct 2".
