@@ -16,6 +16,12 @@ The board. It opens straight on the tasks.
 
 Tapping a card opens the task's page.
 
+Before hand-over, filter by each initial project and open its separate link.
+Check the correct project page opens and the selected tile still shows its
+task count, secondary Details text, and entire icon at phone and Muse-panel
+widths. Use the non-overlap checks in `spec/DESIGN.md`; a working click alone
+does not establish that the selected tile fits.
+
 ## A project's page (`/projects/<slug>`)
 
 1. Breadcrumb "Tasks / Website".
