@@ -49,6 +49,21 @@ Like an issue page, top to bottom:
 
 No statistics strip, no project chips, no counts.
 
+For a generated Office, use one selected-member state shared by the cards and
+desktop panel. Below the reference's 980px desktop layout breakpoint, render that member's
+details directly inside its selected card, immediately after the summary;
+hide the trailing side panel. Reuse the existing portrait/name rather than
+rendering a second header inside the expansion, and add the hat to that card's
+role line ("Bookkeeper · wears a navy bowler"). Selecting another member
+collapses the previous details. Do not append details after the entire roster
+or scroll the person to a separate bottom panel.
+
+Before hand-over, select both the first and last specialist at 390px and in a
+roughly 560px Muse artifact panel. The selected details must be visible at
+that card, with one portrait/name, the hat on its role line, and no duplicate
+trailing details. Repeat
+at desktop width: retain the original grid and right-hand detail panel.
+
 ## Customers (`/customers`)
 
 1. Header: kicker "Your people", title "Customers & leads", lede "Scout keeps this list current from what you tell it and from your work email, and drafts every follow-up."
