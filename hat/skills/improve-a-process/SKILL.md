@@ -33,8 +33,11 @@ Hiring: when the same kind of task keeps arriving and no specialist fits,
 propose a new one: role, mascot, first tasks. On yes, create
 ~/workspace/office/team/<name>/ with AGENT.md from the closest template,
 its own skills/ and memory.md. Add it to REGISTRY.md, make its distinct
-mascot image, and add it to the Team page (upsert_member with avatar_url).
-Check the files and rendered card before saying the agent is ready. A
+mascot image, and create its Team row with `upsert_member` without `avatar_url`.
+Then follow `hat-avatar` to import the portrait into durable private assets,
+install it with `set_member_avatar(slug, avatar_url)`, and check the returned
+stored row and reopened pages. Check the files and loaded portrait before
+saying the agent is ready. A
 relationship record in your own memory is not the agent's working memory.
 
 Retiring: on the user's yes, reassign the specialist's open tasks and
