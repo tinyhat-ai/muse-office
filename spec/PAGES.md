@@ -39,6 +39,24 @@ Like an issue page, top to bottom:
 8. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 
+### Saved comment media
+
+Task, note and project comments and replies use the same saved-media renderer.
+Store each attachment's private storage key, name, actual media type and size
+with its comment. Draft object URLs expire and must never be the saved source.
+Resolve the stored key through the Office's own private asset reader. Render
+images inline and audio as `<audio controls preload="metadata">`, without
+autoplay. Where the host cannot provide a durable playable private URL, read
+the complete saved bytes and create a local Blob URL with the correct type;
+stop playback and revoke it on unmount, and reconstruct it on reopening.
+
+Before hand-over, send a known-valid short WAV and an image, reopen the actual
+comment, and play the saved WAV to its natural end. Inspect the inline image.
+Repeat inside a reply and after reopening the app. A working draft or Library
+player does not prove the comment player works. If it errors, verify byte
+count/type and the private storage reader rather than sending the person to
+an external expired link or making uploads public.
+
 ## Team (`/team`)
 
 1. Header: kicker "Who does the work", title "Team", lede "<Muse> runs <current count> specialists for you. Ask <Muse> to hire, retrain, pause, or retire one."
@@ -75,24 +93,6 @@ Charts are inline SVG. Axis text 12px grey. Series colours are the projects' dar
 The find page: header (kicker "What the team has learned, written down for you"), a large search box, filter rows "Project", "Kept by" (chips with avatars), and "Tags" (the most used tags as `#tag` chips), a count line, and a grid of note cards (project, title, excerpt, up to four tags, kept by · updated). The pinned "Start here" note spans two columns. Searching filters as you type, matches tags too, and highlights matches.
 
 A note's page: breadcrumb "Notes / Website / Brand guide"; the project label; a large title; the lede; "Kept by Pastel · Updated 2 days ago · 1 min read"; the tags as `#tag` chips that filter the find page; the **rendered GitHub-flavored Markdown body** (headings, links, bold text, lists, tables, code, small inline SVG visuals, and fenced `mermaid` diagrams); "Came from these tasks" as sticky-note chips that open the tasks; a comment thread and box for questions and corrections; and "To change this note, tell <Muse> in chat." On the right, "On this page" (the headings) and "More in Website". A Markdown table must appear as an actual table; `**bold**` must appear bold; a Mermaid fence must draw a diagram. Invalid Mermaid source stays visible as code for correction. Never show the Markdown punctuation as ordinary prose.
-
-### Saved comment media
-
-Task, note and project comments and replies use the same saved-media renderer.
-Store each attachment's private storage key, name, actual media type and size
-with its comment. Draft object URLs expire and must never be the saved source.
-Resolve the stored key through the Office's own private asset reader. Render
-images inline and audio as `<audio controls preload="metadata">`, without
-autoplay. Where the host cannot provide a durable playable private URL, read
-the complete saved bytes and create a local Blob URL with the correct type;
-stop playback and revoke it on unmount, and reconstruct it on reopening.
-
-Before hand-over, send a known-valid short WAV and an image, reopen the actual
-comment, and play the saved WAV to its natural end. Inspect the inline image.
-Repeat inside a reply and after reopening the app. A working draft or Library
-player does not prove the comment player works. If it errors, verify byte
-count/type and the private storage reader rather than sending the person to
-an external expired link or making uploads public.
 
 ## Times
 

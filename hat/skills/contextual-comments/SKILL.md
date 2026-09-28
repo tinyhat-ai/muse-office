@@ -51,6 +51,10 @@ is reading; it is not a second chat app or a way to edit project data.
   private URL, read the complete saved bytes, build a typed Blob, and use a
   local object URL. Release it when removed or unmounted; fetch it again on
   reopening. A filename link or a player that errors after Play is not success.
+  Test the saved player independently from the draft: send a known-valid short
+  audio file with a screenshot, reopen its comment/reply, and press Play. Check
+  natural completion without Error and the actual inline image; repeat after
+  reopening the app. Publishing media to make a broken URL play is not a repair.
 - `list_recent_updates` must include every comment with its typed identity,
   page title/link, owner, reply context, and openable file references including
   media type. Paginate deterministically. Identical numeric ids on different
@@ -77,9 +81,3 @@ Test a screenshot and audio comment in the actual Muse client, not only in a
 standalone browser. Verify saved content, agent access, same-page follow-up,
 keyboard behavior, mobile layout, and retry behavior. Do not impose spoken
 responses or another person's presentation preferences on everyone.
-
-Test saved playback independently from the draft: send a known-valid short
-audio file with a screenshot, reopen the comment and an indented reply, then
-press Play. Verify Play/Pause and natural completion without Error, plus the
-actual inline image. Repeat after reopening the app. Keep private media in
-private storage; publishing a file to make a broken URL play is not a repair.
