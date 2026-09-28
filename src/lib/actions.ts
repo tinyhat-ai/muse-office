@@ -670,7 +670,7 @@ export const ACTIONS: Record<string, ActionDef> = {
   },
   list_tasks: {
     section: "Tasks",
-    description: "The cards, with title, column, specialist, step, question, note, due, and updated_at. Filters combine.",
+    description: "The cards, including the current overview, without visual HTML. Use get_task for the full visual. Filters combine.",
     params: { project: "string · project slug · optional", column: "string · todo, in_progress, waiting_on_you, or done · optional", specialist: "string · member slug · optional" },
     read: true,
     run(input) {
@@ -684,7 +684,10 @@ export const ACTIONS: Record<string, ActionDef> = {
          WHERE (? IS NULL OR t.project = ?) AND (? IS NULL OR t.column_name = ?) AND (? IS NULL OR t.specialist = ?)
          ORDER BY CASE t.column_name WHEN 'todo' THEN 0 WHEN 'in_progress' THEN 1 WHEN 'waiting_on_you' THEN 2 ELSE 3 END, t.updated_at DESC`,
         project, project, column, column, specialist, specialist,
-      ).map(({ project_name, specialist_name, ...t }) => ({ ...taskOut(t), project_name, specialist_name }));
+      ).map(({ project_name, specialist_name, ...t }) => {
+        const { overview_html: _visual, ...card } = taskOut(t);
+        return { ...card, project_name, specialist_name };
+      });
     },
   },
 

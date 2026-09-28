@@ -43,7 +43,12 @@ test("new tasks expose both snapshot formats to the agent", () => {
   const created = runAction("create_task", { id: "new", project: "work", title: "Check sources", note: "Checking sources", overview: "The sources are being checked.", overview_html: "<p>Sources: 2 checked</p>" }) as Record<string, unknown>;
   assert.equal(created.overview, "The sources are being checked.");
   assert.equal(created.overview_html, "<p>Sources: 2 checked</p>");
-
+  const cards = runAction("list_tasks", { project: "work" }) as Array<Record<string, unknown>>;
+  const card = cards.find((item) => item.id === "new");
+  assert.equal(card?.overview, created.overview);
+  assert.equal(Object.hasOwn(card!, "overview_html"), false);
+  const full = runAction("get_task", { id: "new" }) as Record<string, unknown>;
+  assert.equal(full.overview_html, created.overview_html);
 });
 
 test("an HTML visual has document and embedding policies plus bounded resize messages", async () => {

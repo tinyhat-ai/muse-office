@@ -51,7 +51,7 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 | `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to Updates on the task's page. `author` is a member slug. Files also appear under "Files from this task". Posting the task's current question again as a `question` note returns the row `move_task` already posted instead of adding a second one. The last `update` before a task moves to `done` is its closing report: what was done, the result, the files, what was learned. |
 | `attach_file` | `id`, `name`, `url` | Adds a file to "Files from this task". The URL must open for the user (a file artifact link, or a file stored in the app), never a path on the Muse's computer. |
 | `get_task` | `id` | Everything on the task's page. |
-| `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, due, updated_at. |
+| `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, overview, due, updated_at. Visual HTML is omitted; use `get_task` when needed. |
 
 `note` is the brief plain-text card summary. `overview` is the current snapshot
 for the person, separate from the original description and detailed worker log:
