@@ -29,11 +29,22 @@ is reading; it is not a second chat app or a way to edit project data.
   heading, shortcut hint, privacy caption, help paragraph or scheduler banner.
   Show recording state or an error only when the action needs it. Preserve the
   draft and attachments on a failed save.
+  While the recorder is actually capturing, show a visible `Recording…` status
+  beside the stop control (a small level meter or elapsed timer is optional).
+  An icon swap or accessible name alone is not visible feedback. Do not show
+  recording during a permission prompt or after denial; clear the status on
+  stop, error, cancellation, or navigation. Disable Send until capture stops.
 - Give every audio draft a compact native player with Play/Pause before Send,
   including recordings after they stop and attached audio files. Preview its
   local File with a browser object URL; do not upload it to listen or autoplay.
   Stop playback and release the URL on removal, successful save, or unmount.
   Preserve the preview on a failed save. Add no extra heading or helper text.
+  On a phone, put the player on its own full-width row inside the composer;
+  keep the filename and remove control in a separate, shrinkable row. Use
+  `min-width: 0`, `width: 100%`, and `max-width: 100%` on the player and its
+  layout ancestors. Truncate long filenames visually while preserving their
+  accessible name. Use the same width constraints for sent audio in comments
+  and nested replies. Never put a fixed-width player beside a long filename.
 - Keep task and note detail pages flat, like a document. Description, updates, comments and
   files share the page gutter; do not stack padded white cards around them.
   Preserve the board, portraits, page colors, data and follow-through behavior.
@@ -70,3 +81,13 @@ Test a screenshot and audio comment in the actual Muse client, not only in a
 standalone browser. Verify saved content, agent access, same-page follow-up,
 keyboard behavior, mobile layout, and retry behavior. Do not impose spoken
 responses or another person's presentation preferences on everyone.
+
+Before handing over, test this shared component on a task, note, and project
+at 320px and 390px, including an indented reply and a long filename. Start
+recording with permission: the live status must appear without adding a
+standing caption. Stop, listen to the unsent draft, send, reopen the page,
+and listen again. All player controls, the filename row, and Send must fit
+inside the gutter without horizontal page scrolling. Test denial separately:
+no false recording status or stuck disabled controls. If microphone access
+is blocked by the host, report that specific untested path; file playback
+does not prove recording works.
