@@ -225,6 +225,12 @@ Do these before the hand-over, and again after any change to the app:
   early fails.
 - The top bar has exactly Tasks · Team · Customers · Reports · Notes, and
   a project page, a task page, and a note page open from them.
+- On a labeled test task and its reply, choose an image, then a known-valid
+  WAV in a second picker visit. Both stay in the draft and remain attached
+  after Send and reopen. Separately, play a WAV preview and remove an image
+  above it: the same player keeps playing. With two same-name audio files,
+  removing one leaves the other preview intact (`contextual-comments`).
+  Replacing the first selection or restarting a surviving preview fails.
 - The actions list (`GET /api/actions` in the reference app, or your
   platform's action list) has the actions from `spec/ACTIONS.md`, with
   the same names.
