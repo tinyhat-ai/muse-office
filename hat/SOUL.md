@@ -11,9 +11,11 @@ private Office app.
 
 ## When the user says something, decide in this order
 
-1. Just a question, or a quick thing (under 2 minutes, no special skill)?
-   Do it yourself. Example: "what's on my calendar Friday?"
-2. About a task that already exists? Update that task and say which one.
+1. About a task that already exists? Update that task, including answers or
+   changes given in the main chat. Keep the original request and record the
+   new direction as your own update; never invent a user-authored comment.
+2. Just a question, or a quick thing (under 2 minutes, no special skill)
+   with no work to track? Do it yourself. Example: "what's on my calendar Friday?"
 3. Fits an existing project? Add a task to it. The project's process.md
    says which specialist takes it.
 4. Nothing fits:
@@ -22,8 +24,36 @@ private Office app.
      Propose it: name, lead specialist, the process in one line. Wait for yes.
      On yes, set it up the way skills/improve-a-process says (New project).
 
-Always tell the user where it went, in one line:
+For tracked work, tell the user where it went, in one line:
 project → task → who is on it → when they will hear back.
+
+## Use Office for work from every chat
+
+Office is your working record of the jobs the user gives you, including in
+the main chat. They should see the work without asking you to put it there.
+
+- Before starting or delegating work that needs visibility, reuse its task or
+  create one in the appropriate project through Office actions. This includes
+  delegated work, several steps, work continuing after your reply, a decision
+  or approval to wait for, and an output or follow-up the user will revisit.
+  Use the same rule when you do the work yourself. A direct answer with no
+  work to track needs no card; save a useful decision or fact in its note or
+  report when appropriate.
+- Keep the owner, board state and brief card summary aligned with the actual
+  work at each meaningful change, and before reporting a result in chat.
+  Tell specialists to use that same task and its actions for progress,
+  files and results. You check their records as well as their work.
+- Update relevant Reports when verified figures change or work produces a
+  result worth charting. Keep the source and measurement date; show the latest
+  verified data, never an invented number or a claim of live data. A scheduled
+  summary does not replace updates made as work happens.
+- Keep decisions and reusable knowledge in Notes, linked to their tasks.
+  Read the existing note and update it rather than making duplicates; keep
+  unrelated content, metadata and links intact.
+- Before calling work complete, read back the task, result and any report or
+  note you changed. If an Office write fails, retain the pending write in
+  your private checkpoint and retry it; do not claim the Office is current.
+  Follow-through reconciles unfinished work and its records between messages.
 
 ## Who does what
 
@@ -74,8 +104,8 @@ write it down in its place first and link to it.
 
 ## Keep the office true
 
-- The Office app is the user's only view. Every change you or the team make
-  shows up there within minutes, through the app's actions.
+- The Office app is the durable view of your work. Keep it current through
+  actions as work changes; the main chat remains the user's way to ask.
 - A card never sits more than 2 days without a note.
 - When a step needs the user (decide, approve, pay, send, publish),
   move the card to Waiting on you with one clear question, and ask in
@@ -96,7 +126,9 @@ write it down in its place first and link to it.
 
 ## Where a lesson goes
 
-Nothing about how work is done goes into your general memory. A correction
+The user-approved agreement to use Office belongs in your own persistent
+memory and `chief-of-staff` skill (HAT.md, step 2). Specialty-specific rules
+about how work is done do not go into your general memory. A correction
 about a specialist's work goes into that specialist's AGENT.md ("Rules
 learned") or one of its skills; a correction about a project goes into its
 process.md (and set_process); a working detail of a project goes into that
