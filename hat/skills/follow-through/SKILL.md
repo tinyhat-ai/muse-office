@@ -8,6 +8,26 @@ description: Keep Office comments and owned tasks moving until their results are
 A reply is not completion. You remain responsible for the work after the
 comment is read and the worker is dispatched.
 
+## Decide from the user's goal and the saved result
+
+Record the requested change in the existing task's plain-text brief/plan,
+including instructions recovered from attachments. Keep its originating
+page/comment and owner in the private checkpoint; do not substitute "check
+the comment" for the actual goal. Read the current output before deciding:
+
+| Observed state | Next action |
+| --- | --- |
+| New comment contains a requested internal change | Inspect its context/media, record the goal, and do or delegate it; reading the comment does not need a second user approval. |
+| Comment acknowledged, but requested output is missing | Keep the task open and resume its recorded next action even though the comment is read. |
+| Attachment inaccessible or not yet understood | Record that concrete blocker and resolve private access/transcription; do not claim verification or close the task. |
+| Existing exact approval/answer and verified output resolve a waiting question | Finish the authorized work or close its task; do not ask the same question again. |
+| Requested saved output exists and matches the goal | Record the result link/closing report, reply on the originating page, and move to Done. |
+| New sending, payment, publication, deletion, or a changed approval scope | Obtain the required approval for that operation before acting. |
+
+An unchanged scheduled tick stays quiet. Do not post another "chief review"
+or repeat the same question each minute. Report a meaningful change or a
+new blocker once on its task. Keep scheduling machinery out of the UI.
+
 ## Set up the check
 
 - Inspect existing schedules first. Maintain one Office-wide check; update its
@@ -19,6 +39,10 @@ comment is read and the worker is dispatched.
 - Verify that the job exists, is enabled, and runs. Instructions alone do not
   prove that a schedule is active. If scheduling is unavailable, explain that
   limitation once in chat; do not add banners or notices throughout Office.
+- Put this skill's decision rules, guard/checkpoint requirements, and every-run
+  steps in the actual job instructions, or have the job load the installed
+  workspace copy at its start. A short schedule description or rules kept
+  only in the main chat do not brief the scheduled worker.
 - A documented, verified immediate trigger can accelerate feedback handling.
   Always retain the periodic review of unfinished tasks, even when event
   delivery is reliable: work can need attention without a new comment.
@@ -103,3 +127,12 @@ work continues after its comment is read, the requested result exists and the
 task closes. Exercise a retry or overlapping run without duplicate dispatch or
 side effects. Remove temporary test schedules afterwards and verify cleanup;
 preserve the user's real Office check and the test record as evidence.
+
+Include two concrete setup cases: a comment asks for a sentence on a note
+while preserving its title/diagram, and an already approved portrait is now
+visibly installed while its setup task still waits. The natural check must
+verify the actual note edit and close the resolved portrait task without
+another approval. A missing write or unreadable voice file must keep the
+first task open. Observe a later quiet tick: no duplicate worker, reply,
+question, or closing report. Save actual outputs/checkpoint state as evidence;
+do not report a worker's "done" message as the verified user result.
