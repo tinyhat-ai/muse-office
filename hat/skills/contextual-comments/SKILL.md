@@ -40,9 +40,9 @@ is reading; it is not a second chat app or a way to edit project data.
   Stop playback and release the URL on removal, successful save, or unmount.
   Preserve the preview on a failed save. Add no extra heading or helper text.
   On a phone, put the player on its own full-width row inside the composer;
-  keep the filename and remove control in a separate, shrinkable row. Use
-  `min-width: 0`, `width: 100%`, and `max-width: 100%` on the player and its
-  layout ancestors. Truncate long filenames visually while preserving their
+  keep the filename and remove control in a separate, shrinkable row. Give
+  every flex/grid ancestor `min-width: 0`; give the player `width: 100%` and
+  `max-width: 100%`. Truncate long filenames visually while preserving their
   accessible name. Use the same width constraints for sent audio in comments
   and nested replies. Never put a fixed-width player beside a long filename.
 - Keep task and note detail pages flat, like a document. Description, updates, comments and
