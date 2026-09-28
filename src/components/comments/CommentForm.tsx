@@ -25,7 +25,7 @@ export async function postComment(payload: Payload, files: File[] = []): Promise
 
 type Props = Target & {
   replyTo?: number | null; placeholder: string; buttonLabel: string; compact?: boolean;
-  hint?: string; id?: string; autoFocus?: boolean; onDone?: () => void;
+  id?: string; autoFocus?: boolean; onDone?: () => void;
 };
 
 export function CommentForm({ task, note, project, replyTo, placeholder, buttonLabel, compact, id, autoFocus, onDone }: Props) {
@@ -128,30 +128,32 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
   return <form className={`oc-form${compact ? " compact" : ""}`} onSubmit={(e) => { e.preventDefault(); void submit(); }}>
     <textarea ref={ref} id={id} name="body" value={body} onChange={(e) => setBody(e.target.value)} onKeyDown={onKey}
       onPaste={(event) => { const incoming = Array.from(event.clipboardData.files); if (incoming.length) { event.preventDefault(); addFiles(incoming); } }}
-      placeholder={placeholder} aria-label={placeholder} rows={compact ? 2 : 3} disabled={busy} />
+      placeholder={placeholder} aria-label={placeholder} rows={compact ? 1 : 2} disabled={busy} />
     {files.length > 0 && <ul className="oc-files">{files.map((f, i) => <li key={`${i}-${f.name}`}>
       <span>{f.name}</span><button type="button" aria-label={`Remove ${f.name}`} disabled={busy} onClick={() => setFiles((all) => all.filter((_, n) => n !== i))}>×</button>
     </li>)}</ul>}
     <div className="oc-actions">
       <input ref={picker} type="file" hidden multiple accept="image/png,image/jpeg,image/webp,image/gif,audio/webm,audio/ogg,audio/wav,audio/x-wav,audio/mpeg,audio/mp4,audio/aac,application/pdf,text/plain,text/markdown,.md,.txt,.m4a" onChange={(e) => { addFiles(Array.from(e.target.files || [])); e.target.value = ""; }} />
       <button type="button" className="oc-icon" aria-label="Attach files" title="Attach files" disabled={busy || recording} onClick={() => picker.current?.click()}>
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><path d="m8 12 6-6a3 3 0 0 1 4 4l-8 8a5 5 0 0 1-7-7l9-9M6 14l8-8" /></svg>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m21 11-8.5 8.5a6 6 0 0 1-8.5-8.5l9-9a4 4 0 0 1 5.7 5.7l-9 9a2 2 0 0 1-2.9-2.9l8.5-8.5" /></svg>
       </button>
-      {canRecord && <button type="button" className="oc-icon" aria-label={recording ? "Stop recording" : "Record voice message"} title={recording ? "Stop recording" : "Record voice message"} disabled={busy || openingMic} onClick={() => recording ? recorder.current?.stop() : void startRecording()}>
-        {recording ? <span aria-hidden="true">■</span> : <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.7" aria-hidden="true"><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></svg>}
+      {canRecord && <button type="button" className="oc-icon" aria-pressed={recording} aria-label={recording ? "Stop recording" : "Record voice message"} title={recording ? "Stop recording" : "Record voice message"} disabled={busy || openingMic} onClick={() => recording ? recorder.current?.stop() : void startRecording()}>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{recording ? <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor" stroke="none" /> : <><rect x="9" y="2" width="6" height="13" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2M12 19v3M8 22h8"/></>}</svg>
       </button>}
       {recording && <span role="status">Recording…</span>}
-      <button type="submit" className="btn oc-send" disabled={busy || recording || openingMic || (!body.trim() && !files.length)}>{busy ? "Sending…" : buttonLabel}</button>
+      <button type="submit" className="oc-icon oc-send" aria-label={busy ? "Sending…" : buttonLabel} title={busy ? "Sending…" : buttonLabel} disabled={busy || recording || openingMic || (!body.trim() && !files.length)}>
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 19V5m-6 6 6-6 6 6" /></svg>
+      </button>
     </div>
     {error && <p className="oc-error" role="alert">{error}</p>}
   </form>;
 }
 
-export function ReplyToggle({ task, note, project, replyTo, label, placeholder, hint }: Target & { replyTo: number; label: string; placeholder: string; hint?: string }) {
+export function ReplyToggle({ task, note, project, replyTo, label, placeholder }: Target & { replyTo: number; label: string; placeholder: string }) {
   const [open, setOpen] = useState(false);
   const target: Target = task ? { task } : note ? { note } : { project: project! };
   return <>
     <button type="button" className={`tk-reply${open ? " open" : ""}`} aria-expanded={open} onClick={() => setOpen(!open)}>{open ? "Cancel" : label}</button>
-    {open && <div className="tk-rbox"><CommentForm {...target} replyTo={replyTo} placeholder={placeholder} buttonLabel="Reply" compact hint={hint} autoFocus onDone={() => setOpen(false)} /></div>}
+    {open && <div className="tk-rbox"><CommentForm {...target} replyTo={replyTo} placeholder={placeholder} buttonLabel="Reply" compact autoFocus onDone={() => setOpen(false)} /></div>}
   </>;
 }

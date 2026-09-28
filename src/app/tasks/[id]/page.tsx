@@ -158,8 +158,6 @@ export default async function TaskPage({ params }: Props) {
     files.push({ name: f.name, url: typeof f.url === "string" && f.url ? f.url : null });
   }
 
-  const replyHint = `${audience} will see this.`;
-
   function renderReply(r: UpdateRow) {
     return (
       <div className="tk-r" key={r.id}>
@@ -202,7 +200,6 @@ export default async function TaskPage({ params }: Props) {
                 replyTo={u.id}
                 label={u.kind === "question" && !mine ? `Reply to ${who}` : "Reply"}
                 placeholder={mine ? "Add to your comment…" : `Reply to ${who}…`}
-                hint={replyHint}
               />
             </div>
           )}
@@ -264,7 +261,7 @@ export default async function TaskPage({ params }: Props) {
                 {task.question_kind === "money" && questionRow ? (
                   <MoneyButtons task={task.id} questionId={questionRow.id} yesLabel={yesLabel(questionText)} />
                 ) : questionRow ? (
-                  <ReplyToggle task={task.id} replyTo={questionRow.id} label={`Reply to ${askerName}`} placeholder={`Reply to ${askerName}…`} hint={replyHint} />
+                  <ReplyToggle task={task.id} replyTo={questionRow.id} label={`Reply to ${askerName}`} placeholder={`Reply to ${askerName}…`} />
                 ) : (
                   <FocusCommentButton label={`Reply to ${askerName}`} />
                 )}
@@ -359,7 +356,7 @@ export default async function TaskPage({ params }: Props) {
       <div className="tk-composer">
         <You size="md" />
         <div className="cbox">
-          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" hint="Your comment stays with this task." />
+          <CommentForm task={task.id} id="new-comment" placeholder={`Add a comment for ${audience}…`} buttonLabel="Comment" />
         </div>
       </div>
 

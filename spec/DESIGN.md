@@ -70,6 +70,25 @@ Project tiles above the board: 118px squares (88px on a phone), the pastel fill,
 
 Cards: white, `--r-card`, `--shadow-card`, 20px padding. Small chips: `--r-chip`. Pills: `--r-pill`. Status pills: green (`#e7f1ea` / `#2d6a43`) for working, grey (`#efeee9` / `#66655f`) for next, peach (`--needs-bg` / `--needs`) for waiting on you. The orange accent appears nowhere else: not on charts, not on buttons that are not about the user's OK.
 
+## Detail pages and comments
+
+Task and note detail pages read like a document, with one content column and
+16px page gutters on phones. Put the description, updates, comments and files
+directly on the page; do not wrap them in a large card or stack padded cards
+inside one another. Ordinary updates use an avatar, a quiet author/time line,
+and the content, without a border, shadow or colored header. Use a small indent
+and one hairline for replies. Keep the peach highlight for the pinned question.
+
+The shared comment input is one compact, white, hairline-bordered field with
+its controls inside the bottom edge. Use familiar outline paperclip and
+microphone icons, a stop square while recording, and an upward-arrow send
+button. A single attachment picker accepts photos, audio and other files.
+Give icon buttons accessible names, hover titles, visible keyboard focus, and
+44px touch targets. The resting field needs only its short placeholder: no
+extra heading, keyboard-shortcut hint, privacy caption or help paragraph.
+Keep recording state, attached filenames and failed-action feedback local to
+the input. Preserve the existing keyboard and private-storage behavior.
+
 ## Avatars
 
 Always round, always the head crop: 20px on project cards and in lists, 32px for compact task and process rows, and 40px for larger task and project portraits. On the Team page, use 56px on specialist cards, 80px in the selected specialist's desktop detail panel, and 96px for the chief. People (contacts) get initials on a coloured circle instead.

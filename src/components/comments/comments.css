@@ -1,17 +1,24 @@
-.oc-form textarea { display: block; width: 100%; border: 1px solid var(--line); border-radius: var(--r-chip); padding: 10px 12px; font: inherit; font-size: var(--t-body); resize: vertical; outline: none; background: #fff; color: var(--ink); min-height: 64px; }
+.oc-form { border: 1px solid var(--line); border-radius: 12px; background: #fff; overflow: hidden; }
+.oc-form:focus-within { border-color: var(--soft); }
+.oc-form textarea { display: block; width: 100%; border: 0; border-radius: 0; padding: 12px; font: inherit; font-size: var(--t-body); resize: vertical; outline: none; background: transparent; color: var(--ink); min-height: 64px; }
+.oc-form.compact textarea { min-height: 44px; }
 .oc-form textarea::placeholder { color: var(--soft); opacity: 1; }
-.oc-form textarea:focus { border-color: var(--ink); }
 .oc-form textarea:disabled { background: #fafaf7; color: var(--soft); }
-.oc-actions { display: flex; align-items: center; gap: 4px; margin-top: 8px; font-size: var(--t-cap); color: var(--soft); }
-.oc-icon { border: 0; background: transparent; color: var(--soft); display: inline-flex; align-items: center; justify-content: center; padding: 8px; min-width: 36px; min-height: 36px; border-radius: var(--r-chip); cursor: pointer; }
+.oc-actions { display: flex; align-items: center; gap: 4px; padding: 0 8px 8px; font-size: var(--t-cap); color: var(--soft); }
+.oc-icon { border: 0; background: transparent; color: var(--soft); display: inline-flex; align-items: center; justify-content: center; padding: 10px; min-width: 44px; min-height: 44px; border-radius: var(--r-chip); cursor: pointer; }
 .oc-icon:hover { background: var(--bg); color: var(--ink); }
-.oc-send { margin-left: auto; }
+.oc-icon:focus-visible { outline: 2px solid var(--ink); outline-offset: -2px; }
+.oc-icon[aria-pressed="true"] { color: var(--needs); }
+.oc-send { margin-left: auto; border-radius: 50%; background: var(--ink); color: #fff; }
+.oc-send:hover { background: #35352f; color: #fff; }
+.oc-send:focus-visible { outline-offset: 2px; }
+.oc-send:disabled { background: #eeeee9; color: var(--soft); }
 .oc-form button:disabled { opacity: .55; cursor: default; }
-.oc-files { list-style: none; padding: 0; margin: 6px 0; display: flex; gap: 6px; flex-wrap: wrap; }
+.oc-files { list-style: none; padding: 0 12px; margin: 0 0 8px; display: flex; gap: 6px; flex-wrap: wrap; }
 .oc-files li { display: flex; align-items: center; gap: 6px; background: var(--bg); border-radius: var(--r-chip); padding: 2px 6px; min-width: 0; max-width: 100%; font-size: var(--t-cap); }
 .oc-files span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .oc-files button { border: 0; background: transparent; color: var(--ink); padding: 4px; cursor: pointer; }
-.oc-error { color: var(--needs); font-size: var(--t-cap); margin-top: 6px; }
+.oc-error { color: var(--needs); font-size: var(--t-cap); padding: 0 12px 8px; }
 .oc-body { overflow-wrap: anywhere; min-width: 0; }
 .oc-body p { margin: 0 0 6px; }
 .oc-body p:last-child { margin-bottom: 0; }
