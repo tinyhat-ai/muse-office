@@ -5,10 +5,16 @@
 
 /* ---- header: crumb, project, title, status line ---- */
 .tk-crumb { padding-bottom: 16px; border-bottom: 1px solid var(--line); }
-.tk-proj { display: inline-flex; align-items: center; gap: 7px; font-size: var(--t-cap); font-weight: 650; color: #55544f; margin-top: 24px; }
+.tk-proj { display: inline-flex; align-items: center; gap: 7px; font-size: var(--t-cap); font-weight: 650; color: #55544f; margin-top: 16px; }
 .tk-proj .stripe { margin-right: 0; height: 15px; }
 .wrap.tk h1.title { margin-top: 8px; line-height: 1.08; }
-.tk-meta { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-top: 12px; font-size: var(--t-cap); color: var(--soft); padding-bottom: 16px; border-bottom: 1px solid var(--line); }
+.tk-description { --preview-height: 160px; margin-top: 12px; }
+.tk-description .tk-def { margin-top: 0; }
+.tk-overview { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--line); }
+.tk-meta { display: flex; align-items: center; gap: 10px 14px; flex-wrap: wrap; font-size: var(--t-cap); color: var(--soft); }
+.tk-summary { margin-top: 8px; overflow-wrap: anywhere; }
+.tk-visual { display: block; width: 100%; border: 0; margin-top: 12px; }
+.tk-overview .tk-h3 { margin-top: 16px; }
 .tk-st { display: inline-flex; align-items: center; gap: 6px; font-weight: 750; }
 .tk-st::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: currentColor; }
 .tk-st.todo { color: var(--soft); }
@@ -26,7 +32,11 @@
 .tk-empty { margin-top: 8px; font-size: var(--t-body); line-height: 1.6; color: var(--soft); }
 .tk-req { margin-top: 12px; font-size: var(--t-cap); color: var(--soft); }
 .tk-req summary { cursor: pointer; font-weight: 650; }
-.tk-req div { margin-top: 8px; background: #fff; border: 1px solid var(--line); border-radius: var(--r-chip); padding: 10px 12px; color: #3d3c38; font-size: var(--t-sec); white-space: pre-wrap; }
+.tk-updates { margin-top: 20px; border-top: 1px solid var(--line); }
+.tk-updates > summary { padding: 12px 0; min-height: 44px; cursor: pointer; font-size: var(--t-body); font-weight: 650; }
+.tk-updates > summary .sub { margin-left: 6px; font-size: var(--t-cap); font-weight: 500; color: var(--soft); }
+.tk-updates > summary:focus-visible, .tk-req > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.tk-req div { margin-top: 8px; color: #3d3c38; font-size: var(--t-sec); white-space: pre-wrap; }
 
 /* Done when: a hollow circle, or a green check once met */
 .tk-chk { list-style: none; padding-left: 0; margin-top: 8px; }
@@ -36,6 +46,7 @@
 
 /* Plan: the current step is bold with "· now"; done steps are grey with a check */
 .tk-plan { margin-top: 8px; padding-left: 26px; font-size: var(--t-body); }
+.tk-req .tk-plan { color: var(--ink); }
 .tk-plan li { padding: 4px 0; }
 .tk-plan li.done { color: var(--soft); }
 .tk-plan li.done .tk-tick { color: var(--done); font-weight: 800; margin-right: 6px; }
@@ -57,6 +68,7 @@
 
 /* ---- the conversation: a vertical timeline ---- */
 .tk-conv { margin-top: 16px; position: relative; }
+.tk-conv [id^="update-"] { scroll-margin-top: 72px; }
 .tk-conv::before { content: ""; position: absolute; left: 15px; top: 6px; bottom: 6px; width: 2px; background: #e3e2dc; }
 .tk-ev { display: flex; align-items: flex-start; padding: 6px 0; position: relative; font-size: var(--t-cap); color: var(--soft); }
 .tk-ev .d { width: 10px; height: 10px; border-radius: 50%; background: #cfcdc6; margin: 4px 17px 0 11px; flex: 0 0 auto; position: relative; z-index: 1; box-shadow: 0 0 0 3px var(--bg); }
@@ -89,6 +101,7 @@ a.tk-fl:hover { border-color: #c9c8c1; }
 /* replies sit indented under the card they answer */
 .tk-replies { margin: 8px 0; border-left: 2px solid #e3e2dc; padding-left: 12px; }
 .tk-r { display: flex; gap: 8px; font-size: var(--t-sec); padding: 5px 0; line-height: 1.45; }
+.tk-r > div { min-width: 0; flex: 1; }
 .tk-r b { font-size: var(--t-cap); }
 .tk-r .tm { color: var(--soft); font-size: var(--t-cap); margin-left: 4px; }
 .tk-r .body { white-space: pre-wrap; overflow-wrap: anywhere; }
@@ -115,6 +128,7 @@ a.tk-fl:hover { border-color: #c9c8c1; }
 @media (max-width: 560px) {
   .wrap.tk { padding-top: 16px; }
   .wrap.tk h1.title { font-size: var(--t-big); }
+  .tk-description { --preview-height: 96px; }
   .tk-cm { gap: 8px; }
   .tk-composer { gap: 8px; }
   .tk-form .row { justify-content: flex-end; }

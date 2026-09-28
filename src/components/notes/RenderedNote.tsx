@@ -18,7 +18,7 @@ function diagramDescription(code: string): string {
  * code until the browser draws them. SVGs are displayed as images, so diagram
  * text cannot become active page markup or a clickable link.
  */
-export function RenderedNote({ html }: { html: string }) {
+export function RenderedNote({ html, className = "md nt-body" }: { html: string; className?: string }) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -64,5 +64,5 @@ export function RenderedNote({ html }: { html: string }) {
     return () => { cancelled = true; };
   }, [html]);
 
-  return <div className="md nt-body" ref={root} dangerouslySetInnerHTML={{ __html: html }} />;
+  return <div className={className} ref={root} dangerouslySetInnerHTML={{ __html: html }} />;
 }

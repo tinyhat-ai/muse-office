@@ -23,6 +23,19 @@
 .oc-body { overflow-wrap: anywhere; min-width: 0; }
 .oc-body p { margin: 0 0 6px; }
 .oc-body p:last-child { margin-bottom: 0; }
+.oc-markdown { font-size: inherit; line-height: inherit; }
+.oc-markdown h1, .oc-markdown h2, .oc-markdown h3, .oc-markdown h4, .oc-markdown h5, .oc-markdown h6 { font-size: 1em; line-height: 1.4; margin: 12px 0 4px; }
+.oc-markdown > :first-child { margin-top: 0; }
+.oc-markdown blockquote { border-left: 2px solid var(--line); margin: 8px 0; padding-left: 12px; color: var(--soft); }
+.oc-markdown a { text-decoration: underline; text-underline-offset: 2px; }
+.oc-markdown table { table-layout: fixed; border-radius: var(--r-chip); }
+.oc-markdown th, .oc-markdown td { padding: 6px 8px; overflow-wrap: anywhere; }
+.oc-markdown hr { border: 0; border-top: 1px solid var(--line); margin: 12px 0; }
+.oc-markdown input[type="checkbox"] { pointer-events: none; }
+.oc-expand-viewport { max-height: var(--preview-height, 160px); overflow: hidden; }
+.oc-expand-viewport.expanded { max-height: none; overflow: visible; }
+.oc-more { color: var(--soft); font-size: var(--t-cap); text-decoration: underline; text-underline-offset: 3px; min-height: 44px; padding: 6px 0; }
+.oc-more:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .oc-body ul, .oc-body ol { padding-left: 20px; }
 .oc-body pre { overflow-x: auto; white-space: pre-wrap; }
 .oc-body img { max-width: 100%; height: auto; max-height: 260px; object-fit: contain; border-radius: var(--r-chip); }

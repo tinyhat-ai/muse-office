@@ -22,8 +22,8 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 - **projects** — a project: name, colour (a pastel fill and a darker shade), who leads it, how it runs (`kind`), the process written out (`process_markdown`), and what "done" means.
 - **process_steps** — the steps of a project, in order: name, who does it (`who` is a member slug, `you`, or `any`), a one-line note, and whether the user's OK is part of it.
 - **project_rules** — rules the project learned from the user, each dated, with `origin = you` (the user said it) or `ok` (the agent suggested it, the user agreed).
-- **tasks** — a task: which project, title, which specialist, which column (`todo`, `in_progress`, `waiting_on_you`, `done`), which process step it is on, the one question when it waits on the user, a one-line note for the card, the job definition, the user's original words, an optional due date.
-- **task_checks** — the task's "Done when" checklist.
+- **tasks** — a task: which project, title, which specialist, which column (`todo`, `in_progress`, `waiting_on_you`, `done`), which process step it is on, the one question when it waits on the user, a brief plain-text `note` for the card, a current user-facing `overview` in Markdown, optional self-contained `overview_html` for a sandboxed interactive visual, the stable job definition, the user's original words, an optional due date. The task page falls back to `note` when no overview is stored. Add the two nullable overview columns to existing databases without reseeding or overwriting work.
+- **task_checks** — an optional "Done when" checklist; `met` records which outcomes have been verified. Muse maintains it as work advances; the user reads it.
 - **task_plan** — the task's plan, one row per step, each `done`, `now`, or `later`.
 - **task_files** — the files the task produced, with a URL the user can open.
 - **task_updates** — the conversation on the task's page: events, updates, questions, the user's comments, and replies. `unread_by_agent = 1` on anything the user wrote until the Muse reads it.
