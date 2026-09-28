@@ -53,6 +53,14 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 | `get_task` | `id` | Everything on the task's page. |
 | `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, due, updated_at. |
 
+`note` is the brief current summary shown on the card and task overview, not
+the original description or an internal worker log. Keep it current at
+meaningful milestones with `update_task`; update verified `done_when` states
+in the same call when needed. Read `get_task` first to retain existing checks
+and their states. A small task may omit the checklist and plan; the page omits
+empty sections. The full conversation remains stored and available even when
+the initial view shows only recent threads.
+
 ## Comments and updates
 
 | Action | Arguments | What it does |

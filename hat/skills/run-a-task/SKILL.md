@@ -8,9 +8,14 @@ description: How a task moves from a card to a finished result through a special
 1. Create the task in Office (create_task) with: project, title, the
    specialist from process.md, step (which process step it is on),
    job_definition (what and why, in plain words), original_request (the
-   user's own words), done_when (a short checklist), and plan (the steps,
-   one marked "now"). As work moves on, update_task: tick done_when, move
-   plan's "now", and change step.
+   user's own words), note (a brief current summary), and, when useful,
+   done_when (a short checklist) and plan (the steps, one marked "now").
+   The person opens this task to see what is happening and what remains,
+   not to read the workers' whole conversation. At each meaningful change,
+   update_task: keep note current, tick verified done_when items, move
+   plan's "now", and change step. Read get_task first and preserve the
+   original job definition and existing checks/states unless the user's goal
+   changes; supplied checklist and plan arrays replace the saved lists.
 2. Start a worker for that specialist. Brief it with exactly four things:
    - the task card
    - ~/workspace/office/team/<name>/AGENT.md and its skills/
@@ -37,12 +42,15 @@ description: How a task moves from a card to a finished result through a special
    before acting; never fabricate a comment authored by the user. Workers
    and the scheduled check do not inherit chat. An answer on the page is a reply to that question, so read
    which question it answers before you act on it.
-5. When the worker says done, check the result against done_when before you
+5. When the worker says done, check the result against the job definition and
+   any done_when checklist before you
    tell the user. If it falls short, send it back once with one clear note.
    If it still falls short, keep the task open with the blocker. After the
    result passes, the task's page gets the closing report (add_task_note, kind
    update): what was done, the result, the files (attach_file, or a link to
-   a file artifact), and what was learned. A file that only sits on your
+   a file artifact), and what was learned. Update note to a brief verified
+   result as well, so the overview stays useful without opening history.
+   A file that only sits on your
    computer is not an output the user can see. Only then move_task to done.
 6. The specialist writes what it learned about this kind of work for this
    user into its own AGENT.md, skills, or memory.md (one rule per line).

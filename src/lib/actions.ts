@@ -494,7 +494,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       done_when: "string[] · the Done when checklist; or [{text, met}] · optional",
       plan: "string[] · the steps, first one now, the rest later; or [{text, state}] · optional",
       due: "string · ISO date · optional",
-      note: "string · one line shown on the card · optional",
+      note: "string · brief current summary, shown on the card and task overview · optional",
     },
     run(input) {
       const project = mustProject(requiredString(input, "project", "the project's slug"));
@@ -538,7 +538,7 @@ export const ACTIONS: Record<string, ActionDef> = {
       title: "string · optional",
       specialist: "string · member slug, or null to unassign · optional",
       step: "integer · process step index, from 0 · optional",
-      note: "string · one line shown on the card · optional",
+      note: "string · brief current summary, shown on the card and task overview · optional",
       job_definition: "string · optional",
       original_request: "string · optional",
       due: "string · ISO date, or null to clear · optional",

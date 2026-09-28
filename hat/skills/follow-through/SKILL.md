@@ -32,6 +32,11 @@ the comment" for the actual goal. Read the current output before deciding:
 An unchanged scheduled tick stays quiet. Do not post another "chief review"
 or repeat the same question each minute. Report a meaningful change or a
 new blocker once on its task. Keep scheduling machinery out of the UI.
+At that change, update the task's brief `note` summary and any verified
+`done_when` states as well. The overview should tell the person what is
+happening, what remains and whether they are needed without reading worker
+history. Preserve the original description and existing checks; do not replace
+them with an internal review log or touch unchanged summaries every tick.
 
 ## Set up the check
 

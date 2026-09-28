@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS tasks (
   step             INTEGER,                     -- index of the process step the task is on
   question         TEXT,                        -- set while waiting on the user: the one question
   question_kind    TEXT,                        -- 'money' (yes / not-yet buttons) | 'approve' | 'answer'
-  note             TEXT,                        -- one line shown on the card
+  note             TEXT,                        -- brief current summary, card and task overview
   job_definition   TEXT,                        -- what this is, in plain words
   original_request TEXT,                        -- the user's own words
   due              TEXT,                        -- ISO date, optional

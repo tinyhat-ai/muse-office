@@ -33,21 +33,21 @@ does not establish that the selected tile fits.
 
 ## A task's page (`/tasks/<id>`)
 
-Like an issue page, top to bottom:
+Top to bottom, with the current state visible before detailed history:
 
-1. Breadcrumb "‹ Tasks / Money". The project name with its colour bar. The title, large. A status line: the column (orange dot for Waiting on you), "[avatar] Penny is on it", "Waiting 3 hours" or "Updated 2 hours ago", and "Due Thursday" when set.
-2. **When the task waits on the user**, the unanswered question is pinned right here, in a peach card: "[avatar] Penny asked you · 3 hours ago", the question, and either two buttons for a `money` question ("Yes, pay $1,240 on Sep 28" / "Not yet") or a "Reply to Penny" button, plus one line saying what a yes does. It disappears once answered.
-3. **What this is**: the job definition. A collapsed "Original request" with the user's own words.
-4. **Done when**: a checklist; met items show a green check.
-5. **Plan**: a numbered list; the current step is bold with "· now"; done steps are grey.
-6. **Conversation**: a vertical timeline. The last update before a task was moved to Done is its closing report (what was done, the result, the files, what was learned); that is where the detail of a task lives, not in chat. Small grey events ("<Muse> made this task from your chat", "Scout started on it"). Flat updates with the author's avatar, name, "posted an update" / "asked you" / "reported a result", the time, the body, and attached files (images as previews, audio with playback, other files as links). Keep the peach pinned question; ordinary updates have no enclosing card or colored header. Replies are indented under their original update. Each update has a "Reply" link that opens a compact input.
+1. Breadcrumb "‹ Tasks / Money", the project colour bar and name, then the title. The rendered job definition follows without another heading. Long descriptions start collapsed (96px on phones, 160px on desktop), with "Show more" only when needed; the full description remains available.
+2. **Current overview** directly after the description: the column (orange dot for Waiting on you), "[avatar] Penny is on it", updated/waiting time, optional due date, and the brief current summary from `tasks.note`. It says what has happened and what comes next in plain words. If no summary exists yet, the current plan step may appear; never invent progress. Muse updates this summary as work changes while preserving the original job definition. No extra overview heading or helper paragraph.
+3. **When the task waits on the user**, keep the current question visible in the overview, in the existing peach treatment: author/avatar, time, question and the contextual reply or money-answer controls. Do not make the user expand history to discover that they are needed, or repeat the pinned question in the initial conversation preview.
+4. **Done when**, only if the task has a useful checklist. Met items show a green check; unmet items show what remains. Muse updates those states against verified work. This is read-only; no percentages or checklist editor. Omit empty checklist headings and placeholder text.
+5. The **Original request** and **Plan** are collapsed by default and omitted when absent. Opening Plan reveals its numbered steps and the current/completed states; no records are removed.
+6. **Conversation** starts with the three most recently active non-event threads, in their existing chronological order. A recent reply makes its original thread recent even if the original comment is old. Show at most the last two replies per thread initially, with "Show more" for the rest. "Show more" on the conversation reveals the complete history, including routine events. Long comment prose may also start collapsed, but attached images and audio controls remain available. Explicit `#update-<id>` links reveal the target and its original thread, including an older reply. Keep all authors, times, files, reply relationships and the shared input. Render sanitized GitHub-flavored Markdown: headings, emphasis, lists, quotes, tables and code appear as formatted content, not source punctuation. Ordinary updates stay flat; no padded cards or colored headers. The closing report stays in this history and includes the result, files and learning.
 7. **The comment box**: "[you] Add a comment for <Muse> and Penny…" in one compact field containing paperclip, microphone and upward-arrow send icons. Use the same component on task, note and project pages and replies, with accessible names and 44px touch targets. Audio drafts have compact local Play/Pause controls before Send, including recordings after they stop. No extra input heading, shortcut hint or privacy caption. Posting stores a `task_updates` row (`author = you`, `kind = comment`, `unread_by_agent = 1`). Enter inserts a line; Shift+Enter sends, with Ctrl/Cmd+Enter retained. See `hat/skills/contextual-comments/SKILL.md` for input, host capability, and verification rules.
    All attachment entry paths append to the existing draft. Use stable item
    ids, not filenames, so same-name files can be removed independently. Clear
    the picker value after reading it to permit re-selection; preserve the
    draft on picker cancellation, validation error, or failed save. Verify choosing
    an image and audio in two separate picker visits before accepting the build.
-8. **Files from this task**: chips that open the file; "No files yet. They show up here when Penny finishes." when empty.
+8. **Files from this task**: chips that open the file. Omit the section when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 
 ### Saved comment media
