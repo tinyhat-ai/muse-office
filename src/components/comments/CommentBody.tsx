@@ -3,8 +3,9 @@ import type { CommentFile } from "@/lib/comment-attachments";
 import "./comments.css";
 
 export function CommentBody({ body, files = [] }: { body: string; files?: CommentFile[] }) {
+  const text = body ? <div className="md oc-markdown" dangerouslySetInnerHTML={{ __html: renderMarkdown(body, true) }} /> : null;
   return <div className="oc-body">
-    {body && <div dangerouslySetInnerHTML={{ __html: renderMarkdown(body, true) }} />}
+    {text}
     {files.map((file, i) => {
       const local = /^\/api\/attachments\/[0-9a-f-]{36}$/.test(file.url);
       return <div className="oc-attachment" key={`${file.url}-${i}`}>

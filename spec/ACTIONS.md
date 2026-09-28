@@ -45,13 +45,27 @@ The Team page works out each specialist's status ("working on", "next", "waiting
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `create_task` | `project`, `title`, `specialist?`, `id?`, `column?`, `step?`, `job_definition?`, `original_request?`, `done_when?: string[]`, `plan?: string[]`, `due?`, `note?` | Creates the task and its page (`column` may be `todo`, `in_progress`, or `done`; to wait on the user, create it and then `move_task` with a question). Adds the event "Made this task". Returns the task id. |
-| `update_task` | `id`, then any of `title`, `specialist`, `step`, `note`, `job_definition`, `original_request`, `due`, `done_when: [{text, met}]`, `plan: [{text, state}]` | Changes the description parts of the task's page. Supplied `job_definition`, `done_when`, and `plan` replace their previous values; omitted fields stay unchanged. Read `get_task` first to preserve existing checks and their `met` states and plan steps with their `state`. `plan` states are `done`, `now`, `later`. |
+| `create_task` | `project`, `title`, `specialist?`, `id?`, `column?`, `step?`, `job_definition?`, `original_request?`, `done_when?: string[]`, `plan?: string[]`, `due?`, `note?`, `overview?`, `overview_html?` | Creates the task and its page (`column` may be `todo`, `in_progress`, or `done`; to wait on the user, create it and then `move_task` with a question). Adds the event "Made this task". Returns the task id. |
+| `update_task` | `id`, then any of `title`, `specialist`, `step`, `note`, `overview`, `overview_html`, `job_definition`, `original_request`, `due`, `done_when: [{text, met}]`, `plan: [{text, state}]` | Updates the current snapshot or description. Supplied fields replace their previous values; omitted fields stay unchanged. `overview` and `overview_html` accept null to clear. Read `get_task` first to preserve existing checks and their `met` states and plan steps with their `state`. `plan` states are `done`, `now`, `later`. |
 | `move_task` | `id`, `column`, `question?`, `question_kind?` | Moves the card and adds a small event. `waiting_on_you` requires `question` (one clear question) and takes `question_kind`: `money` (the page shows "Yes, pay …" / "Not yet"), `approve`, or `answer` (the default). The move also posts the question on the task's page (a `question` update by the specialist) and returns its id as `question_update_id`; the page pins that row, and the user's answer is a reply to it. Moving out of `waiting_on_you` clears the question. Moving to `done` sets `done_at`; moving out of `done` clears it. |
-| `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to the conversation on the task's page. `author` is a member slug. Files also appear under "Files from this task". Posting the task's current question again as a `question` note returns the row `move_task` already posted instead of adding a second one. The last `update` before a task moves to `done` is its closing report: what was done, the result, the files, what was learned. |
+| `add_task_note` | `id`, `author`, `kind: "update" or "question" or "event"`, `body`, `files?: [{name, url}]` | Posts to Updates on the task's page. `author` is a member slug. Files also appear under "Files from this task". Posting the task's current question again as a `question` note returns the row `move_task` already posted instead of adding a second one. The last `update` before a task moves to `done` is its closing report: what was done, the result, the files, what was learned. |
 | `attach_file` | `id`, `name`, `url` | Adds a file to "Files from this task". The URL must open for the user (a file artifact link, or a file stored in the app), never a path on the Muse's computer. |
 | `get_task` | `id` | Everything on the task's page. |
-| `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, due, updated_at. |
+| `list_tasks` | `project?`, `column?`, `specialist?` | Cards, with title, column, specialist, step, question, note, overview, due, updated_at. Visual HTML is omitted; use `get_task` when needed. |
+
+`note` is the brief plain-text card summary. `overview` is the current snapshot
+for the person, separate from the original description and detailed worker log:
+what has happened, what comes next and any decision needed. It supports sanitized
+Markdown, Mermaid and SVG. `overview_html` optionally adds a self-contained HTML
+visual using inline styles/scripts in an iframe sandbox without same-origin
+access; block remote resources and API fetches with CSP. Every Office page
+also enforces `frame-src 'none'` so the visual cannot navigate to an external
+document. Keep the plain-language
+explanation in `overview`. The chief reviews both for clarity and freshness at
+meaningful milestones with `update_task`, together with verified `done_when`
+states when needed. Read `get_task` first to retain existing checks and their
+states. Small tasks may omit visuals, checklist and plan; omit empty sections.
+Full agent history remains stored under Updates, closed by default.
 
 ## Comments and updates
 

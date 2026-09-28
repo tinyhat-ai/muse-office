@@ -1,4 +1,9 @@
 import { CommentBody } from "@/components/comments/CommentBody";
+import { ExpandableContent } from "@/components/comments/ExpandableContent";
+import { TaskHistory } from "@/components/task/TaskHistory";
+import { TaskVisual } from "@/components/task/TaskVisual";
+import { RenderedNote } from "@/components/notes/RenderedNote";
+import { commentThreads } from "@/lib/comment-threads";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { renderMarkdown } from "@/lib/markdown";
@@ -21,8 +26,7 @@ import { CommentForm, ReplyToggle } from "@/components/task/CommentForm";
 import { FocusCommentButton, MoneyButtons } from "@/components/task/MoneyButtons";
 import "../tasks.css";
 
-// A task's page, like an issue: the description on top, then the
-// conversation. It is the one page where the user writes.
+// A current, human-readable snapshot first; the detailed work log stays closed.
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -108,31 +112,10 @@ export default async function TaskPage({ params }: Props) {
   const isDone = task.column_name === "done";
   const waiting = task.column_name === "waiting_on_you";
 
-  // Replies hang under the top-level update they answer, following a chain
-  // of replies up to its root. A reply whose parent is gone stands on its own.
-  const byId = new Map(updates.map((u) => [u.id, u]));
-  function rootOf(u: UpdateRow): UpdateRow | null {
-    let cur = u;
-    for (let hops = 0; cur.reply_to != null && hops < 20; hops++) {
-      const parent = byId.get(cur.reply_to);
-      if (!parent) break;
-      cur = parent;
-    }
-    return cur === u ? null : cur;
-  }
-  const top: UpdateRow[] = [];
-  const replies = new Map<number, UpdateRow[]>();
-  for (const u of updates) {
-    const root = rootOf(u);
-    if (!root) {
-      top.push(u);
-      continue;
-    }
-    const list = replies.get(root.id) ?? [];
-    list.push(u);
-    replies.set(root.id, list);
-  }
-  const updateCount = updates.filter((u) => u.kind !== "event").length;
+  const threads = commentThreads(updates);
+  const top = threads.map(({ root }) => root);
+  const replies = new Map(threads.map(({ root, replies: children }) => [root.id, children]));
+  const updateCount = updates.length;
 
   // The pinned question: the latest question row is its author and the thing
   // a yes replies to; the text is the task's own question.
@@ -145,6 +128,7 @@ export default async function TaskPage({ params }: Props) {
   const askerName = questionRow ? nameOf(questionRow.author) : workerName;
   const answer = questionRow ? [...updates].reverse().find((u) => u.author === "you" && u.reply_to === questionRow.id) : undefined;
   const pinnedId = questionRow && !answer ? questionRow.id : null;
+  const currentSummary = task.note || plan.find((item) => item.state === "now")?.text;
 
   // Files: the task's own files first, then anything attached to an update, once each.
   const files: FileChip[] = [];
@@ -160,7 +144,7 @@ export default async function TaskPage({ params }: Props) {
 
   function renderReply(r: UpdateRow) {
     return (
-      <div className="tk-r" key={r.id}>
+      <div className="tk-r" key={r.id} id={`update-${r.id}`}>
         {avatarOf(r.author, "sm")}
         <div>
           <b>{nameOf(r.author)}</b>
@@ -190,7 +174,9 @@ export default async function TaskPage({ params }: Props) {
           <div className="tk-cm-b">
             <CommentBody body={u.body} files={json(u.files_json, [])} />
           </div>
-          {own.length ? <div className="tk-replies">{own.map(renderReply)}</div> : null}
+          {own.length ? (
+            <div className="tk-replies">{own.map(renderReply)}</div>
+          ) : null}
           {pinnedAbove ? (
             <div className="tk-cm-note">Waiting on you · answer above ↑</div>
           ) : (
@@ -221,90 +207,88 @@ export default async function TaskPage({ params }: Props) {
         {projectName}
       </div>
       <h1 className="title">{task.title}</h1>
-      <div className="tk-meta">
-        <span className={`tk-st ${task.column_name}`}>{COLUMN_LABEL[task.column_name] ?? task.column_name}</span>
-        {worker ? (
-          <span className="tk-who">
-            <Avatar member={worker} size="xs" />
-            {isDone ? `Done by ${workerName}` : `${workerName} is on it`}
-          </span>
-        ) : null}
-        <span>
-          {waiting ? `Waiting ${span(task.updated_at)}` : `Updated ${ago(task.updated_at)}`}
-        </span>
-        {task.due && !isDone ? <span>Due {dueWord(task.due)}</span> : null}
-      </div>
-
-      {/* 2. the unanswered question, pinned while the task waits on the user */}
-      {waiting && questionText ? (
-        <section className="tk-cm q tk-pin" aria-label={`${askerName} asked you`}>
-          {avatarOf(askerSlug, "md")}
-          <div className="tk-cm-box">
-            <div className="tk-cm-h">
-              <b>{askerName}</b>
-              <span className="k">asked you</span>
-              <When iso={questionRow?.created_at ?? task.updated_at} />
-            </div>
-            <div className="tk-cm-b">
-              <div className="body">{questionText}</div>
-            </div>
-            {answer ? (
-              <div className="tk-answered">
-                <You size="sm" />
-                <div>
-                  <span className="body">You answered: {answer.body || json<Array<{ name: string }>>(answer.files_json, []).map((file) => file.name).join(", ")}</span> <span className="tm">· {ago(answer.created_at)}</span>
-                  <span className="next">{chiefName} will pick it up</span>
-                </div>
-              </div>
-            ) : (
-              <div className="tk-cm-f">
-                {task.question_kind === "money" && questionRow ? (
-                  <MoneyButtons task={task.id} questionId={questionRow.id} yesLabel={yesLabel(questionText)} />
-                ) : questionRow ? (
-                  <ReplyToggle task={task.id} replyTo={questionRow.id} label={`Reply to ${askerName}`} placeholder={`Reply to ${askerName}…`} />
-                ) : (
-                  <FocusCommentButton label={`Reply to ${askerName}`} />
-                )}
-                <span className="qhint">{yesHint(task.question_kind, askerName)}</span>
-              </div>
-            )}
-          </div>
-        </section>
-      ) : null}
-
-      {/* 3. what this is */}
-      <h2 className="tk-h2">What this is</h2>
       {task.job_definition ? (
-        <div className="md tk-def" dangerouslySetInnerHTML={{ __html: renderMarkdown(task.job_definition) }} />
-      ) : (
-        <p className="tk-empty">Not written yet.</p>
-      )}
-      {task.original_request ? (
-        <details className="tk-req">
-          <summary>Original request</summary>
-          <div>{task.original_request}</div>
-        </details>
+        <ExpandableContent key={task.id} className="tk-description" label="task description">
+          <div className="md tk-def" dangerouslySetInnerHTML={{ __html: renderMarkdown(task.job_definition) }} />
+        </ExpandableContent>
       ) : null}
 
-      {/* 4. done when */}
-      <div className="tk-sec" />
-      <h3 className="tk-h3">Done when</h3>
-      {checks.length ? (
-        <ul className="tk-chk">
-          {checks.map((c) => (
-            <li key={c.id} className={c.met ? "ok" : undefined}>
-              <span>{c.text}</span>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="tk-empty">Not written yet.</p>
-      )}
+      <section className="tk-overview" aria-label="Task overview">
+        <div className="tk-meta">
+          <span className={`tk-st ${task.column_name}`}>{COLUMN_LABEL[task.column_name] ?? task.column_name}</span>
+          {worker ? (
+            <span className="tk-who">
+              <Avatar member={worker} size="xs" />
+              {isDone ? `Done by ${workerName}` : `${workerName} is on it`}
+            </span>
+          ) : null}
+          <span>
+            {waiting ? `Waiting ${span(task.updated_at)}` : `Updated ${ago(task.updated_at)}`}
+          </span>
+          {task.due && !isDone ? <span>Due {dueWord(task.due)}</span> : null}
+        </div>
+        {task.overview ? <RenderedNote html={renderMarkdown(task.overview)} className="md oc-markdown tk-summary" />
+          : currentSummary ? <p className="tk-summary">{currentSummary}</p> : null}
 
-      {/* 5. plan */}
-      <div className="tk-sec" />
-      <h3 className="tk-h3">Plan</h3>
-      {plan.length ? (
+        {/* 2. the unanswered question, pinned while the task waits on the user */}
+        {waiting && questionText ? (
+          <section className="tk-cm q tk-pin" aria-label={`${askerName} asked you`}>
+            {avatarOf(askerSlug, "md")}
+            <div className="tk-cm-box">
+              <div className="tk-cm-h">
+                <b>{askerName}</b>
+                <span className="k">asked you</span>
+                <When iso={questionRow?.created_at ?? task.updated_at} />
+              </div>
+              <div className="tk-cm-b">
+                <div className="body">{questionText}</div>
+              </div>
+              {answer ? (
+                <div className="tk-answered">
+                  <You size="sm" />
+                  <div>
+                    <span className="body">You answered: {answer.body || json<Array<{ name: string }>>(answer.files_json, []).map((file) => file.name).join(", ")}</span> <span className="tm">· {ago(answer.created_at)}</span>
+                    <span className="next">{chiefName} will pick it up</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="tk-cm-f">
+                  {task.question_kind === "money" && questionRow ? (
+                    <MoneyButtons task={task.id} questionId={questionRow.id} yesLabel={yesLabel(questionText)} />
+                  ) : questionRow ? (
+                    <ReplyToggle task={task.id} replyTo={questionRow.id} label={`Reply to ${askerName}`} placeholder={`Reply to ${askerName}…`} />
+                  ) : (
+                    <FocusCommentButton label={`Reply to ${askerName}`} />
+                  )}
+                  <span className="qhint">{yesHint(task.question_kind, askerName)}</span>
+                </div>
+              )}
+            </div>
+          </section>
+        ) : null}
+
+        {checks.length ? (
+          <>
+            <h2 className="tk-h3">Done when</h2>
+            <ul className="tk-chk">
+              {checks.map((c) => (
+                <li key={c.id} className={c.met ? "ok" : undefined}>
+                  <span>{c.text}</span>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : null}
+        {task.overview_html ? <TaskVisual html={task.overview_html} /> : null}
+      </section>
+
+      {task.original_request ? <details className="tk-req">
+        <summary>Original request</summary>
+        <div>{task.original_request}</div>
+      </details> : null}
+
+      {plan.length ? <details className="tk-req">
+        <summary>Plan</summary>
         <ol className="tk-plan">
           {plan.map((p) => (
             <li key={p.id} className={p.state === "now" || p.state === "done" ? p.state : undefined}>
@@ -318,39 +302,22 @@ export default async function TaskPage({ params }: Props) {
             </li>
           ))}
         </ol>
-      ) : (
-        <p className="tk-empty">No plan yet.</p>
-      )}
+      </details> : null}
 
-      {/* 6. the conversation */}
-      <div className="tk-sec" />
-      <h2 className="tk-h2">
-        Conversation
-        <span className="sub">
-          {updateCount} {updateCount === 1 ? "update" : "updates"}
-        </span>
-      </h2>
-      {top.length ? (
-        <div className="tk-conv">
-          {top.map((u) =>
-            u.kind === "event" ? (
-              <div className="tk-ev" key={u.id}>
-                <span className="d" aria-hidden="true" />
-                <div>
-                  {u.body}
-                  <span className="t">
-                    <When iso={u.created_at} />
-                  </span>
-                </div>
+      {/* 6. optional details, closed until the person asks to see them */}
+      {updateCount > 0 ? <TaskHistory key={task.id} count={updateCount}>
+        {top.map((u) => u.kind === "event" ? (
+            <div className="tk-ev" key={u.id} id={`update-${u.id}`}>
+              <span className="d" aria-hidden="true" />
+              <div>
+                {u.body}
+                <span className="t">
+                  <When iso={u.created_at} />
+                </span>
               </div>
-            ) : (
-              renderCard(u)
-            ),
-          )}
-        </div>
-      ) : (
-        <p className="tk-empty">Nothing yet. Updates from the team show up here.</p>
-      )}
+            </div>
+          ) : renderCard(u))}
+      </TaskHistory> : null}
 
       {/* 7. the comment box */}
       <div className="tk-composer">
@@ -361,19 +328,17 @@ export default async function TaskPage({ params }: Props) {
       </div>
 
       {/* 8. files */}
-      <div className="tk-sec" />
-      <div className="tk-out">
-        <h2 className="tk-h2">Files from this task</h2>
-        {files.length ? (
+      {files.length ? <>
+        <div className="tk-sec" />
+        <div className="tk-out">
+          <h2 className="tk-h2">Files from this task</h2>
           <div className="tk-files">
             {files.map((f) => (
               <Chip key={JSON.stringify([f.name, f.url])} file={f} />
             ))}
           </div>
-        ) : (
-          <p className="tk-empty">No files yet. They show up here when {workerName} finishes.</p>
-        )}
-      </div>
+        </div>
+      </> : null}
 
       {/* 9. who is behind it */}
       <div className="tk-foot">

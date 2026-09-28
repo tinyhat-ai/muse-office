@@ -239,6 +239,30 @@ Do these before the hand-over, and again after any change to the app:
   early fails.
 - The top bar has exactly Tasks · Team · Customers · Reports · Notes, and
   a project page, a task page, and a note page open from them.
+- On a labeled test task at 320px and 390px, use a long description, a brief
+  human-readable `overview`, mixed met/unmet `done_when` items and several updates/replies.
+  The description starts collapsed; its Show more reveals the whole text.
+  Also try a short description beginning with a heading and two brief
+  paragraphs: any clipped line must have Show more; a one-line brief needs none.
+  The current summary and user question are visible before history. Empty
+  checklists/plans/files add no placeholder sections. Updates shows only its
+  label and count, closed by default; expanding reveals all updates and replies.
+  Count every entry, including events; an event-only task still exposes its history.
+  With Updates closed, post a labeled contextual comment using the visible shared
+  input outside the disclosure; opening Updates then shows the saved comment.
+  A direct link to an older update/reply opens its original context. Headings,
+  bold text, tables, quotes and code in comments render properly. Check a useful
+  diagram and a self-contained interactive HTML overview on the phone; include
+  headings and paragraphs with ordinary margins, and verify the last line stays
+  visible as the visual expands/collapses. Keep it isolated from Office APIs
+  and controls: a script, clicked link or meta refresh must not navigate its
+  frame to another document, on a task opened from the board and after a
+  reload. First verify that a bounded inline script changes visible text and
+  that the test link is a real link. Mark stripped or inactive probes untested.
+  The main comment/reply controls stay responsive
+  while the visual is running. Change the overview and
+  one checklist state through `update_task`, reopen the page, and verify both
+  changed while the original description and other states remain intact.
 - On a labeled test task and its reply, choose an image, then a known-valid
   WAV in a second picker visit. Both stay in the draft and remain attached
   after Send and reopen. Separately, play a WAV preview and remove an image

@@ -95,6 +95,37 @@ inside one another. Ordinary updates use an avatar, a quiet author/time line,
 and the content, without a border, shadow or colored header. Use a small indent
 and one hairline for replies. Keep the peach highlight for the pinned question.
 
+On task details, cap the initial description at 96px on phones and 160px on
+desktop, followed by a quiet "Show more" link when it overflows. Put the
+current status, human-readable snapshot, user question and optional completion
+checklist directly below it. The snapshot may include formatted prose, a diagram
+or a compact interactive visual, sized to the column without nested cards.
+An HTML visual's height includes its content margins (for example, use a
+`flow-root` body), so ordinary headings and paragraphs stay fully visible.
+Resize the frame as its content changes, with scrolling for content beyond
+the bounded height; do not add a large empty frame around a small visual.
+Every Office page also needs `Content-Security-Policy: frame-src 'none'`
+(a response header on each page, or an early meta policy in a generated app
+shell). The visual's own policy cannot prevent its frame navigating to another
+page. In-app navigation keeps the first loaded page's policy.
+Verify that scripts, clicked links and meta refresh cannot replace the visual
+with an external document, on a task opened from the board and after a reload.
+Prefer static visuals; use scripts only for a useful
+interaction and keep them bounded so the Office's comment and reply controls
+stay responsive.
+Keep the original request and plan collapsed. All detailed history is hidden
+under a single **Updates** disclosure and count, closed by default. Do not add
+a card around the overview, standing
+instructions, percentages or empty sections. Keep this first view compact at
+320px and 390px; a long description or internal history must not push the
+current summary off the first screen.
+
+Comments use the same sanitized Markdown renderer as task descriptions, with
+compact document styles: clear headings, emphasis and lists, a hairline quote,
+readable tables and code. Wrap long words and constrain tables/media to the
+column on phones. Never clip an attachment player or make the full history
+inaccessible to an update link.
+
 The shared comment input is one compact, white, hairline-bordered field with
 its controls inside the bottom edge. Use familiar outline paperclip and
 microphone icons, a stop square while recording, and an upward-arrow send

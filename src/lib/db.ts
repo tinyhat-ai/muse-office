@@ -33,6 +33,9 @@ function open(): Db {
   if (!contactCols.includes("in_funnel")) db.exec("ALTER TABLE contacts ADD COLUMN in_funnel INTEGER NOT NULL DEFAULT 1");
   const reportCols = (db.prepare("PRAGMA table_info(reports)").all() as Array<{ name: string }>).map((c) => c.name);
   if (!reportCols.includes("source_url")) db.exec("ALTER TABLE reports ADD COLUMN source_url TEXT");
+  const taskCols = (db.prepare("PRAGMA table_info(tasks)").all() as Array<{ name: string }>).map((c) => c.name);
+  if (!taskCols.includes("overview")) db.exec("ALTER TABLE tasks ADD COLUMN overview TEXT");
+  if (!taskCols.includes("overview_html")) db.exec("ALTER TABLE tasks ADD COLUMN overview_html TEXT");
   const count = db.prepare("SELECT COUNT(*) AS n FROM members").get() as { n: number };
   if (count.n === 0 && process.env.OFFICE_SEED !== "none") {
     // Lazy imports keep seed data out of the hot path once the office exists.
@@ -111,6 +114,7 @@ export interface RuleRow { id: number; project: string; text: string; origin: st
 export interface TaskRow {
   id: string; project: string; title: string; specialist: string | null; column_name: Column; step: number | null;
   question: string | null; question_kind: string | null; note: string | null; job_definition: string | null;
+  overview: string | null; overview_html: string | null;
   original_request: string | null; due: string | null; created_at: string; updated_at: string; done_at: string | null;
 }
 export interface CheckRow { id: number; task: string; position: number; text: string; met: number }
