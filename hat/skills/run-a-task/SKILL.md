@@ -57,7 +57,9 @@ or reporting completion in chat.
    Anything worth remembering goes into that project's memory.md only.
    If something looks like it belongs to another project, the worker asks
    you instead of guessing.
-4. Before waiting on the user, inspect the task's comments, attachments,
+4. Choose and maintain the task's lane using `SOUL.md` ("Keep the office true"),
+   including when a blocker appears or clears. Before waiting on the user,
+   inspect the task's comments, attachments,
    recorded approvals and actual outputs. A reply may already answer the
    question or choose the task; an installed approved portrait may resolve
    an old setup blocker. Continue within that authorization rather than

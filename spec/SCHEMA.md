@@ -42,6 +42,7 @@ Every page reads from these tables. Nothing on a page is stored anywhere else, s
 
 - Columns are exactly `todo`, `in_progress`, `waiting_on_you`, `done`. The pages show them as "To do", "In progress", "Waiting on you", "Done".
 - Moving a task to `waiting_on_you` requires a `question`. Moving it anywhere else clears the question.
+- Choose the lane using `hat/SOUL.md` ("Keep the office true"). To do includes queued work paused on an external dependency; Waiting on you means an answer or action is actually needed from the user. Keep blockers in the existing `note` and `overview`, with the owner and next step in the existing plan/checkpoint; no extra state or blocker table is needed.
 - A task belongs to exactly one project. A task update belongs to one task; a note comment belongs to one note; a project comment belongs to one project.
 - Stages are exactly `lead`, `talking`, `proposal`, `customer`, `past`. Changing a stage adds a `stage_changes` row.
 - Times are ISO 8601 in UTC. The pages render them as "2 hours ago" or "Sep 24".
