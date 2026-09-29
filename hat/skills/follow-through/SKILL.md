@@ -44,6 +44,8 @@ review log or touch unchanged summaries every tick.
 
 - Inspect existing schedules first. Maintain one Office-wide check; update its
   instructions instead of creating duplicates or changing unrelated jobs.
+  It handles feedback and unfinished work at the fast cadence below, and
+  runs "Review the Office hourly" when its private hourly checkpoint is due.
 - Use a one-minute interval when supported. If the platform requires a longer
   interval, agree on the nearest useful option, such as five minutes. Replace
   an old 30-minute sweep when adopting this skill. Save the job identity, actual
@@ -53,13 +55,24 @@ review log or touch unchanged summaries every tick.
   limitation once in chat; do not add banners or notices throughout Office.
 - Put this skill's decision rules, guard/checkpoint requirements, and every-run
   steps in the actual job instructions, or have the job load the installed
-  workspace copy at its start. Each tick runs the decision rules, "Prevent
-  repeated work", "On every run" and the `run-a-task` closing steps; it does
-  not repeat schedule setup or setup tests. A short schedule description or rules kept
+  workspace copy at its start. Include "Review the Office hourly" in copied
+  job instructions too. Each tick runs the decision rules, "Prevent repeated
+  work", "On every run" and the `run-a-task` closing steps, and runs the hourly
+  review when due. It does not repeat schedule setup or
+  setup tests. A short schedule description or rules kept
   only in the main chat do not brief the scheduled worker.
 - A documented, verified immediate trigger can accelerate feedback handling.
-  Always retain the periodic review of unfinished tasks, even when event
-  delivery is reliable: work can need attention without a new comment.
+  Long polling needs both a private endpoint that can hold a bounded request
+  and a supported listener that can wake the responsible agent. Verify private
+  access, request limits, reconnect/replay from a saved cursor, and an actual
+  comment-to-owner follow-up before relying on it. Do not assume an artifact
+  action URL, persistent background process or agent-wake API exists; inspect
+  the host's current tools. A returned event alone is not a working wake path.
+  Keep the scheduled fallback until that path is proven, and retain periodic
+  unfinished-work and hourly reviews afterwards. Notifications only signal
+  work to inspect: re-read the saved feed/context under the same guard below,
+  and mark comments handled only after their owned follow-up. Do not publish
+  private endpoints or credentials to make a listener work.
 
 ## Prevent repeated work
 
@@ -148,6 +161,49 @@ The checkpoint is agent coordination state, not another Office page or user-faci
    project thread. Follow `run-a-task` for closing work and recording what the
    specialist learned. Preserve approval requirements throughout.
 
+## Review the Office hourly
+
+Use the same guard and private checkpoint as the fast check. After handling
+feedback, run this review if none has completed yet or an hour has elapsed.
+If a host needs separate event and timed entry paths, they still share this
+checkpoint and guard; do not dispatch the same work twice.
+Save the pass's start time before reading. Keep the last completed review time
+for the hourly clock, and a separate updates boundary from that review's
+**start**, so changes made while it ran are included next time. Do not advance
+the updates boundary until this pass has been checked.
+
+1. Read the board and actual owner/worker state, including recently completed
+   tasks and work changed through chat. Reconcile status, next action, brief
+   card note and readable overview with what is actually happening. Preserve
+   original requests, verified checks, history and approval scope. Follow up
+   on unfinished work even without a new comment. Apply the existing lane and
+   `run-a-task` closing rules, not just a text refresh: after verifying a
+   finished result, close the same task rather than leaving it open with all
+   checks met. A still-blocked attempt remains open.
+2. Read relevant Reports and their authorized sources. Check that figures,
+   labels, units and source dates still support the conclusion. Refresh only
+   changed verified figures and any captions or conclusions contradicted by
+   them; a corrected metric with an old contradictory description is not a
+   current report. If a source is unavailable, keep the last verified
+   figures and date and record an owned retry privately; do not invent numbers
+   or relabel old data as fresh. Leave dated public example charts alone unless
+   their source or the user calls for a change.
+3. Read recent Notes and saved updates, including handled comments, since the
+   previous review's saved start boundary. Use `list_notes`/`get_note` and
+   every relevant page of `list_recent_updates(unread_only=false)`; keep typed
+   identities and include
+   records at the timestamp boundary so simultaneous updates are not skipped.
+   Check whether decisions and results have reached the matching task, note
+   or report, using the existing records. Fix only a demonstrated omission or
+   contradiction; preserve the user's wording, links, tags and diagrams.
+4. Read back changed records and their affected views. Record the completed
+   review time and its start boundary privately after checking the pass; keep
+   any unresolved writes with their owner and next retry time. On interruption, resume those records
+   after re-reading their current state, rather than replaying completed edits.
+   A quiet review changes no Office record timestamps, posts no status message
+   and creates no new card. Report only a meaningful result or a decision the
+   user needs.
+
 ## Verify during setup or a follow-through repair
 
 After starter data exists, use an isolated test Office, or reopen the Office
@@ -170,3 +226,10 @@ another approval. A missing write or unreadable voice file must keep the
 first task open. Observe a later quiet tick: no duplicate worker, reply,
 question, or closing report. Save actual outputs/checkpoint state as evidence;
 do not report a worker's "done" message as the verified user result.
+
+Also exercise a due hourly pass with no unread comments: use synthetic stale
+task/report/note records backed by known QA results, verify their correction
+and readback, then run again before an hour is due. Unchanged records, workers
+and updates must stay unchanged. Exercise an interrupted pass without losing
+pending repairs or overwriting a newer result. A manual pass proves its logic;
+observe an actual scheduled run before claiming the hourly review is active.

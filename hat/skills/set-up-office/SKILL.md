@@ -32,6 +32,8 @@ sentence without the plan is insufficient. The person must be able to read:
   Work needing specialists, team coordination or ongoing follow-up and
   visibility uses Office, including requests made in the main chat. You and the
   team will keep its board, relevant reports and notes current through actions.
+  The recurring check handles feedback frequently and reviews their accuracy
+  once an hour, even without new comments.
   After their yes, you will save this agreement in your own persistent memory
   and chief-of-staff skill so it applies in later chats (HAT.md, step 2).
 Before you start, ask at most two questions: which projects, and "shall I start?"
@@ -121,6 +123,9 @@ the user's browser cannot reach your computer. The Office app is the view.
   and an actual run. It reviews unread comments and all unfinished tasks, even
   after a comment has been answered. Agree on a supported fallback such as five
   minutes when necessary; do not silently default to 30 minutes.
+  Its private checkpoint also makes an hourly board/report/note review due.
+  Verify that branch with synthetic stale records and distinguish a manual
+  test from an actual scheduled pass; follow-through defines both checks.
 
 ## 5. Avatars
 
