@@ -123,7 +123,9 @@ chief-of-staff skill and use `hat/skills/run-a-task/SKILL.md` for tracked work.
 During the approved setup, follow `hat/skills/hat-avatar/SKILL.md`. Load Muse's
 native avatar tools and edit your actual current avatar to add a tiny plain
 black top hat, keeping your face and style. Show me the preview before activating
-it. If that exact hat image is already approved and active, reuse it. Import the
+it. Approval of the setup plan is not approval of a new avatar candidate;
+wait for my choice on that visible preview before selecting or activating it.
+If that exact hat image is already approved and active, reuse it. Import the
 approved image into Office's private assets and set it through
 `set_member_avatar` with an image or asset URL the Office can render. The native
 avatar activation and the Office portrait are separate steps; check both.

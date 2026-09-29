@@ -19,7 +19,13 @@ Add one tiny plain black top hat, with a simple crown and brim. Keep it small
 relative to the avatar. No military or captain's cap, insignia, emblems,
 gold trim, paper, stickers, text, or extra props."
 
-Then preview, get the user's approval, and activate. Read the activated Muse
+Show the actual candidate in the chat preview and wait for the person's choice
+before calling any selection or activation tool. Approval of the setup plan,
+a successful edit or a candidate id is not approval of that image. Record the
+person's exact choice with the candidate identity in the private setup log;
+do not select option 1 yourself or report an unshown preview as approved.
+An already active image can be reused only when its exact approval is recorded.
+Then activate the chosen image. Read the activated Muse
 avatar image from the platform, then follow the private import and verification
 steps below before calling the Office action `set_member_avatar(slug, avatar_url)`
 for the chief. Native activation changes Muse's avatar; that Office action only
