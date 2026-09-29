@@ -129,7 +129,8 @@ The checkpoint is agent coordination state, not another Office page or user-faci
    `reply_to_comment` itself marks that comment read; call it after a completed
    correction or durable handoff, before long-running work. For feedback that
    needs no answer, use `mark_comments_read` after handling it. Neither action
-   finishes the task. Start or resume the recorded work under the guard above.
+   finishes the task. Start or resume the recorded work under the guard above;
+   brief a specialist worker as `run-a-task` step 2 says.
 4. Call `list_tasks` without a column filter and review non-Done tasks, **even
    when no comments are unread**. Read `get_task` for their plan and outputs.
    Check the real worker state and the checkpoint's next-action due time; do not launch a new worker

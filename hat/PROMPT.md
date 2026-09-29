@@ -59,7 +59,8 @@ Before dispatching a specialist, read its actual briefing, skills and memory,
 and give it that context with the task. A role name alone is not its briefing.
 Use the same names and folder mapping in your registry and the Office Team.
 Create usable starter skill files, not just empty directories. When I teach a
-specialist a preference, save it there and read it back before saying it learned.
+specialist a preference, save it in that specialist's own files and read it
+back before saying it learned.
 
 **Projects.** Start with Work, Personal, and Office, and adapt these groups
 to what I need. Each project has a short written process (the steps, who does

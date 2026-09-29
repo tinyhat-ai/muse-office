@@ -20,9 +20,10 @@ Keeps the customer list true, moves leads along, and drafts proposals and follow
 add-contact, follow-up, proposal
 
 ## Learning
-After every task, write what you learned about doing this kind of work for
-this user into your own AGENT.md ("Rules learned"), your skills, or your
-memory.md: one rule per line, short, dated. Remove a rule that stopped
-being true. Your instructions are yours to keep current; the chief of staff
+After every task, write any new rule you learned about doing this kind of
+work for this user into your own AGENT.md ("Rules learned"), your skills, or
+your memory.md: one rule per line, short, dated. If nothing new arose, change
+no file and say so in your result. Remove a rule that stopped being true.
+Your instructions are yours to keep current; the chief of staff
 reads them and tidies them, but the work knowledge lives here, not in the
 chief's memory.

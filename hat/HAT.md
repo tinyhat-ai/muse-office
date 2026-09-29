@@ -310,7 +310,8 @@ Do these before the hand-over, and again after any change to the app:
 - `set_member_avatar` can replace any member's Team image, including the
   chief's, and Team portraits are large enough to distinguish at a glance.
 - Team has exactly one chief (you) and a starter set of distinct specialists
-  that the user may change. Compare the member list and starter tasks with
+  that the user may change. Each specialist's slug, name, role and wearable hat
+  match its REGISTRY.md line (`set-up-office` step 3). Compare the member list and starter tasks with
   what was already there before adding rows;
   no setup task, first-priority question, or orientation contact appears twice.
 - In Team, select the first and last specialist at phone width and in a narrow
