@@ -84,10 +84,12 @@ is reading; it is not a second chat app or a way to edit project data.
   page types must never route to the wrong page.
   Saved attachments belong to that typed comment, not only to task updates.
   Render the same stored image/audio files on note and project comments and
-  their replies, and include them in the feed. During setup, send a labeled
-  image/audio comment on each page type, reopen it, play its full audio and
-  compare its nonempty feed files and recovered bytes with the originals.
-  A working task player does not pass the note/project checks.
+  their replies, and include them in the feed. During setup, use synthetic
+  test pages as specified in `spec/ACTIONS.md`, never the person's ordinary
+  pages. Send a labeled image/audio comment and a labeled image/audio reply
+  on each page type, reopen both, play each full audio and compare each
+  entry's nonempty feed files and recovered bytes with its originals.
+  A working task or comment player does not pass the note/project reply checks.
 - Verify the scheduled agent can retrieve the bytes, not just list filenames.
   Use supported private download/inspection tools; when only actions are
   available, expose `get_comment_attachment` with bounded chunks as specified

@@ -282,11 +282,13 @@ Do these before the hand-over, and again after any change to the app:
   A missing source or target, or a comment id that does not belong to the
   named page, must fail. Copy all three values from one feed item because
   task, note and project comment ids can overlap.
-- On each of task, note and project pages, reopen a labeled image/audio comment
-  and reply. The saved image displays, audio plays fully, and that exact typed
-  feed item returns both files with correct media types/sizes. Empty feed files
-  or invisible saved media fails; a task-only pass is insufficient.
-  The scheduled worker recovers those files for each page type
+- On each of task, note and project test pages, reopen a labeled comment and
+  a labeled reply, each with an image and audio. Each image displays, each
+  audio plays fully, and each entry's own exact typed feed item returns both
+  of its files with correct media types/sizes. Empty feed files or invisible
+  saved media fails; a task-only or comment-only pass is insufficient.
+  Use synthetic test pages as specified in `spec/ACTIONS.md`, never the
+  person's ordinary pages. The scheduled worker recovers each entry's files
   through `get_comment_attachment` or private download, with the same size and
   hash as the originals ("Implement and verify private byte access" in
   `spec/ACTIONS.md`). Metadata, a filename or playback alone fails.

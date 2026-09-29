@@ -112,13 +112,16 @@ later pages. Newer arrivals are handled by the next sweep. Reads never change
 unread state; only a handled reply/read action does that. The worker copies
 the typed identity verbatim for all replies and checkpoints.
 
-During setup, post clearly labeled test comments on a task, note, and project,
+During setup, use clearly labeled synthetic task, note and project test pages.
+Reuse their typed identities on rechecks; never use the person's ordinary
+pages or overwrite existing content to make fixtures. Post labeled comments,
 including a media-only comment and a reply with media on each page type.
 Use a known-valid image and spoken audio file in those test entries. For each
-type, reopen them and verify the actual inline image and playable full audio,
-then verify that its feed item has both saved files with correct types/sizes.
-An empty `files` array for a comment that has uploads fails, even if task
-attachments work. Recover and compare the complete saved bytes for each type
+type, reopen both entries and verify each inline image and playable full audio,
+then verify that each entry's own feed item, the comment's and the reply's,
+has both saved files with correct types/sizes. An empty `files` array for
+either entry with uploads fails, even if task comments work. Recover and
+compare the complete saved bytes for each entry on each page type
 using the worker's real private access path below. Audit with `limit: 2` through
 `next_cursor: null`, checking all fields, newest-first order, and unique typed
 keys. Then test unread pagination while replying to the first page: the older
