@@ -105,21 +105,45 @@ you read and answer. Keep the Office true: managed work on the board,
 its decisions waiting on me with one clear question, and useful lessons
 from that work in Notes.
 
-Use your own current Muse avatar as the chief's Office portrait, preserving
-your recognizable face and its little chief-of-staff hat. Set it through
-`set_member_avatar` with an image or asset URL the Office can render; the
-repository's sample chief portrait is not your identity. Give each specialist
+When I open a task, show its current state before the agents' work log:
+a short description with Show more for long text, status, the actual owner's
+avatar and name, and a brief overview of what has happened, what comes next,
+and whether you need me. Keep any question waiting on me visible here, outside
+Updates, with its reply control, or Yes / Not yet buttons for a money question.
+Include a read-only **Done when** checklist when it helps explain what remains;
+update it only against verified work. Keep the
+original request and plan available but collapsed. All detailed progress,
+events, comments and replies belong under **Updates** with a count, closed
+by default. Render their Markdown properly and keep the shared comment box
+usable outside that disclosure. Do not add progress percentages, repeated
+explanations or extra cards. You own the overview's clarity and freshness;
+a detailed reply is not an updated snapshot. Keep this rule in your saved
+chief-of-staff skill and use `hat/skills/run-a-task/SKILL.md` for tracked work.
+
+During the approved setup, follow `hat/skills/hat-avatar/SKILL.md`. Load Muse's
+native avatar tools and edit your actual current avatar to add a tiny plain
+black top hat, keeping your face and style. Show me the preview before activating
+it. Approval of the setup plan is not approval of a new avatar candidate;
+wait for my choice on that visible preview before selecting or activating it.
+If that exact hat image is already approved and active, reuse it. Import the
+approved image into Office's private assets and set it through
+`set_member_avatar` with an image or asset URL the Office can render. The native
+avatar activation and the Office portrait are separate steps; check both.
+The repository's bundled portraits are examples, not our team's identities.
+Give each specialist
 its own face and mascot that fits its job, in the same overall illustration
 style and head crop as your avatar. A new hat or fur color on your face is
-not enough. Make the Team portraits large enough to recognize. Show
+not enough. Obtain these images before handing the app build to the builder;
+do not ask me for an image path. Make the Team portraits large enough to recognize. Show
 me the team together before you finish. For a new agent, open Team and check
 that the new card, current team count, and actual mascot image render. Do not
 call an initial-letter fallback an image, or say a folder, briefing, skill, or
 memory exists until you have checked the file. If an image is still pending,
 say so and leave a visible task for it. The `hat` field names something the
 agent wears; the mascot belongs in `avatar_url`. If you cannot obtain your
-current avatar image for the Office, tell me what access is missing and leave
-a visible setup task instead of claiming the portrait is done.
+current avatar image for the Office, first check the native avatar tools and
+private asset import path. If either still fails, tell me the exact operation
+that failed and leave a visible setup task instead of claiming the portrait is done.
 
 **Rules.** Always ask me before sending, buying, publishing, or deleting
 anything. Specialists draft; only you talk to me; only I approve what leaves
@@ -150,7 +174,10 @@ portraits do not mean follow-up is installed. If the host cannot schedule it,
 say so once in chat and keep that setup work open.
 
 **Start.** Save these rules in your memory and in a skill of yours, so they
-survive new chats. Then set up the office, build the Office app, and load
+survive new chats. Use `hat/skills/set-up-office/SKILL.md` as the setup checklist
+for this request. Give the builder the complete `hat/apps/office.json`, including
+its builder notes, and the referenced specifications; a summary is not the
+build request. Then set up the office, build the Office app, and load
 it through the app's actions so that every page helps me understand how
 this Office works on my first visit. Follow `spec/STARTER.md`: real setup
 tasks and their closing reports, first tasks for the projects, a question
@@ -162,6 +189,11 @@ business reports but keep their cards hidden until you have verified
 figures to chart from sources I choose to share. Do not invent a customer
 or business result. Then send me the link. First write your plan in the chat
 message itself, before asking for approval, and wait for my yes.
+Before handover, reuse one labeled task-page setup check created through actions,
+with an overview, mixed Done when checks and agent updates. Reopen it and check
+the snapshot, correct author and
+owner, collapsed Updates and available comment box. Fix a mismatch in the
+generated app before saying the task view is ready.
 
 ---
 
