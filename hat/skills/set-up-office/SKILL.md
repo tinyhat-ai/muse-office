@@ -116,7 +116,9 @@ the user's browser cannot reach your computer. The Office app is the view.
   does not prove routing or persistence. A simple factual question also needs no card.
 - Check Notes using a newly action-created test note as well as the starter:
   follow `spec/PAGES.md` to open, reopen, and edit its heading/table/Mermaid
-  body. A source readback alone does not pass. Keep it clearly labeled as a
+  body. Verify the decision, both labeled branches and every node/connection,
+  then a changed label and added connection; a stack of boxes or a generic
+  diagram label does not pass. A source readback alone does not pass. Keep it clearly labeled as a
   setup check rather than invented user work.
 - Follow `skills/follow-through/SKILL.md` to create or update one recurring
   Office check, every minute when supported. Verify the real enabled schedule

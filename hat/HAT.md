@@ -321,9 +321,11 @@ Do these before the hand-over, and again after any change to the app:
   definitions, but keep their cards hidden until verified figures can be
   plotted. Notes has three tagged notes.
 - Open a note containing a Markdown heading, a pipe table, bold text, and a
-  fenced `mermaid` flowchart. Confirm they render as a heading, table, bold
-  text, and diagram. If the raw punctuation appears, fix the renderer before
-  hand-over. Use the same check on a narrow screen.
+  fenced `mermaid` flowchart with a decision and two labeled branches. Follow
+  `spec/PAGES.md` to verify every node and connection, reopen it, then change
+  a label and add a connection through `upsert_note`. A linear box list or
+  generic diagram label does not pass. Confirm the heading, table and bold
+  text too. Fix incorrect rendering before hand-over and repeat at phone width.
 - On Tasks at 390px and in a roughly 560px Muse panel, select each project:
   its tile keeps the name, task count, muted Details and whole link icon
   inside the square without overlap (`spec/DESIGN.md`), and the icon opens

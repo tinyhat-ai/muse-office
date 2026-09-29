@@ -130,11 +130,30 @@ created or edited through `upsert_note` after setup. Do not pre-render only
 starter notes or display later notes as plain strings. Pass the stored
 `markdown` through GFM parsing, sanitization, and the strict Mermaid renderer;
 initialize diagrams again when the note body changes or a different note opens.
+Bundle the real Mermaid library locally, as in
+`src/components/notes/RenderedNote.tsx`; do not load it from a CDN. Preserve
+every declared node, decision shape, directed edge and edge label. Extracting
+bracket labels with a regular expression and stacking boxes is not Mermaid
+rendering and can change the meaning of the note.
 
 Verify a newly created test note through actions, not just a starter note.
 Its body must have actual line breaks, a heading, bold text, a pipe table, and
-a fenced Mermaid flowchart. Open it in the actual Office, reopen it, then edit
-one diagram label through `upsert_note` and check the changed drawing. A raw
+a fenced Mermaid flowchart with a decision and two labeled branches, such as:
+
+```mermaid
+flowchart TD
+  Request --> Choice{Need a team?}
+  Choice -->|Yes| Office[Create an Office task]
+  Choice -->|No| Chat[Answer in chat]
+  Office --> Review[Check the result]
+```
+
+Open it in the actual Office and verify all five nodes, the decision shape,
+the Yes/No labels and the four connections. Office and Chat are alternatives,
+not consecutive steps. Reopen it, then use `upsert_note` to change No to Solo
+and add `Chat --> Review`; verify both the changed label and new connection.
+Keep it in the existing labeled test note, not a second copy. A generic
+"Workflow diagram" accessibility label or any drawing alone does not pass. A raw
 `get_note` response or a comment saying it renders is not visual proof. Invalid
 diagram source stays readable; unsafe Markdown/diagram content remains blocked.
 
