@@ -51,11 +51,10 @@ can prepare reviewable promotion PRs but cannot move those branches themselves.
    `force=false` rejects a non-fast-forward. Keep an existing LTS in place
    when a new release needs more time in Latest.
 
-   Before promoting LTS, check that the production landing page can copy the
-   candidate message: `https://tinyhat.ai/muse/prompt` must accept its format.
-   If the release changes the copying format, deploy and test the compatible
-   landing page first. After promotion, verify the production response, not
-   just the raw GitHub file:
+   Before promoting LTS, test the tagged `hat/PROMPT.md` with the landing
+   page's extractor. If it needs a compatibility fix, deploy and test the
+   compatible landing page first. After promotion, verify the production
+   response, not just the raw GitHub file:
 
    ```bash
    git show vX.Y.Z:hat/PROMPT.md > /tmp/muse-office-release-prompt.md
