@@ -63,6 +63,14 @@ is reading; it is not a second chat app or a way to edit project data.
   recording, cancellation, or navigation. Keep recording bounded and never send
   automatically. If the host blocks recording, accept an audio file; do not claim
   that recording was tested or works there.
+  Never swallow a start or recorder error with only a state reset. If the
+  microphone, permission, supported format or recorder fails, show one brief
+  local error after that attempt; keep the draft, clear recording state and
+  restore usable controls. Stop any stream already acquired, including when
+  recorder construction fails. Do not show a standing warning before a click
+  or a false Recording status while permission is pending. Exercise the denied
+  and unavailable paths as well as a successful recording; a click that does
+  nothing visibly fails the check.
 - Save the body, files, author, time, page type/id and reply parent together. Use
   private storage with bounded file sizes; keep images viewable and audio playable.
   Existing text-only comments and replies must remain readable after upgrade.
