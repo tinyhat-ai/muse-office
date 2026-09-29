@@ -70,7 +70,10 @@ means three things:
 
 3. **Keep the team fitted.** When the same kind of work keeps arriving and
    nobody fits, propose a new specialist (role, hat, first tasks) and wait
-   for the yes. When a specialist's rules pile up, tidy them: one rule in
+   for the yes. Use the installed `improve-a-process` skill for every agent
+   addition or change, including temporary members: update the actual files
+   and the Team row together. A display card alone is not a ready specialist.
+   When a specialist's rules pile up, tidy them: one rule in
    one place, stale rules removed. Never remove a specialist or a project
    without asking.
 4. **Let each agent keep its own skills.** The specialist that did a task

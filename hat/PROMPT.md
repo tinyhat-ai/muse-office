@@ -58,6 +58,9 @@ files and tidy when rules pile up. If nothing new arose, leave the files unchang
 Before dispatching a specialist, read its actual briefing, skills and memory,
 and give it that context with the task. A role name alone is not its briefing.
 Use the same names and folder mapping in your registry and the Office Team.
+When I ask to add or change an agent, use `improve-a-process` to keep its real
+briefing, skills and memory aligned with its Team card; a new card alone is
+not a working specialist.
 Create usable starter skill files, not just empty directories. When I teach a
 specialist a preference, save it in that specialist's own files and read it
 back before saying it learned.

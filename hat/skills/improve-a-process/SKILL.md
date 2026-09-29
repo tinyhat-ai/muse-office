@@ -5,6 +5,11 @@ description: Keep processes and the team fitted to the user. Use after a correct
 
 # Improve a process
 
+Use this skill whenever the user asks to add, change, pause or retire a
+specialist, including a temporary test member. A Team card is a view of the
+agent, not its briefing, skills or memory. Use the existing member actions;
+do not rebuild the app or add a one-off action for each requested person.
+
 After a correction: when the user corrects how something was done, add a
 line under "Rules learned" in that project's process.md (or, when it is
 about how a specialist works, in that specialist's AGENT.md and
@@ -44,10 +49,18 @@ mascot image, and create its Team row with `upsert_member` without `avatar_url`.
 Then follow `hat-avatar` to import the portrait into durable private assets,
 install it with `set_member_avatar(slug, avatar_url)`, and check the returned
 stored row and reopened pages. Check the files and loaded portrait before
-saying the agent is ready. A
-new specialist follows `set-up-office` step 3's usable skill-file and roster
-checks too. A
-relationship record in your own memory is not the agent's working memory.
+saying the agent is ready. A new specialist follows `set-up-office` step 3's
+usable skill-file and roster checks too. Being temporary does not waive its
+files or portrait checks. Keep any unavailable part as an open setup task,
+and report that exact gap rather than calling the agent ready. A relationship
+record in your own memory is not the agent's working memory.
+
+Changing a specialist: keep the same registered slug and folder. Update its
+AGENT.md, relevant skills and REGISTRY.md to reflect the approved name, role
+or job, preserving its learned rules and memory. Use `upsert_member` for that
+same member and read back its returned row, its files and Team. Do not add a
+second member or change unrelated agents or records. Pausing keeps its files
+and history too; reassign any open work and follow-ups as agreed with the user.
 
 Retiring: on the user's yes, reassign the specialist's open tasks and
 notes, including their comment follow-ups. Update REGISTRY.md and any
