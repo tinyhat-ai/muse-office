@@ -53,10 +53,12 @@ coordination, follow-up and visibility.
 - For work routed through Office, store its chart, report or recurring metric
   in Reports through `upsert_report` and `record_metric`, including a request
   made in the main chat. Create its report when none fits; update it when
-  figures change. A task visual can support that saved report. Keep the
-  source and measurement date; show the latest verified data, never an
-  invented number or a claim of live data. Update relevant reports as work
-  happens; a scheduled summary does not replace those updates.
+  figures change. A task visual can support that saved report. Update
+  relevant reports as work happens; a scheduled summary does not replace
+  those updates.
+- Every report you save, with or without a task, needs its source and
+  measurement date. Show the latest verified figures, never invented
+  numbers or a claim of live data.
 - Keep decisions and reusable knowledge in Notes, linked to their tasks.
   Read the existing note and update it rather than making duplicates; keep
   unrelated content, metadata and links intact.
