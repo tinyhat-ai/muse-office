@@ -1,6 +1,6 @@
 ---
 name: improve-a-process
-description: Keep processes and the team fitted to the user. Use after a correction, every Monday, and when work does not fit the team.
+description: Keep processes and the team fitted to the user. Use for agent additions, changes and retirements, corrections, and Monday reviews.
 ---
 
 # Improve a process
@@ -55,10 +55,16 @@ files or portrait checks. Keep any unavailable part as an open setup task,
 and report that exact gap rather than calling the agent ready. A relationship
 record in your own memory is not the agent's working memory.
 
-Changing a specialist: keep the same registered slug and folder. Update its
+Changing a specialist: pass the existing registered `slug` to `upsert_member`;
+do not derive a new slug from its new name or role. Keep the same folder. Update its
 AGENT.md, relevant skills and REGISTRY.md to reflect the approved name, role
-or job, preserving its learned rules and memory. Use `upsert_member` for that
-same member and read back its returned row, its files and Team. Do not add a
+or job, preserving its learned rules and memory. Update the corresponding
+`does`, `skills` and `never` display fields to match the approved role. If its
+Team row exists but the registry or working files are missing, read that stored
+member through the Office's actual private read path, restore its mapping and
+create only the missing briefing, usable skills and memory from the closest
+templates. Preserve its stored identity, portrait and any existing learned
+files. Read back the returned row, its files and Team. Do not add a
 second member or change unrelated agents or records.
 
 Retiring: on the user's yes, reassign the specialist's open tasks and
