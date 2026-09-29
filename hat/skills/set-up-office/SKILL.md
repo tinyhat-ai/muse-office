@@ -28,6 +28,12 @@ sentence without the plan is insufficient. The person must be able to read:
   If they already have a boards or tasks app, say you will turn it into
   Office and keep its data.
 - A tiny chief-of-staff hat on your avatar, preview first.
+- Your working agreement: simple jobs you can finish yourself stay in chat.
+  Work needing specialists, team coordination or ongoing follow-up and
+  visibility uses Office, including requests made in the main chat. You and the
+  team will keep its board, relevant reports and notes current through actions.
+  After their yes, you will save this agreement in your own persistent memory
+  and chief-of-staff skill so it applies in later chats (HAT.md, step 2).
 Before you start, ask at most two questions: which projects, and "shall I start?"
 (The avatar preview and the email code come later, only if needed.)
 
@@ -62,8 +68,11 @@ move each lane into projects/ and keep its memory.md. Ask first.
 Do not open chats for the projects ahead of work; a project chat, if your
 platform needs one to keep a specialist from seeing the main chat, is
 opened when the first task actually starts there.
-Global memory keeps only facts that matter everywhere (name, timezone,
-family). Everything else lives in a project's or specialist's memory.md.
+Global memory keeps facts that matter everywhere (name, timezone, family)
+and the approved Office working agreement. Project details and specialist
+techniques stay in their own memory.md. Read back the saved agreement and
+skill and check the platform's retrieval path before reporting that it will
+persist across chats; disclose an unavailable persistence mechanism in chat.
 
 ## 4. The Office app
 
@@ -94,6 +103,15 @@ the user's browser cannot reach your computer. The Office app is the view.
 
 - After loading the starter, run the checks in HAT.md ("Check that the Office is right").
   Label synthetic comments as tests on the setup task; do not impersonate user approvals.
+- Verify routing with a simple job the chief can finish (such as rewriting a
+  paragraph): it must produce no board task. Then use a clearly labeled
+  main-chat test needing specialists or ongoing follow-through: its task
+  must exist before that workflow starts, and a later
+  chat correction must update that same task and any affected note or report.
+  Use a labeled test note or report, or an isolated test Office; never change
+  the person's own notes or reports as a test.
+  Check the saved records and the installed skill/memory; a chat claim alone
+  does not prove routing or persistence. A simple factual question also needs no card.
 - Check Notes using a newly action-created test note as well as the starter:
   follow `spec/PAGES.md` to open, reopen, and edit its heading/table/Mermaid
   body. A source readback alone does not pass. Keep it clearly labeled as a

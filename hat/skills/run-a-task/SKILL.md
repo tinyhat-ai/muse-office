@@ -1,12 +1,23 @@
 ---
 name: run-a-task
-description: How a task moves from a card to a finished result through a specialist.
+description: How work routed into Office moves from a card to a verified result.
 ---
 
 # Run a task
 
-1. Create the task in Office (create_task) with: project, title, the
-   specialist from process.md, step (which process step it is on),
+Use this after routing a request into Office because it needs specialists,
+team coordination or ongoing follow-up and visibility. Simple jobs you can
+finish yourself stay in chat. Follow `SOUL.md` ("Route work into Office when
+needed"). Check `list_tasks` and reuse the matching task before creating
+another; a chat answer or change belongs on that task. Create its record before starting
+or dispatching work, then brief every worker to use it. Update relevant
+reports with verified figures and save reusable decisions in linked, tagged
+notes. Read back these records and the result before moving the task to Done
+or reporting completion in chat.
+
+1. Create the task in Office (create_task) with: project, title, its owner
+   (the specialist from process.md, or you for chief-owned follow-up), step
+   (which process step it is on),
    job_definition (what and why, in plain words), original_request (the
    user's own words), note (a brief card summary), overview (the current
    snapshot for the person), and, when useful,
@@ -29,7 +40,10 @@ description: How a task moves from a card to a finished result through a special
    Prefer static visuals; add scripts only for useful interaction, with bounded
    work that leaves the Office's comment/reply controls responsive.
    Put links in overview; a visual cannot open another document.
-2. Start a worker for that specialist. Brief it with exactly four things:
+2. If specialist work is needed, start a worker for that specialist. For a
+   chief-owned follow-up, do the work yourself and keep the same task current
+   without creating an unnecessary worker. Brief a specialist with exactly
+   four things:
    - the task card
    - ~/workspace/office/team/<name>/AGENT.md and its skills/
    - ~/workspace/office/projects/<slug>/process.md
@@ -37,7 +51,7 @@ description: How a task moves from a card to a finished result through a special
    Never the whole conversation. If a worker inherits the chat it starts
    in, start it outside the main chat (a project chat, opened when this
    first task starts there, not before).
-3. The worker posts progress as updates on the task's page (add_task_note),
+3. The owner posts progress as updates on the task's page (add_task_note),
    moves the card (move_task), and saves files under
    ~/workspace/office/projects/<slug>/files/.
    Anything worth remembering goes into that project's memory.md only.
@@ -47,17 +61,18 @@ description: How a task moves from a card to a finished result through a special
    recorded approvals and actual outputs. A reply may already answer the
    question or choose the task; an installed approved portrait may resolve
    an old setup blocker. Continue within that authorization rather than
-   asking again. If a step still needs the user, the worker stops and moves the card to
-   Waiting on you with one clear question (move_task posts it on the
-   task's page). You ask the user in chat too. They may answer in either
+   asking again. If a step still needs the user, including the first step of
+   a chief-owned task, move the card to Waiting on you before asking in chat.
+   Use one clear question (move_task posts it on the task's page). They may answer in either
    place. For a chat answer, the chief records the exact words and approval
    scope as its own `add_task_note` update and in the private checkpoint
    before acting; never fabricate a comment authored by the user. Workers
    and the scheduled check do not inherit chat. An answer on the page is a reply to that question, so read
    which question it answers before you act on it.
-5. When the worker says done, check the result against the job definition and
-   any done_when checklist before you
-   tell the user. If it falls short, send it back once with one clear note.
+5. When the work is ready, check the result against the job definition and
+   any done_when checklist before telling the user, including work you
+   handled yourself. If a worker's result falls short, send it back once
+   with one clear note.
    If it still falls short, keep the task open with the blocker. After the
    result passes, the task's page gets the closing report (add_task_note, kind
    update): what was done, the result, the files (attach_file, or a link to
@@ -66,13 +81,11 @@ description: How a task moves from a card to a finished result through a special
    the person can understand the outcome without opening Updates.
    A file that only sits on your
    computer is not an output the user can see. Only then move_task to done.
-6. The specialist writes what it learned about this kind of work for this
-   user into its own AGENT.md, skills, or memory.md (one rule per line).
-   Check that it did. If the lesson is a project matter, it goes into the
+6. If a specialist did the work, it writes what it learned about this kind
+   of work for this user into its own AGENT.md, skills, or memory.md (one rule
+   per line). Check that it did. If the lesson is a project matter, it goes into the
    project's process.md or memory.md instead.
 7. Tell the user in one line, with a link to the result or the task's page.
-   If the task taught something the user may want to find again, add or
-   update a note (upsert_note) with tags, and link the task.
 
 Run up to 3 tasks at the same time. More waits in To do.
 

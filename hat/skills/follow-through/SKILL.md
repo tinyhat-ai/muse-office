@@ -123,7 +123,16 @@ The checkpoint is agent coordination state, not another Office page or user-faci
    or repeat an unchanged question on every tick. Continue authorized work,
    follow up when that action is due or stalled, and keep blockers and next
    actions on the task. Ask one clear question when the user is needed.
-5. Verify the actual changed page, file or other requested output before Done;
+5. Reconcile the task's owner, board state, brief summary and changed result
+   with the actual work, including work captured from the main chat. Follow
+   `SOUL.md` ("Route work into Office when needed") to update relevant
+   reports and notes through actions. Retry pending Office writes from the
+   checkpoint before claiming those records are current: re-read each record
+   and apply only what is still missing, so a retry cannot revert newer
+   checks, plan steps, note text or figures, or add a second card or update.
+   Refresh only changed records; a quiet tick does not rewrite summaries or
+   example charts.
+6. Verify the actual changed page, file or other requested output before Done;
    the worker's reply alone is insufficient. Read back the actual record or file
    the user asked to change: a comment describing a new title is not a renamed
    note. If the required write action is missing, repair it or keep the work

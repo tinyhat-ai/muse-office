@@ -20,6 +20,16 @@ adapts its user's Office. Muse owns the work system: it delegates, keeps the
 records, checks results, and follows up. Office makes that work easier to see
 and revisit than a long chat. Sample teams and projects can change through Muse.
 
+The chief is the main router. Simple jobs it can finish itself stay in chat.
+Office is the agents' working record for specialist work, team coordination,
+or ongoing follow-up needing visibility. Record that work before its managed
+workflow starts, even when the request comes from main chat. A file, chart or
+several small steps alone do not require a task. The chief keeps the board,
+relevant verified reports and useful notes current through actions. Preserve
+this distinction in the hat, approved setup plan and the chief's retrievable
+skill and memory. The runtime rule lives in `hat/SOUL.md` ("Route work into
+Office when needed").
+
 Keep native Muse chat, voice, and attachments as the main input. Prefer a
 supported, tested handoff that carries the current page's context into the
 native composer. Never invent a deep link or assume a link preserves context.

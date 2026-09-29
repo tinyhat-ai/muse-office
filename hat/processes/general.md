@@ -1,6 +1,8 @@
 # How <project> runs — General
 
-Lead: the chief of staff, for one-offs that fit nowhere else.
+Lead: the chief of staff, for Office work needing follow-up that fits nowhere else.
+
+Simple jobs the chief can finish directly stay in chat and do not enter this process.
 
 ## Steps
 
