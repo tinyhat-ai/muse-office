@@ -51,6 +51,37 @@ can prepare reviewable promotion PRs but cannot move those branches themselves.
    `force=false` rejects a non-fast-forward. Keep an existing LTS in place
    when a new release needs more time in Latest.
 
+   Before promoting LTS, check that the production landing page can copy the
+   candidate message: `https://tinyhat.ai/muse/prompt` must accept its format.
+   If the release changes the copying format, deploy and test the compatible
+   landing page first. After promotion, verify the production response, not
+   just the raw GitHub file:
+
+   ```bash
+   git show vX.Y.Z:hat/PROMPT.md > /tmp/muse-office-release-prompt.md
+   curl --fail --silent --show-error https://tinyhat.ai/muse/prompt \
+     -o /tmp/muse-office-production-message.txt
+   node --input-type=module <<'JS'
+   import assert from 'node:assert/strict';
+   import { readFileSync } from 'node:fs';
+   const source = readFileSync('/tmp/muse-office-release-prompt.md', 'utf8');
+   const sections = source.replace(/\r\n/g, '\n').split(/^---\s*$/m);
+   assert.equal(sections.length, 3);
+   const normalize = (text) => text.trim().replace(/\s+/g, ' ');
+   assert.equal(
+     normalize(readFileSync('/tmp/muse-office-production-message.txt', 'utf8')),
+     normalize(sections[1])
+   );
+   console.log('Production copies the complete released message.');
+   JS
+   ```
+
+   Allow up to five minutes for the existing caches to refresh. Then open
+   `https://tinyhat.ai/muse` and verify **Copy the message** succeeds. If the
+   endpoint returns an error or the text differs, restore the previous LTS
+   commit and fix the landing page before trying the promotion again. Do not
+   report LTS ready while production copying is broken.
+
 ## Compatibility
 
 The actions' names and arguments (`spec/ACTIONS.md`) and the database schema
