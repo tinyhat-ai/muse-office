@@ -9,11 +9,12 @@ yes. The details of how the Office is designed, how its pages look, and how
 each specialist and process starts are in this repository; the message
 below is the method.
 
-Before you send it: Muse may ask to read the public Office files on GitHub;
-one-time access is enough. If it asks to give the Office app itself web access,
-you can decline; that app needs none. Muse may offer to sign in to Tinyhat with
-your email; that is optional. Building the Office can take a while. Muse will
-send its private link in this chat when it is ready.
+Before you send it: Muse may ask you to allow github.com access for the Office
+build, so it can read the public Office files; one-time access is enough. If it
+asks whether the Office app itself may read the web, say no; the app makes no
+external calls. Muse may offer to sign in to Tinyhat with your email; that is
+optional. Building the Office can take a while. Muse will send its private link
+in this chat when it is ready.
 
 ---
 
