@@ -306,7 +306,13 @@ Do these before the hand-over, and again after any change to the app:
   A missing source or target, or a comment id that does not belong to the
   named page, must fail. Copy all three values from one feed item because
   task, note and project comment ids can overlap.
-- The scheduled worker recovers a labeled test image and short spoken file
+- On each of task, note and project test pages, reopen a labeled comment and
+  a labeled reply, each with an image and audio. Each image displays, each
+  audio plays fully, and each entry's own exact typed feed item returns both
+  of its files with correct media types/sizes. Empty feed files or invisible
+  saved media fails; a task-only or comment-only pass is insufficient.
+  Use the test pages named in `spec/ACTIONS.md`, never the person's other
+  pages. The scheduled worker recovers each entry's files
   through `get_comment_attachment` or private download, with the same size and
   hash as the originals ("Implement and verify private byte access" in
   `spec/ACTIONS.md`). Metadata, a filename or playback alone fails.
@@ -320,12 +326,13 @@ Do these before the hand-over, and again after any change to the app:
   and link. Reply only to labeled test comments; leave real comments unread.
   One comment's round trip does not catch an unstable offset cursor.
 - Nothing on any page is a form, except comment boxes on task, note and project pages.
-- At 320px and 390px, run the hand-over test in `contextual-comments` on a
-  task, a note and a project, including a reply and a long audio filename.
+- At 320px and 390px, run the hand-over test in `contextual-comments` on the
+  three pages named in `spec/ACTIONS.md`, or in an isolated test Office,
+  including a reply and a long audio filename.
   `Recording…` shows only while capturing; the unsent draft and the sent
   audio play; every player, the filename row and Send stay inside the page
-  gutter without sideways scrolling. Use labeled test comments or an isolated
-  test Office. Test a denied or unavailable microphone: the attempt shows one
+  gutter without sideways scrolling. Use labeled test comments.
+  Test a denied or unavailable microphone: the attempt shows one
   brief local error, keeps the draft and restores usable controls, with no
   false Recording state. Also test recorder failure after a stream is acquired,
   including after partial audio: the tracks stop, the partial draft is retained

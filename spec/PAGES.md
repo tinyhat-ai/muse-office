@@ -71,10 +71,12 @@ autoplay. Where the host cannot provide a durable playable private URL, read
 the complete saved bytes and create a local Blob URL with the correct type;
 stop playback and revoke it on unmount, and reconstruct it on reopening.
 
-Before hand-over, send a known-valid WAV of a few seconds, larger than one
-attachment chunk, and an image. Reopen the actual comment in the Muse client:
-the saved WAV must play for its full known duration and the image must show
-inline. Repeat inside a reply and after reopening the app. A working draft,
+Before hand-over, use the test pages named in `spec/ACTIONS.md`. On each
+of task, note and project pages, send a known-valid WAV of a few seconds,
+larger than one attachment chunk, and an image, in a comment and a reply.
+Reopen both entries in the Muse client: each saved WAV must play for its full
+known duration and each image must show inline. Repeat the read/play check
+after reopening the app without posting more fixtures. A working draft,
 another file viewer, or a player that stops early does not prove the saved
 comment player works. If it fails, verify byte
 count/type and the private storage reader rather than sending the person to

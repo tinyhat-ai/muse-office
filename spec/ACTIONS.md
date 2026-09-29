@@ -112,8 +112,19 @@ later pages. Newer arrivals are handled by the next sweep. Reads never change
 unread state; only a handled reply/read action does that. The worker copies
 the typed identity verbatim for all replies and checkpoints.
 
-During setup, post clearly labeled test comments on a task, note, and project,
-including replies and a media-only comment. Audit with `limit: 2` through
+During setup, use the Office setup task, the labeled test note and the Office
+project that holds the setup tasks as test pages, or an isolated test Office.
+No action removes a project, so never add a test project (`spec/DESIGN.md`).
+Reuse these typed identities on rechecks; never use the person's other pages
+or overwrite existing content to make fixtures. Post labeled comments,
+including a media-only comment and a reply with media on each page type.
+Use a known-valid image and spoken audio file in those test entries. For each
+type, reopen both entries and verify each inline image and playable full audio,
+then verify that each entry's own feed item, the comment's and the reply's,
+has both saved files with correct types/sizes. An empty `files` array for
+either entry with uploads fails, even if task comments work. Recover and
+compare the complete saved bytes for each entry on each page type
+using the worker's real private access path below. Audit with `limit: 2` through
 `next_cursor: null`, checking all fields, newest-first order, and unique typed
 keys. Then test unread pagination while replying to the first page: the older
 unread test comments must still be returned. Reply only to test comments and

@@ -94,6 +94,14 @@ is reading; it is not a second chat app or a way to edit project data.
   page title/link, owner, reply context, and openable file references including
   media type. Paginate deterministically. Identical numeric ids on different
   page types must never route to the wrong page.
+  Saved attachments belong to that typed comment, not only to task updates.
+  Render the same stored image/audio files on note and project comments and
+  their replies, and include them in the feed. During setup, use the test
+  pages named in `spec/ACTIONS.md`, never the person's other pages. Send a
+  labeled image/audio comment and a labeled image/audio reply
+  on each page type, reopen both, play each full audio and compare each
+  entry's nonempty feed files and recovered bytes with its originals.
+  A working task or comment player does not pass the note/project reply checks.
 - Verify the scheduled agent can retrieve the bytes, not just list filenames.
   Use supported private download/inspection tools; when only actions are
   available, expose `get_comment_attachment` with bounded chunks as specified
@@ -127,8 +135,9 @@ standalone browser. Verify saved content, agent access, same-page follow-up,
 keyboard behavior, mobile layout, and retry behavior. Do not impose spoken
 responses or another person's presentation preferences on everyone.
 
-Before handing over, test this shared component on a task, note, and project
-at 320px and 390px, including an indented reply and a long filename. Start
+Before handing over, test this shared component on the three pages named in
+`spec/ACTIONS.md`, or in an isolated test Office, at 320px and 390px,
+including an indented reply and a long filename. Start
 recording with permission: the live status must appear without adding a
 standing caption. Stop, listen to the unsent draft, send, reopen the page,
 and listen again. All player controls, the filename row, and Send must fit
