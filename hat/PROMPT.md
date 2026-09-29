@@ -13,8 +13,11 @@ Before you send it: Muse may ask you to allow github.com access for the Office
 build, so it can read the public Office files; one-time access is enough. If it
 asks whether the Office app itself may read the web, say no; the app makes no
 external calls. Muse may offer to sign in to Tinyhat with your email; that is
-optional. Building the Office can take a while. Muse will send its private link
-in this chat when it is ready.
+optional. Allow roughly 30 minutes for the first setup; the time can vary.
+Muse may show notices while it reads the build files and checks the Office.
+It should explain why you are seeing each warning or permission request and
+whether you need to do anything. Muse will send its private link in this chat
+when it is ready.
 
 ---
 
@@ -205,8 +208,12 @@ business reports but keep their cards hidden until you have verified
 figures to chart from sources I choose to share. Do not invent a customer
 or business result. Then send me the link. First write your plan in the chat
 message itself, before asking for approval, and wait for my yes. In that first
-reply, briefly tell me why you may need access to public files, when you will
-update me, and where I will find my Office.
+reply, tell me to allow roughly 30 minutes for the first setup, while making
+clear that the time can vary. Explain that I may see notices while you read
+public build files, create the Office, and check it. For each warning or
+permission request, tell me why it appeared and whether I need to act; say
+when access is optional. Tell me when you will update me and where I will find
+my Office.
 Before handover, reuse one labeled task-page setup check created through actions,
 with an overview, mixed Done when checks and agent updates. Reopen it and check
 the snapshot, correct author and

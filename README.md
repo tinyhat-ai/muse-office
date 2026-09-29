@@ -20,8 +20,9 @@ bought, published, or deleted without your OK.
 Muse may ask you to allow github.com access for the Office build, so it can
 read the public Office files; one-time access is enough. If it asks whether
 the Office app itself may read the web, say no; the app needs none. Signing in
-to Tinyhat is optional. Building your Office takes time, and Muse will send
-its private link in your chat when it's ready.
+to Tinyhat is optional. Allow roughly 30 minutes for the first setup; the time
+can vary. Muse will explain setup notices and send its private link in your chat
+when it's ready.
 
 The hat is simply a message you send Muse. There is no app to install yourself.
 You can change the message before sending it. The team starts with examples;
