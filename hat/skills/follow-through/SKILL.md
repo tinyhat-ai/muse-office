@@ -48,7 +48,8 @@ review log or touch unchanged summaries every tick.
   runs "Review the Office hourly" when its private hourly checkpoint is due.
 - Use a one-minute interval when supported. If the platform requires a longer
   interval, agree on the nearest useful option, such as five minutes. Replace
-  an old 30-minute sweep when adopting this skill. Save the job identity, actual
+  only an older Office-specific sweep when adopting this skill. Leave Muse's
+  default heartbeat and every unrelated job unchanged. Save the job identity, actual
   interval and scope in your own chief-of-staff skill in your workspace.
 - Use the host's scheduler tools to create or update the job, then list it
   again and inspect its enabled state, actual interval and instructions.
