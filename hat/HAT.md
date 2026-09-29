@@ -329,12 +329,14 @@ Do these before the hand-over, and again after any change to the app:
   populated, sourced public example charts. Store the eight business report
   definitions, but keep their cards hidden until verified figures can be
   plotted. Notes has three tagged notes.
-- Open a note containing a Markdown heading, a pipe table, bold text, and a
+- Create or reuse the labeled test note from `spec/PAGES.md`, never one of the
+  person's own notes. It has a Markdown heading, a pipe table, bold text, and a
   fenced `mermaid` flowchart with a decision and two labeled branches. Follow
   `spec/PAGES.md` to verify every node and connection, reopen it, then change
-  a label and add a connection through `upsert_note`. A linear box list or
-  generic diagram label does not pass. Confirm the heading, table and bold
-  text too. Fix incorrect rendering before hand-over and repeat at phone width.
+  a label and add a connection through `upsert_note`. A linear box list or an
+  accessibility label does not pass. Confirm the heading, table and bold text
+  too. Fix incorrect rendering before hand-over, and check the drawing at
+  phone width without repeating the edit.
 - On Tasks at 390px and in a roughly 560px Muse panel, select each project:
   its tile keeps the name, task count, muted Details and whole link icon
   inside the square without overlap (`spec/DESIGN.md`), and the icon opens

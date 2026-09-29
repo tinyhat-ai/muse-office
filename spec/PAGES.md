@@ -134,9 +134,12 @@ Bundle the real Mermaid library locally, as in
 `src/components/notes/RenderedNote.tsx`; do not load it from a CDN. Preserve
 every declared node, decision shape, directed edge and edge label. Extracting
 bracket labels with a regular expression and stacking boxes is not Mermaid
-rendering and can change the meaning of the note.
+rendering and can change the meaning of the note. If the host cannot bundle
+Mermaid, retain the fenced source as code and report that limitation to the
+chief; never substitute a custom parser or claim the diagram rendered.
 
-Verify a newly created test note through actions, not just a starter note.
+Create one labeled test note through actions if none exists, and reuse it on
+later checks; never edit the person's own notes as a test.
 Its body must have actual line breaks, a heading, bold text, a pipe table, and
 a fenced Mermaid flowchart with a decision and two labeled branches, such as:
 
@@ -150,10 +153,13 @@ flowchart TD
 
 Open it in the actual Office and verify all five nodes, the decision shape,
 the Yes/No labels and the four connections. Office and Chat are alternatives,
-not consecutive steps. Reopen it, then use `upsert_note` to change No to Solo
+not consecutive steps. Open another note, then reopen the test note from the
+Notes list. Use `upsert_note` to change No to Solo
 and add `Chat --> Review`; verify both the changed label and new connection.
-Keep it in the existing labeled test note, not a second copy. A generic
-"Workflow diagram" accessibility label or any drawing alone does not pass. A raw
+Keep one labeled test note; on a later check, write this example back to it
+with `upsert_note` first and repeat these steps, never a second copy. Check
+the drawing at phone width without repeating the edit. An accessibility
+label or alt text is not visual proof, however detailed. A raw
 `get_note` response or a comment saying it renders is not visual proof. Invalid
 diagram source stays readable; unsafe Markdown/diagram content remains blocked.
 
