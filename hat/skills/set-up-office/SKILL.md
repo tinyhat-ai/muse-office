@@ -13,11 +13,16 @@ Put the actual plan in the body of one chat message, in plain words, before
 asking for approval. A choice button, collapsed card, or "that's the plan"
 sentence without the plan is insufficient. The person must be able to read:
 - Tinyhat account: you will create or sign in to their Tinyhat account with
-  their email. It is where hat updates live.
-  It is optional.
-- Your office: ~/workspace/office/ on your computer, with a starter team
-  of five specialists (from team/): a Designer, a Developer, a Marketer,
-  Sales, and a Bookkeeper. Give each one a name in your own style.
+  their email and an emailed code. It is where hat updates live. It is optional.
+- Public files: Muse may ask for one-time access to github.com to read the
+  Office build files. Explain that purpose before requesting it; do not send
+  the person's private information to GitHub as part of that request. The
+  Office app itself needs no web access; tell the person to say no to a
+  separate request for that.
+- Your Office files: ~/workspace/office/ on your (Muse's) computer. The person
+  opens Office through the private link you send in this chat. Start with five
+  specialists (from team/): a Designer, a Developer, a Marketer, Sales, and a
+  Bookkeeper. Give each one a name in your own style.
   If you already keep lanes or boards folders (for example
   ~/workspace/boards/), say you will turn them into projects.
 - Projects: start with Work, Personal, and Office. Adapt these groups to
@@ -25,6 +30,9 @@ sentence without the plan is insufficient. The person must be able to read:
 - One private app, Office, with five pages: Tasks, Team, Customers, Reports,
   and Notes. Each task and each project also gets its own page.
   It saves what you add, so it is private to them and has no public link.
+  Setup is a build, not an instant switch. Say when your next update will come,
+  such as when the build finishes or when you need a decision; do not give a
+  finish time you cannot know. Send its link in this Muse chat when ready.
   If they already have a boards or tasks app, say you will turn it into
   Office and keep its data.
 - A tiny chief-of-staff hat on your avatar, preview first.

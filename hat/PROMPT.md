@@ -9,6 +9,13 @@ yes. The details of how the Office is designed, how its pages look, and how
 each specialist and process starts are in this repository; the message
 below is the method.
 
+Before you send it: Muse may ask you to allow github.com access for the Office
+build, so it can read the public Office files; one-time access is enough. If it
+asks whether the Office app itself may read the web, say no; the app makes no
+external calls. Muse may offer to sign in to Tinyhat with your email; that is
+optional. Building the Office can take a while. Muse will send its private link
+in this chat when it is ready.
+
 ---
 
 Here is how I want you to work from now on. I am promoting you to my chief
@@ -197,7 +204,9 @@ clearly labeled as examples. Define the
 business reports but keep their cards hidden until you have verified
 figures to chart from sources I choose to share. Do not invent a customer
 or business result. Then send me the link. First write your plan in the chat
-message itself, before asking for approval, and wait for my yes.
+message itself, before asking for approval, and wait for my yes. In that first
+reply, briefly tell me why you may need access to public files, when you will
+update me, and where I will find my Office.
 Before handover, reuse one labeled task-page setup check created through actions,
 with an overview, mixed Done when checks and agent updates. Reopen it and check
 the snapshot, correct author and
@@ -205,11 +214,6 @@ owner, collapsed Updates and available comment box. Fix a mismatch in the
 generated app before saying the task view is ready.
 
 ---
-
-While it builds, your Muse asks you once to allow access to github.com for
-the Office artifact, so its builder can fetch this repository: allow that
-one ("Allow once" is enough). If it asks whether the Office app itself may
-read the web, say no; the app makes no external calls.
 
 After the hand-over, try changing the team: ask Muse to create a new
 specialist for a recurring kind of work, change an existing specialist's
