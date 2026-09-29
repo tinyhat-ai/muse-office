@@ -10,7 +10,7 @@ Names are `snake_case`. Slugs are short, lowercase, `kebab-case`. Dates are ISO 
 
 | Action | Arguments | What it does |
 | --- | --- | --- |
-| `upsert_member` | `slug`, `name`, `role`, `hat?`, `job`, `avatar_url?`, `color?`, `does?: string[]`, `never?`, `skills?: string[]`, `is_chief?` | Adds or updates one card on the Team page. |
+| `upsert_member` | `slug`, `name?`, `role?`, `hat?`, `job?`, `avatar_url?`, `color?`, `does?: string[]`, `never?`, `skills?: string[]`, `is_chief?` | Adds or updates one card on the Team page. A new member requires `name`, `role` and `job`; an existing member keeps every field omitted from an update, including its portrait, hat, learned rule and sort order. |
 | `set_member_avatar` | `slug`, `avatar_url` | Changes any existing member's portrait, including the chief, and returns the stored member row, including `avatar_url`. Use the chief's actual Muse avatar image or Office asset URL, not the bundled sample. |
 | `set_member_rule` | `slug`, `rule` | Sets the "last rule learned" shown in the specialist's detail. |
 | `remove_member` | `slug` | Removes a specialist. Refused while they have open tasks, and refused for the chief. Their finished work stays; it is unlinked from them. Never called without the user's yes. |
