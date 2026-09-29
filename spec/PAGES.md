@@ -49,6 +49,13 @@ Top to bottom, with the current state visible before detailed history:
    the picker value after reading it to permit re-selection; preserve the
    draft on picker cancellation, validation error, or failed save. Verify choosing
    an image and audio in two separate picker visits before accepting the build.
+   A failed recording attempt shows one brief local error, preserves the draft
+   and restores controls; a silent catch is not a fallback. Clear recording
+   state and stop any acquired stream on failure. Show Recording only after
+   capture starts, never while permission is pending or after denial. Keep the
+   initial composer free of warnings and help text. If recording fails after
+   capturing some audio, retain that partial draft without clearing the error
+   when its final data/stop events append it.
 8. **Files from this task**: chips that open the file. Omit the section when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 

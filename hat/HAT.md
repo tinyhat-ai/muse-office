@@ -168,7 +168,9 @@ save the agreed working model so this promotion sticks:
   never lose.
 - **Skills.** Add a skill of your own named `chief-of-staff` that says where
   the office lives, loads the routing and Office record rules for requests in
-  any chat, and points at
+  any chat, and loads `~/workspace/office/skills/run-a-task/SKILL.md` for tracked
+  work. Include its responsibility for the current human-readable task snapshot
+  and verified checks, with worker details under collapsed Updates. Point at
   `~/workspace/office/SOUL.md` and the skills in `~/workspace/office/skills/`.
   Copy this hat's `skills/` folder there so they are yours, not a web page.
 - **Files.** Create `~/workspace/office/` as `set-up-office` step 3 describes:
@@ -184,6 +186,11 @@ in the setup conversation. Keep specialist techniques in their own skills
 and memory. For an existing Office, show the proposed working-model change
 and obtain the person's yes before changing their standing skill or memory;
 update the existing entries in place, preserving personal rules.
+When updating an existing Office to this hat version, include the saved
+`chief-of-staff` skill and installed runtime skills in that approved change;
+fetching a new HAT.md alone does not update them. Read them back and repeat the
+task-page check below. Preserve an already approved avatar with this hat;
+propose a different hat separately rather than silently replacing it.
 
 If you cannot edit one of these, say so to the person and do the others.
 
@@ -251,7 +258,8 @@ Do these before the hand-over, and again after any change to the app:
   With Updates closed, post a labeled contextual comment using the visible shared
   input outside the disclosure; opening Updates then shows the saved comment.
   A direct link to an older update/reply opens its original context. Headings,
-  bold text, tables, quotes and code in comments render properly. Check a useful
+  bold text, tables, quotes and code in comments render properly. An update
+  authored by an agent must show that agent's name, not "You". Check a useful
   diagram and a self-contained interactive HTML overview on the phone; include
   headings and paragraphs with ordinary margins, and verify the last line stays
   visible as the visual expands/collapses. Keep it isolated from Office APIs
@@ -307,10 +315,17 @@ Do these before the hand-over, and again after any change to the app:
   including a reply and a long audio filename.
   `Recording…` shows only while capturing; the unsent draft and the sent
   audio play; every player, the filename row and Send stay inside the page
-  gutter without sideways scrolling. If the host blocks the microphone,
-  report recording as untested.
+  gutter without sideways scrolling. Use labeled test comments.
+  Test a denied or unavailable microphone: the attempt shows one
+  brief local error, keeps the draft and restores usable controls, with no
+  false Recording state. Also test recorder failure after a stream is acquired,
+  including after partial audio: the tracks stop, the partial draft is retained
+  and the failure message survives the final data/stop events. A silent click
+  or cleared failure fails. If the host
+  blocks successful capture, report that path as untested.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their own Muse avatar, not on a bundled sample face.
+  No specialist shows a bundled `/avatars/*.svg` sample either.
 - `set_member_avatar` can replace any member's Team image, including the
   chief's, and Team portraits are large enough to distinguish at a glance.
 - Team has exactly one chief (you) and a starter set of distinct specialists

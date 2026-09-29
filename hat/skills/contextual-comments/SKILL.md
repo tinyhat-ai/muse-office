@@ -63,6 +63,18 @@ is reading; it is not a second chat app or a way to edit project data.
   recording, cancellation, or navigation. Keep recording bounded and never send
   automatically. If the host blocks recording, accept an audio file; do not claim
   that recording was tested or works there.
+  Never swallow a start or recorder error with only a state reset. If the
+  microphone, permission or recorder fails, show one brief
+  local error after that attempt; keep the draft, clear recording state and
+  restore usable controls. Stop any stream already acquired, including when
+  recorder construction fails. Try supported WebM, MP4 or Ogg, then the
+  browser default when none is supported; a missing preferred format alone
+  is not a recording failure. Preserve any captured partial clip after an
+  error, but do not let its append/stop event clear the failure message.
+  Do not show a standing warning before a click
+  or a false Recording status while permission is pending. Exercise the denied
+  and unavailable paths as well as a successful recording; a click that does
+  nothing visibly fails the check.
 - Save the body, files, author, time, page type/id and reply parent together. Use
   private storage with bounded file sizes; keep images viewable and audio playable.
   Existing text-only comments and replies must remain readable after upgrade.
@@ -129,7 +141,11 @@ including an indented reply and a long filename. Start
 recording with permission: the live status must appear without adding a
 standing caption. Stop, listen to the unsent draft, send, reopen the page,
 and listen again. All player controls, the filename row, and Send must fit
-inside the gutter without horizontal page scrolling. Test denial separately:
-no false recording status or stuck disabled controls. If microphone access
+inside the gutter without horizontal page scrolling. Test denial and an
+unavailable microphone: one brief local error, the draft retained and controls
+restored, without a false recording status. Also test recorder failure after
+acquiring a stream, including after partial audio: the stream stops, partial
+audio remains a draft and the error stays visible after the final stop event.
+If microphone access
 is blocked by the host, report that specific untested path; file playback
 does not prove recording works.
