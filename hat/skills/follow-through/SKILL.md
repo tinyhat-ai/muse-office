@@ -48,11 +48,16 @@ review log or touch unchanged summaries every tick.
   runs "Review the Office hourly" when its private hourly checkpoint is due.
 - Use a one-minute interval when supported. If the platform requires a longer
   interval, agree on the nearest useful option, such as five minutes. Replace
-  an old 30-minute sweep when adopting this skill. Save the job identity, actual
+  only an older Office-specific sweep when adopting this skill. Leave Muse's
+  default heartbeat and every unrelated job unchanged. Save the job identity, actual
   interval and scope in your own chief-of-staff skill in your workspace.
-- Verify that the job exists, is enabled, and runs. Instructions alone do not
-  prove that a schedule is active. If scheduling is unavailable, explain that
-  limitation once in chat; do not add banners or notices throughout Office.
+- Use the host's scheduler tools to create or update the job, then list it
+  again and inspect its enabled state, actual interval and instructions.
+  Save its identity in the chief's skill and private setup check. Verify a
+  real scheduled run and its same-page follow-up; a cron file, future promise
+  or manually prompted sweep is not proof. If scheduling is unavailable,
+  explain that limitation once in chat and leave that setup check unfinished;
+  do not add banners or notices throughout Office.
 - Put this skill's decision rules, guard/checkpoint requirements, and every-run
   steps in the actual job instructions, or have the job load the installed
   workspace copy at its start. Include "Review the Office hourly" in copied

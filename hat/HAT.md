@@ -235,6 +235,9 @@ figures, and tagged notes. Keep your own face under the chief's hat; each
 specialist gets a different, specialty-relevant mascot face in the same
 illustration style. Send the person the Office link and one suggested first
 request. Do not open chats for projects ahead of work; an empty chat is noise.
+Handover follows the saved setup checks, including the actual enabled Office
+job and a scheduled comment follow-up. Do not report the whole setup ready
+from a builder's completion or an avatar upload alone.
 
 ### 5. Every day
 
