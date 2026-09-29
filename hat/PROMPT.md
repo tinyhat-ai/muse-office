@@ -108,10 +108,10 @@ from that work in Notes.
 When I open a task, show its current state before the agents' work log:
 a short description with Show more for long text, status, the actual owner's
 avatar and name, and a brief overview of what has happened, what comes next,
-and whether you need me. Keep any question waiting on me and its Yes / Not yet
-reply controls visible here, outside Updates. Include a read-only **Done when**
-checklist when it
-helps explain what remains; update it only against verified work. Keep the
+and whether you need me. Keep any question waiting on me visible here, outside
+Updates, with its reply control, or Yes / Not yet buttons for a money question.
+Include a read-only **Done when** checklist when it helps explain what remains;
+update it only against verified work. Keep the
 original request and plan available but collapsed. All detailed progress,
 events, comments and replies belong under **Updates** with a count, closed
 by default. Render their Markdown properly and keep the shared comment box
