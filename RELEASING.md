@@ -95,10 +95,12 @@ can prepare reviewable promotion PRs but cannot move those branches themselves.
      -f sha=PREVIOUS_SHA -F force=true
    ```
 
-   Caches also delay a rollback. Rerun the comparison with the previous
-   release tag and verify browser copying before reporting recovery. Fix the
-   landing page before trying promotion again. Do not report LTS ready while
-   production copying is broken.
+   Caches also delay a rollback. If production was returning an error, it can
+   keep returning it for several minutes after the restore, and the comparison
+   stops at the first one. Rerun it with the previous release tag every few
+   minutes until it passes, then verify browser copying before reporting
+   recovery. Fix the landing page before trying promotion again. Do not report
+   LTS ready while production copying is broken.
 
 ## Compatibility
 
