@@ -22,7 +22,8 @@ gold trim, paper, stickers, text, or extra props."
 Show the actual candidate in the chat preview and wait for the person's choice
 before calling any selection or activation tool. Approval of the setup plan,
 a successful edit or a candidate id is not approval of that image. Record the
-person's exact choice with the candidate identity in the private setup log;
+person's exact choice with the candidate identity in the private
+`~/workspace/office/setup-checks.md`;
 do not select option 1 yourself or report an unshown preview as approved.
 An already active image can be reused only when its exact approval is recorded.
 Then activate the chosen image. Read the activated Muse
@@ -62,7 +63,7 @@ private asset reader on every surface. A bundled slug-to-image map must not
 override it. Initials are only the fallback when no usable image exists. Inspect the
 actual loaded image, not just an action success or an upload progress message.
 Only then close its avatar setup task and clear the stale waiting question.
-Keep upload retries in your own setup log; do not create comments attributed
+Keep upload retries in that same private setup check; do not create comments attributed
 to the user or invent another approval. Reuse the user's recorded approval
 for that exact image.
 

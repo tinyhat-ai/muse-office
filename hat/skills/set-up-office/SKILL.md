@@ -198,7 +198,7 @@ missing, report that exact gap and keep its setup task open.
 Reopen the private setup check first. A missing Office job, unverified run,
 unloaded portrait or failed page check stays unfinished; do not close the
 setup task or report everything ready. You can share the working Office link
-while naming one concrete remaining gap in chat. If the host cannot support
+while naming each concrete remaining gap once in chat. If the host cannot support
 a required operation, record the limitation truthfully rather than inventing
 an installed capability. Keep the UI free of scheduling notices.
 
