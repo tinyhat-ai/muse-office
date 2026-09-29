@@ -113,9 +113,9 @@ unread state; only a handled reply/read action does that. The worker copies
 the typed identity verbatim for all replies and checkpoints.
 
 During setup, post clearly labeled test comments on a task, note, and project,
-including replies and a media-only comment on each of the three page types.
-Use a known-valid image and spoken audio file. For each type, reopen the saved
-comment and reply, verify the actual inline image and playable full audio,
+including a media-only comment and a reply with media on each page type.
+Use a known-valid image and spoken audio file in those test entries. For each
+type, reopen them and verify the actual inline image and playable full audio,
 then verify that its feed item has both saved files with correct types/sizes.
 An empty `files` array for a comment that has uploads fails, even if task
 attachments work. Recover and compare the complete saved bytes for each type
