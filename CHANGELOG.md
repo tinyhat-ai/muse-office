@@ -3,6 +3,46 @@
 All notable changes to this repository are listed here. The version is the
 one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
+## 0.3.0 — 2026-09-28
+
+- Task pages lead with a brief, current overview, status and optional checks.
+  Longer descriptions can be expanded. Detailed work stays under Updates,
+  closed by default, while the comment box remains available.
+- Task overviews can include diagrams or a small interactive visual. They
+  stay separate from the Office's private data and fit the available space.
+- Recording shows visible feedback, and draft and sent audio stay usable on
+  phones. Muse checks the actual image or voice content before acting on it.
+- Muse keeps its own face when putting on the hat and verifies the portrait
+  before closing setup. New Markdown notes and Mermaid diagrams are checked
+  in the actual Office too.
+- Simple jobs stay in chat. Work needing specialists or ongoing follow-up
+  goes on the board, including work requested in the main chat. Blocked work
+  uses the existing lanes according to its real next action.
+- The regular Office check follows work until its result is verified. It
+  also reviews the board, relevant reports and recent notes once an hour,
+  keeping their summaries accurate without rewriting unchanged records.
+
+### Updating an existing Office
+
+Ask Muse to review this release and show you its update plan before saving
+the revised chief-of-staff rules and skills. Keep your existing records,
+projects, team, portraits, customizations and recurring Office check.
+
+This release adds optional `overview` and `overview_html` task fields and
+extends `create_task`, `update_task` and `get_task` for them. Follow
+`spec/SCHEMA.md`, `spec/ACTIONS.md` and `spec/PAGES.md` from the
+[v0.3.0 release](https://github.com/tinyhat-ai/muse-office/tree/v0.3.0).
+The reference app adds the fields in place; a Muse-built Office needs its
+own corresponding update. Do not reset or reseed it.
+
+Refresh the runtime skills from `hat/skills/` and keep the approved agreement
+in Muse's retrievable chief skill and memory. Update the existing job to load
+or carry the full `follow-through` rules, including the hourly review, shared
+guard, saved updates boundary and pending repairs. Verify a real scheduled
+run and a quiet review. Long polling is an option only after private listener
+access and event-to-owner follow-up are proven; no listener is delivered in
+this release. Recording and interactive visuals still depend on host support.
+
 ## 0.2.1 — 2026-09-28
 
 - Comment boxes use attachment, microphone, and send icons, with less text
