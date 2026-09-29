@@ -302,12 +302,13 @@ Do these before the hand-over, and again after any change to the app:
   and link. Reply only to labeled test comments; leave real comments unread.
   One comment's round trip does not catch an unstable offset cursor.
 - Nothing on any page is a form, except comment boxes on task, note and project pages.
-- At 320px and 390px, run the hand-over test in `contextual-comments` on a
-  task, a note and a project, including a reply and a long audio filename.
+- At 320px and 390px, run the hand-over test in `contextual-comments` on the
+  three pages named in `spec/ACTIONS.md`, or in an isolated test Office,
+  including a reply and a long audio filename.
   `Recording…` shows only while capturing; the unsent draft and the sent
   audio play; every player, the filename row and Send stay inside the page
-  gutter without sideways scrolling. Use labeled test comments or an isolated
-  test Office. If the host blocks the microphone, report recording as untested.
+  gutter without sideways scrolling. If the host blocks the microphone,
+  report recording as untested.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their own Muse avatar, not on a bundled sample face.
 - `set_member_avatar` can replace any member's Team image, including the
