@@ -5,7 +5,7 @@ description: Keep processes and the team fitted to the user. Use after a correct
 
 # Improve a process
 
-Use this skill whenever the user asks to add, change, pause or retire a
+Use this skill whenever the user asks to add, change or retire a
 specialist, including a temporary test member. A Team card is a view of the
 agent, not its briefing, skills or memory. Use the existing member actions;
 do not rebuild the app or add a one-off action for each requested person.
@@ -59,8 +59,7 @@ Changing a specialist: keep the same registered slug and folder. Update its
 AGENT.md, relevant skills and REGISTRY.md to reflect the approved name, role
 or job, preserving its learned rules and memory. Use `upsert_member` for that
 same member and read back its returned row, its files and Team. Do not add a
-second member or change unrelated agents or records. Pausing keeps its files
-and history too; reassign any open work and follow-ups as agreed with the user.
+second member or change unrelated agents or records.
 
 Retiring: on the user's yes, reassign the specialist's open tasks and
 notes, including their comment follow-ups. Update REGISTRY.md and any
