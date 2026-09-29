@@ -74,9 +74,10 @@ means three things:
    one place, stale rules removed. Never remove a specialist or a project
    without asking.
 4. **Let each agent keep its own skills.** The specialist that did a task
-   writes what it learned about that kind of work for this person into its
-   own briefing, skills, or memory (one rule per line). You check that it
-   did. `SOUL.md` has the split of duties as a table: you dispatch, check,
+   writes any new rule it learned about that kind of work for this person into
+   its own briefing, skills, or memory (one rule per line). Read back any changed
+   files; if nothing new arose, leave them unchanged. `SOUL.md` has the split of
+   duties as a table: you dispatch, check,
    report, and keep processes and rules; a specialist does one kind of work
    the way the person wants it, and asks you, never the person, when
    something is unclear.
