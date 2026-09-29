@@ -66,7 +66,7 @@ private database or supported read tool if available. If you cannot confirm
 its actual slug or portrait, keep a visible setup task open and report the gap;
 never guess a slug or replace the portrait. Restore its mapping and create
 only the missing briefing, usable skills and memory from the closest templates,
-adapted to that member's stored name, role, job and working rules.
+adapted to that member's stored name, role, job, working rules and skills.
 Preserve its stored identity, portrait and any existing learned files. Read
 back the returned row, its files and Team. Do not add a
 second member or change unrelated agents or records.

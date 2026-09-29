@@ -43,9 +43,9 @@ or reporting completion in chat.
 2. Before dispatch, read REGISTRY.md, the current task, and the specialist's
    actual briefing, relevant skills and memory. Use its registered member slug
    and folder; do not substitute an ad hoc worker with only the same role name.
-   If a registered member lacks those working files, follow
-   `improve-a-process`'s existing-member recovery, keep a visible setup task
-   open, and do not dispatch a role-only worker before the files are verified.
+   If the owning specialist has no REGISTRY.md line or lacks those working files,
+   follow `improve-a-process`'s existing-member recovery. Until its files are
+   verified, keep a visible setup task open and do not dispatch a role-only worker.
    If specialist work is needed, start a worker for that specialist. For a
    chief-owned follow-up, do the work yourself and keep the same task current
    without creating an unnecessary worker. Brief a specialist with exactly
