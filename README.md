@@ -17,6 +17,11 @@ bought, published, or deleted without your OK.
 2. Copy the text between the two horizontal lines and paste it into your Muse chat.
 3. Review Muse's plan and approve it when you're ready.
 
+Muse may ask to read the public Office files on GitHub; one-time access is
+enough. The Office app itself needs no web access. Signing in to Tinyhat is
+optional. Building your Office takes time, and Muse will send its private link
+in your chat when it's ready.
+
 The hat is simply a message you send Muse. There is no app to install yourself.
 You can change the message before sending it. The team starts with examples;
 ask Muse to add, change, or remove specialists as your work changes.
