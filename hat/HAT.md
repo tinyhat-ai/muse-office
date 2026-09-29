@@ -309,7 +309,13 @@ Do these before the hand-over, and again after any change to the app:
   `Recording…` shows only while capturing; the unsent draft and the sent
   audio play; every player, the filename row and Send stay inside the page
   gutter without sideways scrolling. Use labeled test comments or an isolated
-  test Office. If the host blocks the microphone, report recording as untested.
+  test Office. Test a denied or unavailable microphone: the attempt shows one
+  brief local error, keeps the draft and restores usable controls, with no
+  false Recording state. Also test recorder failure after a stream is acquired,
+  including after partial audio: the tracks stop, the partial draft is retained
+  and the failure message survives the final data/stop events. A silent click
+  or cleared failure fails. If the host
+  blocks successful capture, report that path as untested.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their own Muse avatar, not on a bundled sample face.
   No specialist shows a bundled `/avatars/*.svg` sample either.
