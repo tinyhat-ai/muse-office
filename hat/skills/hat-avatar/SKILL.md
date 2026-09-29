@@ -8,17 +8,23 @@ description: Add the chief-of-staff hat to your avatar, and make sibling avatars
 If the user's Muse already has its approved chief-of-staff avatar, use that
 current image for the Office. Do not start a new avatar edit.
 
-Otherwise, use your avatar edit flow with this instruction, word for word:
+Otherwise, load the platform's native avatar tools before editing. In Muse,
+use its `avatar` namespace and `avatar.edit` flow, which edits your existing
+identity. Do not generate a replacement chief through a general image tool,
+or declare the current image inaccessible before checking those tools.
+Use this instruction in the native avatar edit flow:
 
 "Keep the current avatar's shape, style, and identity exactly as they are.
-Add one tiny, minimal, funny "chief of staff" hat. The hat must read clearly
-as a hat — a recognizable hat silhouette with crown and brim, not a box or
-abstract shape. Keep it small relative to the avatar and simple: no paper,
-no stickers, no text, no extra props."
+Add one tiny plain black top hat, with a simple crown and brim. Keep it small
+relative to the avatar. No military or captain's cap, insignia, emblems,
+gold trim, paper, stickers, text, or extra props."
 
 Then preview, get the user's approval, and activate. Read the activated Muse
 avatar image from the platform, then follow the private import and verification
-steps below before calling `set_member_avatar` for the chief. Do not substitute the
+steps below before calling `set_member_avatar` for the chief. Native activation
+changes Muse's avatar; `set_member_avatar` only changes an Office member. Complete
+both during setup. A candidate id or generation result is not an image URL.
+Do not substitute the
 standalone reference app's bundled chief image. Verify the same recognizable
 face appears in Muse and on the Office Team page. If the platform cannot
 expose that image to the Office, state exactly what is missing and leave an
@@ -36,6 +42,9 @@ Import it into the Office's durable private asset storage before setting
 `avatar_url`. A local path, inaccessible platform file, or expiring preview
 link is not an installed portrait. Use the resulting Office asset path or
 durable accessible HTTPS image URL with `set_member_avatar(slug, avatar_url)`.
+Inspect the host's private asset import/read mechanism with the builder if
+needed; renaming a local path to `/assets/...` does not import the file. Keep
+the image private rather than publishing it to make the URL work.
 
 Check that `set_member_avatar` returns the stored member with `avatar_url`
 equal to the imported durable asset path or URL. Reopen Team, then open a task
@@ -52,7 +61,11 @@ for that exact image.
 # Specialist faces
 
 Create one original mascot for each current specialist. Use the chief's actual
-Muse portrait as the style reference. They must look like a team through its
+Muse portrait image as the style reference supplied to the image tool and
+builder, not just a written description or the repository's sample portraits.
+Generate and install these during setup. Bundled `/avatars/*.svg` images are
+only for browsing the standalone reference app. They must not become the
+personal Office's specialist identities. They must look like a team through its
 overall illustration style, crop, and background, while each has a
 **different face and recognizable character**. Choose a species, facial
 expression, and visual detail that suggest the specialty without relying on

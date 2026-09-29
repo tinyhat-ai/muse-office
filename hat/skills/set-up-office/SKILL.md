@@ -144,13 +144,20 @@ the user's browser cannot reach your computer. The Office app is the view.
 
 ## 5. Avatars
 
-Follow skills/hat-avatar/SKILL.md for your own avatar. Then create a distinct
+Complete `skills/hat-avatar/SKILL.md` as part of the approved setup, before
+handover. Load the native avatar tools, edit the existing Muse face, show the
+tiny plain top-hat preview for approval, and activate it. Reuse an already
+approved active hat image. Give the actual image to the specialist image tool
+and builder as their style reference; do not silently keep bundled sample faces.
+Then create a distinct
 face and specialty-relevant mascot for each specialist in a consistent visual
 style. Use the "Hat:" and "Color:" lines in each team/ template as optional
 visual cues, not instructions to recolor the same face. Store each image on
 that specialist's Team card with `set_member_avatar(slug, avatar_url)` after
 creating its member row. Follow the private import and reopen checks in
-`hat-avatar`; an upload acknowledgement alone is not success. Show the person
+`hat-avatar`; a native activation, upload acknowledgement or stored path alone
+is not success. Read back each member's `avatar_url` and inspect its loaded
+image after reopening Team, a task and the board. Show the person
 the team together before you finish; if images are unavailable, keep initials
 temporarily and record avatar creation as a setup task. When creating or
 changing an agent later, use `hat` only for a wearable accessory, never as a
