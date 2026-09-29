@@ -3,6 +3,58 @@
 All notable changes to this repository are listed here. The version is the
 one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
+## 0.3.0 — 2026-09-28
+
+- Task pages lead with a brief, current overview, status and optional checks.
+  Longer descriptions can be expanded. Detailed work stays under Updates,
+  closed by default, while the comment box remains available.
+- Task overviews can include diagrams or a small interactive visual. They
+  stay separate from the Office's private data and fit the available space.
+- Recording shows visible feedback, and draft and sent audio stay usable on
+  phones. Muse's regular check can read the complete saved image or voice
+  file, not just its name.
+- Muse stores an approved portrait in the Office itself, not behind a preview
+  link that can expire. A portrait too large to upload is resized, not
+  redrawn, without asking again. New Markdown notes and Mermaid diagrams are
+  checked in the actual Office.
+- Muse shows its setup plan in the chat message before asking for approval.
+- Simple jobs stay in chat. Work needing specialists or ongoing follow-up
+  goes on the board, including work requested in the main chat. Blocked work
+  uses the existing lanes according to its real next action.
+- Once you have answered a question, on the page or in chat, Muse does not
+  ask it again: the regular Office check finishes that work when its result
+  is verified. It also reviews the board, relevant reports and recent notes
+  once an hour, keeping their summaries accurate without rewriting unchanged
+  records.
+
+### Updating an existing Office
+
+Ask Muse to review this release and show you its update plan before saving
+the revised chief-of-staff rules and skills. Keep your existing records,
+projects, team, portraits, customizations and recurring Office check.
+
+This release adds optional `overview` and `overview_html` task fields and
+extends `create_task`, `update_task` and `get_task` for them; `list_tasks`
+returns `overview` without the HTML. Follow `spec/SCHEMA.md`,
+`spec/ACTIONS.md`, `spec/PAGES.md` and `spec/DESIGN.md` from the
+[v0.3.0 release](https://github.com/tinyhat-ai/muse-office/tree/v0.3.0).
+Apply their generated-Office requirements for the shared comment box and
+audio players, accumulating draft attachments, saved media and private file
+access, the updates feed, notes, portraits, inline Team details and project
+tiles.
+The reference app adds the fields in place; a Muse-built Office needs its
+own corresponding update. Do not reset or reseed it. After changing the app,
+run the "Check that the Office is right" list in `hat/HAT.md` with labeled
+test records or an isolated test Office.
+
+Refresh the runtime skills from `hat/skills/` and keep the approved agreement
+in Muse's retrievable chief skill and memory. Update the existing job to load
+or carry the full `follow-through` rules, including the hourly review, shared
+guard, saved updates boundary and pending repairs. Verify a real scheduled
+run and a quiet review. Long polling is an option only after private listener
+access and event-to-owner follow-up are proven; no listener is delivered in
+this release. Recording and interactive visuals still depend on host support.
+
 ## 0.2.1 — 2026-09-28
 
 - Comment boxes use attachment, microphone, and send icons, with less text
