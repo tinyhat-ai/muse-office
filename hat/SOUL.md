@@ -131,8 +131,9 @@ explicit request to save their result as a note or report needs no task.
     when neither the team nor the user has an actionable next step yet.
   - **In progress**: an owner is doing the work, reviewing it, or actively
     resolving a blocker through an authorized repair or workaround.
-  - **Waiting on you**: progress needs the user's answer, choice, access or
-    approval. Read existing replies and approvals first. If still needed,
+  - **Waiting on you**: progress needs the user's answer, choice, access,
+    approval or an action only they can take. Read existing replies and
+    approvals first. If still needed,
     move the card with one clear question **before** asking in chat.
   - **Done**: the requested result exists and has been checked.
   A technical limitation or external wait is not by itself a question for
