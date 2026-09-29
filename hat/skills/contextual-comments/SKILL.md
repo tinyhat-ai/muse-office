@@ -82,6 +82,12 @@ is reading; it is not a second chat app or a way to edit project data.
   page title/link, owner, reply context, and openable file references including
   media type. Paginate deterministically. Identical numeric ids on different
   page types must never route to the wrong page.
+  Saved attachments belong to that typed comment, not only to task updates.
+  Render the same stored image/audio files on note and project comments and
+  their replies, and include them in the feed. During setup, send a labeled
+  image/audio comment on each page type, reopen it, play its full audio and
+  compare its nonempty feed files and recovered bytes with the originals.
+  A working task player does not pass the note/project checks.
 - Verify the scheduled agent can retrieve the bytes, not just list filenames.
   Use supported private download/inspection tools; when only actions are
   available, expose `get_comment_attachment` with bounded chunks as specified

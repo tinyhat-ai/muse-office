@@ -113,7 +113,13 @@ unread state; only a handled reply/read action does that. The worker copies
 the typed identity verbatim for all replies and checkpoints.
 
 During setup, post clearly labeled test comments on a task, note, and project,
-including replies and a media-only comment. Audit with `limit: 2` through
+including replies and a media-only comment on each of the three page types.
+Use a known-valid image and spoken audio file. For each type, reopen the saved
+comment and reply, verify the actual inline image and playable full audio,
+then verify that its feed item has both saved files with correct types/sizes.
+An empty `files` array for a comment that has uploads fails, even if task
+attachments work. Recover and compare the complete saved bytes for each type
+using the worker's real private access path below. Audit with `limit: 2` through
 `next_cursor: null`, checking all fields, newest-first order, and unique typed
 keys. Then test unread pagination while replying to the first page: the older
 unread test comments must still be returned. Reply only to test comments and
