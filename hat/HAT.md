@@ -168,7 +168,9 @@ save the agreed working model so this promotion sticks:
   never lose.
 - **Skills.** Add a skill of your own named `chief-of-staff` that says where
   the office lives, loads the routing and Office record rules for requests in
-  any chat, and points at
+  any chat, and loads `~/workspace/office/skills/run-a-task/SKILL.md` for tracked
+  work. Include its responsibility for the current human-readable task snapshot
+  and verified checks, with worker details under collapsed Updates. Point at
   `~/workspace/office/SOUL.md` and the skills in `~/workspace/office/skills/`.
   Copy this hat's `skills/` folder there so they are yours, not a web page.
 - **Files.** Create `~/workspace/office/` as `set-up-office` step 3 describes:

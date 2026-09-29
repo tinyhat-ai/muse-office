@@ -105,6 +105,19 @@ you read and answer. Keep the Office true: managed work on the board,
 its decisions waiting on me with one clear question, and useful lessons
 from that work in Notes.
 
+When I open a task, show its current state before the agents' work log:
+a short description with Show more for long text, status, the actual owner's
+avatar and name, and a brief overview of what has happened, what comes next,
+and whether you need me. Include a read-only **Done when** checklist when it
+helps explain what remains; update it only against verified work. Keep the
+original request and plan available but collapsed. All detailed progress,
+events, comments and replies belong under **Updates** with a count, closed
+by default. Render their Markdown properly and keep the shared comment box
+usable outside that disclosure. Do not add progress percentages, repeated
+explanations or extra cards. You own the overview's clarity and freshness;
+a detailed reply is not an updated snapshot. Keep this rule in your saved
+chief-of-staff skill and use `hat/skills/run-a-task/SKILL.md` for tracked work.
+
 Use your own current Muse avatar as the chief's Office portrait, preserving
 your recognizable face and its little chief-of-staff hat. Set it through
 `set_member_avatar` with an image or asset URL the Office can render; the
@@ -145,7 +158,10 @@ updates against the actual work, so their summaries stay accurate even when
 nobody comments. Keep this in the same recurring check.
 
 **Start.** Save these rules in your memory and in a skill of yours, so they
-survive new chats. Then set up the office, build the Office app, and load
+survive new chats. Use `hat/skills/set-up-office/SKILL.md` as the setup checklist
+for this request. Give the builder the complete `hat/apps/office.json`, including
+its builder notes, and the referenced specifications; a summary is not the
+build request. Then set up the office, build the Office app, and load
 it through the app's actions so that every page helps me understand how
 this Office works on my first visit. Follow `spec/STARTER.md`: real setup
 tasks and their closing reports, first tasks for the projects, a question
@@ -157,6 +173,10 @@ business reports but keep their cards hidden until you have verified
 figures to chart from sources I choose to share. Do not invent a customer
 or business result. Then send me the link. First write your plan in the chat
 message itself, before asking for approval, and wait for my yes.
+Before handover, open an action-created task with an overview, mixed Done when
+checks and agent updates. Reopen it and check the snapshot, correct author and
+owner, collapsed Updates and available comment box. Fix a mismatch in the
+generated app before saying the task view is ready.
 
 ---
 

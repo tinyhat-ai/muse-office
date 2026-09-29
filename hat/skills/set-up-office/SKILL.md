@@ -82,6 +82,10 @@ Build one web_fullstack app from apps/office.json, the way HAT.md step 3
 says: from the repository https://github.com/tinyhat-ai/muse-office when you
 can, otherwise an exact match of its schema (db/schema.sql), pages
 (spec/PAGES.md), look (spec/DESIGN.md), and actions (spec/ACTIONS.md).
+Pass the complete `apps/office.json`, including `builder_notes`, and those
+specifications to the builder. Do not replace them with a short page list or
+your own summary. The builder must preserve the task snapshot and collapsed
+Updates contract, not just make a board that looks similar.
 When running the repository code for this person, set `OFFICE_SEED=none`
 **before the first database open**. The app's default starter is for browsing
 the reference app; loading it and then calling setup actions creates duplicate
@@ -105,6 +109,17 @@ the user's browser cannot reach your computer. The Office app is the view.
 
 - After loading the starter, run the checks in HAT.md ("Check that the Office is right").
   Label synthetic comments as tests on the setup task; do not impersonate user approvals.
+- Open an action-created setup test task with a real member as owner, a current
+  overview, one met and one unmet `done_when` item, a Markdown agent update and
+  a clearly labeled test comment. Reopen it. The overview, status, owner and
+  checks must appear before a closed **Updates** disclosure with the full count;
+  the shared comment box stays available. Expand Updates and verify the agent
+  update keeps its actual author and rendered Markdown. Change the overview and
+  a check through `update_task`, then reopen and verify the current values.
+  A successful action or a builder's completion message is not this visual
+  check. Fix any generated-page mismatch in place before calling it ready.
+  Read back the chief's saved skill too: it must load the installed `run-a-task`
+  skill and retain responsibility for keeping that snapshot clear and current.
 - Verify routing with a simple job the chief can finish (such as rewriting a
   paragraph): it must produce no board task. Then use a clearly labeled
   main-chat test needing specialists or ongoing follow-through: its task
