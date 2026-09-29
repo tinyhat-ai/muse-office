@@ -112,9 +112,11 @@ later pages. Newer arrivals are handled by the next sweep. Reads never change
 unread state; only a handled reply/read action does that. The worker copies
 the typed identity verbatim for all replies and checkpoints.
 
-During setup, use clearly labeled synthetic task, note and project test pages.
-Reuse their typed identities on rechecks; never use the person's ordinary
-pages or overwrite existing content to make fixtures. Post labeled comments,
+During setup, use the Office setup task, the labeled test note and the Office
+project that holds the setup tasks as test pages, or an isolated test Office.
+No action removes a project, so never add a test project (`spec/DESIGN.md`).
+Reuse these typed identities on rechecks; never use the person's other pages
+or overwrite existing content to make fixtures. Post labeled comments,
 including a media-only comment and a reply with media on each page type.
 Use a known-valid image and spoken audio file in those test entries. For each
 type, reopen both entries and verify each inline image and playable full audio,

@@ -287,8 +287,8 @@ Do these before the hand-over, and again after any change to the app:
   audio plays fully, and each entry's own exact typed feed item returns both
   of its files with correct media types/sizes. Empty feed files or invisible
   saved media fails; a task-only or comment-only pass is insufficient.
-  Use synthetic test pages as specified in `spec/ACTIONS.md`, never the
-  person's ordinary pages. The scheduled worker recovers each entry's files
+  Use the test pages named in `spec/ACTIONS.md`, never the person's other
+  pages. The scheduled worker recovers each entry's files
   through `get_comment_attachment` or private download, with the same size and
   hash as the originals ("Implement and verify private byte access" in
   `spec/ACTIONS.md`). Metadata, a filename or playback alone fails.

@@ -64,7 +64,7 @@ autoplay. Where the host cannot provide a durable playable private URL, read
 the complete saved bytes and create a local Blob URL with the correct type;
 stop playback and revoke it on unmount, and reconstruct it on reopening.
 
-Before hand-over, use the synthetic test pages in `spec/ACTIONS.md`. On each
+Before hand-over, use the test pages named in `spec/ACTIONS.md`. On each
 of task, note and project pages, send a known-valid WAV of a few seconds,
 larger than one attachment chunk, and an image, in a comment and a reply.
 Reopen both entries in the Muse client: each saved WAV must play for its full
