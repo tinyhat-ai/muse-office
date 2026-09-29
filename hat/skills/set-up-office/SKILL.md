@@ -78,6 +78,13 @@ persist across chats; disclose an unavailable persistence mechanism in chat.
 
 ## 4. The Office app
 
+Keep a private `~/workspace/office/setup-checks.md` with this version, the
+approved plan and the remaining setup checks. Mark a check passed only with
+its actual record, file, loaded view or job-run evidence. After a pause,
+approval callback or new setup worker, read it and finish the remaining steps
+instead of treating the builder's completion as the end of setup. This file
+is your coordination record, not another page or status banner for the person.
+
 Build one web_fullstack app from apps/office.json, the way HAT.md step 3
 says: from the repository https://github.com/tinyhat-ai/muse-office when you
 can, otherwise an exact match of its schema (db/schema.sql), pages
@@ -120,7 +127,11 @@ the user's browser cannot reach your computer. The Office app is the view.
   setup check rather than invented user work.
 - Follow `skills/follow-through/SKILL.md` to create or update one recurring
   Office check, every minute when supported. Verify the real enabled schedule
-  and an actual run. It reviews unread comments and all unfinished tasks, even
+  and an actual run. Save its job identity, actual interval, enabled state and
+  run evidence in the private setup check. Post one labeled test comment on
+  the setup task, wait for the scheduled worker rather than prompting a manual
+  sweep, and read back its same-page reply and handled feed item. It reviews
+  unread comments and all unfinished tasks, even
   after a comment has been answered. Agree on a supported fallback such as five
   minutes when necessary; do not silently default to 30 minutes.
   Its private checkpoint also makes an hourly board/report/note review due.
@@ -145,6 +156,13 @@ skills, and memory files before reporting the agent as ready. If any part is
 missing, report that exact gap and keep its setup task open.
 
 ## 6. Hand over
+
+Reopen the private setup check first. A missing Office job, unverified run,
+unloaded portrait or failed page check stays unfinished; do not close the
+setup task or report everything ready. You can share the working Office link
+while naming one concrete remaining gap in chat. If the host cannot support
+a required operation, record the limitation truthfully rather than inventing
+an installed capability. Keep the UI free of scheduling notices.
 
 Send the Office link, one line on how it works ("tell me what you need;
 watch it here"), and one suggested first request.

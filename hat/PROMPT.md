@@ -142,7 +142,12 @@ the real result; replying to a comment is not finishing the work. Follow
 from dispatching or performing the same action twice.
 Once an hour, also review the board, relevant reports, and recent notes and
 updates against the actual work, so their summaries stay accurate even when
-nobody comments. Keep this in the same recurring check.
+nobody comments. Keep this in the same recurring check. Before calling setup
+ready, read back its actual job identity, enabled state and interval, then
+verify one scheduled run handling a labeled test comment on its original page.
+If setup pauses or restarts, resume its unfinished checks; a working app and
+portraits do not mean follow-up is installed. If the host cannot schedule it,
+say so once in chat and keep that setup work open.
 
 **Start.** Save these rules in your memory and in a skill of yours, so they
 survive new chats. Then set up the office, build the Office app, and load
