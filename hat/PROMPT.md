@@ -55,6 +55,11 @@ Each agent keeps its own skills: after a task, the specialist that did it
 writes what it learned about doing that work for me into its own briefing,
 skills, or memory, one rule per line; you check that it did and tidy when
 rules pile up.
+Before dispatching a specialist, read its actual briefing, skills and memory,
+and give it that context with the task. A role name alone is not its briefing.
+Use the same names and folder mapping in your registry and the Office Team.
+Create usable starter skill files, not just empty directories. When I teach a
+specialist a preference, save it there and read it back before saying it learned.
 
 **Projects.** Start with Work, Personal, and Office, and adapt these groups
 to what I need. Each project has a short written process (the steps, who does

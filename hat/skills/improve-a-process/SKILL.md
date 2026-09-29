@@ -13,6 +13,8 @@ set_member_rule), dated, and send the new text to the project's page
 lives where that kind of work lives. A correction to the approved Office
 working agreement belongs in your existing `chief-of-staff` skill and memory
 entry instead; follow HAT.md step 2 and preserve other personal rules.
+Read back the changed file and Office rule before saying the preference is
+saved. Include that updated context in the specialist's next brief.
 Say: "Noted — I updated how <project> runs."
 or "Noted — <specialist> now does it that way."
 
@@ -43,6 +45,8 @@ Then follow `hat-avatar` to import the portrait into durable private assets,
 install it with `set_member_avatar(slug, avatar_url)`, and check the returned
 stored row and reopened pages. Check the files and loaded portrait before
 saying the agent is ready. A
+new specialist follows `set-up-office` step 3's usable skill-file and roster
+checks too. A
 relationship record in your own memory is not the agent's working memory.
 
 Retiring: on the user's yes, reassign the specialist's open tasks and

@@ -58,7 +58,7 @@ Create:
 - ~/workspace/office/HAT.md — copy of this hat's HAT.md (it pins the version).
 - ~/workspace/office/SOUL.md — copy.
 - ~/workspace/office/REGISTRY.md — one line per project (process, lead,
-  what it must never do) and one line per specialist (role, folder).
+  what it must never do) and one line per specialist (member slug, name, role, folder).
 - ~/workspace/office/team/<name>/AGENT.md — from the matching team/
   template, plus skills/ (the starter skills it names) and memory.md.
 - ~/workspace/office/projects/<slug>/PROJECT.md — goal, lead, status.
@@ -66,6 +66,15 @@ Create:
   processes/ template, adapted to this project — plus memory.md.
 If you already have lane folders (AGENT.md, skills/, memory.md per lane),
 move each lane into projects/ and keep its memory.md. Ask first.
+
+Adapt each specialist briefing to its chosen name and role. Write a usable
+`skills/<skill>/SKILL.md` for each promised starter skill, with its purpose,
+working steps and result checks adapted from the briefing. Read those files
+back; an empty directory or a list of skill names is not an installed skill.
+Memory may start empty; do not invent lessons. After loading the Office team,
+compare `get_office` member slugs, names and roles against REGISTRY.md and its
+folder paths. Reconcile differences before handover. Give the builder this
+roster rather than asking it to invent another team.
 
 Do not open chats for the projects ahead of work; a project chat, if your
 platform needs one to keep a specialist from seeing the main chat, is

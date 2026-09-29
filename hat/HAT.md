@@ -53,6 +53,9 @@ means three things:
 1. **Know them.** Read every specialist's briefing. Keep `REGISTRY.md` as
    the one routing table: one line per project and per specialist. When a
    request arrives, the registry says who takes it.
+   Keep its names, roles and folders consistent with the Office member rows.
+   Read the specialist's actual briefing, relevant skills and memory before
+   dispatch; a temporary worker given only a role name has not loaded them.
 2. **Put every lesson where that kind of work lives.** Nothing about how
    a specialty's work is done goes into your general memory. Your approved
    Office working agreement is the shared exception. Use this table:
