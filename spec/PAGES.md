@@ -156,8 +156,10 @@ the Yes/No labels and the four connections. Office and Chat are alternatives,
 not consecutive steps. Open another note, then reopen the test note from the
 Notes list. Use `upsert_note` to change No to Solo
 and add `Chat --> Review`; verify both the changed label and new connection.
-Keep one labeled test note; on a later check, write this example back to it
-with `upsert_note` first and repeat these steps, never a second copy. Check
+Keep one labeled test note. On a later check, read its full Markdown and restore
+only its Mermaid fence to this example with `upsert_note`, preserving the
+heading, bold text, table and other Markdown. Repeat these steps, never a
+second copy. Check
 the drawing at phone width without repeating the edit. An accessibility
 label or alt text is not visual proof, however detailed. A raw
 `get_note` response or a comment saying it renders is not visual proof. Invalid

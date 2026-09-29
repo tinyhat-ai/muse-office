@@ -260,7 +260,9 @@ Do these before the hand-over, and again after any change to the app:
   A direct link to an older update/reply opens its original context. Headings,
   bold text, tables, quotes and code in comments render properly. An update
   authored by an agent must show that agent's name, not "You". Check a useful
-  diagram and a self-contained interactive HTML overview on the phone; include
+  diagram and a self-contained interactive HTML overview on the phone. For a
+  Mermaid overview, repeat Notes' branch/edit/reopen check with `update_task`
+  on that labeled test task; the phone pass only reads it. Include
   headings and paragraphs with ordinary margins, and verify the last line stays
   visible as the visual expands/collapses. Keep it isolated from Office APIs
   and controls: a script, clicked link or meta refresh must not navigate its
@@ -271,6 +273,9 @@ Do these before the hand-over, and again after any change to the app:
   while the visual is running. Change the overview and
   one checklist state through `update_task`, reopen the page, and verify both
   changed while the original description and other states remain intact.
+- If the host cannot bundle Mermaid, keep its fenced source visible as code,
+  leave that setup check unfinished and explain the limitation once in chat.
+  A substitute parser or a plausible drawing does not pass.
 - On a labeled test task and its reply, choose an image, then a known-valid
   WAV in a second picker visit. Both stay in the draft and remain attached
   after Send and reopen. Separately, play a WAV preview and remove an image
