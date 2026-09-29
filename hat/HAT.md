@@ -281,6 +281,12 @@ Do these before the hand-over, and again after any change to the app:
   while the visual is running. Change the overview and
   one checklist state through `update_task`, reopen the page, and verify both
   changed while the original description and other states remain intact.
+  For a Mermaid overview, repeat Notes' branch/edit/reopen check with
+  `update_task` on that labeled test task. Before a later check, restore only
+  its Mermaid fence and preserve the other text; the phone pass only reads it.
+- If the host cannot bundle Mermaid, keep its fenced source visible as code,
+  leave that setup check unfinished and explain the limitation once in chat.
+  A substitute parser or a plausible drawing does not pass.
 - On a labeled test task and its reply, choose an image, then a known-valid
   WAV in a second picker visit. Both stay in the draft and remain attached
   after Send and reopen. Separately, play a WAV preview and remove an image
@@ -346,10 +352,14 @@ Do these before the hand-over, and again after any change to the app:
   populated, sourced public example charts. Store the eight business report
   definitions, but keep their cards hidden until verified figures can be
   plotted. Notes has three tagged notes.
-- Open a note containing a Markdown heading, a pipe table, bold text, and a
-  fenced `mermaid` flowchart. Confirm they render as a heading, table, bold
-  text, and diagram. If the raw punctuation appears, fix the renderer before
-  hand-over. Use the same check on a narrow screen.
+- Create or reuse the labeled test note from `spec/PAGES.md`, never one of the
+  person's own notes. It has a Markdown heading, a pipe table, bold text, and a
+  fenced `mermaid` flowchart with a decision and two labeled branches. Follow
+  `spec/PAGES.md` to verify every node and connection, reopen it, then change
+  a label and add a connection through `upsert_note`. A linear box list or an
+  accessibility label does not pass. Confirm the heading, table and bold text
+  too. Fix incorrect rendering before hand-over, and check the drawing at
+  phone width without repeating the edit.
 - On Tasks at 390px and in a roughly 560px Muse panel, select each project:
   its tile keeps the name, task count, muted Details and whole link icon
   inside the square without overlap (`spec/DESIGN.md`), and the icon opens

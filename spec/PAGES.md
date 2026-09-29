@@ -137,11 +137,38 @@ created or edited through `upsert_note` after setup. Do not pre-render only
 starter notes or display later notes as plain strings. Pass the stored
 `markdown` through GFM parsing, sanitization, and the strict Mermaid renderer;
 initialize diagrams again when the note body changes or a different note opens.
+Bundle the real Mermaid library locally, as in
+`src/components/notes/RenderedNote.tsx`; do not load it from a CDN. Preserve
+every declared node, decision shape, directed edge and edge label. Extracting
+bracket labels with a regular expression and stacking boxes is not Mermaid
+rendering and can change the meaning of the note. If the host cannot bundle
+Mermaid, retain the fenced source as code and report that limitation to the
+chief; never substitute a custom parser or claim the diagram rendered.
 
-Verify a newly created test note through actions, not just a starter note.
+Create one labeled test note through actions if none exists, and reuse it on
+later checks; never edit the person's own notes as a test.
 Its body must have actual line breaks, a heading, bold text, a pipe table, and
-a fenced Mermaid flowchart. Open it in the actual Office, reopen it, then edit
-one diagram label through `upsert_note` and check the changed drawing. A raw
+a fenced Mermaid flowchart with a decision and two labeled branches, such as:
+
+```mermaid
+flowchart TD
+  Request --> Choice{Need a team?}
+  Choice -->|Yes| Office[Create an Office task]
+  Choice -->|No| Chat[Answer in chat]
+  Office --> Review[Check the result]
+```
+
+Open it in the actual Office and verify all five nodes, the decision shape,
+the Yes/No labels and the four connections. Office and Chat are alternatives,
+not consecutive steps. Open another note, then reopen the test note from the
+Notes list. Use `upsert_note` to change No to Solo
+and add `Chat --> Review`; verify both the changed label and new connection.
+Keep one labeled test note. On a later check, read its full Markdown and restore
+only its Mermaid fence to this example with `upsert_note`, preserving the
+heading, bold text, table and other Markdown. Repeat these steps, never a
+second copy. Check
+the drawing at phone width without repeating the edit. An accessibility
+label or alt text is not visual proof, however detailed. A raw
 `get_note` response or a comment saying it renders is not visual proof. Invalid
 diagram source stays readable; unsafe Markdown/diagram content remains blocked.
 
