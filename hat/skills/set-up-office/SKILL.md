@@ -117,13 +117,19 @@ the user's browser cannot reach your computer. The Office app is the view.
 
 - After loading the starter, run the checks in HAT.md ("Check that the Office is right").
   Label synthetic comments as tests on the setup task; do not impersonate user approvals.
-- Open an action-created setup test task with a real member as owner, a current
-  overview, one met and one unmet `done_when` item, a Markdown agent update and
-  a clearly labeled test comment. Reopen it. The overview, status, owner and
+- Reuse the labeled task from HAT.md's 320px/390px task-page check; the actions
+  do not delete tasks, so do not add another permanent test card. Make yourself
+  its owner. Keep its overview and existing checks; add a labeled unmet test
+  check if all are already met. Add a Markdown update under your own member
+  slug and a clearly labeled test comment. Reopen it. The overview, status, owner
+  and
   checks must appear before a closed **Updates** disclosure with the full count;
   the shared comment box stays available. Expand Updates and verify the agent
-  update keeps its actual author and rendered Markdown. Change the overview and
-  a check through `update_task`, then reopen and verify the current values.
+  update shows your name, not "You", and renders Markdown. Read `get_task`
+  before changing the overview and one check through `update_task`; keep every
+  other checklist item in the payload because `done_when` replaces the full list.
+  Reopen and verify the current values. On the first real delegated task,
+  check that its specialist owner and each update's author remain distinct.
   A successful action or a builder's completion message is not this visual
   check. Fix any generated-page mismatch in place before calling it ready.
   Read back the chief's saved skill too: it must load the installed `run-a-task`
@@ -157,9 +163,10 @@ handover. Load the native avatar tools, edit the existing Muse face, show the
 tiny plain black top-hat preview for approval, and activate it. Reuse an already
 approved active image with that exact hat. Give the actual image to the specialist image tool
 and builder as their style reference; do not silently keep bundled sample faces.
-Then create a distinct
-face and specialty-relevant mascot for each specialist in a consistent visual
-style. Use the "Hat:" and "Color:" lines in each team/ template as optional
+Install the specialist portraits prepared in step 4; create only images still
+missing, rather than generating the team twice. Each needs a distinct face and
+specialty-relevant mascot in the same visual style. Use the "Hat:" and "Color:"
+lines in each team/ template as optional
 visual cues, not instructions to recolor the same face. Store each image on
 that specialist's Team card with `set_member_avatar(slug, avatar_url)` after
 creating its member row. Follow the private import and reopen checks in

@@ -186,6 +186,11 @@ in the setup conversation. Keep specialist techniques in their own skills
 and memory. For an existing Office, show the proposed working-model change
 and obtain the person's yes before changing their standing skill or memory;
 update the existing entries in place, preserving personal rules.
+When updating an existing Office to this hat version, include the saved
+`chief-of-staff` skill and installed runtime skills in that approved change;
+fetching a new HAT.md alone does not update them. Read them back and repeat the
+task-page check below. Preserve an already approved avatar with this hat;
+propose a different hat separately rather than silently replacing it.
 
 If you cannot edit one of these, say so to the person and do the others.
 
@@ -253,7 +258,8 @@ Do these before the hand-over, and again after any change to the app:
   With Updates closed, post a labeled contextual comment using the visible shared
   input outside the disclosure; opening Updates then shows the saved comment.
   A direct link to an older update/reply opens its original context. Headings,
-  bold text, tables, quotes and code in comments render properly. Check a useful
+  bold text, tables, quotes and code in comments render properly. An update
+  authored by an agent must show that agent's name, not "You". Check a useful
   diagram and a self-contained interactive HTML overview on the phone; include
   headings and paragraphs with ordinary margins, and verify the last line stays
   visible as the visual expands/collapses. Keep it isolated from Office APIs

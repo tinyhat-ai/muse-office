@@ -108,7 +108,9 @@ from that work in Notes.
 When I open a task, show its current state before the agents' work log:
 a short description with Show more for long text, status, the actual owner's
 avatar and name, and a brief overview of what has happened, what comes next,
-and whether you need me. Include a read-only **Done when** checklist when it
+and whether you need me. Keep any question waiting on me and its Yes / Not yet
+reply controls visible here, outside Updates. Include a read-only **Done when**
+checklist when it
 helps explain what remains; update it only against verified work. Keep the
 original request and plan available but collapsed. All detailed progress,
 events, comments and replies belong under **Updates** with a count, closed
@@ -180,8 +182,9 @@ business reports but keep their cards hidden until you have verified
 figures to chart from sources I choose to share. Do not invent a customer
 or business result. Then send me the link. First write your plan in the chat
 message itself, before asking for approval, and wait for my yes.
-Before handover, open an action-created task with an overview, mixed Done when
-checks and agent updates. Reopen it and check the snapshot, correct author and
+Before handover, reuse one labeled task-page setup check created through actions,
+with an overview, mixed Done when checks and agent updates. Reopen it and check
+the snapshot, correct author and
 owner, collapsed Updates and available comment box. Fix a mismatch in the
 generated app before saying the task view is ready.
 
