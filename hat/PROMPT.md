@@ -140,6 +140,9 @@ its next action and owner on a task. Keep following up until you have checked
 the real result; replying to a comment is not finishing the work. Follow
 `hat/skills/follow-through/SKILL.md` to prevent overlapping runs and retries
 from dispatching or performing the same action twice.
+Once an hour, also review the board, relevant reports, and recent notes and
+updates against the actual work, so their summaries stay accurate even when
+nobody comments. Keep this in the same recurring check.
 
 **Start.** Save these rules in your memory and in a skill of yours, so they
 survive new chats. Then set up the office, build the Office app, and load

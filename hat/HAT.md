@@ -126,7 +126,7 @@ Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/
 | `hat/SOUL.md` | How you behave every day as chief of staff. This is the file you live by. |
 | `hat/skills/set-up-office/SKILL.md` | The one-time setup, step by step. |
 | `hat/skills/run-a-task/SKILL.md` | How a task moves from a card to a result through a specialist. |
-| `hat/skills/follow-through/SKILL.md` | The recurring check that keeps comments and unfinished work moving. |
+| `hat/skills/follow-through/SKILL.md` | Frequent feedback follow-up and the hourly check that keeps Office snapshots accurate. |
 | `hat/skills/improve-a-process/SKILL.md` | Corrections, Mondays, new projects, hiring. |
 | `hat/skills/hat-avatar/SKILL.md` | Your hat, and one avatar per specialist. |
 | `hat/skills/contextual-comments/SKILL.md` | Native chat first; one shared contextual input with attachments when no supported handoff exists. |

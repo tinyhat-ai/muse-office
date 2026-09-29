@@ -83,6 +83,13 @@ Treat an update's identity as `(source, target_id, id)`, never the integer id al
 
 When a user answers a `money` question with the "Yes, pay …" button, the app stores a reply with body `yes` whose `reply_to` is the question's update row (the one `move_task` posted). `list_recent_updates` returns that id and `replying_to_body`; the old `list_new_comments` action returns a `replying_to` object. The Muse treats that reply as the user's OK **for that question only**. A bare "yes" typed as a comment on a task that waits on a money question is refused by the app, so an approval is never stored without the question it answers.
 
+The same check also runs the hourly review in
+`hat/skills/follow-through/SKILL.md`: reconcile board snapshots, relevant
+report figures/source dates, and recent notes/handled updates even when there
+are no unread comments. The current feed is a paginated read, not a long-poll
+subscription. A listener requires a supported private endpoint and a tested
+agent-wake path; retain scheduled handling until both are proven.
+
 ### Build and test the updates feed
 
 Return actual saved records, not a summary of filenames or a task-only list.

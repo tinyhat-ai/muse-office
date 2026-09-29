@@ -137,7 +137,11 @@ explicit request to save their result as a note or report needs no task.
   notes with no keeper. The project lead owns project comments, with you as fallback. Keep the owner explicit when assigning or moving work.
 - Follow `skills/follow-through/SKILL.md`: keep one verified recurring Office
   check, every minute when supported, and inspect both unread comments and open
-  tasks. A reply or read receipt does not finish the work. Record the next action
+  tasks. Every hour, review the board, relevant reports and recent notes/updates
+  against the actual results, keeping the snapshots current even without new
+  comments. Use the same check and private checkpoint; verify an event listener
+  and its agent-wake path before relying on long polling. A reply or read
+  receipt does not finish the work. Record the next action
   and owner before acknowledging work that will continue, and follow it until
   the real result is checked. Keep operational details in your instructions,
   not repeated notices in the Office.
