@@ -53,13 +53,16 @@ can prepare reviewable promotion PRs but cannot move those branches themselves.
 
    Before promoting LTS, test the tagged `hat/PROMPT.md` with the landing
    page's extractor. If it needs a compatibility fix, deploy and test the
-   compatible landing page first. After promotion, verify the production
-   response, not just the raw GitHub file:
+   compatible landing page first. Record the current LTS commit as
+   `PREVIOUS_SHA` before moving it. After promotion, verify the production
+   response, not just the raw GitHub file. Caches can serve the previous
+   message for several minutes. This check waits for the complete release
+   message and stops immediately on an HTTP error:
 
    ```bash
+   (
+   set -euo pipefail
    git show vX.Y.Z:hat/PROMPT.md > /tmp/muse-office-release-prompt.md
-   curl --fail --silent --show-error https://tinyhat.ai/muse/prompt \
-     -o /tmp/muse-office-production-message.txt
    node --input-type=module <<'JS'
    import assert from 'node:assert/strict';
    import { readFileSync } from 'node:fs';
@@ -67,19 +70,35 @@ can prepare reviewable promotion PRs but cannot move those branches themselves.
    const sections = source.replace(/\r\n/g, '\n').split(/^---\s*$/m);
    assert.equal(sections.length, 3);
    const normalize = (text) => text.trim().replace(/\s+/g, ' ');
-   assert.equal(
-     normalize(readFileSync('/tmp/muse-office-production-message.txt', 'utf8')),
-     normalize(sections[1])
-   );
+   const deadline = Date.now() + 15 * 60_000;
+   for (;;) {
+     const response = await fetch('https://tinyhat.ai/muse/prompt', {
+       signal: AbortSignal.timeout(30_000),
+     });
+     assert.ok(response.ok, `Production returned HTTP ${response.status}.`);
+     if (normalize(await response.text()) === normalize(sections[1])) break;
+     assert.ok(Date.now() < deadline, 'Production still differs after 15 minutes.');
+     console.log('Production still differs; checking again in 30 seconds.');
+     await new Promise((resolve) => setTimeout(resolve, 30_000));
+   }
    console.log('Production copies the complete released message.');
    JS
+   )
    ```
 
-   Allow up to five minutes for the existing caches to refresh. Then open
-   `https://tinyhat.ai/muse` and verify **Copy the message** succeeds. If the
-   endpoint returns an error or the text differs, restore the previous LTS
-   commit and fix the landing page before trying the promotion again. Do not
-   report LTS ready while production copying is broken.
+   Then open `https://tinyhat.ai/muse` and verify **Copy the message** succeeds.
+   If either check fails, restore the recorded previous LTS commit. This
+   rollback moves the channel backwards, so it requires `force=true`:
+
+   ```bash
+   gh api --method PATCH repos/tinyhat-ai/muse-office/git/refs/heads/channels/lts \
+     -f sha=PREVIOUS_SHA -F force=true
+   ```
+
+   Caches also delay a rollback. Rerun the comparison with the previous
+   release tag and verify browser copying before reporting recovery. Fix the
+   landing page before trying promotion again. Do not report LTS ready while
+   production copying is broken.
 
 ## Compatibility
 
