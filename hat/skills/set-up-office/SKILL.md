@@ -78,10 +78,22 @@ persist across chats; disclose an unavailable persistence mechanism in chat.
 
 ## 4. The Office app
 
+Before handing the build to the builder, follow `skills/hat-avatar/SKILL.md`
+to prepare the approved, active chief portrait and the original specialist
+images. You obtain these images; the person approves the native preview, not
+a file path. Supply the actual images with the build request. Import them and
+verify their Office member rows in step 5, after the app and members exist.
+If a native tool genuinely fails, pass the exact failure and temporary initials
+fallback to the builder; do not make the person supply an image to start setup.
+
 Build one web_fullstack app from apps/office.json, the way HAT.md step 3
 says: from the repository https://github.com/tinyhat-ai/muse-office when you
 can, otherwise an exact match of its schema (db/schema.sql), pages
 (spec/PAGES.md), look (spec/DESIGN.md), and actions (spec/ACTIONS.md).
+Pass the complete `apps/office.json`, including `builder_notes`, and those
+specifications to the builder. Do not replace them with a short page list or
+your own summary. The builder must preserve the task snapshot and collapsed
+Updates contract, not just make a board that looks similar.
 When running the repository code for this person, set `OFFICE_SEED=none`
 **before the first database open**. The app's default starter is for browsing
 the reference app; loading it and then calling setup actions creates duplicate
@@ -105,6 +117,23 @@ the user's browser cannot reach your computer. The Office app is the view.
 
 - After loading the starter, run the checks in HAT.md ("Check that the Office is right").
   Label synthetic comments as tests on the setup task; do not impersonate user approvals.
+- Reuse the labeled task from HAT.md's 320px/390px task-page check; the actions
+  do not delete tasks, so do not add another permanent test card. Make yourself
+  its owner. Keep its overview and existing checks; add a labeled unmet test
+  check if all are already met. Add a Markdown update under your own member
+  slug and a clearly labeled test comment. Reopen it. The overview, status, owner
+  and
+  checks must appear before a closed **Updates** disclosure with the full count;
+  the shared comment box stays available. Expand Updates and verify the agent
+  update shows your name, not "You", and renders Markdown. Read `get_task`
+  before changing the overview and one check through `update_task`; keep every
+  other checklist item in the payload because `done_when` replaces the full list.
+  Reopen and verify the current values. On the first real delegated task,
+  check that its specialist owner and each update's author remain distinct.
+  A successful action or a builder's completion message is not this visual
+  check. Fix any generated-page mismatch in place before calling it ready.
+  Read back the chief's saved skill too: it must load the installed `run-a-task`
+  skill and retain responsibility for keeping that snapshot clear and current.
 - Verify routing with a simple job the chief can finish (such as rewriting a
   paragraph): it must produce no board task. Then use a clearly labeled
   main-chat test needing specialists or ongoing follow-through: its task
@@ -131,13 +160,22 @@ the user's browser cannot reach your computer. The Office app is the view.
 
 ## 5. Avatars
 
-Follow skills/hat-avatar/SKILL.md for your own avatar. Then create a distinct
-face and specialty-relevant mascot for each specialist in a consistent visual
-style. Use the "Hat:" and "Color:" lines in each team/ template as optional
+Complete `skills/hat-avatar/SKILL.md` as part of the approved setup, before
+handover. Load the native avatar tools, edit the existing Muse face, show the
+tiny plain black top-hat preview for approval, and activate it. Reuse an already
+approved active image with that exact hat. Give the actual image to the specialist image tool
+and builder as their style reference; do not silently keep bundled sample faces.
+Install the specialist portraits prepared in step 4; create only images still
+missing, rather than generating the team twice. Each needs a distinct face and
+specialty-relevant mascot in the same visual style. Use the "Hat:" and "Color:"
+lines in each team/ template as optional
 visual cues, not instructions to recolor the same face. Store each image on
 that specialist's Team card with `set_member_avatar(slug, avatar_url)` after
 creating its member row. Follow the private import and reopen checks in
-`hat-avatar`; an upload acknowledgement alone is not success. Show the person
+`hat-avatar`; a native activation, upload acknowledgement or stored path alone
+is not success. Check each stored member row returned by
+`set_member_avatar(slug, avatar_url)` and inspect its loaded
+image after reopening Team, a task and the board. Show the person
 the team together before you finish; if images are unavailable, keep initials
 temporarily and record avatar creation as a setup task. When creating or
 changing an agent later, use `hat` only for a wearable accessory, never as a
