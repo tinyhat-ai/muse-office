@@ -76,6 +76,44 @@ test("moving to waiting_on_you without a question is refused with the valid kind
   assert.match(String((r.body as { error: string }).error), /money, approve, answer/);
 });
 
+test("queuing blocked work and resuming it keeps verified progress, files and the prior answer", () => {
+  const { id } = runAction("create_task", {
+    project: "money", title: "Prepare the receipt summary", specialist: "penny", column: "in_progress",
+    job_definition: "Use the approved receipts to prepare the summary.", original_request: "Please summarize these receipts.",
+  }) as { id: string };
+  runAction("update_task", {
+    id, done_when: [{ text: "Receipts checked", met: true }, { text: "Summary verified", met: false }],
+    plan: [{ text: "Check receipts", state: "done" }, { text: "Prepare summary", state: "now" }],
+  });
+  runAction("attach_file", { id, name: "Checked receipts", url: "/files/receipts.csv" });
+  const question = runAction("move_task", { id, column: "waiting_on_you", question: "Which receipt source should I use?" }) as { question_update_id: number };
+  const answer = postComment({ task: id, body: "Use the exported receipts.", reply_to: question.question_update_id });
+  type Snapshot = {
+    id: string; column: string; question: string | null; specialist: string; job_definition: string; original_request: string;
+    note: string; overview: string; done_when: unknown[]; plan: unknown[]; files: unknown[];
+    updates: Array<{ id: number; reply_to: number | null; kind: string }>;
+  };
+  const read = () => runAction("get_task", { id }) as Snapshot;
+  const before = read();
+  runAction("update_task", { id, note: "Queued until the fictional export service returns.", overview: "The receipts are checked. The summary can resume when the export service returns." });
+  runAction("move_task", { id, column: "todo" });
+  const queued = read();
+  assert.equal(queued.column, "todo");
+  assert.equal(queued.question, null, "an external wait does not leave a user question pinned");
+  assert.equal(queued.note, "Queued until the fictional export service returns.");
+  runAction("move_task", { id, column: "in_progress" });
+  const resumed = read();
+  assert.equal(resumed.column, "in_progress");
+  assert.equal(resumed.question, null);
+  for (const key of ["id", "specialist", "job_definition", "original_request", "done_when", "plan", "files"] as const) {
+    assert.deepEqual(queued[key], before[key]);
+    assert.deepEqual(resumed[key], before[key]);
+  }
+  assert.equal(resumed.overview, queued.overview);
+  assert.deepEqual(resumed.updates.find((u) => u.id === answer.id), before.updates.find((u) => u.id === answer.id));
+  assert.equal(resumed.updates.filter((u) => u.kind === "question").length, 1, "resuming does not ask for the saved choice again");
+});
+
 test("the team can change, and task and note comments reach an ordered paginated owner feed", () => {
   runAction("upsert_member", { slug: "researcher", name: "Rae", role: "Researcher", job: "Checks sources." });
   runAction("upsert_member", { slug: "researcher", job: "Checks sources and writes briefs." });

@@ -122,7 +122,11 @@ The checkpoint is agent coordination state, not another Office page or user-faci
    Check the real worker state and the checkpoint's next-action due time; do not launch a new worker
    or repeat an unchanged question on every tick. Continue authorized work,
    follow up when that action is due or stalled, and keep blockers and next
-   actions on the task. Ask one clear question when the user is needed.
+   actions on the task. Use `SOUL.md` ("Keep the office true") to choose the
+   lane from the real next action: external waiting alone does not require
+   the user, and an idle blocked task is not active work. Move the same card
+   when its blocker or next action changes; ask one clear question only when
+   the user is needed.
 5. Reconcile the task's owner, board state, brief summary and changed result
    with the actual work, including work captured from the main chat. Follow
    `SOUL.md` ("Route work into Office when needed") to update relevant

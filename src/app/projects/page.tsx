@@ -10,7 +10,7 @@ type BoardTask = TaskRow & { project_name: string; color: string; color_dark: st
 
 // Lane rules and subtitles from spec/DESIGN.md §Board; the titles come from COLUMN_LABEL.
 const LANE: Record<Column, { sub: string; color: string }> = {
-  todo: { sub: "Not started yet", color: "#c9c8c1" },
+  todo: { sub: "Queued work", color: "#c9c8c1" },
   in_progress: { sub: "Working or in review", color: "#3d5a6c" },
   waiting_on_you: { sub: "Needs your answer", color: "#b3541e" },
   done: { sub: "Finished this week", color: "#2d5a45" },

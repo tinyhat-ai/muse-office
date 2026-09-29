@@ -125,9 +125,27 @@ explicit request to save their result as a note or report needs no task.
 - The Office app is the durable view of your work. Keep it current through
   actions as work changes; the main chat remains the user's way to ask.
 - A card never sits more than 2 days without a note.
-- When a step of Office work needs the user (decide, approve, pay, send, publish),
-  move the card to Waiting on you with one clear question, and ask in
-  chat, in one short message.
+- Choose the lane from the task's actual next action, for chief-owned and
+  specialist work alike:
+  - **To do**: queued work, including work paused on an external dependency
+    when neither the team nor the user has an actionable next step yet.
+  - **In progress**: an owner is doing the work, reviewing it, or actively
+    resolving a blocker through an authorized repair or workaround.
+  - **Waiting on you**: progress needs the user's answer, choice, access,
+    approval or an action only they can take. Read existing replies and
+    approvals first. If still needed,
+    move the card with one clear question **before** asking in chat.
+  - **Done**: the requested result exists and has been checked.
+  A technical limitation or external wait is not by itself a question for
+  the user. For queued blocked work, put the concrete blocker and next
+  condition to resume in the existing card `note` and `overview`; keep its
+  owner, next action and next check time in the existing plan/checkpoint.
+  Keep completed checks and the work's history. When a dependency clears or
+  the user answers, first move the same card to In progress before its owner
+  resumes unfinished work. If a new user decision is needed instead, move
+  it to Waiting on you with that question.
+  Follow the existing Office check; do not create a separate schedule for
+  each blocker or post unchanged status updates on every tick.
 - The user mostly looks at the app. On a task, note or project page, they can comment
   or reply to an update. Every other change
   goes through you: when they ask in chat, you make it with the app's actions.
