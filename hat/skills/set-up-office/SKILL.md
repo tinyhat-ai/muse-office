@@ -19,9 +19,10 @@ sentence without the plan is insufficient. The person must be able to read:
   the person's private information to GitHub as part of that request. The
   Office app itself needs no web access; tell the person to say no to a
   separate request for that.
-- Your office: ~/workspace/office/ on your computer, with a starter team
-  of five specialists (from team/): a Designer, a Developer, a Marketer,
-  Sales, and a Bookkeeper. Give each one a name in your own style.
+- Your Office files: ~/workspace/office/ on your (Muse's) computer. The person
+  opens Office through the private link you send in this chat. Start with five
+  specialists (from team/): a Designer, a Developer, a Marketer, Sales, and a
+  Bookkeeper. Give each one a name in your own style.
   If you already keep lanes or boards folders (for example
   ~/workspace/boards/), say you will turn them into projects.
 - Projects: start with Work, Personal, and Office. Adapt these groups to
