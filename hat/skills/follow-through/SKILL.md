@@ -55,9 +55,10 @@ review log or touch unchanged summaries every tick.
   limitation once in chat; do not add banners or notices throughout Office.
 - Put this skill's decision rules, guard/checkpoint requirements, and every-run
   steps in the actual job instructions, or have the job load the installed
-  workspace copy at its start. Each tick runs the decision rules, "Prevent
-  repeated work", "On every run" and the `run-a-task` closing steps, and
-  runs the hourly review when due. It does not repeat schedule setup or
+  workspace copy at its start. Include "Review the Office hourly" in copied
+  job instructions too. Each tick runs the decision rules, "Prevent repeated
+  work", "On every run" and the `run-a-task` closing steps, and runs the hourly
+  review when due. It does not repeat schedule setup or
   setup tests. A short schedule description or rules kept
   only in the main chat do not brief the scheduled worker.
 - A documented, verified immediate trigger can accelerate feedback handling.
@@ -162,6 +163,10 @@ Use the same guard and private checkpoint as the fast check. After handling
 feedback, run this review if none has completed yet or an hour has elapsed.
 If a host needs separate event and timed entry paths, they still share this
 checkpoint and guard; do not dispatch the same work twice.
+Save the pass's start time before reading. Keep the last completed review time
+for the hourly clock, and a separate updates boundary from that review's
+**start**, so changes made while it ran are included next time. Do not advance
+the updates boundary until this pass has been checked.
 
 1. Read the board and actual owner/worker state, including recently completed
    tasks and work changed through chat. Reconcile status, next action, brief
@@ -180,15 +185,16 @@ checkpoint and guard; do not dispatch the same work twice.
    or relabel old data as fresh. Leave dated public example charts alone unless
    their source or the user calls for a change.
 3. Read recent Notes and saved updates, including handled comments, since the
-   previous review. Use `list_notes`/`get_note` and every relevant page of
-   `list_recent_updates(unread_only=false)`; keep typed identities and include
+   previous review's saved start boundary. Use `list_notes`/`get_note` and
+   every relevant page of `list_recent_updates(unread_only=false)`; keep typed
+   identities and include
    records at the timestamp boundary so simultaneous updates are not skipped.
    Check whether decisions and results have reached the matching task, note
    or report, using the existing records. Fix only a demonstrated omission or
    contradiction; preserve the user's wording, links, tags and diagrams.
 4. Read back changed records and their affected views. Record the completed
-   review time privately after checking the pass; keep any unresolved writes
-   with their owner and next retry time. On interruption, resume those records
+   review time and its start boundary privately after checking the pass; keep
+   any unresolved writes with their owner and next retry time. On interruption, resume those records
    after re-reading their current state, rather than replaying completed edits.
    A quiet review changes no Office record timestamps, posts no status message
    and creates no new card. Report only a meaningful result or a decision the
