@@ -53,7 +53,9 @@ Top to bottom, with the current state visible before detailed history:
    and restores controls; a silent catch is not a fallback. Clear recording
    state and stop any acquired stream on failure. Show Recording only after
    capture starts, never while permission is pending or after denial. Keep the
-   initial composer free of warnings and help text.
+   initial composer free of warnings and help text. If recording fails after
+   capturing some audio, retain that partial draft without clearing the error
+   when its final data/stop events append it.
 8. **Files from this task**: chips that open the file. Omit the section when empty.
 9. Footer: "[avatar] Managed by <Muse> · worked on by Penny".
 

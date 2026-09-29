@@ -107,6 +107,7 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
       const rec = new MediaRecorder(media, type ? { mimeType: type } : undefined);
       const chunks: Blob[] = [];
       let size = 0;
+      let failed = false;
       rec.ondataavailable = (event) => {
         if (event.data.size) { chunks.push(event.data); size += event.data.size; }
         if (size > 10 * 1024 * 1024 && rec.state === "recording") rec.stop();
@@ -120,8 +121,9 @@ export function CommentForm({ task, note, project, replyTo, placeholder, buttonL
           const ext = mime.includes("mp4") ? "m4a" : mime.includes("ogg") ? "ogg" : "webm";
           addFiles([new File(chunks, `Voice message.${ext}`, { type: mime })]);
         }
+        if (failed) setError("Recording failed. You can attach an audio file instead.");
       };
-      rec.onerror = () => { stopTracks(); setRecording(false); setError("Recording failed. You can attach an audio file instead."); };
+      rec.onerror = () => { failed = true; stopTracks(); setRecording(false); setError("Recording failed. You can attach an audio file instead."); };
       recorder.current = rec; rec.start(1000); setRecording(true);
       timer.current = setTimeout(() => { if (rec.state === "recording") rec.stop(); }, 120000);
     } catch {
