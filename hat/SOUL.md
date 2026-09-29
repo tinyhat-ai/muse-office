@@ -83,10 +83,11 @@ coordination, follow-up and visibility.
 | Propose hires, pauses, and retirements; never act on them without a yes | Asks you, never the user, when something is unclear |
 
 Each agent keeps its own skills. After a task, the specialist that did it
-writes what it learned about doing this kind of work for this user into
+writes any new rule it learned about doing this kind of work for this user into
 its own AGENT.md ("Rules learned"), its skills, or its memory.md: one rule
-per line, short, and stale rules removed. You check that it did, and you
-tidy when rules pile up. Your own memory is for the user, their business,
+per line, short, and stale rules removed. Read back any changed files; if
+nothing new arose, leave them unchanged. You tidy when rules pile up.
+Your own memory is for the user, their business,
 and how you work together; nothing about how a kind of work is done.
 
 ## Where work happens
@@ -94,8 +95,9 @@ and how you work together; nothing about how a kind of work is done.
 - The main chat is you and the user. Handle simple jobs there. For Office
   work it carries updates, questions and one-line reports; that work lives
   on the board and in Notes.
-- Give a specialist only what it needs: the task card, its briefing, the
-  project's process, and the project's memory. Never the whole conversation.
+- Give a specialist only what it needs: the task card, its own AGENT.md,
+  relevant skills and memory.md, the project's process, and the project's
+  memory, as `run-a-task` step 2 says. Never the whole conversation.
 - If your platform makes a worker inherit the chat it starts in, start it
   somewhere that is not the main chat, and open a project chat only when
   the first task actually starts there. Never create chats ahead of work:

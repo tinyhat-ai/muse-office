@@ -40,21 +40,31 @@ or reporting completion in chat.
    Prefer static visuals; add scripts only for useful interaction, with bounded
    work that leaves the Office's comment/reply controls responsive.
    Put links in overview; a visual cannot open another document.
-2. If specialist work is needed, start a worker for that specialist. For a
+2. Before dispatch, read REGISTRY.md, the current task, and the specialist's
+   actual briefing, relevant skills and memory. Use its registered member slug
+   and folder; do not substitute an ad hoc worker with only the same role name.
+   If the owning specialist has no REGISTRY.md line or lacks those working files,
+   follow `improve-a-process`'s existing-member recovery. Until its files are
+   verified, keep a visible setup task open and do not dispatch a role-only worker.
+   If specialist work is needed, start a worker for that specialist. For a
    chief-owned follow-up, do the work yourself and keep the same task current
    without creating an unnecessary worker. Brief a specialist with exactly
    four things:
    - the task card
-   - ~/workspace/office/team/<name>/AGENT.md and its skills/
+   - ~/workspace/office/team/<name>/AGENT.md, relevant skills/ files and memory.md
    - ~/workspace/office/projects/<slug>/process.md
    - ~/workspace/office/projects/<slug>/memory.md
    Never the whole conversation. If a worker inherits the chat it starts
    in, start it outside the main chat (a project chat, opened when this
    first task starts there, not before).
+   Supply the files' current contents, or explicitly have the worker read
+   them at the start and identify any relevant rule it applied from each file
+   in its result (or say none applied). Paths or a short
+   role summary alone are not the specialist's working context.
 3. The owner posts progress as updates on the task's page (add_task_note),
    moves the card (move_task), and saves files under
    ~/workspace/office/projects/<slug>/files/.
-   Anything worth remembering goes into that project's memory.md only.
+   Project details worth remembering go into that project's memory.md.
    If something looks like it belongs to another project, the worker asks
    you instead of guessing.
 4. Choose and maintain the task's lane using `SOUL.md` ("Keep the office true"),
@@ -83,9 +93,14 @@ or reporting completion in chat.
    the person can understand the outcome without opening Updates.
    A file that only sits on your
    computer is not an output the user can see. Only then move_task to done.
-6. If a specialist did the work, it writes what it learned about this kind
+6. If a specialist did the work, it writes any new rule it learned about this kind
    of work for this user into its own AGENT.md, skills, or memory.md (one rule
-   per line). Check that it did. If the lesson is a project matter, it goes into the
+   per line). Have it return each changed file path, or say that no new lesson
+   arose, and read any changed file back yourself. Do not accept a promise to
+   remember as persistence. If no new lesson
+   arose, record that privately rather than inventing one. A correction or
+   preference is saved when received, not postponed until the whole task closes.
+   If the lesson is a project matter, it goes into the
    project's process.md or memory.md instead.
 7. Tell the user in one line, with a link to the result or the task's page.
 

@@ -1,9 +1,14 @@
 ---
 name: improve-a-process
-description: Keep processes and the team fitted to the user. Use after a correction, every Monday, and when work does not fit the team.
+description: Keep processes and the team fitted to the user. Use for agent additions, changes and retirements, corrections, Monday reviews, and work that does not fit the team.
 ---
 
 # Improve a process
+
+Use this skill whenever the user asks to add, change or retire a
+specialist, including a temporary test member. A Team card is a view of the
+agent, not its briefing, skills or memory. Use the existing member actions;
+do not rebuild the app or add a one-off action for each requested person.
 
 After a correction: when the user corrects how something was done, add a
 line under "Rules learned" in that project's process.md (or, when it is
@@ -13,6 +18,8 @@ set_member_rule), dated, and send the new text to the project's page
 lives where that kind of work lives. A correction to the approved Office
 working agreement belongs in your existing `chief-of-staff` skill and memory
 entry instead; follow HAT.md step 2 and preserve other personal rules.
+Read back the changed file and Office rule before saying the preference is
+saved. Include that updated context in the specialist's next brief.
 Say: "Noted — I updated how <project> runs."
 or "Noted — <specialist> now does it that way."
 
@@ -42,8 +49,27 @@ mascot image, and create its Team row with `upsert_member` without `avatar_url`.
 Then follow `hat-avatar` to import the portrait into durable private assets,
 install it with `set_member_avatar(slug, avatar_url)`, and check the returned
 stored row and reopened pages. Check the files and loaded portrait before
-saying the agent is ready. A
-relationship record in your own memory is not the agent's working memory.
+saying the agent is ready. A new specialist follows `set-up-office` step 3's
+usable skill-file and roster checks too. Being temporary does not waive its
+files or portrait checks. Keep any unavailable part as an open setup task,
+and report that exact gap rather than calling the agent ready. A relationship
+record in your own memory is not the agent's working memory.
+
+Changing a specialist: pass the existing registered `slug` to `upsert_member`;
+do not derive a new slug from its new name or role. Keep the same folder. Update its
+AGENT.md, relevant skills and REGISTRY.md to reflect the approved name, role
+or job, preserving its learned rules and memory. Update the corresponding
+`does`, `skills` and `never` display fields to match the approved role. If its
+Team row exists but the registry or working files are missing, inspect its Team
+card and any task owner slug, then read the stored member through the Office's
+private database or supported read tool if available. If you cannot confirm
+its actual slug or portrait, keep a visible setup task open and report the gap;
+never guess a slug or replace the portrait. Restore its mapping and create
+only the missing briefing, usable skills and memory from the closest templates,
+adapted to that member's stored name, role, job, working rules and skills.
+Preserve its stored identity, portrait and any existing learned files. Read
+back the returned row, its files and Team. Do not add a
+second member or change unrelated agents or records.
 
 Retiring: on the user's yes, reassign the specialist's open tasks and
 notes, including their comment follow-ups. Update REGISTRY.md and any

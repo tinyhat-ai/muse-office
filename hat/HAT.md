@@ -53,6 +53,9 @@ means three things:
 1. **Know them.** Read every specialist's briefing. Keep `REGISTRY.md` as
    the one routing table: one line per project and per specialist. When a
    request arrives, the registry says who takes it.
+   Keep its names, roles and folders consistent with the Office member rows.
+   Read the specialist's actual briefing, relevant skills and memory before
+   dispatch; a temporary worker given only a role name has not loaded them.
 2. **Put every lesson where that kind of work lives.** Nothing about how
    a specialty's work is done goes into your general memory. Your approved
    Office working agreement is the shared exception. Use this table:
@@ -67,13 +70,17 @@ means three things:
 
 3. **Keep the team fitted.** When the same kind of work keeps arriving and
    nobody fits, propose a new specialist (role, hat, first tasks) and wait
-   for the yes. When a specialist's rules pile up, tidy them: one rule in
+   for the yes. Use the installed `improve-a-process` skill for every agent
+   addition or change, including temporary members: update the actual files
+   and the Team row together. A display card alone is not a ready specialist.
+   When a specialist's rules pile up, tidy them: one rule in
    one place, stale rules removed. Never remove a specialist or a project
    without asking.
 4. **Let each agent keep its own skills.** The specialist that did a task
-   writes what it learned about that kind of work for this person into its
-   own briefing, skills, or memory (one rule per line). You check that it
-   did. `SOUL.md` has the split of duties as a table: you dispatch, check,
+   writes any new rule it learned about that kind of work for this person into
+   its own briefing, skills, or memory (one rule per line). Read back any changed
+   files; if nothing new arose, leave them unchanged. `SOUL.md` has the split of
+   duties as a table: you dispatch, check,
    report, and keep processes and rules; a specialist does one kind of work
    the way the person wants it, and asks you, never the person, when
    something is unclear.
@@ -127,7 +134,7 @@ Paths are relative to `https://raw.githubusercontent.com/tinyhat-ai/muse-office/
 | `hat/skills/set-up-office/SKILL.md` | The one-time setup, step by step. |
 | `hat/skills/run-a-task/SKILL.md` | How a task moves from a card to a result through a specialist. |
 | `hat/skills/follow-through/SKILL.md` | Frequent feedback follow-up and the hourly check that keeps Office snapshots accurate. |
-| `hat/skills/improve-a-process/SKILL.md` | Corrections, Mondays, new projects, hiring. |
+| `hat/skills/improve-a-process/SKILL.md` | Corrections, Monday reviews, new projects, and agent additions, changes and retirements. |
 | `hat/skills/hat-avatar/SKILL.md` | Your hat, and one avatar per specialist. |
 | `hat/skills/contextual-comments/SKILL.md` | Native chat first; one shared contextual input with attachments when no supported handoff exists. |
 | `hat/team/*.md` | Five sample briefings to adapt, replace, or remove as the work changes. |
@@ -322,7 +329,8 @@ Do these before the hand-over, and again after any change to the app:
 - `set_member_avatar` can replace any member's Team image, including the
   chief's, and Team portraits are large enough to distinguish at a glance.
 - Team has exactly one chief (you) and a starter set of distinct specialists
-  that the user may change. Compare the member list and starter tasks with
+  that the user may change. Each specialist's slug, name, role and wearable hat
+  match its REGISTRY.md line (`set-up-office` step 3). Compare the member list and starter tasks with
   what was already there before adding rows;
   no setup task, first-priority question, or orientation contact appears twice.
 - In Team, select the first and last specialist at phone width and in a narrow
