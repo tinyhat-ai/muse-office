@@ -3,6 +3,29 @@
 All notable changes to this repository are listed here. The version is the
 one in `VERSION` and in the `version:` line of `hat/HAT.md`.
 
+## 0.4.0 — 2026-09-29
+
+- Fresh setup now checks the Office people actually see: Muse's own portrait
+  with its hat, distinct specialist portraits, a readable task snapshot,
+  branching Mermaid diagrams, and saved image and voice replies on tasks,
+  notes, and projects. A failed recording shows a brief error instead of
+  appearing to do nothing.
+- Muse checks that its specialists really use their own briefing, skills, and
+  memory, and that the scheduled Office review follows unfinished work through
+  to a verified result. Setup explains what will happen, including permission
+  requests, before asking for approval.
+- Existing specialists can be updated one field at a time with `upsert_member`.
+  Omitted fields, including a portrait or learned rule, remain unchanged.
+
+### Updating an existing Office
+
+Ask Muse to show its update plan, then refresh the chief's and specialists'
+skills from this release without resetting the Office or replacing your
+records and customizations. Update `upsert_member` so partial updates preserve
+omitted fields while new members still require a name, role, and job. Use the
+checks in `hat/HAT.md` to verify the real Office pages, saved attachments,
+specialist files, and recurring follow-through before calling it updated.
+
 ## 0.3.0 — 2026-09-28
 
 - Task pages lead with a brief, current overview, status and optional checks.
