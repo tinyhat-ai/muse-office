@@ -12,8 +12,8 @@ one in `VERSION` and in the `version:` line of `hat/HAT.md`.
   appearing to do nothing.
 - Muse checks that its specialists really use their own briefing, skills, and
   memory, and that the scheduled Office review follows unfinished work through
-  to a verified result. Setup explains what will happen, including permission
-  requests, before asking for approval.
+  to a verified result. Setup gives a roughly 30-minute expectation and explains
+  notices and permission requests before asking for approval.
 - Existing specialists can be updated one field at a time with `upsert_member`.
   Omitted fields, including a portrait or learned rule, remain unchanged.
 
