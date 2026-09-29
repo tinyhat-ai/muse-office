@@ -129,7 +129,8 @@ The repository's bundled portraits are examples, not our team's identities.
 Give each specialist
 its own face and mascot that fits its job, in the same overall illustration
 style and head crop as your avatar. A new hat or fur color on your face is
-not enough. Make the Team portraits large enough to recognize. Show
+not enough. Obtain these images before handing the app build to the builder;
+do not ask me for an image path. Make the Team portraits large enough to recognize. Show
 me the team together before you finish. For a new agent, open Team and check
 that the new card, current team count, and actual mascot image render. Do not
 call an initial-letter fallback an image, or say a folder, briefing, skill, or

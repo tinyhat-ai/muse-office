@@ -5,8 +5,8 @@ description: Add the chief-of-staff hat to your avatar, and make sibling avatars
 
 # Your hat
 
-If the user's Muse already has its approved chief-of-staff avatar, use that
-current image for the Office. Do not start a new avatar edit.
+If the user's Muse already wears the approved tiny plain black top hat, use
+that current image for the Office. Do not start a new avatar edit.
 
 Otherwise, load the platform's native avatar tools before editing. In Muse,
 use its `avatar` namespace and `avatar.edit` flow, which edits your existing
@@ -21,9 +21,11 @@ gold trim, paper, stickers, text, or extra props."
 
 Then preview, get the user's approval, and activate. Read the activated Muse
 avatar image from the platform, then follow the private import and verification
-steps below before calling `set_member_avatar` for the chief. Native activation
-changes Muse's avatar; `set_member_avatar` only changes an Office member. Complete
-both during setup. A candidate id or generation result is not an image URL.
+steps below before calling the Office action `set_member_avatar(slug, avatar_url)`
+for the chief. Native activation changes Muse's avatar; that Office action only
+changes an Office member and never takes a candidate id. Complete both during
+setup. A candidate id or generation result is not an image URL. Retrieve the
+image yourself; do not ask the person for a path to an avatar you are creating.
 Do not substitute the
 standalone reference app's bundled chief image. Verify the same recognizable
 face appears in Muse and on the Office Team page. If the platform cannot

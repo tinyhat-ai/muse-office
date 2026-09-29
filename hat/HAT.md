@@ -306,6 +306,7 @@ Do these before the hand-over, and again after any change to the app:
   test Office. If the host blocks the microphone, report recording as untested.
 - The app's icon is the Office building from `src/app/icon.svg`; the top hat
   identifies the chief on their own Muse avatar, not on a bundled sample face.
+  No specialist shows a bundled `/avatars/*.svg` sample either.
 - `set_member_avatar` can replace any member's Team image, including the
   chief's, and Team portraits are large enough to distinguish at a glance.
 - Team has exactly one chief (you) and a starter set of distinct specialists
